@@ -1,0 +1,23 @@
+{
+  "name": "angie",
+  "version": "0.0.1",
+  "authors": "Joe Groseclose <@benderTheCrime>",
+  "description": "AngularJS REST Framework",
+  "main": "src/index.js",
+  "keywords": [
+    "Angular",
+    "AngularJS",
+    "REST"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "https://github.com/angular/angular.js.git"
+  }
+}

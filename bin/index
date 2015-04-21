@@ -1,0 +1,17 @@
+#!/bin/env node
+
+// TODO make all commands here
+
+global.angular = require('../.angular/Public');
+console.log(global.angular);
+
+const p = process,
+    args = p.argv.slice(p.argv.indexOf('node'));
+
+switch (args[0]) {
+    case 'server':
+        require('../src/server');
+        break;
+    default:
+        require('../src/server');
+}

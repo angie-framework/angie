@@ -1,0 +1,19 @@
+{
+  "name": "angie",
+  "version": "0.0.1",
+  "authors": "Joe Groseclose <@benderTheCrime>",
+  "description": "AngularJS REST Framework",
+  "main": "bin/index",
+  "scripts": {
+    "test": "broccoli test"
+  },
+  "keywords": [
+    "Angular",
+    "AngularJS",
+    "REST"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "broccoli": "^0.16.2"
+  }
+}
