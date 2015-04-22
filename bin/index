@@ -1,17 +1,36 @@
 #!/bin/env node
 
-// TODO make all commands here
-
-global.angular = require('../.angular/Public');
-console.log(global.angular);
+import Config from '../src/config';
+import Angular from '../src/index';
+import createProject from '../src/util/scaffold/project';
 
 const p = process,
-    args = p.argv.slice(p.argv.indexOf('node'));
+    config = new Config();
+
+let args = p.argv;
+
+args.splice(0, 2);
 
 switch (args[0]) {
     case 'server':
         require('../src/server');
         break;
+    case 'create':
+        createProject(args[1]);
+    case 'sync':
+        require('../src/database');
+        break;
     default:
         require('../src/server');
 }
+
+let app = new Angular();
+export default app;
+
+// TODO make all commands here
+    // TODO scaffold application
+    // TODO make instance (app)
+    // TODO create database
+    // TODO migrate database
+    // TODO server
+    // TODO shell
