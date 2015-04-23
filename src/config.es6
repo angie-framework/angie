@@ -18,7 +18,7 @@ export default class Config {
 
                 // TODO remove this:
                 config = JSON.parse(fs.readFileSync('bin/_AngieFile.json', 'utf8'));
-                
+
                 // TODO re-add this:
                 // process.exit(1);
             }
@@ -28,3 +28,5 @@ export default class Config {
         return config;
     }
 }
+
+// TODO change this to get AngieFile from cwd

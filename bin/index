@@ -1,26 +1,39 @@
 #!/bin/env node
 
+// TODO put this in runtime to not have to babel
+// require('babel/register');
+
 import Config from '../src/config';
 import Angular from '../src/index';
 import createProject from '../src/util/scaffold/project';
+import createInstance from '../src/util/scaffold/instance';
 
-const p = process,
-    config = new Config();
+const p = process;
 
-let args = p.argv;
+let args = p.argv,
+    config;
 
 args.splice(0, 2);
 
 switch (args[0]) {
     case 'server':
+
+        // TODO remove repetition
+        config = new Config();
         require('../src/server');
         break;
-    case 'create':
+    case 'createProject':
         createProject(args[1]);
+        break;
+    case 'createInstance':
+        createInstance(args[1]);
+        break;
     case 'sync':
+        config = new Config();
         require('../src/database');
         break;
     default:
+        config = new Config();
         require('../src/server');
 }
 

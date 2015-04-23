@@ -1,0 +1,4 @@
+TODO rename modules .es6
+TODO renderers/serializers
+TODO use nvm
+TODO use broccoli

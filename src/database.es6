@@ -1,6 +1,8 @@
 'use strict';
 
-const settings = require('../core/config').fetch();
+import Config from './config';
+
+let config = Config.fetch();
 
 export default class Database {
     contructor() {

@@ -17,6 +17,7 @@
     "broccoli": "^0.16.2"
   },
   "dependencies": {
+    "babel": "^5.1.11",
     "chalk": "^1.0.0",
     "mkdirp": "^0.5.0"
   }
