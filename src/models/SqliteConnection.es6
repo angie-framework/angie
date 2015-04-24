@@ -37,6 +37,7 @@ export default class SqliteConnection extends BaseDBConnection {
     }
     sync() {
         console.log('sync');
+        console.log(this.config.databases.default.name);
         if (this.checkConfig() || !this.config.databases.default.name) {
             console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
         }
@@ -73,3 +74,5 @@ export default class SqliteConnection extends BaseDBConnection {
             this.config.databases.default.type !== 'sqlite3';
     }
 }
+
+// TODO configure sync to work recursively

@@ -1,10 +1,10 @@
 'use strict';
 
-// class Model {
-//     constructor() {
-//         this.con
-//     }
-// }
+class Model {
+    constructor() {
+        //this.con
+    }
+}
 
 class Angular {
     constructor() {
@@ -17,7 +17,7 @@ class Angular {
         this.services[name] = obj;
     }
     model() {
-        return new Model();
+        //return new Model();
     }
 }
 
