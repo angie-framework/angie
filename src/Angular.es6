@@ -1,6 +1,8 @@
 'use strict';
 
-export default class Angular {
+let app = new Angular();
+
+class Angular {
     constructor() {
         this.services = {};
         this.controllers = {};
@@ -11,3 +13,5 @@ export default class Angular {
         this.services[name] = obj;
     }
 }
+
+export default app;

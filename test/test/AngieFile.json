@@ -1,5 +1,10 @@
 {
-   "databases": [],
-   "instances": [],
-   "staticDirs": [],
+    "databases": {
+        "default": {
+            "type": "sqlite3",
+            "name": "/Users/josephgroseclose/nosql_dbs/AngieTest"
+        }
+    },
+    "instances": [],
+    "staticDirs": []
 }

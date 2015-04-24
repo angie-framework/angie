@@ -5,7 +5,8 @@
         url =         require('url'),
         path =        require('path');
 
-    const port = process.argv[2] || 9000;
+    const p = process,
+        port = p.argv[2] || 9000;
 
     http.createServer(function(req, res) {
 

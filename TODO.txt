@@ -1,4 +1,5 @@
-TODO rename modules .es6
-TODO renderers/serializers
-TODO use nvm
-TODO use broccoli
+-- TODO rename modules .es6
+-- TODO renderers/serializers
+-- TODO use nvm
+-- TODO use broccoli
+-- TODO build desktop management tool using electron

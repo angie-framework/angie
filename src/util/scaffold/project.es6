@@ -3,7 +3,8 @@
 const p =       process,
     chalk =     require('chalk'),
     mkdirp =    require('mkdirp'),
-    fs =        require('fs');
+    fs =        require('fs'),
+    util =      require('util');
 
 export default function createProject(n) {
     if (!n) {
@@ -28,12 +29,12 @@ export default function createProject(n) {
 
         makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
         makeSub = `${makeDir}/${name}`;
-        //makeFile = `${makeSub}/AngieFile.json`;
+        makeStatic = `${makeDir}/static`;
 
     try {
         fs.mkdirSync(makeDir);
         fs.mkdirSync(makeSub);
-        //fs.mkdirSync(makeFile);
+        fs.mkdirSync(makeStatic);
     } catch(e) {
         console.log(
             chalk.bold(
@@ -43,13 +44,11 @@ export default function createProject(n) {
 
         p.exit(1);
     } finally {
+        let template = fs.readFileSync('../../templates/AngieFile.sample.json', 'utf8');
+        template = util.format(template, name);
         fs.writeFileSync(
             `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}/${name}/AngieFile.json`,
-            '{\n' +
-            '   "databases": [],\n' +
-            '   "instances": [],\n' +
-            '   "staticDirs": [],\n' +
-            '}',
+            template,
             'utf8'
         );
     }

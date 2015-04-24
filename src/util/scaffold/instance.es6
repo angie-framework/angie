@@ -18,8 +18,6 @@ export default function createInstance(n) {
             fs.writeFileSync(`${dir}/models.js`, '// Create models here', 'utf8');
             fs.writeFileSync(`${dir}/views.js`, '// Create views here', 'utf8');
 
-            new Config();
-
             let config = Config.fetch();
 
             console.log(config);

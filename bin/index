@@ -4,41 +4,45 @@
 // require('babel/register');
 
 import Config from '../src/config';
-import Angular from '../src/index';
 import createProject from '../src/util/scaffold/project';
 import createInstance from '../src/util/scaffold/instance';
+import {default as DB} from '../src/Database';
 
 const p = process;
 
 let args = p.argv,
-    config;
+    node = args.indexOf('node'),
+    app;
 
-args.splice(0, 2);
-
-switch (args[0]) {
-    case 'server':
-
-        // TODO remove repetition
-        config = new Config();
-        require('../src/server');
-        break;
-    case 'createProject':
-        createProject(args[1]);
-        break;
-    case 'createInstance':
-        createInstance(args[1]);
-        break;
-    case 'sync':
-        config = new Config();
-        require('../src/database');
-        break;
-    default:
-        config = new Config();
-        require('../src/server');
+// Remove trivial arguments
+if (node > -1) {
+    args.splice(node, 1);
 }
 
-let app = new Angular();
-export default app;
+// Fetch configs
+new Config().then(function() {
+    switch (args[1]) {
+        case 'server':
+
+            // TODO remove repetition
+            require('../src/server');
+            break;
+        case 'createProject':
+            createProject(args[2]);
+            break;
+        case 'createInstance':
+            createInstance(args[2]);
+            break;
+        case 'syncdb':
+            new DB();
+            break;
+        default:
+            require('../src/server');
+    }
+}, function() {
+    p.exit(1);
+});
+
 
 // TODO make all commands here
     // TODO scaffold application

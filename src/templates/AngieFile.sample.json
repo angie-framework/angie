@@ -1,0 +1,11 @@
+{
+    "databases": {
+        "default": {
+            "name": "%s"
+        }
+    },
+    "instances": [],
+    "staticDirs": [
+        "static"
+    ],
+}
