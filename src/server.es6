@@ -10,7 +10,7 @@
 
     http.createServer(function(req, res) {
 
-        let uri = url.parse(re.url).pathname;
+        let uri = url.parse(req.url).pathname;
 
         // First get the pathname, check and see if a router exists
 

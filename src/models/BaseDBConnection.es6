@@ -22,8 +22,12 @@ export default class BaseDBConnection {
     delete() {
 
     }
-    sync() {
+    connect() {
 
+    }
+    sync() {
+        // TODO collect the modules here
+        this.models = app.models;
     }
 }
 

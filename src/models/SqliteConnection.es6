@@ -17,22 +17,26 @@ export default class SqliteConnection extends BaseDBConnection {
         if (this.checkConfig()) {
             console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
         } else if (!this.db) {
-            try {
-                this.db = new sqlite3.Database(`:${this.config.databases.default.name}:`);
-            } catch(e) {
-                throw new Error(`ANGIE [Error]: ${e}`);
-            } finally {
+            //try {
+            //    this.db = new sqlite3.Database(`:${this.config.databases.default.name}:`);
+            //} catch(e) {
+            //    throw new Error(`ANGIE [Error]: ${e}`);
+            //} //finally {
 
                 // TODO find a way to commonize the serialization
-                this.db.serialize(function() {
-
-                    //this.db.run('CREATE TABLE lorem');
-                    console.log(chalk.bold(chalk.green('ANGIE [Log]: Connected')));
-                });
-            }
+                // this.db.serialize(function() {
+                //
+                //     //this.db.run('CREATE TABLE lorem');
+                //     console.log(chalk.bold(chalk.green('ANGIE [Log]: Connected')));
+                // });
+            //}
         }
     }
+    connect() {
+
+    }
     sync() {
+        console.log('sync');
         if (this.checkConfig() || !this.config.databases.default.name) {
             console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
         }
@@ -41,13 +45,22 @@ export default class SqliteConnection extends BaseDBConnection {
             dir =  hasDir ? filename.split('/').pop().join('/') : null,
             file = hasDir ? filename.split('/').pop() : file;
 
-        if (dir) {
-            mkdirp.sync(dir);
+        super.sync();
+        console.log(dir, file);
+
+        try {
+            if (dir) {
+                mkdirp.sync(dir);
+            }
+            fs.writeFileSync(file, '', 'utf8');
+        } catch(e) {
+            console.log(e);
         }
-        fs.writeFileSync(file, '', 'utf8');
 
         // Collect models from angular app
         console.log(app);
+
+        // Reads model classes and finds their fields
     }
 
     // TODO this is unecessary, but this should be a shorthand regardless
@@ -57,6 +70,6 @@ export default class SqliteConnection extends BaseDBConnection {
     checkConfig() {
         return !this.config.databases || !this.config.databases.default ||
             !this.config.databases.default.type ||
-            !this.config.databases.default.type !== 'sqlite3';
+            this.config.databases.default.type !== 'sqlite3';
     }
 }
