@@ -3,7 +3,7 @@
 // TODO put this in runtime to not have to babel
 // require('babel/register');
 
-import Config from '../src/config';
+import Config from '../src/Config';
 import createProject from '../src/util/scaffold/project';
 import createInstance from '../src/util/scaffold/instance';
 import {default as DB} from '../src/Database';
@@ -36,6 +36,7 @@ new Config().then(function() {
         case 'syncdb':
             new DB();
             break;
+        case 'migrations':
         default:
             require('../src/server');
     }

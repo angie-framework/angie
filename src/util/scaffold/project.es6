@@ -57,3 +57,4 @@ export default function createProject(n) {
 }
 
 // TODO create with . for settings in the same directory
+// TODO do we need instances?

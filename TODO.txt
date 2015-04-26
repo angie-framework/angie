@@ -1,5 +1,11 @@
+-- Finish base by may 15th
+
+-- TODO setup angiedb page
 -- TODO rename modules .es6
 -- TODO renderers/serializers
 -- TODO use nvm
 -- TODO use broccoli
+-- TODO have a debug mode or verbose mode/logging
 -- TODO build desktop management tool using electron
+-- TODO links from errors to online docs
+-- TODO everything should be a byproduct of the angular instance

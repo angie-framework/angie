@@ -1,6 +1,7 @@
 'use strict';
 
-import Config from './config';
+import Config from './Config';
+import MySqlConnection from './models/MySqlConnection';
 import SqliteConnection from './models/SqliteConnection';
 
 let config;
@@ -12,11 +13,14 @@ export default class Database {
         }
 
         let db = config.databases;
+        console.log(db.default);
         if (db && db.default && db.default.type) {
             let type = db.default.type;
-
-            // Do a mook check to see if the database connection is viable
-            switch (type) {
+            console.log(type);
+            switch (type.toLowerCase()) {
+                case 'mysql':
+                    this.db = new MySqlConnection();
+                    this.db.sync();
                 default:
                     this.db = new SqliteConnection();
                     this.db.sync();
@@ -26,3 +30,4 @@ export default class Database {
 }
 
 // TODO Here we want to establish our first connection and set up shared methods
+// TODO recurse through all dbs

@@ -1,4 +1,4 @@
-import Config from '../config'
+import Config from '../Config'
 import app from '../Angular';
 
 // app.service('$ModelService', function() {
@@ -13,7 +13,7 @@ export default class BaseDBConnection {
     create() {
 
     }
-    read() {
+    get() {
 
     }
     update() {
@@ -26,8 +26,7 @@ export default class BaseDBConnection {
 
     }
     sync() {
-        // TODO collect the modules here
-        this.models = app.models;
+        this.models = app.__registry__.__models__;
     }
 }
 

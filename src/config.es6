@@ -28,3 +28,5 @@ export default class Config {
         return config;
     }
 }
+
+// TODO what if it is not a linux machine?

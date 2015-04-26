@@ -5,7 +5,15 @@
   "description": "AngularJS REST Framework",
   "main": "bin/index",
   "scripts": {
-    "test": "broccoli test"
+    "test": "broccoli test",
+    "postinstall": "bower install"
+  },
+  "engines": {
+    "iojs": ">=1.8.1",
+    "babel-node": "*"
+  },
+  "bin": {
+    "angie": "bin/index"
   },
   "repository": {
     "type": "git",
@@ -14,11 +22,13 @@
   "keywords": [
     "Angular",
     "AngularJS",
-    "REST"
+    "REST",
+    "Framework"
   ],
   "license": "MIT",
   "devDependencies": {
-    "broccoli": "^0.16.2"
+    "broccoli": "^0.16.2",
+    "electron-prebuilt": "*"
   },
   "dependencies": {
     "babel": "^5.1.11",

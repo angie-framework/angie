@@ -1,8 +1,14 @@
 {
     "databases": {
         "default": {
-            "type": "sqlite3",
-            "name": "/Users/josephgroseclose/nosql_dbs/AngieTest"
+            "type": "mysql",
+            "name": "angie_test",
+            "host": "127.0.0.1",
+            "username": "root",
+            "password": "",
+            "options": {
+                "hardErrors": true
+            }
         }
     },
     "instances": [],
