@@ -13,10 +13,8 @@ export default class Database {
         }
 
         let db = config.databases;
-        console.log(db.default);
         if (db && db.default && db.default.type) {
             let type = db.default.type;
-            console.log(type);
             switch (type.toLowerCase()) {
                 case 'mysql':
                     this.db = new MySqlConnection();

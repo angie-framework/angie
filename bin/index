@@ -7,6 +7,7 @@ import Config from '../src/Config';
 import createProject from '../src/util/scaffold/project';
 import createInstance from '../src/util/scaffold/instance';
 import {default as DB} from '../src/Database';
+import server from '../src/Server';
 
 const p = process;
 
@@ -23,9 +24,7 @@ if (node > -1) {
 new Config().then(function() {
     switch (args[1]) {
         case 'server':
-
-            // TODO remove repetition
-            require('../src/server');
+            server();
             break;
         case 'createProject':
             createProject(args[2]);
@@ -38,7 +37,7 @@ new Config().then(function() {
             break;
         case 'migrations':
         default:
-            require('../src/server');
+            server();
     }
 }, function() {
     p.exit(1);

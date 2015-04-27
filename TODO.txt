@@ -9,3 +9,8 @@
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
+
+
+TEMPLATES
+=============
+-- TODO use template cache or handlebars for templating

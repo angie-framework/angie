@@ -15,7 +15,7 @@ export default class SqliteConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
+            //console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
             process.exit(1);
         } else if (!this.db) {
             //try {

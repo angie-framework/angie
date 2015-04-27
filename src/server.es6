@@ -1,14 +1,22 @@
-(function() {
-    'use strict';
+'use strict';
 
-    const http =      require('http'),
-        url =         require('url'),
-        path =        require('path');
+import {app, angular} from './Angular';
 
-    const p = process,
-        port = p.argv[2] || 9000;
+const http =        require('http'),
+      url =         require('url'),
+      path =        require('path');
+
+const p = process,
+      port = p.argv[2] || 9000;
+
+// TODO Fire config in config
+    // TODO Get routes
+
+export default function server() {
+    angular.bootstrap();
 
     http.createServer(function(req, res) {
+
 
         let uri = url.parse(req.url).pathname;
 
@@ -16,7 +24,7 @@
 
         //
     }).listen(+port);
-})();
+}
 
 //   path.exists(filename, function(exists) {
 //     if(!exists) {
