@@ -7,19 +7,18 @@ const http =        require('http'),
       path =        require('path');
 
 const p = process,
-      port = p.argv[2] || 9000;
 
-// TODO Fire config in config
-    // TODO Get routes
+      // TODO make sure the port is properly defined
+      port = p.argv[2] || 9000;
 
 export default function server() {
     angular.bootstrap();
-
+    console.log(port);
     http.createServer(function(req, res) {
 
 
         let uri = url.parse(req.url).pathname;
-
+        console.log(uri);
         // First get the pathname, check and see if a router exists
 
         //

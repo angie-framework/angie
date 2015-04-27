@@ -2,7 +2,7 @@
 
 let routes = {};
 
-export default class $RouteProvider {
+class $RouteProvider {
     static when(str, obj) {
         routes[str] = obj;
         return this;
@@ -16,8 +16,12 @@ export default class $RouteProvider {
     }
 }
 
-export class $StateProvider {
-
+class $StateProvider {
+    constructor() {
+        
+    }
 }
+
+export {$StateProvider as $stateProvider, $RouteProvider as $routeProvider};
 
 // TODO we have to make state provider as well

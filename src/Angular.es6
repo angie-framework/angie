@@ -1,6 +1,6 @@
 'use strict';
 
-import {$RouteProvider as $routeProvider} from './services/Routes';
+import {$routeProvider} from './services/Routes';
 import $injector from './services/injector';
 
 const chalk =       require('chalk');
@@ -8,23 +8,11 @@ const chalk =       require('chalk');
 class Angular {
     constructor() {
         this.configs = [];
-        this.services = {
-            $routeProvider: $routeProvider,
-            $routes: function() {
-                return $routeProvider.fetch();
-            },
-            $injector: $injector
-        };
+        this.services = {};
         this.Controllers = {};
         this.Models = {};
         this.directives = {};
-        this.__registry__ = {
-            __configs__: new Set(),
-            __services__: new Set(),
-            __controllers__: new Set(),
-            __models__: new Set(),
-            __directives__: new Set()
-        };
+        this.__registry__ = {};
         return this;
     }
     config(fn) {
@@ -44,11 +32,6 @@ class Angular {
     }
     static noop() {}
     static bootstrap() {
-        // Load and fire configs
-            // Check if it is a "class" or a "function" config
-                // if it is a function config, to string function, find args, and load them
-                    // write an injector function
-                    // load dependencies
         app.configs.forEach(function(v) {
             try {
                 let str = v.toString(),
@@ -56,7 +39,7 @@ class Angular {
                         .replace(/(function\s+\(|\))/g, '').trim().split(',');
                 v.apply(
                     app,
-                    app.services.$injector.get.apply(null, args)
+                    app.services.$injector.get.apply(app, args)
                 );
             } catch(e) {
 
@@ -65,6 +48,9 @@ class Angular {
                 new v();
             }
         });
+
+        // Configs are loaded --> At the moment, we need not make considerations
+        // for other provider types
     }
 }
 
@@ -84,7 +70,7 @@ let app = new Angular().Model('UserModel', function() {
     }
 }).config(function($routeProvider) {
     $routeProvider.when('/index', {}).otherwise('/');
-});
+}).service('$routeProvider', $routeProvider).service('$injector', $injector);
 
 // .config(class extends $routeProvider {
 //     constructor() {
@@ -96,7 +82,7 @@ let app = new Angular().Model('UserModel', function() {
 
 function __register__(component, name, obj) {
     if (this[component]) {
-        this.__registry__[`__${component.toLowerCase()}__`].add(name);
+        this.__registry__[name] = component;
         this[component][name] = obj;
     }
 }
