@@ -1,6 +1,14 @@
 'use strict';
 
-let routes = {};
+let routes = {
+        '/404': {
+            templateUrl: '404.html'
+        },
+        '/500': {
+            templateUrl: '404.html'
+        }
+    },
+    otherwise;
 
 class $RouteProvider {
     static when(str, obj) {
@@ -8,17 +16,20 @@ class $RouteProvider {
         return this;
     }
     static otherwise(str) {
-        routes[str] = null;
+        otherwise = str;
         return this;
     }
     static fetch() {
-        return routes;
+        return {
+            routes: routes,
+            otherwise: otherwise
+        };
     }
 }
 
 class $StateProvider {
     constructor() {
-        
+
     }
 }
 

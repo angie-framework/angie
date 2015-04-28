@@ -2,6 +2,7 @@
 
 import Config from './Config';
 import MySqlConnection from './models/MySqlConnection';
+import FirebaseConnection from './models/FirebaseConnection';
 import SqliteConnection from './models/SqliteConnection';
 
 let config;
@@ -18,6 +19,9 @@ export default class Database {
             switch (type.toLowerCase()) {
                 case 'mysql':
                     this.db = new MySqlConnection();
+                    this.db.sync();
+                case 'firebase':
+                    this.db = new FirebaseConnection();
                     this.db.sync();
                 default:
                     this.db = new SqliteConnection();

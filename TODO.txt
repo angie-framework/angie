@@ -1,7 +1,6 @@
--- Finish base by may 15th
 
--- TODO setup angiedb page
--- TODO rename modules .es6
+
+
 -- TODO renderers/serializers
 -- TODO use nvm
 -- TODO use broccoli
@@ -10,7 +9,18 @@
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
 
+PROJECT
+============
+-- TODO Finish base by may 15th
+-- TODO setup angiedb page
+-- TODO rename modules .es6
 
 TEMPLATES
 =============
 -- TODO use template cache or handlebars for templating
+
+
+DB
+=============
+-- TODO add firebase connector
+-- TODO rename models folder

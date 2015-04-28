@@ -1,9 +1,11 @@
 'use strict';
 
-import {$routeProvider} from './services/Routes';
+import {$routeProvider} from './services/$RouteProvider';
 import $injector from './services/injector';
+import {$templateCache} from './services/$TemplateCache';
 
-const chalk =       require('chalk');
+const chalk =       require('chalk'),
+      fs =          require('fs');
 
 class Angular {
     constructor() {
@@ -21,6 +23,10 @@ class Angular {
     }
     service(name, obj) {
         __register__.call(this, 'services', name, obj);
+        return this;
+    }
+    Controller(name, obj) {
+        __register__.call(this, 'Controllers', name, obj);
         return this;
     }
     Model(name, obj) {
@@ -68,9 +74,20 @@ let app = new Angular().Model('UserModel', function() {
     constructor() {
         this.name = 'angie_migrations';
     }
-}).config(function($routeProvider) {
-    $routeProvider.when('/index', {}).otherwise('/');
-}).service('$routeProvider', $routeProvider).service('$injector', $injector);
+}).config(function($templateCache) {
+    $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
+
+// }).config(function($routeProvider) {
+//     $routeProvider.when('/index', {}).otherwise('/');
+}).service('$routeProvider', $routeProvider).service(
+    '$injector',
+    $injector
+).service(
+    '$templateCache',
+    $templateCache
+).Controller('DefaultCtrl', function($templateCache, $responses) {
+
+});
 
 // .config(class extends $routeProvider {
 //     constructor() {

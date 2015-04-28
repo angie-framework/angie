@@ -12,8 +12,7 @@ import server from '../src/Server';
 const p = process;
 
 let args = p.argv,
-    node = args.indexOf('node'),
-    app;
+    node = args.indexOf('node');
 
 // Remove trivial arguments
 if (node > -1) {
