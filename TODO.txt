@@ -1,4 +1,16 @@
+TODAY
+=======
+-- TODO RequestRouter
+-- TODO Request
+-- TODO Scope
+-- TODO Controller
+-- TODO $Compile (template)
+-- TODO API View
+-- TODO Template View
 -- TODO add firbase connector next so thay you can serve JSON responses
+
+
+
 
 -- TODO renderers/serializers
 -- TODO use nvm
@@ -12,7 +24,7 @@ PROJECT
 ============
 -- TODO Finish base by may 15th
 -- TODO setup angiedb page
--- TODO rename modules .es6
+-- TODO rename modules .es
 
 TEMPLATES
 =============
@@ -27,3 +39,5 @@ DB
 SYSTEM
 ==============
 -- TODO have a debug mode or verbose mode/logging, web server login
+-- TODO errors pages
+-- TODO webserver cluster

@@ -22,6 +22,7 @@ if (node > -1) {
 // Fetch configs
 new Config().then(function() {
     switch (args[1]) {
+        case 'cluster':
         case 'server':
             server();
             break;
@@ -48,5 +49,5 @@ new Config().then(function() {
     // TODO make instance (app)
     // TODO create database
     // TODO migrate database
-    // TODO server
+    // TODO cluster
     // TODO shell

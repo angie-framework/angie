@@ -1,7 +1,7 @@
 'use strict';
 
 import {$routeProvider} from './services/$RouteProvider';
-import $injector from './services/injector';
+import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
 
 const chalk =       require('chalk'),
@@ -77,9 +77,8 @@ let app = new Angular().Model('UserModel', function() {
 }).config(function($templateCache) {
     $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
-
-}).config(function($routeProvider) {
-    $routeProvider.when('/index', {}).otherwise('/index');
+// }).config(function($routeProvider) {
+//     $routeProvider.when('/index', {}).otherwise('/index');
 }).service('$routeProvider', $routeProvider).service(
     '$injector',
     $injector
