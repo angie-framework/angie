@@ -9,6 +9,9 @@ class $CacheFactory {
         this.key = key;
         if (!cache[key]) {
             cache[key] = {};
+        } else {
+            console.error('ANGIE [Error]: Cache already exists');
+            process.exit(1);
         }
         return this;
     }

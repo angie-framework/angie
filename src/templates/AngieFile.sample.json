@@ -6,6 +6,6 @@
     },
     "instances": [],
     "staticDirs": [
-        "static"
+        "static/"
     ],
 }

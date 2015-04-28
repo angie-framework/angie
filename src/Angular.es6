@@ -75,10 +75,11 @@ let app = new Angular().Model('UserModel', function() {
         this.name = 'angie_migrations';
     }
 }).config(function($templateCache) {
+    $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
 
-// }).config(function($routeProvider) {
-//     $routeProvider.when('/index', {}).otherwise('/');
+}).config(function($routeProvider) {
+    $routeProvider.when('/index', {}).otherwise('/index');
 }).service('$routeProvider', $routeProvider).service(
     '$injector',
     $injector

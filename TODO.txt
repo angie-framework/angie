@@ -1,10 +1,9 @@
-
-
+-- TODO add firbase connector next so thay you can serve JSON responses
 
 -- TODO renderers/serializers
 -- TODO use nvm
 -- TODO use broccoli
--- TODO have a debug mode or verbose mode/logging
+
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
@@ -24,3 +23,7 @@ DB
 =============
 -- TODO add firebase connector
 -- TODO rename models folder
+
+SYSTEM
+==============
+-- TODO have a debug mode or verbose mode/logging, web server login

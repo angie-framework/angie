@@ -3,7 +3,8 @@
 import BaseDBConnection from './BaseDBConnection';
 import app from '../Angular';
 
-const chalk =           require('chalk'),
+const Firebase =        require('firebase'),
+      chalk =           require('chalk'),
       mysql =           require('mysql'),
       mkdirp =          require('mkdirp'),
       fs =              require('fs');

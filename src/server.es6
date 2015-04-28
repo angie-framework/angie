@@ -7,7 +7,8 @@ import {$templateLoader} from './services/$TemplateCache';
 const http =        require('http'),
       url =         require('url'),
       path =        require('path'),
-      fs =          require('fs');
+      fs =          require('fs'),
+      chalk =       require('chalk');
 
 const p = process;
 
@@ -28,6 +29,7 @@ export default function server() {
             routes = $routeProvider.fetch().routes,
             otherwise = $routeProvider.fetch().otherwise;
 
+        // TODO build a request service, BaseRequest?
         // TODO export this all to responses? once you figure out what to do with
         // Controllers
         if (routes[uri]) {
@@ -53,49 +55,43 @@ export default function server() {
                 }
             }
 
+            // Cases:
+            // Controller & templateUrl (default) --> compiles template in scope
+            // --> view
+            // Controler & template --> compiles template in scope
+            // --> view
+            // Controller --> fires Controller, expects response
+            // --> view
+            // templateUrl (default) --> serves template, expects compilation on frontend
+            // template --> serves template, expects compilation on frontend
+            // --> no views
 
         } else if (otherwise) {
-
+            res.statusCode = 302;
+            res.setHeader('Location', `${otherwise}`);
         } else {
 
-            // TODO If the root is serving serving, serve the angie root file
-            // TODO else serve 404
-            //Move this to responses as well
-            res.writeHead(404, {
-                "Content-Type": "text/html"
-            });
-            res.write($templateLoader(routes['/404'].templateUrl));
-            res.end();
+            if (uri === '/') {
+                res.writeHead(200, {
+                    "Content-Type": "text/html"
+                });
+                res.write($templateLoader('index.html'));
+            } else {
+
+                //Move this to responses as well
+                res.writeHead(404, {
+                    "Content-Type": "text/html"
+                });
+                res.write($templateLoader(routes['/404'].templateUrl));
+
+            }
         }
+        res.end();
         // First get the pathname, check and see if a router exists
 
-        // If no router exists, check if there is a default
-        // If no default, serve default route '/'
     }).listen(+port);
+    console.log(chalk.bold(chalk.green(`Angie: [Info] Serving on port ${port}`)));
 }
 
-//   path.exists(filename, function(exists) {
-//     if(!exists) {
-//       response.writeHead(404, {"Content-Type": "text/plain"});
-//       response.write("404 Not Found\n");
-//       response.end();
-//       return;
-//     }
-  //
-//     if (fs.statSync(filename).isDirectory()) filename += '/index.html';
-  //
-//     fs.readFile(filename, "binary", function(err, file) {
-//       if(err) {
-//         response.writeHead(500, {"Content-Type": "text/plain"});
-//         response.write(err + "\n");
-//         response.end();
-//         return;
-//       }
-  //
-//       response.writeHead(200);
-//       response.write(file, "binary");
-//       response.end();
-//     });
-//   });
-
-// TODO default success page on '/'
+// TODO build a $request service
+// TODO log statements for each status

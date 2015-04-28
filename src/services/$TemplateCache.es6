@@ -20,7 +20,7 @@ function $templateLoader(url) {
     staticDirs.unshift('');
 
     staticDirs.forEach(function(v) {
-        let tmp = $templateCache.get(`${v}/url`);
+        let tmp = $templateCache.get(`${v}${url}`);
         if (tmp) {
             template = tmp;
             cached = true;
@@ -31,7 +31,7 @@ function $templateLoader(url) {
         staticDirs.forEach(function(v) {
             let tmp;
             try {
-                tmp = fs.readFileSync(`${v}/url`, 'utf8');
+                tmp = fs.readFileSync(`${v}url`, 'utf8');
                 if (tmp) {
                     template = tmp;
                 }
