@@ -11,11 +11,14 @@ export default class Config {
         if (!config) {
             return new Promise(function(resolve, reject) {
                 console.log(chalk.bold(chalk.green('Read Settings File')));
-                exec('find . -type f -exec cat \'AngieFile.json\' \'{}\' \\;', function(e, stdout) {
-                    return e ? reject(e) : resolve(stdout);
-                });
+                exec(`find ${process.cwd()} -type f -exec cat 'AngieFile.json' '{}' \\;`,
+                    function(e, stdout) {
+                        return e ? reject(e) : resolve(stdout);
+                    }
+                );
             }).then(function(stdout) {
                 config = JSON.parse(stdout);
+                console.log(config);
             }, function(e) {
                 config = {};
                 throw new Error(`ANGIE [Error]: ${e}`);

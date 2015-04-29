@@ -26,7 +26,6 @@ TEMPLATES
 =============
 -- TODO use template cache or handlebars for templating
 
-
 DB
 =============
 -- TODO add firebase connector
