@@ -1,23 +1,22 @@
-#!/bin/env node
+'use strict';
 
-// TODO put this in runtime to not have to babel
-// require('babel/register');
+import Config from './Config';
 
-import Config from '../src/Config';
-import createProject from '../src/util/scaffold/project';
-import createInstance from '../src/util/scaffold/instance';
-import {default as DB} from '../src/Database';
-import server from '../src/Server';
+// TODO merge into one module
+import createProject from './util/scaffold/project';
+import createInstance from './util/scaffold/instance';
+import {default as DB} from './Database';
+import server from './Server';
 
 const p = process;
 
-let args = p.argv,
-    node = args.indexOf('node');
-
 // Remove trivial arguments
-if (node > -1) {
-    args.splice(node, 1);
-}
+let args = [];
+p.argv.forEach(function(v) {
+    if (v.match(/^(?:(?!(node|iojs)).)*$/)) {
+        args.push(v);
+    }
+});
 
 // Fetch configs
 new Config().then(function() {

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "AngularJS REST Framework",
-  "main": "bin/index",
+  "main": "src/index.js",
   "scripts": {
     "test": "broccoli test",
     "postinstall": "bower install"
@@ -13,7 +13,7 @@
     "babel-node": "*"
   },
   "bin": {
-    "angie": "bin/index"
+    "angie": "bin/angie"
   },
   "repository": {
     "type": "git",

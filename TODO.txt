@@ -19,7 +19,8 @@ PROJECT
 ============
 -- TODO Finish base by may 15th
 -- TODO setup angiedb page
--- TODO rename modules .es
+-- TODO rename modules .es6
+-- TODO man style --help options
 
 TEMPLATES
 =============
@@ -36,3 +37,8 @@ SYSTEM
 -- TODO have a debug mode or verbose mode/logging, web server login
 -- TODO errors pages
 -- TODO webserver cluster
+
+INSTRUCTIONS
+==============
+- npm install -g babel
+- npm install -g nvm
