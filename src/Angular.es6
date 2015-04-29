@@ -77,17 +77,22 @@ let app = new Angular().Model('UserModel', function() {
 }).config(function($templateCache) {
     $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
-// }).config(function($routeProvider) {
-//     $routeProvider.when('/index', {}).otherwise('/index');
-}).service('$routeProvider', $routeProvider).service(
+}).config(function($routeProvider) {
+
+    // TODO Recommend not making otherwise the same as any other routes
+    $routeProvider.when('/index', {
+        Controller: 'DefaultCtrl'
+    }).otherwise('/blah');
+}).service(
+    '$routeProvider',
+    $routeProvider
+).service(
     '$injector',
     $injector
-).service(
+).service('$scope', {}).service(
     '$templateCache',
     $templateCache
-).Controller('DefaultCtrl', function($templateCache, $responses) {
-
-});
+);
 
 // .config(class extends $routeProvider {
 //     constructor() {

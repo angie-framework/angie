@@ -68,7 +68,7 @@ export default class BaseRequest {
 
             // Redirect the page to a default page
             this.response.statusCode = 302;
-            this.response.setHeader('Location', `${otherwise}`);
+            this.response.setHeader('Location', `${this.otherwise}`);
             return;
         }
         this[`${this.path === '/' ? 'default' : 'error'}Path`]();

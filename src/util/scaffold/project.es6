@@ -28,12 +28,14 @@ export default function createProject(n) {
         name = file.length ? file.pop() : file,
 
         makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
-        makeSub = `${makeDir}/${name}`;
-        makeStatic = `${makeDir}/static`;
+        makeSub = `${makeDir}/src`;
 
     try {
         fs.mkdirSync(makeDir);
         fs.mkdirSync(makeSub);
+        [ 'controllers', 'models', 'directives', 'static' ].forEach(function(v) {
+            fs.mkdirSync(`${makeDir}/${v}`);
+        })
         fs.mkdirSync(makeStatic);
     } catch(e) {
         console.log(

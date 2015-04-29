@@ -1,16 +1,11 @@
 TODAY
 =======
--- TODO RequestRouter
--- TODO Request
--- TODO Scope
+-- TODO Move test to another directory to test linking app to other projects
+-- TODO add firbase connector next so that you can serve JSON responses
 -- TODO Controller
 -- TODO $Compile (template)
 -- TODO API View
 -- TODO Template View
--- TODO add firbase connector next so thay you can serve JSON responses
-
-
-
 
 -- TODO renderers/serializers
 -- TODO use nvm
