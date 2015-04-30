@@ -34,9 +34,8 @@ export default function createProject(n) {
         fs.mkdirSync(makeDir);
         fs.mkdirSync(makeSub);
         [ 'controllers', 'models', 'directives', 'static' ].forEach(function(v) {
-            fs.mkdirSync(`${makeDir}/${v}`);
+            fs.mkdirSync(`${makeSub}/${v}`);
         })
-        fs.mkdirSync(makeStatic);
     } catch(e) {
         console.log(
             chalk.bold(
@@ -46,10 +45,13 @@ export default function createProject(n) {
 
         p.exit(1);
     } finally {
-        let template = fs.readFileSync('../../templates/AngieFile.sample.json', 'utf8');
+        let template = fs.readFileSync(
+            `${__dirname}/../../templates/AngieFile.sample.json`,
+            'utf8'
+        );
         template = util.format(template, name);
         fs.writeFileSync(
-            `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}/${name}/AngieFile.json`,
+            `${makeSub}/AngieFile.json`,
             template,
             'utf8'
         );
