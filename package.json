@@ -28,7 +28,11 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli": "^0.16.2",
-    "electron-prebuilt": "*"
+    "electron-prebuilt": "*",
+    "karma": "^0.12.31",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "mocha": "^2.2.4"
   },
   "dependencies": {
     "babel": "^5.1.13",
