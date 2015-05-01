@@ -30,7 +30,11 @@ export default class FirebaseConnection extends BaseDBConnection {
     }
     create(model) {
         let data = this.read(model);
-        this.db.set('')
+
+        // TODO can you set a specific instance of a model?
+
+        //data[data.length] = {};
+        //this.db.set(data[data.length], {})
     }
     syncdb() {
         super.syncdb();

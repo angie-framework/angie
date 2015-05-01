@@ -9,6 +9,14 @@ class $TemplateCache extends $cacheFactory {
     constructor() {
         super('templateCache');
     }
+    get(url) {
+        let template = super.get(url);
+        if (!template) {
+            template = $templateLoader(url);
+        }
+        this.put(url, template);
+        return template;
+    }
 }
 
 function $templateLoader(url) {
