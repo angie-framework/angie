@@ -16,3 +16,4 @@ export default function compile(t) {
 
 // TODO you may just want to patch in the Angular compile and listen on {{{}}}
 // TODO you also need to parse child scopes
+// TODO use handlebars and then angular

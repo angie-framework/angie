@@ -86,7 +86,6 @@ export default class BaseRequest {
                 // TODO call that view link with injected scope and services & template
                 // directive.link();
                 if (directive.type === 'APIView') {
-                    response.content
                 } else {
 
                 }

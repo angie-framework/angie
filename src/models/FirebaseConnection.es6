@@ -4,8 +4,8 @@ import BaseDBConnection from './BaseDBConnection';
 // import app from '../Angular';
 
 const chalk =           require('chalk'),
-      Firebase =        require('firebase'),
-      FirebaseTokenGenerator = require("firebase-token-generator.js"),
+      Firebase =        require('firebase');
+      // FirebaseTokenGenerator = require("firebase-token-generator.js");
       // mysql =           require('mysql'),
       // mkdirp =          require('mkdirp'),
       // fs =              require('fs');
@@ -44,7 +44,7 @@ export default class FirebaseConnection extends BaseDBConnection {
     }
 }
 
-checkConfig(db) {
+function checkConfig(db) {
     return !db.url;
 }
 

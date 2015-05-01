@@ -8,6 +8,8 @@ import {$compile} from './services/$Compile';
 const chalk =       require('chalk'),
       fs =          require('fs');
 
+const p = process;
+
 class Angular {
     constructor() {
         this.configs = [];
@@ -39,28 +41,69 @@ class Angular {
     }
     static noop() {}
     static bootstrap() {
-        app.configs.forEach(function(v) {
-            try {
-                let str = v.toString(),
-                    args = str.match(/(function.*\(.*\))/g)[0]
-                        .replace(/(function\s+\(|\))/g, '').trim().split(',');
-                v.apply(
-                    app,
-                    app.services.$injector.get.apply(app, args)
-                );
-            } catch(e) {
+        let proms = [];
 
-                // This is a class, nothing needs to be injected
-                console.log(chalk.bold(chalk.red(`Angie: [Error] ${e}`)));
-                new v();
-            }
+        // Load all of the files from the project
+        [
+          'controllers', 'directives', 'services', 'models', 'configs'
+        ].forEach(function(v) {
+            console.log(v);
+            try {
+                fs.readdirSync(`${p.cwd()}/${v}`, function(f) {
+                  console.log(f);
+                  f.forEach(function(w) {
+                      proms.push(System.import(w));
+                  });
+                });
+            } catch(e) {
+                console.log(e);
+            } // Moot error, I don't really care if you muss with things
+            try {
+                fs.readdirSync(`${p.cwd()}/src/${v}`, function(f) {
+                  console.log(f);
+                  f.forEach(function(w) {
+                      proms.push(System.import(w));
+                  });
+                });
+            } catch(e) {
+                console.log(e);
+            } // Moot error, I don't really care if you muss with things
         });
 
-        // Configs are loaded --> At the moment, we need not make considerations
-        // for other provider types
+        // Once all of the modules are loaded, run the configs
+        Promise.all(proms).then(function() {
+            app.configs.forEach(function(v) {
+                try {
+                    let str = v.toString(),
+                        args = str.match(/(function.*\(.*\))/g)[0]
+                            .replace(/(function\s+\(|\))/g, '').trim().split(',');
+                    v.apply(
+                        app,
+                        app.services.$injector.get.apply(app, args)
+                    );
+                } catch(e) {
+
+                    // This is a class, nothing needs to be injected
+                    console.log(chalk.bold(chalk.red(`Angie: [Error] ${e}`)));
+                    new v();
+                }
+            });
+        });
+
+        // Test that the registry loads test controller
+        console.log(app.__registry__)
     }
 }
 
+function __register__(component, name, obj) {
+    if (this[component]) {
+        this.__registry__[name] = component;
+        this[component][name] = obj;
+    }
+}
+
+
+// TODO move this into it's own module
 let app = new Angular().Model('UserModel', function() {
     // this.username = new CharField({
     //     maxLength: 35,
@@ -95,20 +138,7 @@ let app = new Angular().Model('UserModel', function() {
     $templateCache
 );
 
-// .config(class extends $routeProvider {
-//     constructor() {
-//         this.when('/index', {
-//
-//         }).otherwise('/');
-//     }
-// });
-
-function __register__(component, name, obj) {
-    if (this[component]) {
-        this.__registry__[name] = component;
-        this[component][name] = obj;
-    }
-}
-
+global.app = app;
+global.angular = Angular;
 
 export {app, Angular as angular};

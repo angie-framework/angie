@@ -1,5 +1,6 @@
 TODAY
 =======
+-- TODO read all files from project directory!!! fix the read
 -- TODO Controller
 -- TODO $Compile (template)
 
@@ -29,6 +30,7 @@ PROJECT
 -- TODO Finish base by may 15th
 -- TODO setup angiedb page
 -- TODO rename modules .es6
+-- TODO require all modules as 'Provider'
 -- TODO man style --help options
 -- TODO write broadcaster
 
