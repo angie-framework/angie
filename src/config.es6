@@ -42,6 +42,9 @@ export default class Config {
             return new Promise(resolve => resolve());
         }
     }
+    static __forceSet__(obj) {
+        config = obj;
+    }
     static fetch() {
         return config;
     }

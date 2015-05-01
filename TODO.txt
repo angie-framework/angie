@@ -1,10 +1,20 @@
 TODAY
 =======
--- TODO add firbase connector next so that you can serve JSON responses
 -- TODO Controller
 -- TODO $Compile (template)
--- TODO API View
+
 -- TODO Template View
+-- TODO fields --> install into model
+    -- test with sample model
+-- TODO add firebase connector next so that you can serve JSON responses
+    -- TODO establish connection
+    -- TODO sync
+    -- TODO create records
+    -- TODO read records
+    -- TODO filter records
+    -- TODO update records
+    -- TODO delete records
+-- TODO API View
 
 -- TODO renderers/serializers
 -- TODO use nvm
@@ -20,6 +30,7 @@ PROJECT
 -- TODO setup angiedb page
 -- TODO rename modules .es6
 -- TODO man style --help options
+-- TODO write broadcaster
 
 TEMPLATES
 =============

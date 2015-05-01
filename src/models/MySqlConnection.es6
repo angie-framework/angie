@@ -4,9 +4,9 @@ import BaseDBConnection from './BaseDBConnection';
 import app from '../Angular';
 
 const chalk =           require('chalk'),
-      mysql =           require('mysql'),
-      mkdirp =          require('mkdirp'),
-      fs =              require('fs');
+      mysql =           require('mysql');
+      // mkdirp =          require('mkdirp'),
+      // fs =              require('fs');
 
 const p = process,
       DEFAULT_HOST = '127.0.0.1';
@@ -18,7 +18,7 @@ export default class MySqlConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            //console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
+            console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
             p.exit(1);
         } else if (!this.connection) {
             let me = this;

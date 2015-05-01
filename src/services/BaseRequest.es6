@@ -3,7 +3,8 @@
 import {app} from '../Angular';
 import {$Request} from './$Request';
 import {$routeProvider} from './$RouteProvider';
-import {$templateLoader} from './$TemplateCache';
+import {$templateCache} from './$TemplateCache';
+import {$compile} from './$Compile';
 
 const DEFAULT_CONTENT_TYPE = {
     'Content-Type': 'text/html'
@@ -28,6 +29,7 @@ export default class BaseRequest {
 
         // If the route exists:
         if (this.routes[this.path]) {
+            this.route = this.routes[this.path];
             this.controllerPath();
         } else {
             this.otherPath();
@@ -37,7 +39,7 @@ export default class BaseRequest {
 
         // TODO define scope
 
-        let controllerName = this.routes[this.path].Controller;
+        let controllerName = this.route.Controller;
         if (controllerName && app.Controllers[controllerName]) {
             let controller = app.Controllers[controllerName];
             try {
@@ -59,9 +61,40 @@ export default class BaseRequest {
         }
 
         // TODO get scope
+        // ok, our controller has a scope!
+
         // TODO compile template with scope
+        // is there a template?
+        if (this.route.template) {
+            this.template = this.route.template;
+        } else if (this.route.templateUrl) {
+            this.template = $templateCache(this.route.templateUrl);
+            //
+        }
+
+        if (this.template) {
+
+            this.reponseContent = $compile(this.template)(scope);
+            // TODO render the template into the resoponse
+        }
+
         // TODO See if any views have this Controller associated
-        // TODO call that view link with injected scope and services & template
+        app.directives.forEach(function(directive) {
+            if (directive.Controller && directive.Controller === controllerName) {
+
+                // TODO move instances of parsing to injector
+                // TODO call that view link with injected scope and services & template
+                // directive.link();
+                if (directive.type === 'APIView') {
+                    response.content
+                } else {
+
+                }
+            }
+        });
+
+        r
+        response.write()
     }
     otherPath() {
         if (this.otherwise) {

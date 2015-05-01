@@ -3,6 +3,7 @@
 import {$routeProvider} from './services/$RouteProvider';
 import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
+import {$compile} from './services/$Compile';
 
 const chalk =       require('chalk'),
       fs =          require('fs');
