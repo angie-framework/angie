@@ -22,34 +22,30 @@ let __server__ = requiresConfig.bind(null, server),
         return new DB();
     });
 
-//new Config().then(function() {
 switch (args[1]) {
     case 'cluster':
     case 'server':
-        __server__();
+        __server__({ port: args[2] });
         break;
     case 's':
-        __server__();
+        __server__({ port: args[2] });
         break;
     case 'createProject':
-        createProject(args[2]);
+        createProject({ name: args[2] });
         break;
     case 'syncdb':
         __db__();
         break;
     case 'migrations':
     default:
-        __server__();
+        __server__({ port:args[2] });
 }
-// }, function() {
-//     p.exit(1);
-// });
 
-function requiresConfig(fn) {
+function requiresConfig(fn, args = {}) {
 
     // Fetch configs
     return new Config().then(function() {
-        return fn();
+        return fn(args);
     }, function() {
         p.exit(1);
     })

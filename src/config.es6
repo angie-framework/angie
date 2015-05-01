@@ -3,28 +3,40 @@
 const exec =          require('child_process').exec,
       chalk =         require('chalk');
 
+const p = process;
+
 let config = undefined;
 
 export default class Config {
     constructor() {
-        console.log('in');
         console.log(chalk.bold(chalk.green('Build Config')));
         if (!config) {
             return new Promise(function(resolve, reject) {
                 console.log(chalk.bold(chalk.green('Read Settings File')));
-                exec(`find ${__dirname} -type f -exec cat 'AngieFile.json' '{}' \\;`,
+                exec(`find . -name 'AngieFile.json' -exec cat {} \\;`,
                     function(e, stdout) {
-                        console.log(stdout);
-                        return e ? reject(e) : resolve(stdout);
+                        if (stdout) {
+                            resolve(stdout)
+                        } else {
+                            reject(e);
+                        }
                     }
                 );
             }).then(function(stdout) {
-                //console.log(stdout);
-                config = JSON.parse(stdout);
-                console.log(config);
+                try {
+                    config = JSON.parse(stdout);
+                } catch(e) {
+                    console.log(chalk.bold(chalk.red(`ANGIE [Error]: ${e}`)));
+                    p.exit(1);
+                }
             }, function(e) {
                 config = {};
-                throw new Error(`ANGIE [Error]: ${e}`);
+                if (e) {
+                    console.log(chalk.bold(chalk.red(`ANGIE [Error]: ${e}`)));
+                } else {
+                    console.log(chalk.bold(chalk.red(`ANGIE [Error]: No AngieFile Found.`)));
+                }
+                p.exit(1);
             });
         } else {
             return new Promise(resolve => resolve());

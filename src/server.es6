@@ -19,9 +19,10 @@ if (node > -1) {
     args.splice(node, 1);
 }
 
-let port = args[2] || 9000;
+export default function server(args) {
 
-export default function server() {
+    let port = !isNaN(+args.port) ? args.port : 9000;
+
     angular.bootstrap();
     http.createServer(function(request, response) {
 

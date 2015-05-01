@@ -1,6 +1,5 @@
 TODAY
 =======
--- TODO Move test to another directory to test linking app to other projects
 -- TODO add firbase connector next so that you can serve JSON responses
 -- TODO Controller
 -- TODO $Compile (template)

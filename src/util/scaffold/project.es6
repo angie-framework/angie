@@ -6,15 +6,17 @@ const p =       process,
     fs =        require('fs'),
     util =      require('util');
 
-export default function createProject(n) {
-    if (!n) {
+export default function createProject(args) {
+    let name = args.name;
+
+    if (!name) {
         console.log(
             chalk.bold(
                 chalk.red('ANGIE [Error]: No Project Name Specified.')
             )
         );
         p.exit(1);
-    } else if (!/([A-z]+)/.test(n)) {
+    } else if (!/([A-z]+)/.test(name)) {
         console.log(
             chalk.bold(
                 chalk.red('ANGIE [Error]: Invalid Project name: must be all letters.')
@@ -23,12 +25,13 @@ export default function createProject(n) {
         p.exit(1);
     }
 
-    let file = n.indexOf('/') < 0 ? n.split('/') : n,
-        dirname = file.length > 1 ? file.splice(-1).join('/') : '',
-        name = file.length ? file.pop() : file,
+    let file = name.indexOf('/') < 0 ? name.split('/') : name,
+        dirname = file.length > 1 ? file.splice(-1).join('/') : '';
 
-        makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
-        makeSub = `${makeDir}/src`;
+    name = file.length ? file.pop() : file,
+
+    makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
+    makeSub = `${makeDir}/src`;
 
     try {
         fs.mkdirSync(makeDir);
