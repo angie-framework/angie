@@ -1,8 +1,8 @@
 'use strict';
 
 import Config from './Config';
+import $log from './util/$LogProvider';
 import createProject from './util/scaffold/project';
-//import createInstance from './util/scaffold/instance';
 import {default as DB} from './Database';
 import server from './Server';
 
@@ -22,13 +22,25 @@ let __server__ = requiresConfig.bind(null, server),
         return new DB();
     });
 
+if (args.length === 1) {
+    args.push('');
+}
+
+// Route the CLI request to a specific command
 switch (args[1]) {
-    case 'cluster':
+    case '':
+        $log.help();
+        break
+    case 'help':
+        $log.help();
+        break;
     case 'server':
         __server__({ port: args[2] });
         break;
     case 's':
         __server__({ port: args[2] });
+        break;
+    case 'cluster':
         break;
     case 'createProject':
         createProject({ name: args[2] });
@@ -38,9 +50,11 @@ switch (args[1]) {
         break;
     case 'migrations':
     default:
-        __server__({ port:args[2] });
+        $log.help();
 }
 
+// Wrapper function for services which require configs to be loaded
+// TODO make this a directive
 function requiresConfig(fn, args = {}) {
 
     // Fetch configs
@@ -51,9 +65,7 @@ function requiresConfig(fn, args = {}) {
     })
 }
 
-
 // TODO make all commands here
-    // TODO scaffold application
     // TODO make instance (app)
     // TODO create database
     // TODO migrate database

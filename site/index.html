@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <link rel='stylesheet' type='text/css'
+              href='http://fonts.googleapis.com/css?family=Pacifico|Oxygen|Slabo+27px' >
+        <link rel='stylesheet' href='css/index.css'>
+    </head>
+    <body ng-app='angieWebApp'>
+        <h1>
+            Angie
+            <sup>beta</sup>
+        </h1>
+        <h3>An AngularJS inspired NodeJS MVC</h3>
+        <ul>
+            <li>
+                <a href='#/news'>news</a>
+            </li>
+            <li>
+                <a href='#/features'>features</a>
+            </li>
+            <li>
+                <a href='#/quickstart'>quickstart</a>
+            </li>
+            <li>
+                <a href='#docs'>docs</a>
+            </li>
+            <!-- <li>
+                <a href='https://github.com/benderTheCrime/angie' target='_blank'>
+                    fork on GitHub
+                </a>
+            </li> -->
+            <li>
+                <a href='#/contributors'>contributors</a>
+            </li>
+        </ul>
+        <ng-view></ng-view>
+
+      <!-- start: components -->
+          <script type='text/javascript'
+                  src='../bower_components/angular/angular.min.js'>
+          </script>
+          <script type='text/javascript'
+                  src='../bower_components/angular-route/angular-route.min.js'>
+          </script>
+          <script type='text/javascript' src='js/index.js'></script>
+      <!-- end: components -->
+    </body>
+</html>

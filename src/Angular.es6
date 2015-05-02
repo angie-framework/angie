@@ -1,23 +1,34 @@
 'use strict';
 
+import Config from './Config';
 import {$routeProvider} from './services/$RouteProvider';
 import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
 import {$compile} from './services/$Compile';
+import $log from './util/$LogProvider';
 
 const chalk =       require('chalk'),
       fs =          require('fs');
 
-const p = process;
+const p = process,
+      config = Config.fetch();
 
 class Angular {
-    constructor() {
+    constructor(dependencies = []) {
         this.configs = [];
         this.services = {};
         this.Controllers = {};
         this.Models = {};
         this.directives = {};
         this.__registry__ = {};
+
+        // TODO dependencies
+        if (dependencies) {
+            dependencies.forEach(function(v) {
+
+            });
+        }
+
         return this;
     }
     config(fn) {
@@ -41,37 +52,32 @@ class Angular {
     }
     static noop() {}
     static bootstrap() {
-        let proms = [];
+        let proms = [],
+            files;
 
         // Load all of the files from the project
+        // TODO also look for ".config." files
         [
           'controllers', 'directives', 'services', 'models', 'configs'
         ].forEach(function(v) {
-            console.log(v);
             try {
-                fs.readdirSync(`${p.cwd()}/${v}`, function(f) {
-                  console.log(f);
-                  f.forEach(function(w) {
-                      proms.push(System.import(w));
-                  });
+                files = fs.readdirSync(`${p.cwd()}/${v}`);
+                files.forEach(function(w) {
+                    proms.push(System.import(w));
                 });
-            } catch(e) {
-                console.log(e);
-            } // Moot error, I don't really care if you muss with things
+            } catch(e) {} // Moot error, I don't really care if you muss with things
             try {
-                fs.readdirSync(`${p.cwd()}/src/${v}`, function(f) {
-                  console.log(f);
-                  f.forEach(function(w) {
-                      proms.push(System.import(w));
-                  });
+                files = fs.readdirSync(`${p.cwd()}/src/${v}`);
+                files.forEach(function(w) {
+
+                    // TODO do this with System
+                    require(`${p.cwd()}/src/${v}/${w}`);
                 });
-            } catch(e) {
-                console.log(e);
-            } // Moot error, I don't really care if you muss with things
+            } catch(e) {} // Moot error, I don't really care if you muss with things
         });
 
         // Once all of the modules are loaded, run the configs
-        Promise.all(proms).then(function() {
+        return Promise.all(proms).then(function() {
             app.configs.forEach(function(v) {
                 try {
                     let str = v.toString(),
@@ -82,16 +88,10 @@ class Angular {
                         app.services.$injector.get.apply(app, args)
                     );
                 } catch(e) {
-
-                    // This is a class, nothing needs to be injected
-                    console.log(chalk.bold(chalk.red(`Angie: [Error] ${e}`)));
                     new v();
                 }
             });
         });
-
-        // Test that the registry loads test controller
-        console.log(app.__registry__)
     }
 }
 
@@ -102,9 +102,8 @@ function __register__(component, name, obj) {
     }
 }
 
-
 // TODO move this into it's own module
-let app = new Angular().Model('UserModel', function() {
+let app = new Angular(config.dependencies).Model('UserModel', function() {
     // this.username = new CharField({
     //     maxLength: 35,
     //     defaultValue: 'test'
@@ -121,15 +120,12 @@ let app = new Angular().Model('UserModel', function() {
 }).config(function($templateCache) {
     $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
-}).config(function($routeProvider) {
-
-    // TODO Recommend not making otherwise the same as any other routes
-    $routeProvider.when('/index', {
-        Controller: 'DefaultCtrl'
-    }).otherwise('/blah');
 }).service(
     '$routeProvider',
     $routeProvider
+).service(
+    '$logProvider',
+    $log
 ).service(
     '$injector',
     $injector

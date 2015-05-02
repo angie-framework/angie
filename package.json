@@ -1,8 +1,8 @@
 {
   "name": "angie",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "authors": "Joe Groseclose <@benderTheCrime>",
-  "description": "AngularJS REST Framework",
+  "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
   "scripts": {
     "test": "broccoli test",
@@ -28,6 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli": "^0.16.2",
+    "connect": "^2.x.x",
     "electron-prebuilt": "*",
     "karma": "^0.12.31",
     "karma-mocha": "^0.1.10",

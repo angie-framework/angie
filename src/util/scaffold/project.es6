@@ -36,9 +36,25 @@ export default function createProject(args) {
     try {
         fs.mkdirSync(makeDir);
         fs.mkdirSync(makeSub);
-        [ 'controllers', 'models', 'directives', 'static' ].forEach(function(v) {
+
+        // TODO do you want to move static, templates, AngieFile up one directory?
+        [
+            'controllers',
+            'models',
+            'directives',
+            'configs',
+            'services',
+            'static',
+            'templates'
+        ].forEach(function(v) {
             fs.mkdirSync(`${makeSub}/${v}`);
-        })
+        });
+        [
+            'static',
+            'templates'
+        ].forEach(function(v) {
+            fs.mkdirSync(`${makeDir}/${v}`);
+        });
     } catch(e) {
         console.log(
             chalk.bold(
@@ -54,7 +70,7 @@ export default function createProject(args) {
         );
         template = util.format(template, name);
         fs.writeFileSync(
-            `${makeSub}/AngieFile.json`,
+            `${makeDir}/AngieFile.json`,
             template,
             'utf8'
         );

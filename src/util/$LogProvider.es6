@@ -1,0 +1,103 @@
+'use strict'
+
+const chalk =           require('chalk'),
+      exec =            require('child_process').exec;
+
+const p = process,
+      bold = chalk.bold,
+      LOG_LEVELS = {
+          'debug': true,
+          'info': true,
+          'error': true
+      };
+
+let ENABLE_DEBUG = true;
+
+class $LogProvider {
+    constructor() {
+        // TODO configure logfile here from AngieFile
+    }
+    log() {
+        console.log.apply(null, arguments);
+    }
+    bold() {
+        return this.log(bold.apply(null, arguments));
+    }
+    info() {
+        let args = Array.prototype.slice.call(arguments);
+        args.unshift('ANGIE: [Info] ');
+        console.info(chalk.green(bold.apply(null, args)));
+    }
+    debug() {
+        if (ENABLE_DEBUG === 'debug') {
+            this.info.apply(this, arguments);
+        }
+    }
+    warn() {
+        let args = Array.prototype.slice.call(arguments);
+        args.unshift('ANGIE: [Warning] ');
+        console.log(chalk.yellow(bold.apply(null, args)));
+    }
+    error() {
+        let args = Array.prototype.slice.call(arguments);
+        if (args[0].stack) {
+            args[0] = args[0].stack;
+        }
+        args.unshift('ANGIE: [Error] ');
+        console.error(chalk.red(bold.apply(null, args)));
+    }
+    help() {
+        let me = this;
+        exec('clear', function() {
+            me.log('\n');
+            me.bold('Angie');
+            me.log('An AngularJS inspired NodeJS MVC');
+            me.log('\n');
+            me.bold('Version:');
+            me.log(global.__VERSION__);
+            me.log('\n');
+            me.bold('Commands:');
+            me.log(
+                'server <port>                   ' +
+                chalk.gray('Start the Angie Webserver (shortcut with s).')
+            );
+            me.log(
+                'cluster <port>                  ' +
+                chalk.gray('Start the Angie Webserver as a Cluster.')
+            );
+            me.log(
+                'createProject <project_name>    ' +
+                chalk.gray(
+                    'Create a new Angie project with the specified name in the ' +
+                    'current directory.'
+                )
+            );
+            me.log(
+                'syncdb                          ' +
+                chalk.gray(
+                    'Sync the current specified databases in the AngieFile.'
+                )
+            );
+            me.log(
+                'migrations                      ' +
+                chalk.gray(
+                    'Checks to see if the database and the specified ' +
+                    'models are out of sync. Generates NO files.'
+                )
+            );
+            me.log('\n');
+            p.exit(0);
+        });
+    }
+    static setDebugLevel(b) {
+        ENABLE_DEBUG = b;
+    }
+}
+
+const $log = new $LogProvider();
+
+export default $log;
+
+// TODO replace all console log with Console
+// TODO this should handle terminal logging and log file output
+// TODO tracebacks on error

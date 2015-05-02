@@ -1,17 +1,29 @@
 'use strict';
 
 import {app} from '../Angular';
+import $log from '../util/$LogProvider';
 import {$Request} from './$Request';
 import {$routeProvider} from './$RouteProvider';
-import {$templateCache} from './$TemplateCache';
+import {$templateCache, $templateLoader} from './$TemplateCache';
 import {$compile} from './$Compile';
 
 const DEFAULT_CONTENT_TYPE = {
     'Content-Type': 'text/html'
 };
 
-export default class BaseRequest {
+class BaseRequest {
     constructor(path, req, res) {
+
+        // Cases:
+        // Controller & templateUrl (default) --> compiles template in scope
+        // --> view
+        // Controler & template --> compiles template in scope
+        // --> view
+        // Controller --> fires Controller, expects response
+        // --> view
+        // templateUrl (default) --> serves template, expects compilation on frontend
+        // template --> serves template, expects compilation on frontend
+        // --> no views
 
         // Define URI
         this.path = path;
@@ -40,6 +52,7 @@ export default class BaseRequest {
         // TODO define scope
 
         let controllerName = this.route.Controller;
+
         if (controllerName && app.Controllers[controllerName]) {
             let controller = app.Controllers[controllerName];
             try {
@@ -65,35 +78,52 @@ export default class BaseRequest {
 
         // TODO compile template with scope
         // is there a template?
-        if (this.route.template) {
-            this.template = this.route.template;
-        } else if (this.route.templateUrl) {
-            this.template = $templateCache(this.route.templateUrl);
-            //
-        }
+        try {
+            if (
+                this.route.template &&
+                typeof this.route.template === 'string' &&
+                this.route.template.length > 0
+            ) {
 
-        if (this.template) {
+                // This is fine
+                this.template = this.route.template;
+            } else if (this.route.templateUrl) {
+                this.template = $templateCache.get(this.route.templateUrl);
 
-            this.reponseContent = $compile(this.template)(scope);
-            // TODO render the template into the resoponse
-        }
-
-        // TODO See if any views have this Controller associated
-        app.directives.forEach(function(directive) {
-            if (directive.Controller && directive.Controller === controllerName) {
-
-                // TODO move instances of parsing to injector
-                // TODO call that view link with injected scope and services & template
-                // directive.link();
-                if (directive.type === 'APIView') {
-                } else {
-
+                if (!this.template) {
+                    this.errorPath();
+                    return;
                 }
             }
-        });
 
-        r
-        response.write()
+            if (this.template) {
+
+                this.reponseContent = $compile(this.template)(scope);
+                // TODO render the template into the resoponse
+            }
+
+            // TODO See if any views have this Controller associated
+            app.directives.forEach(function(directive) {
+                if (directive.Controller && directive.Controller === controllerName) {
+
+                    // TODO move instances of parsing to injector
+                    // TODO call that view link with injected scope and services & template
+                    // directive.link();
+                    if (directive.type === 'APIView') {
+                    } else {
+
+                    }
+                }
+            });
+        } catch(e) {
+            $log.error(e);
+            this.response.writeHead(500, DEFAULT_CONTENT_TYPE);
+            this.response.write('<h1>Invalid Request</h1>');
+            return;
+        }
+
+        this.response.writeHead(200, this.responseType);
+        this.response.write(this.responseContent);
     }
     otherPath() {
         if (this.otherwise) {
@@ -103,12 +133,18 @@ export default class BaseRequest {
             this.response.setHeader('Location', `${this.otherwise}`);
             return;
         }
-        this[`${this.path === '/' ? 'default' : 'error'}Path`]();
+        this[ `${this.path === '/' ? 'default' : 'error'}Path` ]();
     }
     defaultPath() {
 
         // Load default page
         let index = $templateLoader('index.html');
+
+        // If the index page could not be found
+        if (!index) {
+            this.errorPath();
+            return;
+        }
 
         // Write the response
         this.response.writeHead(200, DEFAULT_CONTENT_TYPE);
@@ -123,3 +159,5 @@ export default class BaseRequest {
         this.response.write(fourOhFour);
     }
 }
+
+export {BaseRequest, DEFAULT_CONTENT_TYPE};

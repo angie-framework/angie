@@ -4,7 +4,11 @@
             "name": "%s"
         }
     },
-    "staticDirs": [
+    "templateDirs": [
         "static/"
-    ]
+    ],
+    "staticDirs": [
+
+    ],
+    "dependencies": []
 }

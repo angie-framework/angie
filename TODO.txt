@@ -1,6 +1,10 @@
 TODAY
 =======
--- TODO read all files from project directory!!! fix the read
+-- TODO simple template rendering
+-- TODO static dirs
+-- TODO have web server live reload
+
+-- TODO site
 -- TODO Controller
 -- TODO $Compile (template)
 
@@ -17,8 +21,9 @@ TODAY
     -- TODO delete records
 -- TODO API View
 
+-- TODO route parsing for variables
+
 -- TODO renderers/serializers
--- TODO use nvm
 -- TODO use broccoli
 
 -- TODO build desktop management tool using electron
@@ -31,12 +36,13 @@ PROJECT
 -- TODO setup angiedb page
 -- TODO rename modules .es6
 -- TODO require all modules as 'Provider'
--- TODO man style --help options
 -- TODO write broadcaster
+-- TODO caching
 
 TEMPLATES
 =============
 -- TODO use template cache or handlebars for templating
+-- TODO serve with script
 
 DB
 =============
@@ -45,9 +51,11 @@ DB
 
 SYSTEM
 ==============
--- TODO have a debug mode or verbose mode/logging, web server login
+-- TODO web server login
 -- TODO errors pages
 -- TODO webserver cluster
+-- TODO make BaseRequest available via an 'application file'
+-- TODO how would one authenticate
 
 INSTRUCTIONS
 ==============
