@@ -61,7 +61,7 @@ class $LogProvider {
                 'server [port -- optional]       ' +
                 chalk.gray(
                     'Start the Angie Webserver (shortcut with s). Default port ' +
-                    'is 3000.'
+                    'is 9000.'
                 )
             );
             me.log(

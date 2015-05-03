@@ -157,8 +157,6 @@ class BaseRequest {
         // Load page not found
         let fourOhFour = $templateLoader('404.html');
 
-        console.log(fourOhFour);
-
         this.response.writeHead(404, DEFAULT_CONTENT_TYPE);
         this.response.write(fourOhFour);
     }

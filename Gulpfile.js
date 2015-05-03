@@ -1,22 +1,27 @@
-(function() {
-    'use strict';
+'use strict';
 
-    const gulp = require('gulp');
+import server from './src/Server';
 
-    const p = process
+const gulp =        require('gulp');
 
-    gulp.task('server', function() {
-        require('src/server')();
-    });
+const p = process;
 
-    gulp.task('reload', [ 'server' ], function() {
-        gulp.watch([ 'src/*', `${p.cwd()}/*` ], //function() {
-        //     gulp.run('server');
-        // });
-        [ 'server' ]);
-    });
+let args;
 
-    module.exports = function() {
-        gulp.run('reload');
-    };
-})();
+gulp.task('server', function() {
+    return server(args);
+});
+
+gulp.task('reload', [ 'server' ], function() {
+    console.log('watch called');
+    console.log(p.cwd());
+    gulp.watch([ 'src/*', `${p.cwd()}/*` ], //function() {
+    //     gulp.run('server');
+    // });
+    [ 'server' ]);
+});
+
+export default function gulpServer() {
+    args = arguments[0];
+    gulp.start('reload');
+};

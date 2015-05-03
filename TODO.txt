@@ -1,7 +1,10 @@
 TODAY
 =======
--- TODO have web server live reload
+-- TODO fix Config and Server paths by deleting and reinstantiating
 -- TODO static dirs serving
+    -- start by applying site styles to the index and 404 pages
+    -- move css
+-- TODO have web server live reload
 -- TODO site
 -- TODO Controller
 -- TODO module dependencies
@@ -39,6 +42,7 @@ PROJECT
 -- TODO require all modules as 'Provider'
 -- TODO write broadcaster
 -- TODO caching
+-- TODO use broccoli, mimosa, brunch, or something other than gulp
 
 TEMPLATES
 =============
@@ -56,8 +60,3 @@ SYSTEM
 -- TODO webserver cluster
 -- TODO make BaseRequest available via an 'application file'
 -- TODO how would one authenticate
-
-INSTRUCTIONS
-==============
-- npm install -g babel
-- npm install -g nvm

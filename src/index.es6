@@ -54,7 +54,7 @@ switch (args[1]) {
 }
 
 // Wrapper function for services which require configs to be loaded
-// TODO make this a directive
+// TODO make config a service
 function requiresConfig(fn, args = {}) {
 
     // Fetch configs
