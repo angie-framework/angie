@@ -4,16 +4,18 @@
     a.module('angieWebApp', [
         'ngRoute'
     ]).config(function($routeProvider) {
-        $routeProvider.when('/news', {
+        $routeProvider.when('/default', {
+            templateUrl: 'html/default.html'
+        }).when('/news', {
             templateUrl: 'html/news.html'
         }).when('/features', {
             templateUrl: 'html/features.html'
-        }).when('/quickstart', {
-            templateUrl: 'html/quickstart.html'
-        }).when('/docs', {
-            templateUrl: 'html/docs.html'
-        }).when('/contributors', {
-            templateUrl: 'html/contributors.html'
-        }).otherwise('/news');
+        // }).when('/quickstart', {
+        //     templateUrl: 'html/quickstart.html'
+        // }).when('/docs', {
+        //     templateUrl: 'html/docs.html'
+        // }).when('/contributors', {
+        //     templateUrl: 'html/contributors.html'
+        }).otherwise('/default');
     });
 })(angular);

@@ -25,7 +25,11 @@ class $TemplateCache extends $cacheFactory {
 
 function $templateLoader(url) {
     let config = Config.fetch(),
-        templateDirs = config.templateDirs || [],
+
+        // Clone them template dirs
+        templateDirs = (
+            config.templateDirs.slice() || []
+        ),
         cached = false,
         template;
 
@@ -33,11 +37,12 @@ function $templateLoader(url) {
         url = `/${url}`;
     }
 
-    templateDirs.unshift(ANGIE_TEMPLATE_DIR);
+    // Add the default Angie template dirs to the existing config template dirs
+    templateDirs.push(ANGIE_TEMPLATE_DIR);
 
-    templateDirs.forEach(function(v) {
-        let tmp;
-
+    // TODO right now the behavior is that this returns the first template it
+    // finds, is this correct?
+    templateDirs.some(function(v) {
         if (v !== ANGIE_TEMPLATE_DIR) {
             if (v.indexOf(p.cwd()) === -1) {
                 if (v.charAt(0) !== '/') {
@@ -52,18 +57,14 @@ function $templateLoader(url) {
         }
 
         try {
-            tmp = fs.readFileSync(`${v}${url}`, 'utf8');
-            if (tmp) {
-                template = tmp;
-            }
-        } catch(e) {} // Moot error, I know you've probably got may static dirs
+            template = fs.readFileSync(`${v}${url}`, 'utf8');
+            return true;
+        } catch(e) {
+            return false;
+        }
     });
 
     if (!template) {
-
-        // TODO when you are rendering dynamic templates, pass the static urls
-        // to this path
-
         return false;
     } else {
         $templateCache.put(url, template);

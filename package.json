@@ -27,7 +27,6 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "broccoli": "^0.16.2",
     "connect": "^2.x.x",
     "electron-prebuilt": "*",
     "karma": "^0.12.31",

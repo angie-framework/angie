@@ -1,11 +1,14 @@
 'use strict';
 
 let routes = {
+        '/': {
+            templatePath: 'index.html'
+        },
         '/404': {
-            templateUrl: '404.html'
+            templatePath: '404.html'
         },
         '/500': {
-            templateUrl: '404.html'
+            templatePath: '404.html'
         }
     },
     otherwise;

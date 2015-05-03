@@ -1,16 +1,21 @@
 TODAY
 =======
--- TODO simple template rendering
--- TODO static dirs
 -- TODO have web server live reload
-
+-- TODO static dirs serving
 -- TODO site
 -- TODO Controller
--- TODO $Compile (template)
+-- TODO module dependencies
+-- TODO tests/gulp
+-- TODO clean up
 
+-- END OF DEV PREVIEW ONE, May 15th
+
+
+-- TODO $Compile (template)
 -- TODO Template View
 -- TODO fields --> install into model
     -- test with sample model
+
 -- TODO add firebase connector next so that you can serve JSON responses
     -- TODO establish connection
     -- TODO sync
@@ -24,7 +29,6 @@ TODAY
 -- TODO route parsing for variables
 
 -- TODO renderers/serializers
--- TODO use broccoli
 
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
@@ -32,9 +36,6 @@ TODAY
 
 PROJECT
 ============
--- TODO Finish base by may 15th
--- TODO setup angiedb page
--- TODO rename modules .es6
 -- TODO require all modules as 'Provider'
 -- TODO write broadcaster
 -- TODO caching
@@ -47,7 +48,6 @@ TEMPLATES
 DB
 =============
 -- TODO add firebase connector
--- TODO rename models folder
 
 SYSTEM
 ==============

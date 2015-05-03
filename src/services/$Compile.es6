@@ -8,8 +8,9 @@ export default function compile(t) {
 
     return function template (scope) {
         listeners.forEach(function(v) {
-            v = v.replace(/\{|\}/g).trim();
+            // template = template.replace(v, '').trim();
         });
+        return template
     }
 };
 

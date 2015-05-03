@@ -2,3 +2,42 @@
 
 @import 'mixins';
 @import 'shared';
+
+.default {
+    font-size:1.3em;
+    text-align: center;
+}
+
+.nav-link {
+    .transition(color);
+    .transition(font-size);
+    &:hover {
+        color:teal;
+        font-size:1.1em;
+    }
+}
+
+.git-fork-link {
+    .dim(30px, 30px);
+    .pos(absolute, 10px, @3: 10px);
+    cursor:pointer;
+    &:before {
+        margin-right:10px;
+        padding:5px;
+        content: 'Fork me on GitHub';
+        .pos(absolute, 2px, @3: 100%);
+        .font(@2: 0.75em, @3: 20px, @4: white);
+        height:20px;
+        vertical-align:middle;
+        background-color:@c1;
+        border-radius:2px;
+        .transition(opacity);
+        white-space:nowrap;
+        opacity:0;
+    }
+    &:hover {
+        &:before {
+            opacity:1;
+        }
+    }
+}

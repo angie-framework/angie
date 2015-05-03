@@ -25,7 +25,7 @@ class $LogProvider {
     }
     info() {
         let args = Array.prototype.slice.call(arguments);
-        args.unshift('ANGIE: [Info] ');
+        args.unshift('ANGIE: [Info]');
         console.info(chalk.green(bold.apply(null, args)));
     }
     debug() {
@@ -35,7 +35,7 @@ class $LogProvider {
     }
     warn() {
         let args = Array.prototype.slice.call(arguments);
-        args.unshift('ANGIE: [Warning] ');
+        args.unshift('ANGIE: [Warning]');
         console.log(chalk.yellow(bold.apply(null, args)));
     }
     error() {
@@ -43,7 +43,7 @@ class $LogProvider {
         if (args[0].stack) {
             args[0] = args[0].stack;
         }
-        args.unshift('ANGIE: [Error] ');
+        args.unshift('ANGIE: [Error]');
         console.error(chalk.red(bold.apply(null, args)));
     }
     help() {
@@ -58,15 +58,18 @@ class $LogProvider {
             me.log('\n');
             me.bold('Commands:');
             me.log(
-                'server <port>                   ' +
-                chalk.gray('Start the Angie Webserver (shortcut with s).')
+                'server [port -- optional]       ' +
+                chalk.gray(
+                    'Start the Angie Webserver (shortcut with s). Default port ' +
+                    'is 3000.'
+                )
             );
             me.log(
-                'cluster <port>                  ' +
+                'cluster [port -- optional]      ' +
                 chalk.gray('Start the Angie Webserver as a Cluster.')
             );
             me.log(
-                'createProject <project_name>    ' +
+                'createProject [name]            ' +
                 chalk.gray(
                     'Create a new Angie project with the specified name in the ' +
                     'current directory.'
@@ -95,7 +98,6 @@ class $LogProvider {
 }
 
 const $log = new $LogProvider();
-
 export default $log;
 
 // TODO replace all console log with Console

@@ -5,7 +5,7 @@ import $log from '../util/$LogProvider';
 import {$Request} from './$Request';
 import {$routeProvider} from './$RouteProvider';
 import {$templateCache, $templateLoader} from './$TemplateCache';
-import {$compile} from './$Compile';
+import $compile from './$Compile';
 
 const DEFAULT_CONTENT_TYPE = {
     'Content-Type': 'text/html'
@@ -15,13 +15,13 @@ class BaseRequest {
     constructor(path, req, res) {
 
         // Cases:
-        // Controller & templateUrl (default) --> compiles template in scope
+        // Controller & templatePath (default) --> compiles template in scope
         // --> view
         // Controler & template --> compiles template in scope
         // --> view
         // Controller --> fires Controller, expects response
         // --> view
-        // templateUrl (default) --> serves template, expects compilation on frontend
+        // templatePath (default) --> serves template, expects compilation on frontend
         // template --> serves template, expects compilation on frontend
         // --> no views
 
@@ -35,9 +35,10 @@ class BaseRequest {
         // Grab the routes and the otherwise
         this.routes = $routeProvider.fetch().routes;
         this.otherwise = $routeProvider.fetch().otherwise;
+
+        this.responseContent = '';
     }
     route() {
-        // We have three *main* options here
 
         // If the route exists:
         if (this.routes[this.path]) {
@@ -84,11 +85,9 @@ class BaseRequest {
                 typeof this.route.template === 'string' &&
                 this.route.template.length > 0
             ) {
-
-                // This is fine
                 this.template = this.route.template;
-            } else if (this.route.templateUrl) {
-                this.template = $templateCache.get(this.route.templateUrl);
+            } else if (this.route.templatePath) {
+                this.template = $templateCache.get(this.route.templatePath);
 
                 if (!this.template) {
                     this.errorPath();
@@ -98,12 +97,13 @@ class BaseRequest {
 
             if (this.template) {
 
-                this.reponseContent = $compile(this.template)(scope);
                 // TODO render the template into the resoponse
+                //this.reponseContent = $compile(this.template)(scope);
+                this.responseContent = this.template;
             }
 
             // TODO See if any views have this Controller associated
-            app.directives.forEach(function(directive) {
+            for (directive in app.directives) {
                 if (directive.Controller && directive.Controller === controllerName) {
 
                     // TODO move instances of parsing to injector
@@ -114,7 +114,7 @@ class BaseRequest {
 
                     }
                 }
-            });
+            };
         } catch(e) {
             $log.error(e);
             this.response.writeHead(500, DEFAULT_CONTENT_TYPE);
@@ -129,10 +129,12 @@ class BaseRequest {
         if (this.otherwise) {
 
             // Redirect the page to a default page
+            // TODO test otherwise redirects to absolute path or full link
             this.response.statusCode = 302;
             this.response.setHeader('Location', `${this.otherwise}`);
             return;
         }
+
         this[ `${this.path === '/' ? 'default' : 'error'}Path` ]();
     }
     defaultPath() {
@@ -154,6 +156,8 @@ class BaseRequest {
 
         // Load page not found
         let fourOhFour = $templateLoader('404.html');
+
+        console.log(fourOhFour);
 
         this.response.writeHead(404, DEFAULT_CONTENT_TYPE);
         this.response.write(fourOhFour);
