@@ -1,14 +1,13 @@
 TODAY
 =======
--- TODO fix Config and Server paths by deleting and reinstantiating
--- TODO static dirs serving
-    -- start by applying site styles to the index and 404 pages
-    -- move css
--- TODO have web server live reload
 -- TODO site
+-- TODO have web server live reload
 -- TODO Controller
--- TODO module dependencies
--- TODO tests/gulp
+    -- Define the request object
+    -- Make a module you can require into the controller
+-- TODO module dependencies --> how do high level dependencies get required in?
+-- TODO use broccoli, mimosa, brunch, or something other than gulp
+    -- tests/gulp
 -- TODO clean up
 
 -- END OF DEV PREVIEW ONE, May 15th
@@ -42,12 +41,13 @@ PROJECT
 -- TODO require all modules as 'Provider'
 -- TODO write broadcaster
 -- TODO caching
--- TODO use broccoli, mimosa, brunch, or something other than gulp
+-- TODO do something with favicon requests
 
-TEMPLATES
+TEMPLATES/STATIC
 =============
 -- TODO use template cache or handlebars for templating
 -- TODO serve with script
+-- TODO mime types
 
 DB
 =============
@@ -60,3 +60,4 @@ SYSTEM
 -- TODO webserver cluster
 -- TODO make BaseRequest available via an 'application file'
 -- TODO how would one authenticate
+    -- XSRF validation

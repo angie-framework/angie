@@ -1,5 +1,7 @@
 'use strict';
 
+import $log from '../util/$LogProvider';
+
 let cache;
 
 global.__AngieCache__ = cache = {};
@@ -8,10 +10,10 @@ class $CacheFactory {
     constructor(key) {
         this.key = key;
         if (!cache[key]) {
-            cache[key] = {};
+            this.cache = cache[key] = {};
         } else {
-            console.error('ANGIE [Error]: Cache already exists');
-            process.exit(1);
+            $log.warn(`Cache "${key}" already exists`);
+            this.cache = cache[key];
         }
         return this;
     }

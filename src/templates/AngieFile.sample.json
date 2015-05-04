@@ -5,10 +5,11 @@
         }
     },
     "templateDirs": [
-        "static/"
+        "templates/"
     ],
     "staticDirs": [
-
+        "static/"
     ],
-    "dependencies": []
+    "dependencies": [],
+    "cacheStaticAssets": false
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 import BaseDBConnection from './BaseDBConnection';
+import $log from '../util/$LogProvider';
 import app from '../Angular';
 
 const chalk =           require('chalk'),
@@ -18,7 +19,7 @@ export default class MySqlConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
+            $log.error('wat?');
             p.exit(1);
         } else if (!this.connection) {
             let me = this;
@@ -31,7 +32,7 @@ export default class MySqlConnection extends BaseDBConnection {
                 database: me.db.name
             });
             me.connection.on('error', function(e) {
-                console.log(chalk.red(chalk.bold(`ANGIE: [Error] ${e}`)));
+                $log.error(e);
                 if (me.db.options.hardErrors) {
                     p.exit(1);
                 }
@@ -39,14 +40,13 @@ export default class MySqlConnection extends BaseDBConnection {
         }
     }
     connect() {
-        console.log('Connection');
         let me = this;
         me.connection.connect(function(e) {
             if (e) {
-                console.log(chalk.red(chalk.bold(`ANGIE: [Error] ${e}`)));
+                $log.error(e);
                 process.exit(1);
             }
-            console.log(chalk.green(chalk.bold('ANGIE: [Info] Success')));
+            $log.info('Connection successful');
             me.disconnect();
         });
     }
@@ -55,15 +55,13 @@ export default class MySqlConnection extends BaseDBConnection {
     }
     query(q) {
         let me = this;
-        console.log(q);
         return new Promise(function(resolve, reject) {
             me.connection.query(q, function(e, r, f) {
 
                 if (e) {
-                    console.log('x', e);
+                    $log.error(e);
                     reject(e);
                 } else {
-                    console.log('came back');
                     resolve({
                         data: r//,
                         //fields: fields
@@ -76,7 +74,7 @@ export default class MySqlConnection extends BaseDBConnection {
             // });
             return d;
         }, function(e) {
-            console.log(chalk.red(chalk.bold(`ANGIE: [Error] ${e}`)));
+            $log.error(e);
             if (me.db.options.hardErrors) {
                 p.exit(1);
             }
@@ -87,7 +85,8 @@ export default class MySqlConnection extends BaseDBConnection {
         let me = this;
 
         if (checkConfig(me.config.databases[database])) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: Invalid DB configuration')));
+            $log.error('Invalid database configuration');
+            p.exit(1);
         }
 
         super.sync();
@@ -99,23 +98,18 @@ export default class MySqlConnection extends BaseDBConnection {
         //         database: ''
         //     });
 
-        //console.log('starting create');
 
         //tmpConnection.connect().query(
         //    `CREATE SCHEMA ${this.db.name};`,
             // function(e, r) {
             //     if (e) {
-            //         console.log(e);
             //         process.exit(1);
-            //     }
-            //     console.log(this);
             //me.connect();
                 //var proms = [];
         this.connect();
                 // me.models.forEach(function(v) {
                 //     let modelInstance = new app.Models[v],
                 //         tableName = modelInstance.name || v;
-                //     console.log(tableName);
                 //     //proms.push(
                 //         me.query(
                 //             `CREATE TABLE \`${me.db.name}\`.\`${tableName}\`` +

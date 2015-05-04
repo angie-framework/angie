@@ -2,7 +2,7 @@
 
 import $log from './util/$LogProvider';
 
-const exec =          require('child_process').exec,
+const fs =            require('fs'),
       chalk =         require('chalk');
 
 const p = process;
@@ -13,29 +13,22 @@ export default class Config {
     constructor() {
         if (Object.keys(config).length === 0) {
             return new Promise(function(resolve, reject) {
-                exec(`find . -name 'AngieFile.json' -exec cat {} \\;`,
-                    function(e, stdout) {
-                        if (stdout) {
-                            resolve(stdout);
-                        } else {
-                            reject(e);
-                        }
-                    }
-                );
+
+                // TODO different cases of AngieFile, angiefile, angieFile, Angiefile, angie_file
+                try {
+                    resolve(fs.readFileSync('AngieFile.json', 'utf8'));
+                } catch(e) {
+                    reject(e);
+                }
             }).then(function(stdout) {
                 try {
                     config = JSON.parse(stdout);
                 } catch(e) {
-                    $log.error(`${e}`);
+                    $log.error(e);
                     p.exit(1);
                 }
             }, function(e) {
-                config = {};
-                if (e) {
-                    $log.error(`${e}`);
-                } else {
-                    $log.error('No AngieFile Found.');
-                }
+                $log.error(e);
                 p.exit(1);
             });
         } else {

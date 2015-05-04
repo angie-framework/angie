@@ -1,27 +1,21 @@
 'use strict';
 
-const p =       process,
-    chalk =     require('chalk'),
-    mkdirp =    require('mkdirp'),
-    fs =        require('fs'),
-    util =      require('util');
+import $log from '../$LogProvider';
+
+const mkdirp =    require('mkdirp'),
+      fs =        require('fs'),
+      util =      require('util');
+
+const p = process;
 
 export default function createProject(args) {
     let name = args.name;
 
     if (!name) {
-        console.log(
-            chalk.bold(
-                chalk.red('ANGIE [Error]: No Project Name Specified.')
-            )
-        );
+        $log.error('No project name specified');
         p.exit(1);
     } else if (!/([A-z]+)/.test(name)) {
-        console.log(
-            chalk.bold(
-                chalk.red('ANGIE [Error]: Invalid Project name: must be all letters.')
-            )
-        );
+        $log.error('Invalid project name: must be all letters');
         p.exit(1);
     }
 
@@ -37,15 +31,12 @@ export default function createProject(args) {
         fs.mkdirSync(makeDir);
         fs.mkdirSync(makeSub);
 
-        // TODO do you want to move static, templates, AngieFile up one directory?
         [
             'controllers',
             'models',
             'directives',
             'configs',
-            'services',
-            'static',
-            'templates'
+            'services'
         ].forEach(function(v) {
             fs.mkdirSync(`${makeSub}/${v}`);
         });
@@ -56,12 +47,7 @@ export default function createProject(args) {
             fs.mkdirSync(`${makeDir}/${v}`);
         });
     } catch(e) {
-        console.log(
-            chalk.bold(
-                chalk.red('ANGIE [Error]: Project directory already exists.')
-            )
-        );
-
+        $log.error('Project directory already exists');
         p.exit(1);
     } finally {
         let template = fs.readFileSync(
@@ -76,8 +62,7 @@ export default function createProject(args) {
         );
     }
 
-    process.exit(0);
+    p.exit(0);
 }
 
 // TODO create with . for settings in the same directory
-// TODO do we need instances?

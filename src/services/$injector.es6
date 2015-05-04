@@ -1,5 +1,7 @@
 'use strict';
 
+import $log from '../util/$LogProvider';
+
 const chalk =       require('chalk');
 
 const $injector = {
@@ -11,9 +13,9 @@ const $injector = {
             if (typeof provision === 'function' || typeof provision === 'object') {
                 providers.push(provision);
             } else {
-                console.log(chalk.bold(chalk.red(
+                $log.error(
                     `Angie: [Error] Cannot find ${name} <-- ${name}Provider`
-                )));
+                );
             }
         }
         return providers;

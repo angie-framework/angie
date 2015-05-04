@@ -1,6 +1,7 @@
 'use strict'
 
 import BaseDBConnection from './BaseDBConnection';
+import $log from '../util/$LogProvider';
 // import app from '../Angular';
 
 const chalk =           require('chalk'),
@@ -16,7 +17,7 @@ export default class FirebaseConnection extends BaseDBConnection {
     constructor(database = 'default') {
         super();
         if (checkConfig(this.config.databases[database])) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
+            $log.error('wat?');
             p.exit(1);
         } else {
             this.db = new Firebase(this.config.databases[database].url);

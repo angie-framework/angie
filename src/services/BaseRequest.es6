@@ -8,11 +8,16 @@ import {$templateCache, $templateLoader} from './$TemplateCache';
 import $compile from './$Compile';
 
 const DEFAULT_CONTENT_TYPE = {
-    'Content-Type': 'text/html'
-};
+          'Content-Type': 'text/plain'
+      },
+      RESPONSE_HEADER_MESSAGES = {
+          '200': 'OK',
+          '404': 'File Not Found',
+          '500': 'Invalid Request'
+      };
 
 class BaseRequest {
-    constructor(path, req, res) {
+    constructor(path, request, response) {
 
         // Cases:
         // Controller & templatePath (default) --> compiles template in scope
@@ -28,9 +33,21 @@ class BaseRequest {
         // Define URI
         this.path = path;
 
-        // TODO process request here
-        this.request = new $Request(req);
-        this.response = res;
+        // Shortcut to set and receive the request object
+        this.request = new $Request(request).request;
+        this.response = response;
+
+        // Parse out the response content type
+        let contentType = this.request.headers['Content-Type'] ||
+            this.request.headers.accept || 'text/plain';
+        if (contentType.split(',').length) {
+            contentType = contentType.split(',')[0];
+        }
+
+        this.responseContentType = contentType;
+        this.responseHeaders = {
+            'Content-Type': this.responseContentType
+        };
 
         // Grab the routes and the otherwise
         this.routes = $routeProvider.fetch().routes;
@@ -43,6 +60,7 @@ class BaseRequest {
         // If the route exists:
         if (this.routes[this.path]) {
             this.route = this.routes[this.path];
+
             this.controllerPath();
         } else {
             this.otherPath();
@@ -117,12 +135,20 @@ class BaseRequest {
             };
         } catch(e) {
             $log.error(e);
-            this.response.writeHead(500, DEFAULT_CONTENT_TYPE);
-            this.response.write('<h1>Invalid Request</h1>');
+            this.response.writeHead(
+                500,
+                RESPONSE_HEADER_MESSAGES['500'],
+                this.responseHeaders
+            );
+            this.response.write(`<h1>${RESPONSE_HEADER_MESSAGES['500']}</h1>`);
             return;
         }
 
-        this.response.writeHead(200, this.responseType);
+        this.response.writeHead(
+            200,
+            RESPONSE_HEADER_MESSAGES['200'],
+            this.responseHeaders
+        );
         this.response.write(this.responseContent);
     }
     otherPath() {
@@ -149,7 +175,11 @@ class BaseRequest {
         }
 
         // Write the response
-        this.response.writeHead(200, DEFAULT_CONTENT_TYPE);
+        this.response.writeHead(
+            200,
+            RESPONSE_HEADER_MESSAGES['200'],
+            this.responseHeaders
+        );
         this.response.write(index);
     }
     errorPath() {
@@ -157,7 +187,11 @@ class BaseRequest {
         // Load page not found
         let fourOhFour = $templateLoader('404.html');
 
-        this.response.writeHead(404, DEFAULT_CONTENT_TYPE);
+        this.response.writeHead(
+            404,
+            RESPONSE_HEADER_MESSAGES['404'],
+            this.responseHeaders
+        );
         this.response.write(fourOhFour);
     }
 }

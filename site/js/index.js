@@ -12,8 +12,8 @@
             templateUrl: 'html/features.html'
         }).when('/quickstart', {
             templateUrl: 'html/quickstart.html'
-        }).when('/docs', {
-            templateUrl: 'html/docs.html'
+        // }).when('/docs', {
+        //     templateUrl: 'html/docs.html'
         }).when('/contributors', {
             templateUrl: 'html/contributors.html'
         }).otherwise('/default');

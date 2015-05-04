@@ -7,7 +7,11 @@ import $log from '../util/$LogProvider';
 const fs =      require('fs');
 
 const p = process,
-      ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`;
+      config = Config.fetch(),
+      ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`,
+
+      // TODO do you want to replace this with another dir?
+      ANGIE_STATIC_DIRS = [ `${__dirname}/../../site/css` ];
 
 class $TemplateCache extends $cacheFactory {
     constructor() {
@@ -23,12 +27,12 @@ class $TemplateCache extends $cacheFactory {
     }
 }
 
-function $templateLoader(url) {
+function $templateLoader(url, type = 'template') {
     let config = Config.fetch(),
 
         // Clone them template dirs
         templateDirs = (
-            config.templateDirs.slice() || []
+            config[ `${type}Dirs` ].slice() || []
         ),
         cached = false,
         template;
@@ -38,12 +42,15 @@ function $templateLoader(url) {
     }
 
     // Add the default Angie template dirs to the existing config template dirs
-    templateDirs.push(ANGIE_TEMPLATE_DIR);
+    if (type === 'template') {
+        templateDirs.push(ANGIE_TEMPLATE_DIR);
+    } else if (type === 'static') {
+        templateDirs = templateDirs.concat(ANGIE_STATIC_DIRS);
+    }
 
-    // TODO right now the behavior is that this returns the first template it
-    // finds, is this correct?
+    // Returns the first matching template by name
     templateDirs.some(function(v) {
-        if (v !== ANGIE_TEMPLATE_DIR) {
+        if (v !== ANGIE_TEMPLATE_DIR && ANGIE_STATIC_DIRS.indexOf(v) === -1) {
             if (v.indexOf(p.cwd()) === -1) {
                 if (v.charAt(0) !== '/') {
                     v = `${p.cwd()}/${v}`;
@@ -57,6 +64,8 @@ function $templateLoader(url) {
         }
 
         try {
+
+            // TODO you could replace this with a deep find, but it would be slower
             template = fs.readFileSync(`${v}${url}`, 'utf8');
             return true;
         } catch(e) {
@@ -66,10 +75,12 @@ function $templateLoader(url) {
 
     if (!template) {
         return false;
-    } else {
+    } else if (type === 'template') {
         $templateCache.put(url, template);
-        return template;
+    } else if (config.cacheStaticAssets !== true) {
+        new $cacheFactory('staticAssets').put(url, template);
     }
+    return template;
 }
 
 let $templateCache = new $TemplateCache();

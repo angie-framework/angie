@@ -63,7 +63,9 @@ class Angular {
             try {
                 files = fs.readdirSync(`${p.cwd()}/${v}`);
                 files.forEach(function(w) {
-                    proms.push(System.import(w));
+
+                    // TODO do this with System
+                    require(`${p.cwd()}/src/${v}/${w}`);
                 });
             } catch(e) {} // Moot error, I don't really care if you muss with things
             try {
