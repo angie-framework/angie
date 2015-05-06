@@ -3,14 +3,28 @@
 export default function compile(t) {
 
     // TODO do you want to use triple brackets here?
-    const template = t,
-          listeners = template.match(/\{\{\{.*\}\}\}/g);
+    let template = t,
+        listeners = template.match(/\{\{.*\}\}/g);
 
-    return function template (scope) {
-        listeners.forEach(function(v) {
-            // template = template.replace(v, '').trim();
+    // TODO this is pretty basic for now, does not handle expressions
+    // TODO expressions
+    // TODO controllers & directives
+    // TODO when you fix scope, fix this as well
+    return function templateCompile (scope) {
+        listeners.forEach(function(listener) {
+            let val,
+                parsedListener = listener.replace(/(\{|\})/g, '').trim();
+
+            try {
+                val = eval(`scope.${parsedListener}`);
+            } catch(e) {} // Moot error, if it's not there, try something else
+
+            if (val) {
+                template = template.replace(listener, val);
+                return;
+            }
         });
-        return template
+        return template;
     }
 };
 

@@ -2,7 +2,8 @@
 
 import {app} from '../Angular';
 import $log from '../util/$LogProvider';
-import {$Request} from './$Request';
+import $Request from './$Request';
+import {$Response} from './$Responses';
 import {$routeProvider} from './$RouteProvider';
 import {$templateCache, $templateLoader} from './$TemplateCache';
 import $compile from './$Compile';
@@ -36,6 +37,9 @@ class BaseRequest {
         // Shortcut to set and receive the request object
         this.request = new $Request(request).request;
         this.response = response;
+
+        // Make the response object available to the API
+        new $Response(response);
 
         // Parse out the response content type
         let contentType = this.request.headers['Content-Type'] ||
@@ -72,6 +76,7 @@ class BaseRequest {
 
         let controllerName = this.route.Controller;
 
+        // Get controller and compile scope
         if (controllerName && app.Controllers[controllerName]) {
             let controller = app.Controllers[controllerName];
             try {
@@ -81,21 +86,16 @@ class BaseRequest {
                     args = str.match(/(function.*\(.*\))/g)[0]
                         .replace(/(function\s+\(|\))/g, '').trim().split(','),
                     providers = app.services.$injector.get.apply(app, args);
-                console.log(providers);
                 this.contoller = controller.apply(app, providers);
             } catch(e) {
                 this.controller = new controller();
             }
         } else {
-
+            $log.error(`No Controller named "${controllerName}" could be found`);
             // TODO controller was not found despite being defined
         }
 
-        // TODO get scope
-        // ok, our controller has a scope!
-
-        // TODO compile template with scope
-        // is there a template?
+        // Find and load template
         try {
             if (
                 this.route.template &&
@@ -103,20 +103,29 @@ class BaseRequest {
                 this.route.template.length > 0
             ) {
                 this.template = this.route.template;
+
             } else if (this.route.templatePath) {
                 this.template = $templateCache.get(this.route.templatePath);
-
-                if (!this.template) {
-                    this.errorPath();
-                    return;
-                }
             }
 
+            // If there is a template defined we should have a template
+            if (
+                (this.route.template || this.route.templatePath) &&
+                !this.template
+            ) {
+                this.errorPath();
+                return;
+            }
+
+            // TODO ^^ Still need to check here whether there is a template?
             if (this.template) {
 
                 // TODO render the template into the resoponse
+                //this.responseContent = require('../../bower_components/angularSrc/src/ng/compile')(this.template)({});
+                this.responseContent = $compile(this.template)(app.services.$scope);
                 //this.reponseContent = $compile(this.template)(scope);
-                this.responseContent = this.template;
+                //this.responseContent = this.template;
+                console.log(this.responseContent);
             }
 
             // TODO See if any views have this Controller associated
@@ -124,9 +133,14 @@ class BaseRequest {
                 if (directive.Controller && directive.Controller === controllerName) {
 
                     // TODO move instances of parsing to injector
+
                     // TODO call that view link with injected scope and services & template
                     // directive.link();
+
+                    // TODO if you include a template here, it should be favored
                     if (directive.type === 'APIView') {
+
+                        // TODO APIViews cannot have templates, all templates are trashed
                     } else {
 
                     }

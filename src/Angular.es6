@@ -4,8 +4,8 @@ import Config from './Config';
 import {$routeProvider} from './services/$RouteProvider';
 import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
-import {$compile} from './services/$Compile';
-import {$request} from './services/$Request';
+import $compile from './services/$Compile';
+import util from './util/util';
 import $log from './util/$LogProvider';
 
 const chalk =       require('chalk'),
@@ -98,6 +98,8 @@ class Angular {
     }
 }
 
+Angular = util.extend(Angular, util);
+
 function __register__(component, name, obj) {
     if (this[component]) {
         this.__registry__[name] = component;
@@ -125,11 +127,11 @@ let app = new Angular(config.dependencies).Model('UserModel', function() {
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
 })
 .service('$routeProvider', $routeProvider)
+.service('$compile', $compile)
 .service('$logProvider', $log)
 .service('$injector', $injector)
 .service('$scope', {})
-.service('$templateCache', $templateCache)
-.service('$request', $request);
+.service('$templateCache', $templateCache);
 
 global.app = app;
 global.angular = Angular;

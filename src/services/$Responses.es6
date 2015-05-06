@@ -1,7 +1,20 @@
 'use strict';
 
-let $responses = {
+class $Response {
+    constructor(response) {
+        this.response = response;
+        app.service('$response', this.response);
+    }
+}
 
-};
 
-export default $responses;
+// TODO use these classes to format responses instead of BaseRequest
+class $APIResponse extends $Response {
+
+}
+
+class $TemplateResponse extends $Response {
+
+}
+
+export {$Response};

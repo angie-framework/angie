@@ -8,22 +8,33 @@ const $injector = {
     get: function() {
         let providers = [];
         for (let i = 0; i < arguments.length; ++i) {
-            console.log(arguments[i]);
-            let name = arguments[i],
-                provision = this[this.__registry__[name]][name];
+            let arg = arguments[i].trim(),
+                provision;
+
+            try {
+                provision = this[this.__registry__[arg]][arg];
+            } catch (e) {
+                $$providerErr(e, arg);
+            }
+
             if (typeof provision === 'function' || typeof provision === 'object') {
                 providers.push(provision);
             } else {
-                $log.error(
-                    `Angie: [Error] Cannot find ${name} <-- ${name}Provider`
-                );
+                $$providerErr(null, arg);
             }
         }
-        console.log(providers);
         return providers;
     }
 };
 
+function $parse(s) {}
+
+function $$providerErr(e, arg) {
+    $log.error(`Cannot find ${arg} <-- ${arg}Provider ${e}`);
+    p.exit(1);
+}
+
 export default $injector;
 
 // TODO we can still do this better
+// TODO this should probably include a function that parses the arguments as well

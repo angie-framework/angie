@@ -1,12 +1,14 @@
 'use strict';
 
-let $request = {};
+import {app} from '../Angular';
+import util from '../util/util';
 
-class $Request {
+const url = require('url');
+
+export default class $Request {
     constructor(request) {
-        $request = this.request = request;
-        return this;
+        this.request = request;
+        this.request.query = url.parse(request.url, true).query;
+        app.service('$request', this.request);
     }
 }
-
-export {$Request, $request};

@@ -1,8 +1,5 @@
 TODAY
 =======
--- TODO Controller
-    -- Define the request object
-    -- Make a module you can require into the controller
 -- TODO module dependencies --> how do high level dependencies get required in?
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
@@ -12,12 +9,11 @@ TODAY
 
 -- END OF DEV PREVIEW ONE, May 15th
 
-
--- TODO $Compile (template)
--- TODO Template View
 -- TODO fields --> install into model
     -- test with sample model
-
+-- TODO Mysql, sqlite ORM connections
+-- TODO Template View, APIView (Views/Directives)
+-- TODO how do you handle escaping templates that the user wants to compile on the FE?
 -- TODO add firebase connector next so that you can serve JSON responses
     -- TODO establish connection
     -- TODO sync
@@ -26,19 +22,14 @@ TODAY
     -- TODO filter records
     -- TODO update records
     -- TODO delete records
--- TODO API View
-
 -- TODO route parsing for variables
-
 -- TODO renderers/serializers
-
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
 
 PROJECT
 ============
--- TODO require all modules as 'Provider'
 -- TODO write broadcaster
 -- TODO caching
 -- TODO do something with favicon requests

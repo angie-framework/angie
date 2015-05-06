@@ -20,7 +20,6 @@ export default function createInstance(n) {
 
             let config = Config.fetch();
 
-            console.log(config);
             config.instances.push(n);
         }
     });

@@ -2,6 +2,7 @@
 
 import BaseDBConnection from './BaseDBConnection';
 import app from '../Angular';
+import $log from '../util/$LogProvider';
 
 const chalk =         require('chalk'),
       sqlite3 =       require('sqlite3').verbose(),
@@ -15,7 +16,7 @@ export default class SqliteConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            //console.log(chalk.bold(chalk.red('ANGIE [Error]: wut?')));
+            $log.error('wut?')
             process.exit(1);
         } else if (!this.db) {
             //try {
@@ -28,7 +29,6 @@ export default class SqliteConnection extends BaseDBConnection {
                 // this.db.serialize(function() {
                 //
                 //     //this.db.run('CREATE TABLE lorem');
-                //     console.log(chalk.bold(chalk.green('ANGIE [Log]: Connected')));
                 // });
             //}
         }
@@ -39,9 +39,9 @@ export default class SqliteConnection extends BaseDBConnection {
     sync(database = 'default') {
         let filename = this.config.databases[database].name;
         if (checkConfig(this.config.databases[database]) || !filename) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: Invalid DB configuration')));
+            $log.error('Invalid DB configuration');
         } else if (!/\.db/.test(filename)) {
-            console.log(chalk.bold(chalk.red('ANGIE [Error]: Invalid filename')));
+            $log.error('Invalid filename');
         }
 
         super.sync();
@@ -66,7 +66,6 @@ export default class SqliteConnection extends BaseDBConnection {
 
         // TODO don't serialize each time
         this.db.serialize(function() {
-            console.log(app.__registry__.__models__);
             this.models.forEach(function(v) {
 
                 // Collect models from angular app
