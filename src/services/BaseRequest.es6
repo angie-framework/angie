@@ -79,11 +79,10 @@ class BaseRequest {
                 // TODO we may want to move all instances of this to $injector
                 let str = controller.toString(),
                     args = str.match(/(function.*\(.*\))/g)[0]
-                        .replace(/(function\s+\(|\))/g, '').trim().split(',');
-                this.contoller = controller.apply(
-                    app,
-                    app.services.$injector.get.apply(app, args)
-                );
+                        .replace(/(function\s+\(|\))/g, '').trim().split(','),
+                    providers = app.services.$injector.get.apply(app, args);
+                console.log(providers);
+                this.contoller = controller.apply(app, providers);
             } catch(e) {
                 this.controller = new controller();
             }

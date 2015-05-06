@@ -6,9 +6,10 @@ const chalk =       require('chalk');
 
 const $injector = {
     get: function() {
-        let providers = []
-        for (let key in arguments) {
-            let name = arguments[key],
+        let providers = [];
+        for (let i = 0; i < arguments.length; ++i) {
+            console.log(arguments[i]);
+            let name = arguments[i],
                 provision = this[this.__registry__[name]][name];
             if (typeof provision === 'function' || typeof provision === 'object') {
                 providers.push(provision);
@@ -18,6 +19,7 @@ const $injector = {
                 );
             }
         }
+        console.log(providers);
         return providers;
     }
 };

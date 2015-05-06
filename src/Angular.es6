@@ -5,6 +5,7 @@ import {$routeProvider} from './services/$RouteProvider';
 import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
 import {$compile} from './services/$Compile';
+import {$request} from './services/$Request';
 import $log from './util/$LogProvider';
 
 const chalk =       require('chalk'),
@@ -122,19 +123,13 @@ let app = new Angular(config.dependencies).Model('UserModel', function() {
 }).config(function($templateCache) {
     $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
-}).service(
-    '$routeProvider',
-    $routeProvider
-).service(
-    '$logProvider',
-    $log
-).service(
-    '$injector',
-    $injector
-).service('$scope', {}).service(
-    '$templateCache',
-    $templateCache
-);
+})
+.service('$routeProvider', $routeProvider)
+.service('$logProvider', $log)
+.service('$injector', $injector)
+.service('$scope', {})
+.service('$templateCache', $templateCache)
+.service('$request', $request);
 
 global.app = app;
 global.angular = Angular;
