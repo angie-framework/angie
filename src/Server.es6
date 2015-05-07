@@ -1,6 +1,7 @@
 'use strict';
 
-import {app, angular} from './Angular';
+import angular from './Angular';
+import app from './Base';
 import {$cacheFactory} from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
 import {BaseRequest, DEFAULT_CONTENT_TYPE} from './services/BaseRequest';

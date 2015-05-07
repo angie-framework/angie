@@ -1,12 +1,8 @@
 'use strict';
 
 import Config from './Config';
-import {$routeProvider} from './services/$RouteProvider';
-import $injector from './services/$injector';
-import {$templateCache} from './services/$TemplateCache';
-import $compile from './services/$Compile';
 import util from './util/util';
-import $log from './util/$LogProvider';
+
 
 const chalk =       require('chalk'),
       fs =          require('fs');
@@ -14,8 +10,9 @@ const chalk =       require('chalk'),
 const p = process,
       config = Config.fetch();
 
-class Angular {
+let angular = class Angular {
     constructor(dependencies = []) {
+        this.constants = {};
         this.configs = [];
         this.services = {};
         this.Controllers = {};
@@ -30,6 +27,10 @@ class Angular {
             });
         }
 
+        return this;
+    }
+    constant(name, obj) {
+        __register__.call(this, 'constants', name, obj);
         return this;
     }
     config(fn) {
@@ -98,7 +99,7 @@ class Angular {
     }
 }
 
-Angular = util.extend(Angular, util);
+angular = util.extend(angular, util);
 
 function __register__(component, name, obj) {
     if (this[component]) {
@@ -107,33 +108,7 @@ function __register__(component, name, obj) {
     }
 }
 
-// TODO move this into it's own module
-let app = new Angular(config.dependencies).Model('UserModel', function() {
-    // this.username = new CharField({
-    //     maxLength: 35,
-    //     defaultValue: 'test'
-    // });
-    this.name = 'angie_users';
-    this.save = function() {
-        // TODO this would override the base, but using an es6 class will not
-    };
-    return this;
-}).Model('MigrationsModel', class MigrationsModel {
-    constructor() {
-        this.name = 'angie_migrations';
-    }
-}).config(function($templateCache) {
-    $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
-    $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
-})
-.service('$routeProvider', $routeProvider)
-.service('$compile', $compile)
-.service('$logProvider', $log)
-.service('$injector', $injector)
-.service('$scope', {})
-.service('$templateCache', $templateCache);
+//global.app = app;
+global.angular = angular;
 
-global.app = app;
-global.angular = Angular;
-
-export {app, Angular as angular};
+export default angular;

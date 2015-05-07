@@ -32,11 +32,12 @@ export default function createProject(args) {
         fs.mkdirSync(makeSub);
 
         [
+            'constants',
+            'configs',
+            'services',
             'controllers',
             'models',
             'directives',
-            'configs',
-            'services'
         ].forEach(function(v) {
             fs.mkdirSync(`${makeSub}/${v}`);
         });

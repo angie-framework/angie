@@ -1,6 +1,6 @@
 'use strict';
 
-import {app} from '../Angular';
+import app from '../Base';
 import $log from '../util/$LogProvider';
 import $Request from './$Request';
 import {$Response} from './$Responses';
@@ -8,6 +8,8 @@ import {$routeProvider} from './$RouteProvider';
 import {$templateCache, $templateLoader} from './$TemplateCache';
 import $compile from './$Compile';
 
+
+// TODO move these out to a constant
 const DEFAULT_CONTENT_TYPE = {
           'Content-Type': 'text/plain'
       },

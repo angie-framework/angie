@@ -1,7 +1,12 @@
 TODAY
 =======
+-- TODO app and angular need to live in different files for ease of import!!!
+    -- fix routing
+    -- fix live reload webserver
 -- TODO add constants
+    -- test
 -- TODO site
+    -- ng animate
 -- TODO module dependencies --> how do high level dependencies get required in?
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
@@ -23,6 +28,13 @@ TODAY
     -- TODO update records
     -- TODO delete records
 -- TODO route parsing for variables
+-- TODO tests
+-- TODO cleanup
+
+-- END OF DEV PREVIEW TWO
+
+-- TODO Windows
+-- TODO Load modules outside of specified folders
 -- TODO renderers/serializers
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs

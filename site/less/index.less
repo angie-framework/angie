@@ -4,13 +4,20 @@
 @import 'shared';
 @import 'prism';
 
+.br {
+    height:1.5em;
+}
+
 .content {
-    margin:0.25em 0.25em 0.75em 0.25em;
+    margin:0.25em 0.25em 1em 0.25em;
     .font(@f1, 1.1em, 1.5em, @c1);
     display:block;
-    a {
+    a, p {
         display:inline-block;
         color:teal;
+    }
+    &.no-bottom {
+        margin-bottom:0.5em;
     }
 }
 

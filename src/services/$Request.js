@@ -1,6 +1,6 @@
 'use strict';
 
-import {app} from '../Angular';
+import app from '../Base';
 import util from '../util/util';
 
 const url = require('url');
