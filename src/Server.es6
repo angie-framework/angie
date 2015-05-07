@@ -9,34 +9,31 @@ import $log from './util/$LogProvider';
 const http =        require('http'),
       url =         require('url'),
       path =        require('path'),
-      fs =          require('fs'),
-      chalk =       require('chalk');
+      chalk =       require('chalk'),
+      watch =       require('node-watch');
 
 const p = process;
 
 let args = p.argv,
     node = args.indexOf('node'),
-    firstrun = true;
+    firstrun = true,
+    port;
 
 // Remove trivial arguments
 if (node > -1) {
     args.splice(node, 1);
 }
 
-function restart(runserver, port) {
-    try {
-        runserver.close(function() {
-            $log.error(`Server on port ${port} interrupted.`);
-            server({ port: port });
-        });
-    } catch(e) {
-        $log.error(e);
-    }
+function restart() {
+    angular.bootstrap().then(function() {
+        $log.info(`Application files reloaded; Still serving on port ${port}`);
+    });
 }
 
 export default function server(args) {
-    let port = !isNaN(+args.port) ? args.port : 9000,
-        runserver;
+    let runserver;
+
+    port = !isNaN(+args.port) ? args.port : 9000;
 
     if (firstrun) {
         $log.warn('"server" not suitable for production use.');
@@ -93,6 +90,8 @@ export default function server(args) {
             }
 
             response.end();
+            request.connection.end();
+            request.connection.destroy;
         }).listen(+port);
     });
 
@@ -103,8 +102,10 @@ export default function server(args) {
                     persistent: true,
                     recursive: true
                 };
-            fs.watch(p.cwd(), (() => restart(runserver, port)), restartObj);
-            fs.watch(__dirname, (() => restart(runserver, port)), restartObj);
+            watch([
+                p.cwd(),
+                __dirname
+            ], (() => restart()), restartObj);
         } catch(e) {
             $log.error(e);
         }

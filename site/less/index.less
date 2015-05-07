@@ -2,6 +2,17 @@
 
 @import 'mixins';
 @import 'shared';
+@import 'prism';
+
+.content {
+    margin:0.25em 0.25em 0.75em 0.25em;
+    .font(@f1, 1.1em, 1.5em, @c1);
+    display:block;
+    a {
+        display:inline-block;
+        color:teal;
+    }
+}
 
 .default {
     font-size:1.3em;

@@ -1,7 +1,7 @@
 (function(a) {
     'use strict';
 
-    a.module('angieWebApp', [
+    a.module('ngieWebApp', [
         'ngRoute'
     ]).config(function($routeProvider) {
         $routeProvider.when('/default', {

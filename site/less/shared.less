@@ -5,13 +5,16 @@
 
 @c1: #444;
 @c2: #e54040;
+@c3: #ccc;
+@c4: #dd4a68;
+@c5: #eed900;
 
 * {
     margin:0;
     padding:0;
     box-sizing:border-box;
     font-weight:100;
-    .user-select;
+    .user-select();
 }
 
 html {
@@ -24,7 +27,7 @@ body {
     .dim(700px, auto);
 }
 
-ul, a, span {
+ul, a {
     display:block;
 }
 
@@ -88,7 +91,6 @@ li {
 }
 
 a,
-span,
 ol li {
     font-family:@f1;
     color:@c1;
@@ -98,12 +100,7 @@ ol, span {
     margin-bottom:0.75em;
 }
 
-span {
+pre,
+pre code {
     margin:0.25em 0.25em 0.75em 0.25em;
-    font-size:1.1em;
-    line-height:1.5em;
-    a {
-        display:inline-block;
-        color:teal;
-    }
 }

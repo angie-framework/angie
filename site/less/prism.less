@@ -1,0 +1,29 @@
+// main: index.less
+
+pre,
+pre code[class*='language-'] {
+    padding:0;
+    .user-select(initial);
+    .border-radius(2px);
+    font-size:0.85em;
+    font-weight:100;
+    color:white;
+    background-color:@c1;
+    span {
+        font-weight:100;
+    }
+    .token {
+        &.keyword {
+            color:lighten(teal, 10%);
+        }
+        &.string {
+            color:@c5;
+        }
+        &.function {
+            color:@c4;
+        }
+        &.punctuation {
+            color:@c3;
+        }
+    }
+}

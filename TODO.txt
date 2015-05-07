@@ -1,10 +1,10 @@
 TODAY
 =======
+-- TODO add constants
+-- TODO site
 -- TODO module dependencies --> how do high level dependencies get required in?
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
--- TODO site
--- TODO have web server live reload
 -- TODO clean up
 
 -- END OF DEV PREVIEW ONE, May 15th
