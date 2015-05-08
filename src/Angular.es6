@@ -3,12 +3,14 @@
 import Config from './Config';
 import util from './util/util';
 
-
-const chalk =       require('chalk'),
+const System =      require('systemjs'),
+      chalk =       require('chalk'),
       fs =          require('fs');
 
 const p = process,
       config = Config.fetch();
+
+System.transpiler = 'babel';
 
 let angular = class Angular {
     constructor(dependencies = []) {
@@ -54,13 +56,18 @@ let angular = class Angular {
     }
     static noop() {}
     static bootstrap() {
-        let proms = [],
-            files;
+
+        let files;
 
         // Load all of the files from the project
         // TODO also look for ".config." files
         [
-          'controllers', 'directives', 'services', 'models', 'configs'
+            'constants',
+            'configs',
+            'services',
+            'controllers',
+            'models',
+            'directives'
         ].forEach(function(v) {
             try {
                 files = fs.readdirSync(`${p.cwd()}/${v}`);
@@ -80,8 +87,12 @@ let angular = class Angular {
             } catch(e) {} // Moot error, I don't really care if you muss with things
         });
 
-        // Once all of the modules are loaded, run the configs
-        return Promise.all(proms).then(function() {
+        // Import the app
+        // TODO use the System module loader
+        //return System.import(`${__dirname}/Base.es6`).then(function(app) {
+        return new Promise(function(resolve) {
+
+            // Once all of the modules are loaded, run the configs
             app.configs.forEach(function(v) {
                 try {
                     let str = v.toString(),
@@ -95,6 +106,8 @@ let angular = class Angular {
                     new v();
                 }
             });
+
+            resolve();
         });
     }
 }
@@ -108,7 +121,5 @@ function __register__(component, name, obj) {
     }
 }
 
-//global.app = app;
 global.angular = angular;
-
 export default angular;

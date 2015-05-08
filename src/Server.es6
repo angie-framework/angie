@@ -94,6 +94,9 @@ export default function server(args) {
             request.connection.end();
             request.connection.destroy;
         }).listen(+port);
+
+        // Info
+        $log.info(`Serving on port ${port}`);
     });
 
     // Attempt to restart the webserver on change
@@ -114,7 +117,4 @@ export default function server(args) {
 
     // Set firstrun to false
     firstrun = false;
-
-    // Info
-    $log.info(`Serving on port ${port}`);
 }

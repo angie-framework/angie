@@ -84,10 +84,10 @@ class BaseRequest {
             try {
 
                 // TODO we may want to move all instances of this to $injector
-                let str = controller.toString(),
-                    args = str.match(/(function.*\(.*\))/g)[0]
-                        .replace(/(function\s+\(|\))/g, '').trim().split(','),
-                    providers = app.services.$injector.get.apply(app, args);
+                 let str = controller.toString(),
+                     args = str.match(/(function.*\(.*\))/g)[0]
+                         .replace(/(function\s+\(|\)|\s+)/g, '').split(','),
+                     providers = app.services.$injector.get.apply(app, args);
                 this.contoller = controller.apply(app, providers);
             } catch(e) {
                 this.controller = new controller();
@@ -123,11 +123,7 @@ class BaseRequest {
             if (this.template) {
 
                 // TODO render the template into the resoponse
-                //this.responseContent = require('../../bower_components/angularSrc/src/ng/compile')(this.template)({});
                 this.responseContent = $compile(this.template)(app.services.$scope);
-                //this.reponseContent = $compile(this.template)(scope);
-                //this.responseContent = this.template;
-                console.log(this.responseContent);
             }
 
             // TODO See if any views have this Controller associated

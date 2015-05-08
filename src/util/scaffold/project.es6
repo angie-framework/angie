@@ -37,7 +37,7 @@ export default function createProject(args) {
             'services',
             'controllers',
             'models',
-            'directives',
+            'directives'
         ].forEach(function(v) {
             fs.mkdirSync(`${makeSub}/${v}`);
         });

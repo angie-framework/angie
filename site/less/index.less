@@ -19,6 +19,9 @@
     &.no-bottom {
         margin-bottom:0.5em;
     }
+    &:first-of-type {
+        margin-top:0;
+    }
 }
 
 .default {
@@ -33,6 +36,21 @@
         color:teal;
         font-size:1.1em;
     }
+}
+
+.ng-enter,
+.ng-leave {
+    .transition(opacity, 1s);
+}
+
+.ng-enter.ng-enter-active,
+.ng-leave {
+    opacity:1;
+}
+
+.ng-enter,
+.ng-leave.ng-leave-active {
+    opacity:0;
 }
 
 .git-fork-link {

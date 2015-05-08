@@ -2,7 +2,8 @@
     'use strict';
 
     a.module('ngieWebApp', [
-        'ngRoute'
+        'ngRoute',
+        'ngAnimate'
     ]).config(function($routeProvider) {
         $routeProvider.when('/default', {
             templateUrl: 'html/default.html'

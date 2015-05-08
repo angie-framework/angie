@@ -20,11 +20,19 @@
 html {
     .dim(100%);
     border-top:5px solid teal;
+    position:relative;
 }
 
 body {
-    margin:0 auto;
+    margin-left:-350px;
     .dim(700px, auto);
+    .pos(absolute, 0, @5: 50%);
+}
+
+ng-view {
+    padding-bottom:60px;
+    .dim(100%, auto);
+    .pos(absolute, 285px, @5: 0);
 }
 
 ul, a {
@@ -41,6 +49,10 @@ h1, h2, h3 {
 
 h1, h2, ul {
     margin:1.5em 0;
+}
+
+h2:first-of-type {
+    margin-top:0;
 }
 
 h1, h2 {
@@ -100,7 +112,6 @@ ol, span {
     margin-bottom:1em;
 }
 
-pre,
-pre code {
+pre {
     margin:0.25em 0.25em 1.5em 0.25em;
 }

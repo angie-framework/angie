@@ -1,18 +1,15 @@
 TODAY
 =======
--- TODO app and angular need to live in different files for ease of import!!!
-    -- fix routing
-    -- fix live reload webserver
--- TODO add constants
-    -- test
--- TODO site
-    -- ng animate
 -- TODO module dependencies --> how do high level dependencies get required in?
+-- TODO site
+    -- responsive
+    -- footer
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
 -- TODO clean up
 
 -- END OF DEV PREVIEW ONE, May 15th
+    -- blog && site
 
 -- TODO fields --> install into model
     -- test with sample model
@@ -45,6 +42,7 @@ PROJECT
 -- TODO write broadcaster
 -- TODO caching
 -- TODO do something with favicon requests
+-- TODO make site's backend run on Angie
 
 TEMPLATES/STATIC
 =============

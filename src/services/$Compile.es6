@@ -11,19 +11,21 @@ export default function compile(t) {
     // TODO controllers & directives
     // TODO when you fix scope, fix this as well
     return function templateCompile (scope) {
-        listeners.forEach(function(listener) {
-            let val,
-                parsedListener = listener.replace(/(\{|\})/g, '').trim();
+        if (listeners && listeners.length) {
+            listeners.forEach(function(listener) {
+                let val,
+                    parsedListener = listener.replace(/(\{|\})/g, '').trim();
 
-            try {
-                val = eval(`scope.${parsedListener}`);
-            } catch(e) {} // Moot error, if it's not there, try something else
+                try {
+                    val = eval(`scope.${parsedListener}`);
+                } catch(e) {} // Moot error, if it's not there, try something else
 
-            if (val) {
-                template = template.replace(listener, val);
-                return;
-            }
-        });
+                if (val) {
+                    template = template.replace(listener, val);
+                    return;
+                }
+            });
+        }
         return template;
     }
 };

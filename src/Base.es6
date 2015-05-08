@@ -8,6 +8,8 @@ import $log from './util/$LogProvider';
 import $injector from './services/$injector';
 import {$templateCache} from './services/$TemplateCache';
 
+const fs =      require('fs');
+
 let config = Config.fetch(),
     app;
 
@@ -27,8 +29,6 @@ global.app = app = new angular(config.dependencies).Model('UserModel', function(
     constructor() {
         this.name = 'angie_migrations';
     }
-}).constant('test', {
-    test: 'test'
 }).config(function($templateCache) {
     $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
     $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
@@ -37,7 +37,8 @@ global.app = app = new angular(config.dependencies).Model('UserModel', function(
 .service('$compile', $compile)
 .service('$logProvider', $log)
 .service('$injector', $injector)
-.service('$scope', {})
-.service('$templateCache', $templateCache);
+.service('$scope', {
+    $id: 1
+}).service('$templateCache', $templateCache);
 
 export default app;

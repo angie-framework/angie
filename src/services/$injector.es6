@@ -16,14 +16,28 @@ const $injector = {
             } catch (e) {
                 $$providerErr(e, arg);
             }
-
-            if (typeof provision === 'function' || typeof provision === 'object') {
+            if (provision && $injector[`${typeof provision}Check`](provision)) {
                 providers.push(provision);
             } else {
                 $$providerErr(null, arg);
             }
         }
         return providers;
+    },
+    stringCheck(s) {
+        return !!s.length;
+    },
+    objectCheck(o) {
+        return !!Object.keys(o).length;
+    },
+    functionCheck() {
+        return true;
+    },
+    booleanCheck() {
+        return true;
+    },
+    numberCheck(n) {
+        return true;
     }
 };
 
