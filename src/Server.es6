@@ -2,9 +2,9 @@
 
 import angular from './Angular';
 import app from './Base';
-import {$cacheFactory} from './services/$CacheFactory';
+import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
-import {BaseRequest, DEFAULT_CONTENT_TYPE} from './services/BaseRequest';
+import {BaseRequest, DEFAULT_CONTENT_TYPE, RESPONSE_HEADER_MESSAGES} from './services/BaseRequest';
 import $log from './util/$LogProvider';
 
 const http =        require('http'),
@@ -63,7 +63,11 @@ export default function server(args) {
 
                 // If we have an asset at this point, there is little more to do
                 if (asset) {
-                    response.writeHead(200, 'OK', angieResponse.responseHeaders);
+                    response.writeHead(
+                        200,
+                        RESPONSE_HEADER_MESSAGES['200'],
+                        angieResponse.responseHeaders
+                    );
                     response.write(asset);
                     response.end();
                     return;

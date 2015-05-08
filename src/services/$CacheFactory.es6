@@ -17,8 +17,10 @@ class $CacheFactory {
         }
         return this;
     }
-    put(id, obj) {
-        cache[this.key][id] = obj;
+    put(id, obj, replace) {
+        if ((cache[this.key][id] && replace) || !cache[this.key][id]) {
+            cache[this.key][id] = obj;
+        }
         return this;
     }
     get(id) {
@@ -37,4 +39,5 @@ class $CacheFactory {
     }
 }
 
-export {$CacheFactory as $cacheFactory};
+const $cacheFactory = $CacheFactory;
+export default $cacheFactory;

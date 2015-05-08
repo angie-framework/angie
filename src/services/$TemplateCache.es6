@@ -1,7 +1,8 @@
 'use strict';
 
 import Config from '../Config';
-import {$cacheFactory} from './$CacheFactory';
+import app from '../Base';
+import $cacheFactory from './$CacheFactory';
 import $log from '../util/$LogProvider';
 
 const fs =      require('fs');
@@ -83,5 +84,68 @@ function $templateLoader(url, type = 'template') {
     return template;
 }
 
-let $templateCache = new $TemplateCache();
-export {$templateCache, $templateLoader};
+
+// TODO make this work with .css
+function $resourceLoader() {
+
+    // TODO I'm not sure why or how you could call this without a response object
+    const $injector = app.services.$injector,
+          $response = $injector.get('$response');
+
+    if (!$response) {
+        return false;
+    }
+
+    // TODO accepts a string or an array
+    // Options for loading files are:
+        // Inline: loads the script into script tags
+        // Script: attaches the url to the response resource
+    let files = arguments[0];
+
+    const loadStyle = arguments[1] || 'src';
+
+    if (typeof files === 'string') {
+        files = [ files ];
+    }
+
+    files.forEach(function(resource) {
+
+        // Return if not a js file
+        if (!resource.split('.').pop() === 'js') {
+            return;
+        }
+
+        // TODO put this into a template?
+        let asset = '<script type=\'text/javascript\'';
+        if (loadStyle === 'src') {
+            asset += ` src='${resource}'>`;
+        } else {
+            let assetCache = new $cacheFactory('staticAssets'),
+                assetPath = resource.split('/').pop(),
+                staticAsset;
+
+            asset += '>'
+            if (assetCache.get(path)) {
+                staticAsset = assetCache.get(assetPath);
+            } else {
+                staticAsset = $templateLoader(assetPath, 'static');
+            }
+
+            if (staticAsset.length) {
+                asset += staticAsset;
+            }
+        }
+
+        asset += ';</script>';
+
+        let index = $response.__responseContent__.indexOf('</body>');
+        if (index > -1) {
+            $response.__responseContent__.splice(index, 0, asset);
+        } else {
+            $response.__responseContent__ += asset;
+        }
+    });
+}
+
+const $templateCache = new $TemplateCache();
+export {$templateCache, $templateLoader, $resourceLoader};

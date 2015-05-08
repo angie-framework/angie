@@ -6,7 +6,7 @@ import {$routeProvider} from './services/$RouteProvider';
 import $compile from './services/$Compile';
 import $log from './util/$LogProvider';
 import $injector from './services/$injector';
-import {$templateCache} from './services/$TemplateCache';
+import {$templateCache, $resourceLoader} from './services/$TemplateCache';
 
 const fs =      require('fs');
 
@@ -30,8 +30,14 @@ global.app = app = new angular(config.dependencies).Model('UserModel', function(
         this.name = 'angie_migrations';
     }
 }).config(function($templateCache) {
-    $templateCache.put('index.html', fs.readFileSync(__dirname + '/templates/html/index.html'));
-    $templateCache.put('404.html', fs.readFileSync(__dirname + '/templates/html/404.html'));
+    $templateCache.put(
+        'index.html',
+        fs.readFileSync(__dirname + '/templates/html/index.html', 'utf8')
+    );
+    $templateCache.put(
+        '404.html',
+        fs.readFileSync(__dirname + '/templates/html/404.html', 'utf8')
+    );
 })
 .service('$routeProvider', $routeProvider)
 .service('$compile', $compile)
@@ -39,6 +45,7 @@ global.app = app = new angular(config.dependencies).Model('UserModel', function(
 .service('$injector', $injector)
 .service('$scope', {
     $id: 1
-}).service('$templateCache', $templateCache);
+}).service('$templateCache', $templateCache)
+.service('$resourceLoader', $resourceLoader);
 
 export default app;

@@ -1,6 +1,12 @@
 'use strict';
 
+import angular from '../Angular';
+
 export default function compile(t) {
+
+    if (!t) {
+        return angular.noop;
+    }
 
     // TODO do you want to use triple brackets here?
     let template = t,
@@ -13,17 +19,14 @@ export default function compile(t) {
     return function templateCompile (scope) {
         if (listeners && listeners.length) {
             listeners.forEach(function(listener) {
-                let val,
+                let val = '',
                     parsedListener = listener.replace(/(\{|\})/g, '').trim();
 
                 try {
                     val = eval(`scope.${parsedListener}`);
                 } catch(e) {} // Moot error, if it's not there, try something else
 
-                if (val) {
-                    template = template.replace(listener, val);
-                    return;
-                }
+                template = template.replace(listener, val);
             });
         }
         return template;

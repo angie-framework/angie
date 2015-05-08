@@ -38,10 +38,11 @@ class BaseRequest {
 
         // Shortcut to set and receive the request object
         this.request = new $Request(request).request;
-        this.response = response;
 
         // Make the response object available to the API
         new $Response(response);
+
+        this.response = app.services.$response;
 
         // Parse out the response content type
         let contentType = this.request.headers['Content-Type'] ||
@@ -59,7 +60,7 @@ class BaseRequest {
         this.routes = $routeProvider.fetch().routes;
         this.otherwise = $routeProvider.fetch().otherwise;
 
-        this.responseContent = '';
+        this.responseContent = this.response.__responseContent__ = '';
     }
     route() {
 
@@ -88,7 +89,8 @@ class BaseRequest {
                      args = str.match(/(function.*\(.*\))/g)[0]
                          .replace(/(function\s+\(|\)|\s+)/g, '').split(','),
                      providers = app.services.$injector.get.apply(app, args);
-                this.contoller = controller.apply(app, providers);
+                this.contoller = providers.length ?
+                    controller(...providers) : controller(providers);
             } catch(e) {
                 this.controller = new controller();
             }
@@ -123,7 +125,7 @@ class BaseRequest {
             if (this.template) {
 
                 // TODO render the template into the resoponse
-                this.responseContent = $compile(this.template)(app.services.$scope);
+                this.responseContent += $compile(this.template)(app.services.$scope);
             }
 
             // TODO See if any views have this Controller associated
@@ -207,4 +209,4 @@ class BaseRequest {
     }
 }
 
-export {BaseRequest, DEFAULT_CONTENT_TYPE};
+export {BaseRequest, DEFAULT_CONTENT_TYPE, RESPONSE_HEADER_MESSAGES};

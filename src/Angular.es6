@@ -97,11 +97,9 @@ let angular = class Angular {
                 try {
                     let str = v.toString(),
                         args = str.match(/(function.*\(.*\))/g)[0]
-                            .replace(/(function\s+\(|\))/g, '').trim().split(',');
-                    v.apply(
-                        app,
-                        app.services.$injector.get.apply(app, args)
-                    );
+                            .replace(/(function\s+\(|\))/g, '').trim().split(','),
+                        providers = app.services.$injector.get.apply(app, args);
+                    return providers.length ? v(...providers) : v(providers);
                 } catch(e) {
                     new v();
                 }

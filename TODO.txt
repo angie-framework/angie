@@ -1,16 +1,23 @@
 TODAY
 =======
+-- TODO "resourceLoader" service to push static files into the templates
+    -- test with resource
+    -- test with inline
 -- TODO module dependencies --> how do high level dependencies get required in?
 -- TODO site
     -- responsive
     -- footer
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
+-- TODO document
 -- TODO clean up
 
 -- END OF DEV PREVIEW ONE, May 15th
     -- blog && site
 
+-- TODO error module
+-- TODO "resource" superset of responses
+    -- resolve resource and resource loader
 -- TODO fields --> install into model
     -- test with sample model
 -- TODO Mysql, sqlite ORM connections
@@ -31,7 +38,15 @@ TODAY
 -- END OF DEV PREVIEW TWO
 
 -- TODO Windows
+-- TODO write broadcaster
+-- TODO realtime connectors!
+    -- share scope from front to back with sockets
+    -- share scope from front to back with long polling
 -- TODO Load modules outside of specified folders
+-- TODO resource loader compilers
+    -- .less
+    -- .scss
+    -- .haml
 -- TODO renderers/serializers
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
@@ -39,20 +54,16 @@ TODAY
 
 PROJECT
 ============
--- TODO write broadcaster
 -- TODO caching
 -- TODO do something with favicon requests
 -- TODO make site's backend run on Angie
 
 TEMPLATES/STATIC
 =============
--- TODO use template cache or handlebars for templating
--- TODO serve with script
 -- TODO mime types
 
 DB
 =============
--- TODO add firebase connector
 
 SYSTEM
 ==============
