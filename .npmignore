@@ -1,4 +1,4 @@
 app
 dep
 site
-bin/server.js
+bin/_server.js
