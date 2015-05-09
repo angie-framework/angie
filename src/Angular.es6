@@ -129,8 +129,7 @@ let angular = class Angular {
                 // Check to see if the config has already fired, if it has, we
                 // do not want to fire it again
                 if (!v.fired) {
-
-                    // TODO injection binder
+                    new me.services.$injectionBinder(v.fn)();
                 }
             });
 

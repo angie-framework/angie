@@ -46,20 +46,20 @@ const $injector = {
     }
 };
 
-function $injectionBinder() {
+function $injectionBinder(fn) {
     try {
-        let str = v.fn.toString(),
+        let str = fn.toString(),
             args = str.match(/(function.*\(.*\))/g),
             providers = [];
 
         if (args && args.length) {
             args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
-            providers = app.services.$injector.get.apply(app, args);
+            providers = $injector.get.apply(app, args);
         }
 
-        return providers.length ? v.fn(...providers) : v.fn(providers);
+        return providers.length ? fn.bind(null, ...providers) : fn.bind(null, providers);
     } catch(e) {
-        new v.fn();
+        return fn;
     }
 }
 

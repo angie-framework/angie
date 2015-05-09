@@ -42,6 +42,7 @@ global.app = app = new angular()
     .service('$compile', $compile)
     .service('$logProvider', $log)
     .service('$injector', $injector)
+    .service('$injectionBinder', $injectionBinder)
     .service('$scope', {
         $id: 1
     }).service('$templateCache', $templateCache)

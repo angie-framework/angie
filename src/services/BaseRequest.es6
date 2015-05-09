@@ -79,21 +79,11 @@ class BaseRequest {
         // Get controller and compile scope
         if (controllerName && app.Controllers[controllerName]) {
             let controller = app.Controllers[controllerName];
-            try {
-
-                // TODO we may want to move all instances of this to $injector
-                 let str = controller.toString(),
-                     args = str.match(/(function.*\(.*\))/g)[0]
-                         .replace(/(function\s+\(|\)|\s+)/g, '').split(','),
-                     providers = app.services.$injector.get.apply(app, args);
-                this.contoller = providers.length ?
-                    controller(...providers) : controller(providers);
-            } catch(e) {
-                this.controller = new controller();
-            }
+            this.controller = new app.services.$injectionBinder(controller)();
         } else {
+
+            // TODO controller was not found despite being defined?
             $log.error(`No Controller named "${controllerName}" could be found`);
-            // TODO controller was not found despite being defined
         }
 
         // Find and load template

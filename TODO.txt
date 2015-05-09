@@ -1,9 +1,6 @@
 TODAY
 =======
 -- TODO module dependencies --> how do high level dependencies get required in?
-    -- abstract injector Service
-        -- figure out a good way to include it everywhere
-    -- change the way dependencies are injected with $injector everywhere (to angular)
     -- merge into master
         -- remove test from repos, but do not delete
         -- add angieSite, remove from main project
