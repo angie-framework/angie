@@ -46,7 +46,22 @@ const $injector = {
     }
 };
 
-function $parse(s) {}
+function $injectionBinder() {
+    try {
+        let str = v.fn.toString(),
+            args = str.match(/(function.*\(.*\))/g),
+            providers = [];
+
+        if (args && args.length) {
+            args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
+            providers = app.services.$injector.get.apply(app, args);
+        }
+
+        return providers.length ? v.fn(...providers) : v.fn(providers);
+    } catch(e) {
+        new v.fn();
+    }
+}
 
 function $$inejectorErr() {
     $log.error('Injector cannot be called without a provider name');
@@ -59,6 +74,7 @@ function $$providerErr(e, arg) {
 }
 
 export default $injector;
+export {$injectionBinder};
 
 // TODO we can still do this better
 // TODO this should probably include a function that parses the arguments as well

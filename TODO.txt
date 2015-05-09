@@ -5,6 +5,10 @@ TODAY
         -- figure out a good way to include it everywhere
     -- change the way dependencies are injected with $injector everywhere (to angular)
     -- merge into master
+        -- remove test from repos, but do not delete
+        -- add angieSite, remove from main project
+            -- to do this, you will have to remove css static folder, add another
+        -- re-clone with git
 -- TODO site
     -- responsive
     -- components

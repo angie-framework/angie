@@ -4,7 +4,7 @@ import angular from './Angular';
 import {$routeProvider} from './services/$RouteProvider';
 import $compile from './services/$Compile';
 import $log from './util/$LogProvider';
-import $injector from './services/$injector';
+import $injector, {$injectionBinder} from './services/$Injector';
 import {$templateCache, $resourceLoader} from './services/$TemplateCache';
 
 const fs =      require('fs');

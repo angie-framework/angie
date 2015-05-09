@@ -129,20 +129,8 @@ let angular = class Angular {
                 // Check to see if the config has already fired, if it has, we
                 // do not want to fire it again
                 if (!v.fired) {
-                    try {
-                        let str = v.fn.toString(),
-                            args = str.match(/(function.*\(.*\))/g),
-                            providers = [];
 
-                        if (args && args.length) {
-                            args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
-                            providers = app.services.$injector.get.apply(app, args);
-                        }
-
-                        return providers.length ? v.fn(...providers) : v.fn(providers);
-                    } catch(e) {
-                        new v.fn();
-                    }
+                    // TODO injection binder
                 }
             });
 
