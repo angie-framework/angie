@@ -124,6 +124,8 @@ function restart() {
     prepApp().then(function() {
         $log.info(`Application files reloaded; Still serving on port ${port}`);
     });
+
+    // TODO live reload
 }
 
 function prepApp() {
