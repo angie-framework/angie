@@ -29,30 +29,6 @@
     text-align: center;
 }
 
-.nav-link {
-    .transition(color);
-    .transition(font-size);
-    &:hover {
-        color:teal;
-        font-size:1.1em;
-    }
-}
-
-.ng-enter,
-.ng-leave {
-    .transition(opacity, 1s);
-}
-
-.ng-enter.ng-enter-active,
-.ng-leave {
-    opacity:1;
-}
-
-.ng-enter,
-.ng-leave.ng-leave-active {
-    opacity:0;
-}
-
 .git-fork-link {
     .dim(30px, 30px);
     .pos(absolute, 10px, @3: 10px);
@@ -90,4 +66,32 @@
             opacity:1;
         }
     }
+}
+
+.inactive {
+    color:@c3;
+}
+
+.nav-link {
+    .transition(color);
+    .transition(font-size);
+    &:hover {
+        color:teal;
+        font-size:1.1em;
+    }
+}
+
+.ng-enter,
+.ng-leave {
+    .transition(opacity, 1s);
+}
+
+.ng-enter.ng-enter-active,
+.ng-leave {
+    opacity:1;
+}
+
+.ng-enter,
+.ng-leave.ng-leave-active {
+    opacity:0;
 }

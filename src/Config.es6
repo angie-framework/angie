@@ -35,12 +35,14 @@ export default class Config {
             return new Promise(resolve => resolve());
         }
     }
-    static __forceSet__(obj) {
-        config = obj;
-    }
+    // static __forceSet__(obj) {
+    //     config = obj;
+    // }
     static fetch() {
         return config;
     }
 }
+
+export {config};
 
 // TODO what if it is not a linux machine?

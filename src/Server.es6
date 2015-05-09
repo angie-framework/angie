@@ -1,10 +1,12 @@
 'use strict';
 
 import angular from './Angular';
+import {config} from './Config';
 import app from './Base';
 import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
 import {BaseRequest, DEFAULT_CONTENT_TYPE, RESPONSE_HEADER_MESSAGES} from './services/BaseRequest';
+import __mimetypes__ from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
 const http =        require('http'),
@@ -25,12 +27,6 @@ if (node > -1) {
     args.splice(node, 1);
 }
 
-function restart() {
-    angular.bootstrap().then(function() {
-        $log.info(`Application files reloaded; Still serving on port ${port}`);
-    });
-}
-
 export default function server(args) {
     let runserver;
 
@@ -40,8 +36,7 @@ export default function server(args) {
         $log.warn('"server" not suitable for production use.');
     }
 
-    // Bootstrap the angular application
-    angular.bootstrap().then(function() {
+    prepApp().then(function() {
 
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
@@ -55,7 +50,7 @@ export default function server(args) {
                 let assetCache = new $cacheFactory('staticAssets'),
                     assetPath = path.split('/').pop();
 
-                if (assetCache.get(path)) {
+                if (assetCache.get(assetPath)) {
                     asset = assetCache.get(assetPath);
                 } else {
                     asset = $templateLoader(assetPath, 'static');
@@ -63,6 +58,9 @@ export default function server(args) {
 
                 // If we have an asset at this point, there is little more to do
                 if (asset) {
+                    angieResponse.responseHeaders[ 'Content-Type' ] = __mimetypes__[
+                        path.split('.').pop()
+                    ];
                     response.writeHead(
                         200,
                         RESPONSE_HEADER_MESSAGES['200'],
@@ -99,26 +97,41 @@ export default function server(args) {
             request.connection.destroy;
         }).listen(+port);
 
+        // Attempt to restart the webserver on change
+        if (firstrun) {
+            let watchDirs = [ p.cwd(), __dirname ].concat(app.__dependencies__);
+
+            try {
+                let restartObj = {
+                        persistent: true,
+                        recursive: true
+                    };
+                watch(watchDirs, (() => restart()), restartObj);
+            } catch(e) {
+                $log.error(e);
+            }
+        }
+
         // Info
         $log.info(`Serving on port ${port}`);
+
+        // Set firstrun to false
+        firstrun = false;
     });
+}
 
-    // Attempt to restart the webserver on change
-    if (firstrun) {
-        try {
-            let restartObj = {
-                    persistent: true,
-                    recursive: true
-                };
-            watch([
-                p.cwd(),
-                __dirname
-            ], (() => restart()), restartObj);
-        } catch(e) {
-            $log.error(e);
-        }
-    }
+function restart() {
+    prepApp().then(function() {
+        $log.info(`Application files reloaded; Still serving on port ${port}`);
+    });
+}
 
-    // Set firstrun to false
-    firstrun = false;
+function prepApp() {
+
+    // Load any app dependencies
+    return app.loadDependencies(config.dependencies).then(function() {
+
+        // Bootstrap the angular application
+        return new Promise((resolve) => app.bootstrap().then(resolve));
+    });
 }

@@ -125,18 +125,18 @@ function $resourceLoader() {
                 staticAsset;
 
             asset += '>'
-            if (assetCache.get(path)) {
+            if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
                 staticAsset = $templateLoader(assetPath, 'static');
             }
 
             if (staticAsset.length) {
-                asset += staticAsset;
+                asset += `\n${staticAsset}`;
             }
         }
 
-        asset += ';</script>';
+        asset += '</script>';
 
         let index = $response.__responseContent__.indexOf('</body>');
         if (index > -1) {

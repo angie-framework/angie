@@ -40,12 +40,11 @@ class BaseRequest {
         this.request = new $Request(request).request;
 
         // Make the response object available to the API
-        new $Response(response);
-
-        this.response = app.services.$response;
+        response.__responseContent__ = '';
+        this.response = new $Response(response).response;
 
         // Parse out the response content type
-        let contentType = this.request.headers['Content-Type'] ||
+        let contentType = this.request.headers[ 'Content-Type' ] ||
             this.request.headers.accept || 'text/plain';
         if (contentType.split(',').length) {
             contentType = contentType.split(',')[0];
@@ -59,8 +58,6 @@ class BaseRequest {
         // Grab the routes and the otherwise
         this.routes = $routeProvider.fetch().routes;
         this.otherwise = $routeProvider.fetch().otherwise;
-
-        this.responseContent = this.response.__responseContent__ = '';
     }
     route() {
 
@@ -109,6 +106,14 @@ class BaseRequest {
                 this.template = this.route.template;
 
             } else if (this.route.templatePath) {
+
+                // Check to see if we can associate the template path with a
+                // mime type
+                if (this.route.templatePath.indexOf('.')) {
+                    this.responseHeaders[ 'Content-Type' ] = __mimetypes__[
+                        this.route.templatePath.split('.').pop()
+                    ];
+                }
                 this.template = $templateCache.get(this.route.templatePath);
             }
 
@@ -121,11 +126,17 @@ class BaseRequest {
                 return;
             }
 
+            // Pull the response back in from wherever it was before
+            this.responseContent = this.response.__responseContent__;
+
             // TODO ^^ Still need to check here whether there is a template?
             if (this.template) {
 
                 // TODO render the template into the resoponse
                 this.responseContent += $compile(this.template)(app.services.$scope);
+
+                // TODO does this cause issues with directives
+                this.response.__responseContent__ = this.responseContent;
             }
 
             // TODO See if any views have this Controller associated

@@ -9,7 +9,7 @@ const mkdirp =    require('mkdirp'),
 const p = process;
 
 export default function createProject(args) {
-    let name = args.name;
+    const name = args.name;
 
     if (!name) {
         $log.error('No project name specified');
@@ -20,12 +20,9 @@ export default function createProject(args) {
     }
 
     let file = name.indexOf('/') < 0 ? name.split('/') : name,
-        dirname = file.length > 1 ? file.splice(-1).join('/') : '';
-
-    name = file.length ? file.pop() : file,
-
-    makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
-    makeSub = `${makeDir}/src`;
+        dirname = file.length > 1 ? file.splice(-1).join('/') : '',
+        makeDir = `${p.cwd()}/${dirname}${dirname.length ? '/' : ''}${name}`,
+        makeSub = `${makeDir}/src`;
 
     try {
         fs.mkdirSync(makeDir);
@@ -63,6 +60,7 @@ export default function createProject(args) {
         );
     }
 
+    $log.info('Project successfully created');
     p.exit(0);
 }
 

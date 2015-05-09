@@ -1,12 +1,17 @@
 TODAY
 =======
--- TODO "resourceLoader" service to push static files into the templates
-    -- test with resource
-    -- test with inline
 -- TODO module dependencies --> how do high level dependencies get required in?
+    -- abstract injector Service
+        -- figure out a good way to include it everywhere
+    -- change the way dependencies are injected with $injector everywhere (to angular)
+    -- merge into master
 -- TODO site
     -- responsive
+    -- components
+    -- add more to features
     -- footer
+    -- favicon
+    -- make site's backend run on Angie
 -- TODO use broccoli, mimosa, brunch, or something other than gulp
     -- tests/gulp
 -- TODO document
@@ -14,8 +19,10 @@ TODAY
 
 -- END OF DEV PREVIEW ONE, May 15th
     -- blog && site
+    -- indiegogo
 
 -- TODO error module
+-- TODO make angiefile an optional JS module that loads either json or js
 -- TODO "resource" superset of responses
     -- resolve resource and resource loader
 -- TODO fields --> install into model
@@ -56,7 +63,10 @@ PROJECT
 ============
 -- TODO caching
 -- TODO do something with favicon requests
--- TODO make site's backend run on Angie
+-- TODO meta tags
+-- TODO mobile optimizations
+    -- make this a setting
+    -- meta
 
 TEMPLATES/STATIC
 =============

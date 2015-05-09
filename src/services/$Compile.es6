@@ -19,11 +19,11 @@ export default function compile(t) {
     return function templateCompile (scope) {
         if (listeners && listeners.length) {
             listeners.forEach(function(listener) {
-                let val = '',
+                let val,
                     parsedListener = listener.replace(/(\{|\})/g, '').trim();
 
                 try {
-                    val = eval(`scope.${parsedListener}`);
+                    val = eval(`scope.${parsedListener}`) || '';
                 } catch(e) {} // Moot error, if it's not there, try something else
 
                 template = template.replace(listener, val);
