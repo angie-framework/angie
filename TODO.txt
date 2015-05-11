@@ -1,36 +1,35 @@
 TODAY
 =======
--- TODO module dependencies --> how do high level dependencies get required in?
-    -- merge into master
-        -- remove test from repos, but do not delete
-        -- add angieSite, remove from main project
-            -- to do this, you will have to remove css static folder, add another
-        -- re-clone with git
+-- TODO tests/gulp
+    -- jshint
+    -- jscs
+    -- jsdoc
+        -- use gulp snippet
+-- TODO clean up
 -- TODO site
-    -- responsive
     -- components
     -- add more to features
     -- footer
+    -- scrolltop on menu? scroll to top?
     -- favicon
-    -- make site's backend run on Angie
--- TODO use broccoli, mimosa, brunch, or something other than gulp
-    -- tests/gulp
--- TODO document
--- TODO clean up
-
 -- END OF DEV PREVIEW ONE, May 15th
     -- blog && site
     -- indiegogo
 
 -- TODO error module
+    -- add style to error pages
 -- TODO make angiefile an optional JS module that loads either json or js
--- TODO "resource" superset of responses
+-- TODO "resource" superset of responses (http)
     -- resolve resource and resource loader
 -- TODO fields --> install into model
     -- test with sample model
+-- TODO deep templates
+    -- test with site
 -- TODO Mysql, sqlite ORM connections
 -- TODO Template View, APIView (Views/Directives)
 -- TODO how do you handle escaping templates that the user wants to compile on the FE?
+    -- triple bracket on the backend
+    -- ngieDirectives
 -- TODO add firebase connector next so that you can serve JSON responses
     -- TODO establish connection
     -- TODO sync
@@ -43,44 +42,59 @@ TODAY
 -- TODO tests
 -- TODO cleanup
 
--- END OF DEV PREVIEW TWO
+-- END OF DEV PREVIEW TWO, June 15th
 
+-- TODO webserver cluster
+-- TODO make BaseRequest available via an 'application file'
+    -- elegant way of running via better webserver
 -- TODO Windows
--- TODO write broadcaster
 -- TODO realtime connectors!
     -- share scope from front to back with sockets
     -- share scope from front to back with long polling
 -- TODO Load modules outside of specified folders
--- TODO resource loader compilers
+-- TODO resource loader compilers & autoload
     -- .less
     -- .scss
     -- .haml
+    -- angular
+    -- jquery
+    -- backbone
+    -- ember
+    -- underscore
 -- TODO renderers/serializers
 -- TODO build desktop management tool using electron
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
 
-PROJECT
-============
--- TODO caching
--- TODO do something with favicon requests
+-- RELEASE
+
+-- TODO write broadcaster
+-- TODO make it easier to require modules in tests
+    -- right now you have to import using $injector
 -- TODO meta tags
+    -- mobile optimization meta
 -- TODO mobile optimizations
     -- make this a setting
     -- meta
+-- TODO how would one authenticate
+    -- XSRF validation
+-- TODO web server login
+-- TODO admin
+
+-- 1.1
+
+-- TODO caching
+-- TODO do something with favicon requests
+
+
+PROJECT
+=============
+-- TODO "run" blocks?
+
 
 TEMPLATES/STATIC
 =============
--- TODO mime types
-
 DB
 =============
-
 SYSTEM
-==============
--- TODO web server login
--- TODO errors pages
--- TODO webserver cluster
--- TODO make BaseRequest available via an 'application file'
--- TODO how would one authenticate
-    -- XSRF validation
+=============

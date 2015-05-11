@@ -52,7 +52,7 @@ export default function createProject(args) {
             `${__dirname}/../../templates/AngieFile.sample.json`,
             'utf8'
         );
-        template = util.format(template, name);
+        template = util.format(template, name, name);
         fs.writeFileSync(
             `${makeDir}/AngieFile.json`,
             template,

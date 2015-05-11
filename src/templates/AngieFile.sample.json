@@ -1,4 +1,5 @@
 {
+    "projectName": "%s",
     "databases": {
         "default": {
             "name": "%s"

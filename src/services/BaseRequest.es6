@@ -6,6 +6,7 @@ import $Request from './$Request';
 import {$Response} from './$Responses';
 import {$routeProvider} from './$RouteProvider';
 import {$templateCache, $templateLoader} from './$TemplateCache';
+import __mimetypes__ from '../util/MimeTypes';
 import $compile from './$Compile';
 
 
@@ -44,10 +45,19 @@ class BaseRequest {
         this.response = new $Response(response).response;
 
         // Parse out the response content type
-        let contentType = this.request.headers[ 'Content-Type' ] ||
-            this.request.headers.accept || 'text/plain';
-        if (contentType.split(',').length) {
+        let contentType = this.request.headers.accept;
+
+        if (contentType && contentType.indexOf(',') > -1) {
             contentType = contentType.split(',')[0];
+        } else if (
+            path.indexOf('.') > -1  &&
+
+            // TODO mimetypes should never return undefined
+            __mimetypes__[ path.split('.').pop() ]
+        ) {
+            contentType = __mimetypes__[ path.split('.').pop() ]
+        } else {
+            contentType = 'text/plain';
         }
 
         this.responseContentType = contentType;
@@ -77,13 +87,15 @@ class BaseRequest {
         let controllerName = this.route.Controller;
 
         // Get controller and compile scope
-        if (controllerName && app.Controllers[controllerName]) {
-            let controller = app.Controllers[controllerName];
-            this.controller = new app.services.$injectionBinder(controller)();
-        } else {
+        if (controllerName) {
+            if(app.Controllers[controllerName]) {
+                let controller = app.Controllers[controllerName];
+                this.controller = new app.services.$injectionBinder(controller)();
+            } else {
 
-            // TODO controller was not found despite being defined?
-            $log.error(`No Controller named "${controllerName}" could be found`);
+                // TODO controller was not found despite being defined?
+                $log.error(`No Controller named "${controllerName}" could be found`);
+            }
         }
 
         // Find and load template
@@ -99,7 +111,14 @@ class BaseRequest {
 
                 // Check to see if we can associate the template path with a
                 // mime type
-                if (this.route.templatePath.indexOf('.')) {
+                if (
+                    this.route.templatePath.indexOf('.') > -1 &&
+
+                    // TODO mimetypes should never return undefined
+                    __mimetypes__[
+                       this.route.templatePath.split('.').pop()
+                   ]
+                ) {
                     this.responseHeaders[ 'Content-Type' ] = __mimetypes__[
                         this.route.templatePath.split('.').pop()
                     ];

@@ -9,7 +9,7 @@ export default function compile(t) {
     }
 
     // TODO do you want to use triple brackets here?
-    let template = t,
+    let template = t.toString(),
         listeners = template.match(/\{\{.*\}\}/g);
 
     // TODO this is pretty basic for now, does not handle expressions

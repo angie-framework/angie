@@ -21,11 +21,5 @@
   ],
   "dependencies": {
     "angularSrc": "https://github.com/angular/angular.js.git"
-  },
-  "devDependencies": {
-    "angular": "~1.3.15",
-    "angular-route": "~1.3.15",
-    "prism": "*",
-    "angular-animate": "~1.3.15"
   }
 }

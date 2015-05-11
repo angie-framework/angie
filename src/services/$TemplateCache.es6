@@ -12,7 +12,7 @@ const p = process,
       ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`,
 
       // TODO do you want to replace this with another dir?
-      ANGIE_STATIC_DIRS = [ `${__dirname}/../../site/css` ];
+      ANGIE_STATIC_DIRS = [];
 
 class $TemplateCache extends $cacheFactory {
     constructor() {
@@ -28,6 +28,7 @@ class $TemplateCache extends $cacheFactory {
     }
 }
 
+// TODO deep find templates
 function $templateLoader(url, type = 'template') {
     let config = Config.fetch(),
 
@@ -67,7 +68,7 @@ function $templateLoader(url, type = 'template') {
         try {
 
             // TODO you could replace this with a deep find, but it would be slower
-            template = fs.readFileSync(`${v}${url}`, 'utf8');
+            template = fs.readFileSync(`${v}${url}`);
             return true;
         } catch(e) {
             return false;
@@ -85,7 +86,9 @@ function $templateLoader(url, type = 'template') {
 }
 
 
-// TODO make this work with .css
+// TODO make this work with .css, .less, .scss, .haml
+// TODO move this to $resource
+// TODO auto load angular, jquery, underscore, etc.
 function $resourceLoader() {
 
     // TODO I'm not sure why or how you could call this without a response object

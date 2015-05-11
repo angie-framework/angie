@@ -24,7 +24,7 @@ class $LogProvider {
         return this.log(bold.apply(null, arguments));
     }
     info() {
-        let args = Array.prototype.slice.call(arguments);
+        let args = __carriage__.apply(null, arguments);
         args.unshift('ANGIE: [Info]');
         console.info(chalk.green(bold.apply(null, args)));
     }
@@ -34,12 +34,12 @@ class $LogProvider {
         }
     }
     warn() {
-        let args = Array.prototype.slice.call(arguments);
+        let args = __carriage__.apply(null, arguments);
         args.unshift('ANGIE: [Warning]');
         console.log(chalk.yellow(bold.apply(null, args)));
     }
     error() {
-        let args = Array.prototype.slice.call(arguments);
+        let args = __carriage__.apply(null, arguments);
         if (args[0].stack) {
             args[0] = args[0].stack;
         }
@@ -97,9 +97,14 @@ class $LogProvider {
     }
 }
 
+function __carriage__() {
+    let args = Array.prototype.slice.call(arguments);
+
+    // TODO change to regexp if you want to replace all
+    return args.map((v) => v.replace('\r\n', ' '));
+}
+
 const $log = new $LogProvider();
 export default $log;
 
-// TODO replace all console log with Console
 // TODO this should handle terminal logging and log file output
-// TODO tracebacks on error

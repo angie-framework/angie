@@ -12,7 +12,6 @@ class $CacheFactory {
         if (!cache[key]) {
             this.cache = cache[key] = {};
         } else {
-            $log.warn(`Cache "${key}" already exists`);
             this.cache = cache[key];
         }
         return this;

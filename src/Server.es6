@@ -5,7 +5,11 @@ import {config} from './Config';
 import app from './Base';
 import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
-import {BaseRequest, DEFAULT_CONTENT_TYPE, RESPONSE_HEADER_MESSAGES} from './services/BaseRequest';
+import {
+    BaseRequest,
+    DEFAULT_CONTENT_TYPE,
+    RESPONSE_HEADER_MESSAGES
+} from './services/BaseRequest';
 import __mimetypes__ from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
@@ -56,40 +60,67 @@ export default function server(args) {
                     asset = $templateLoader(assetPath, 'static');
                 }
 
-                // If we have an asset at this point, there is little more to do
+                // We have an asset and must render a response
                 if (asset) {
-                    angieResponse.responseHeaders[ 'Content-Type' ] = __mimetypes__[
-                        path.split('.').pop()
-                    ];
+
+                    let contentType;
+
+                    // TODO mimetypes should never return undefined
+                    if (__mimetypes__[ path.split('.').pop() ]) {
+                        contentType = __mimetypes__[
+                            path.split('.').pop()
+                        ];
+                    } else {
+                        contentType = 'text/plain';
+                    }
+
+                    // Write the head
+                    angieResponse.responseHeaders[ 'Content-Type' ] = contentType;
                     response.writeHead(
                         200,
                         RESPONSE_HEADER_MESSAGES['200'],
                         angieResponse.responseHeaders
                     );
+
+                    // Check if you have an image type asset
                     response.write(asset);
-                    response.end();
-                    return;
+                    $log.info(path, response._header);
+                } else {
+
+                    // We have no asset and must render a response
+                    const error = $templateLoader('500.html');
+
+                    // TODO extrapolate this to responses
+                    response.writeHead(
+                        500,
+                        RESPONSE_HEADER_MESSAGES['500'],
+                        angieResponse.responseHeaders
+                    );
+                    response.write(error);
+                    $log.error(path, response._header);
                 }
-            }
-
-            angieResponse.route();
-
-            let code = response.statusCode;
-            if (!code) {
-                const error = $templateLoader('500.html');
-                response.writeHead(
-                    500,
-                    'Invalid Request',
-                    angieResponse.responseHeaders
-                );
-                response.write(error);
-                $log.error(path, response._header);
-            } else if (code < 400) {
-                $log.info(path, response._header);
-            } else if (code < 500) {
-                $log.warn(path, response._header);
             } else {
-                $log.error(path, response._header);
+                angieResponse.route();
+
+                let code = response.statusCode;
+                if (!code) {
+                    const error = $templateLoader('500.html');
+
+                    // TODO extrapolate this to responses
+                    response.writeHead(
+                        500,
+                        RESPONSE_HEADER_MESSAGES['500'],
+                        angieResponse.responseHeaders
+                    );
+                    response.write(error);
+                    $log.error(path, response._header);
+                } else if (code < 400) {
+                    $log.info(path, response._header);
+                } else if (code < 500) {
+                    $log.warn(path, response._header);
+                } else {
+                    $log.error(path, response._header);
+                }
             }
 
             response.end();
@@ -121,6 +152,8 @@ export default function server(args) {
 }
 
 function restart() {
+
+    // TODO this doesn't reload like you think it does
     prepApp().then(function() {
         $log.info(`Application files reloaded; Still serving on port ${port}`);
     });
