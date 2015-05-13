@@ -1,7 +1,7 @@
 'use strict';
 
 
-FIELD_TYPES = [];
+// FIELD_TYPES = [];
 
 export class BaseField {
 

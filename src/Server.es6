@@ -1,13 +1,11 @@
 'use strict';
 
-import angular from './Angular';
 import {config} from './Config';
 import app from './Base';
 import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
 import {
     BaseRequest,
-    DEFAULT_CONTENT_TYPE,
     RESPONSE_HEADER_MESSAGES
 } from './services/BaseRequest';
 import __mimetypes__ from './util/MimeTypes';
@@ -15,25 +13,14 @@ import $log from './util/$LogProvider';
 
 const http =        require('http'),
       url =         require('url'),
-      path =        require('path'),
-      chalk =       require('chalk'),
       watch =       require('node-watch');
 
 const p = process;
 
-let args = p.argv,
-    node = args.indexOf('node'),
-    firstrun = true,
+let firstrun = true,
     port;
 
-// Remove trivial arguments
-if (node > -1) {
-    args.splice(node, 1);
-}
-
 export default function server(args) {
-    let runserver;
-
     port = !isNaN(+args.port) ? args.port : 9000;
 
     if (firstrun) {
@@ -44,7 +31,7 @@ export default function server(args) {
 
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
-        runserver = http.createServer(function(request, response) {
+        http.createServer(function(request, response) {
             let path = url.parse(request.url).pathname,
                 angieResponse = new BaseRequest(path, request, response),
                 asset;
@@ -88,16 +75,16 @@ export default function server(args) {
                 } else {
 
                     // We have no asset and must render a response
-                    const error = $templateLoader('500.html');
+                    const error = $templateLoader('404.html');
 
                     // TODO extrapolate this to responses
                     response.writeHead(
-                        500,
-                        RESPONSE_HEADER_MESSAGES['500'],
+                        404,
+                        RESPONSE_HEADER_MESSAGES['404'],
                         angieResponse.responseHeaders
                     );
                     response.write(error);
-                    $log.error(path, response._header);
+                    $log.warn(path, response._header);
                 }
             } else {
                 angieResponse.route();
@@ -125,7 +112,7 @@ export default function server(args) {
 
             response.end();
             request.connection.end();
-            request.connection.destroy;
+            request.connection.destroy();
         }).listen(+port);
 
         // Attempt to restart the webserver on change

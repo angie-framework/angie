@@ -1,9 +1,8 @@
-'use strict'
+'use strict';
 
 import $log from './util/$LogProvider';
 
-const fs =            require('fs'),
-      chalk =         require('chalk');
+const fs =            require('fs');
 
 const p = process;
 

@@ -1,16 +1,13 @@
-'use strict'
+'use strict';
 
 import BaseDBConnection from './BaseDBConnection';
 import $log from '../util/$LogProvider';
-import app from '../Angular';
 
-const chalk =           require('chalk'),
-      mysql =           require('mysql');
-      // mkdirp =          require('mkdirp'),
+const mysql =           require('mysql');
       // fs =              require('fs');
 
-const p = process,
-      DEFAULT_HOST = '127.0.0.1';
+const p = process;
+      // DEFAULT_HOST = '127.0.0.1';
 
 export default class MySqlConnection extends BaseDBConnection {
     constructor(database = 'default') {
@@ -19,8 +16,7 @@ export default class MySqlConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            $log.error('wat?');
-            p.exit(1);
+            throw new Error();
         } else if (!this.connection) {
             let me = this;
             me.db = me.config.databases[database];
@@ -43,8 +39,7 @@ export default class MySqlConnection extends BaseDBConnection {
         let me = this;
         me.connection.connect(function(e) {
             if (e) {
-                $log.error(e);
-                process.exit(1);
+                throw new Error(e);
             }
             $log.info('Connection successful');
             me.disconnect();
@@ -63,8 +58,8 @@ export default class MySqlConnection extends BaseDBConnection {
                     reject(e);
                 } else {
                     resolve({
-                        data: r//,
-                        //fields: fields
+                        data: r,
+                        fields: f
                     });
                 }
             });

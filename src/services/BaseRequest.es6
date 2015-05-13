@@ -55,7 +55,7 @@ class BaseRequest {
             // TODO mimetypes should never return undefined
             __mimetypes__[ path.split('.').pop() ]
         ) {
-            contentType = __mimetypes__[ path.split('.').pop() ]
+            contentType = __mimetypes__[ path.split('.').pop() ];
         } else {
             contentType = 'text/plain';
         }
@@ -149,23 +149,23 @@ class BaseRequest {
             }
 
             // TODO See if any views have this Controller associated
-            for (directive in app.directives) {
-                if (directive.Controller && directive.Controller === controllerName) {
-
-                    // TODO move instances of parsing to injector
-
-                    // TODO call that view link with injected scope and services & template
-                    // directive.link();
-
-                    // TODO if you include a template here, it should be favored
-                    if (directive.type === 'APIView') {
-
-                        // TODO APIViews cannot have templates, all templates are trashed
-                    } else {
-
-                    }
-                }
-            };
+            // for (directive in app.directives) {
+            //     if (directive.Controller && directive.Controller === controllerName) {
+            //
+            //         // TODO move instances of parsing to injector
+            //
+            //         // TODO call that view link with injected scope and services & template
+            //         // directive.link();
+            //
+            //         // TODO if you include a template here, it should be favored
+            //         if (directive.type === 'APIView') {
+            //
+            //             // TODO APIViews cannot have templates, all templates are trashed
+            //         } else {
+            //
+            //         }
+            //     }
+            // }
         } catch(e) {
             $log.error(e);
             this.response.writeHead(

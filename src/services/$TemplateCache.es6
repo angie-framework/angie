@@ -1,14 +1,13 @@
 'use strict';
 
-import Config from '../Config';
+import config from '../Config';
 import app from '../Base';
 import $cacheFactory from './$CacheFactory';
-import $log from '../util/$LogProvider';
+// import $log from '../util/$LogProvider';
 
 const fs =      require('fs');
 
 const p = process,
-      config = Config.fetch(),
       ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`,
 
       // TODO do you want to replace this with another dir?
@@ -30,14 +29,12 @@ class $TemplateCache extends $cacheFactory {
 
 // TODO deep find templates
 function $templateLoader(url, type = 'template') {
-    let config = Config.fetch(),
 
-        // Clone them template dirs
-        templateDirs = (
-            config[ `${type}Dirs` ].slice() || []
-        ),
-        cached = false,
-        template;
+    // Clone them template dirs
+    let templateDirs = (
+        config[ `${type}Dirs` ].slice() || []
+    ),
+    template;
 
     if (url.charAt(0) !== '/') {
         url = `/${url}`;
@@ -127,7 +124,7 @@ function $resourceLoader() {
                 assetPath = resource.split('/').pop(),
                 staticAsset;
 
-            asset += '>'
+            asset += '>';
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {

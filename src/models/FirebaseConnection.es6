@@ -1,24 +1,22 @@
-'use strict'
+'use strict';
 
 import BaseDBConnection from './BaseDBConnection';
-import $log from '../util/$LogProvider';
+// import $log from '../util/$LogProvider';
 // import app from '../Angular';
 
-const chalk =           require('chalk'),
-      Firebase =        require('firebase');
+const Firebase =        require('firebase');
       // FirebaseTokenGenerator = require("firebase-token-generator.js");
       // mysql =           require('mysql'),
       // mkdirp =          require('mkdirp'),
       // fs =              require('fs');
 
-const p = process;
+// const p = process;
 
 export default class FirebaseConnection extends BaseDBConnection {
     constructor(database = 'default') {
         super();
         if (checkConfig(this.config.databases[database])) {
-            $log.error('wat?');
-            p.exit(1);
+            throw new Error();
         } else {
             this.db = new Firebase(this.config.databases[database].url);
         }
@@ -29,8 +27,9 @@ export default class FirebaseConnection extends BaseDBConnection {
             return data;
         });
     }
-    create(model) {
-        let data = this.read(model);
+    create() {
+        // model
+        // let data = this.read(model);
 
         // TODO can you set a specific instance of a model?
 

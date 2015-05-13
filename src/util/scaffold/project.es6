@@ -2,8 +2,7 @@
 
 import $log from '../$LogProvider';
 
-const mkdirp =    require('mkdirp'),
-      fs =        require('fs'),
+const fs =        require('fs'),
       util =      require('util');
 
 const p = process;

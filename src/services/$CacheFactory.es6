@@ -1,6 +1,6 @@
 'use strict';
 
-import $log from '../util/$LogProvider';
+// import $log from '../util/$LogProvider';
 
 let cache;
 
@@ -28,7 +28,7 @@ class $CacheFactory {
     remove(id) {
         delete cache[this.key][id];
     }
-    removeAll(id) {
+    removeAll() {
         cache[this.key] = {};
         return this;
     }

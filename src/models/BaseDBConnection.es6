@@ -1,4 +1,6 @@
-import Config from '../Config'
+'use strict';
+
+import Config from '../Config';
 import app from '../Angular';
 
 // app.service('$ModelService', function() {

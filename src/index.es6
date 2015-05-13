@@ -30,7 +30,7 @@ if (args.length === 1) {
 switch (args[1]) {
     case '':
         $log.help();
-        break
+        break;
     case 'help':
         $log.help();
         break;
@@ -55,14 +55,14 @@ switch (args[1]) {
 
 // Wrapper function for services which require configs to be loaded
 // TODO make config a service
-function requiresConfig(fn, args = {}) {
+function requiresConfig(fn) {
 
     // Fetch configs
     return new Config().then(function() {
         return fn(args);
     }, function() {
         p.exit(1);
-    })
+    });
 }
 
 // TODO make all commands here

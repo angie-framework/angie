@@ -1,5 +1,7 @@
 'use strict';
 
+import app from '../Base';
+
 class $Response {
     constructor(response) {
         this.response = response;

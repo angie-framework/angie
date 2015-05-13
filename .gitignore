@@ -76,5 +76,6 @@ Temporary Items
 
 
 ### Custom ###
-site/css
-docs
+debug
+coverage
+doc

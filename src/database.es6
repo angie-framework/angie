@@ -20,9 +20,11 @@ export default class Database {
                 case 'mysql':
                     this.db = new MySqlConnection();
                     this.db.sync();
+                    break;
                 case 'firebase':
                     this.db = new FirebaseConnection();
                     this.db.sync();
+                    break;
                 default:
                     this.db = new SqliteConnection();
                     this.db.sync();

@@ -1,12 +1,10 @@
-'use strict'
+'use strict';
 
 import BaseDBConnection from './BaseDBConnection';
 import app from '../Angular';
 import $log from '../util/$LogProvider';
 
-const chalk =         require('chalk'),
-      sqlite3 =       require('sqlite3').verbose(),
-      mkdirp =        require('mkdirp'),
+const sqlite3 =       require('sqlite3').verbose(),
       fs =            require('fs');
 
 export default class SqliteConnection extends BaseDBConnection {
@@ -16,8 +14,7 @@ export default class SqliteConnection extends BaseDBConnection {
         // TODO this should not be necessary, this module should not be loaded
         // unless you've already proven to have a sqlite config
         if (checkConfig(this.config.databases[database])) {
-            $log.error('wut?')
-            process.exit(1);
+            throw new Error();
         } else if (!this.db) {
             //try {
             //    this.db = new sqlite3.Database(`:${this.config.databases.default.name}:`);

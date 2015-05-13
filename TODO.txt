@@ -1,17 +1,14 @@
 TODAY
 =======
--- TODO tests/gulp
-    -- jshint
-    -- jscs
-    -- jsdoc
-        -- use gulp snippet
--- TODO clean up
 -- TODO site
     -- components
     -- add more to features
     -- footer
     -- scrolltop on menu? scroll to top?
     -- favicon
+-- TODO tests/gulp
+-- TODO clean up
+
 -- END OF DEV PREVIEW ONE, May 15th
     -- blog && site
     -- indiegogo
@@ -51,6 +48,7 @@ TODAY
 -- TODO realtime connectors!
     -- share scope from front to back with sockets
     -- share scope from front to back with long polling
+    -- add application.js file to frontend that uses sockets and obervables
 -- TODO Load modules outside of specified folders
 -- TODO resource loader compilers & autoload
     -- .less

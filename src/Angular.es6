@@ -1,11 +1,9 @@
 'use strict';
 
-import {config} from './Config';
 import util from './util/util';
 import $log from './util/$LogProvider';
 
 const System =      require('systemjs'),
-      chalk =       require('chalk'),
       fs =          require('fs');
 
 const p = process;
@@ -62,7 +60,7 @@ let angular = class Angular {
                 }
 
                 // This should be the root folder of an Angie project
-                let config = fs.readFileSync(`${v}/AngieFile.json`) || '{,}';
+                let config = fs.readFileSync(`${v}/AngieFile.json`) || '{, }';
 
                 try {
                     config = JSON.parse(config);
@@ -73,13 +71,14 @@ let angular = class Angular {
 
                 // This will load all of the modules, overwriting a module name
                 // will replace it
-                let prom = new Promise(function(resolve, reject) {
+                let prom = new Promise(function(resolve) {
                     me.bootstrap(v).then(function() {
                         resolve();
                     }).then(function() {
                         me.loadDependencies(config.dependencies);
                     });
                 });
+                proms.push(prom);
             });
         }
 
@@ -137,7 +136,7 @@ let angular = class Angular {
         });
     }
     static noop() {}
-}
+};
 
 angular = util.extend(angular, util);
 

@@ -1,0 +1,54 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "node": true,
+        "mocha": true,
+        "es6": true
+    },
+    "rules": {
+        "camelcase": [
+            2,
+            {
+                "properties": "always"
+            }
+        ],
+        "comma-spacing": false,
+        "global-strict": [
+            2,
+            "always"
+        ],
+        "indent": 4,
+        "key-spacing": false,
+        "no-empty": false,
+        "no-mixed-requires": false,
+        "no-multi-spaces": false,
+        "no-underscore-dangle": false,
+        "no-use-before-define": false,
+        "quotes": [ 1, "single" ]
+    },
+    "emcaFeatures": {
+        "arrowFunctions": true,
+        "binaryLiterals": true,
+        "blockBindings": true,
+        "classes": true,
+        "defaultParams": true,
+        "destructuring": true,
+        "forOf": true,
+        "generators": true,
+        "modules": true,
+        "objectLiteralComputedProperties": true,
+        "objectLiteralDuplicateProperties": true,
+        "objectLiteralShorthandMethods": true,
+        "objectLiteralShorthandProperties": true,
+        "octalLiterals": true,
+        "regexUFlag": true,
+        "regexYFlag": true,
+        "restParams": true,
+        "spread": true,
+        "superInFunctions": true,
+        "templateStrings": true,
+        "unicodeCodePointEscapes": true,
+        "globalReturn": true,
+        "jsx": false
+    }
+}

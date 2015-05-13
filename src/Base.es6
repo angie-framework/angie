@@ -11,6 +11,8 @@ const fs =      require('fs');
 
 let app;
 
+/* eslint-disable */
+
 global.app = app = new angular()
     .Model('UserModel', function() {
 
@@ -25,17 +27,19 @@ global.app = app = new angular()
         };
         return this;
     }).Model('MigrationsModel', class MigrationsModel {
+
+/*eslint-enable */
         constructor() {
             this.name = 'angie_migrations';
         }
-    }).config(function($templateCache) {
+    }).config(function() {
         $templateCache.put(
             'index.html',
-            fs.readFileSync(__dirname + '/templates/html/index.html', 'utf8')
+            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
         );
         $templateCache.put(
             '404.html',
-            fs.readFileSync(__dirname + '/templates/html/404.html', 'utf8')
+            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
         );
     })
     .service('$routeProvider', $routeProvider)

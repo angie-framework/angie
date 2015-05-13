@@ -1,3 +1,3 @@
-'use strict';
-
-import FirebaseConnection from '../../src/models/FirebaseConnection';
+// 'use strict';
+//
+// import FirebaseConnection from '../../src/models/FirebaseConnection';

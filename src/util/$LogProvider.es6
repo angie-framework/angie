@@ -1,15 +1,15 @@
-'use strict'
+'use strict';
 
 const chalk =           require('chalk'),
       exec =            require('child_process').exec;
 
 const p = process,
-      bold = chalk.bold,
-      LOG_LEVELS = {
-          'debug': true,
-          'info': true,
-          'error': true
-      };
+      bold = chalk.bold;
+    //   LOG_LEVELS = {
+    //       'debug': true,
+    //       'info': true,
+    //       'error': true
+    //   };
 
 let ENABLE_DEBUG = true;
 
@@ -106,5 +106,6 @@ function __carriage__() {
 
 const $log = new $LogProvider();
 export default $log;
+export {$LogProvider};
 
 // TODO this should handle terminal logging and log file output

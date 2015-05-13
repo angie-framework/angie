@@ -3,7 +3,7 @@
 import app from '../Base';
 import $log from '../util/$LogProvider';
 
-const chalk =       require('chalk');
+const p = process;
 
 const $injector = {
     get: function() {
@@ -41,7 +41,7 @@ const $injector = {
     booleanCheck() {
         return true;
     },
-    numberCheck(n) {
+    numberCheck() {
         return true;
     }
 };
@@ -63,7 +63,7 @@ function $injectionBinder(fn) {
     }
 }
 
-function $$inejectorErr() {
+function $$injectorErr() {
     $log.error('Injector cannot be called without a provider name');
     p.exit(1);
 }

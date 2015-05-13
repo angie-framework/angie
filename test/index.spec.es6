@@ -1,5 +1,5 @@
-(function() {
-    'use strict';
+'use strict';
 
-    require('babel/register');
-})();
+require('babel/register');
+
+global.expect = require('chai').expect;
