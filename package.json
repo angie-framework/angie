@@ -5,7 +5,7 @@
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
   "scripts": {
-    "test": "babel-node gulpfile.es6 --test",
+    "test": "gulp",
     "postinstall": "bower install"
   },
   "engines": {
@@ -34,6 +34,7 @@
     "connect": "^2.x.x",
     "electron-prebuilt": "*",
     "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
     "gulp-cli": "^0.2.0",
     "gulp-eslint": "^0.12.0",
     "gulp-istanbul": "^0.9.0",

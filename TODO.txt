@@ -1,12 +1,14 @@
 TODAY
 =======
 -- TODO site
+    -- docs from jsdoc *****
     -- components
     -- add more to features
     -- footer
-    -- scrolltop on menu? scroll to top?
     -- favicon
+
 -- TODO tests/gulp
+    -- write template tests
 -- TODO clean up
 
 -- END OF DEV PREVIEW ONE, May 15th
@@ -36,8 +38,11 @@ TODAY
     -- TODO update records
     -- TODO delete records
 -- TODO route parsing for variables
+-- TODO shell
 -- TODO tests
 -- TODO cleanup
+-- TODO site
+    -- scroll to top
 
 -- END OF DEV PREVIEW TWO, June 15th
 

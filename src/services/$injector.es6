@@ -16,18 +16,29 @@ const $injector = {
             let arg = arguments[i].trim(),
                 provision;
 
+            if (!arg || !arg.length) {
+
+                // I don't think that this warrants a hard return, maybe just
+                // odd spacing
+                // TODO write a test around this
+                $log.warn('Invalid spacing found in $injector');
+                continue;
+            } else if (arg === '$scope') {
+                arg = 'scope';
+            }
+
             try {
                 provision = app[app.__registry__[arg]][arg];
             } catch (e) {
                 $$providerErr(e, arg);
             }
-            if (provision && $injector[`${typeof provision}Check`](provision)) {
+            if (provision && $injector[ `${typeof provision}Check` ](provision)) {
                 providers.push(provision);
             } else {
                 $$providerErr(null, arg);
             }
         }
-        return providers.length > 1 ? providers : providers[0];
+        return providers.length > 1 ? providers : providers[0] ? providers[0] : [];
     },
     stringCheck(s) {
         return !!s.length;
@@ -52,14 +63,15 @@ function $injectionBinder(fn) {
             args = str.match(/(function.*\(.*\))/g),
             providers = [];
 
+        args.forEach((v) => v.replace(/\s+/g, ''));
+
         if (args && args.length) {
             args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
             providers = $injector.get.apply(app, args);
         }
-
         return providers.length ? fn.bind(null, ...providers) : fn.bind(null, providers);
     } catch(e) {
-        return fn;
+        $$providerErr(e);
     }
 }
 
@@ -69,7 +81,9 @@ function $$injectorErr() {
 }
 
 function $$providerErr(e, arg) {
-    $log.error(`Cannot find ${arg} <-- ${arg}Provider ${e}`);
+    $log.error(
+        arg ? `Cannot find ${arg} <-- ${arg}Provider ${e}` : e
+    );
     p.exit(1);
 }
 

@@ -6,6 +6,8 @@ import createProject from './util/scaffold/project';
 import {default as DB} from './Database';
 import server from './Server';
 
+const exec =        require('child_process').exec;
+
 const p = process;
 
 // Remove trivial arguments
@@ -49,8 +51,26 @@ switch (args[1]) {
         __db__();
         break;
     case 'migrations':
+        break;
+    case 'test':
+        runTests();
+        break;
     default:
         $log.help();
+}
+
+function runTests() {
+    // TODO is there any way to carry the stream output from gulp instead
+    // of capturing stdout?
+    exec(`cd ${__dirname} && gulp`, function(e, std, err) {
+        $log.log(std);
+        if (err) {
+            $log.error(err);
+        }
+        if (e) {
+            throw new Error(e);
+        }
+    });
 }
 
 // Wrapper function for services which require configs to be loaded

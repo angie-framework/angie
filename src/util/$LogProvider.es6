@@ -40,7 +40,7 @@ class $LogProvider {
     }
     error() {
         let args = __carriage__.apply(null, arguments);
-        if (args[0].stack) {
+        if (args && args[0].stack) {
             args[0] = args[0].stack;
         }
         args.unshift('ANGIE: [Error]');
@@ -99,9 +99,7 @@ class $LogProvider {
 
 function __carriage__() {
     let args = Array.prototype.slice.call(arguments);
-
-    // TODO change to regexp if you want to replace all
-    return args.map((v) => v.replace('\r\n', ' '));
+    return args.map((v) => v.replace ? v.replace('\r\n', ' ') : v);
 }
 
 const $log = new $LogProvider();

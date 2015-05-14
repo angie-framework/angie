@@ -21,7 +21,7 @@ let firstrun = true,
     port;
 
 export default function server(args) {
-    port = !isNaN(+args.port) ? args.port : 9000;
+    port = !isNaN(+args.port) ? args.port : 3000;
 
     if (firstrun) {
         $log.warn('"server" not suitable for production use.');
@@ -111,8 +111,10 @@ export default function server(args) {
             }
 
             response.end();
-            request.connection.end();
-            request.connection.destroy();
+
+            // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
+            // request.connection.end();
+            // request.connection.destroy();
         }).listen(+port);
 
         // Attempt to restart the webserver on change

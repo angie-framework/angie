@@ -6,7 +6,20 @@ let cache;
 
 global.__AngieCache__ = cache = {};
 
+/**
+ * Creates a cache reference in the Angie cache object
+ * @class
+ * @name $CacheFactory
+ * @alias $cacheFactory
+ */
 class $CacheFactory {
+
+    /**
+     * @constructor
+     * @name $CacheFactory
+     * @alias $cacheFactory
+     * @param {string} key The name of the instantiated cache
+     */
     constructor(key) {
         this.key = key;
         if (!cache[key]) {
@@ -14,8 +27,17 @@ class $CacheFactory {
         } else {
             this.cache = cache[key];
         }
-        return this;
     }
+
+    /**
+     * @method
+     * @memberof $CacheFactory
+     * @name put
+     * @param {string} id The name of the key in the cache
+     * @param {string|object|boolean|undefined|number}
+     obj The value of the key in the cache
+     * @param {boolean} replace Should existing keys be replaced?
+     */
     put(id, obj, replace) {
         if ((cache[this.key][id] && replace) || !cache[this.key][id]) {
             cache[this.key][id] = obj;
@@ -27,6 +49,7 @@ class $CacheFactory {
     }
     remove(id) {
         delete cache[this.key][id];
+        return this;
     }
     removeAll() {
         cache[this.key] = {};
@@ -34,7 +57,6 @@ class $CacheFactory {
     }
     delete() {
         delete cache[this.key];
-        return this;
     }
 }
 

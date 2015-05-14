@@ -7,6 +7,7 @@ const gulp =        require('gulp'),
       istanbul =    require('gulp-istanbul'),
       isparta =     require('isparta'),
       mocha =       require('gulp-mocha'),
+      babel =       require('gulp-babel'),
       jsdoc =       require('gulp-jsdoc');
 
 const src = 'src/**/*.es6',
@@ -23,8 +24,6 @@ gulp.task('eslint', function () {
         eslint.failOnError()
     );
 });
-
-
 gulp.task('mocha', [ 'eslint' ], function(cb) {
     gulp.src([ src ]).pipe(
         istanbul({
@@ -50,9 +49,9 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
 });
 gulp.task('jsdoc', [ 'mocha' ], function() {
     gulp.src(src).pipe(
-        jsdoc.parser({
-            plugins: [ 'plugins/commentsOnly' ]
-        })
+        babel()
+    ).pipe(
+        jsdoc.parser()
     ).pipe(
         jsdoc.generator(docSrc)
     );
@@ -60,7 +59,4 @@ gulp.task('jsdoc', [ 'mocha' ], function() {
 gulp.task('watch:mocha', [ 'mocha' ], function() {
     gulp.watch([ src, testSrc ], [ 'mocha' ]);
 });
-gulp.task('default', [ 'jsdoc' ])
-
-// TODO jshint
-// TODO jscs
+gulp.task('default', [ 'jsdoc' ]);

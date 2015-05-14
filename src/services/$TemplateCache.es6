@@ -1,6 +1,6 @@
 'use strict';
 
-import config from '../Config';
+import {config} from '../Config';
 import app from '../Base';
 import $cacheFactory from './$CacheFactory';
 // import $log from '../util/$LogProvider';
