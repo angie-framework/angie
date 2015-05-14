@@ -6,18 +6,14 @@ let cache;
 
 global.__AngieCache__ = cache = {};
 
-/**
- * Creates a cache reference in the Angie cache object
- * @class
- * @name $CacheFactory
- * @alias $cacheFactory
- */
 class $CacheFactory {
 
     /**
-     * @constructor
+     * @class
+     * @service
      * @name $CacheFactory
      * @alias $cacheFactory
+     * @description Creates a Cache instance
      * @param {string} key The name of the instantiated cache
      */
     constructor(key) {

@@ -3,7 +3,6 @@
 const util = {
 
     // TODO keep this light for now, single target, single arg
-    // TODO also no deep copy
     extend: function extend() {
         var target = arguments[0] || {},
             obj = arguments[1] || {};

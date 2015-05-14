@@ -90,4 +90,5 @@ function requiresConfig(fn) {
     // TODO create database
     // TODO migrate database
     // TODO cluster
+    // TODO docs
     // TODO shell

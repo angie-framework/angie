@@ -6,6 +6,7 @@ TODAY
     -- add more to features
     -- footer
     -- favicon
+    -- responsive
 
 -- TODO tests/gulp
     -- write template tests
@@ -37,12 +38,16 @@ TODAY
     -- TODO filter records
     -- TODO update records
     -- TODO delete records
+-- TODO migrations
 -- TODO route parsing for variables
 -- TODO shell
 -- TODO tests
 -- TODO cleanup
 -- TODO site
     -- scroll to top
+    -- email form
+    -- social
+    -- roadmap
 
 -- END OF DEV PREVIEW TWO, June 15th
 
@@ -69,9 +74,10 @@ TODAY
 -- TODO links from errors to online docs
 -- TODO everything should be a byproduct of the angular instance
 
--- RELEASE
+-- RELEASE - July 15th
 
 -- TODO write broadcaster
+-- TODO "run" blocks?
 -- TODO make it easier to require modules in tests
     -- right now you have to import using $injector
 -- TODO meta tags
@@ -83,6 +89,8 @@ TODAY
     -- XSRF validation
 -- TODO web server login
 -- TODO admin
+-- TODO documentation generator
+-- TODO travis
 
 -- 1.1
 
@@ -92,9 +100,6 @@ TODAY
 
 PROJECT
 =============
--- TODO "run" blocks?
-
-
 TEMPLATES/STATIC
 =============
 DB

@@ -13,6 +13,10 @@ let app;
 
 /* eslint-disable */
 
+/**
+ * @overview
+ * @name app
+ */
 global.app = app = new angular()
     .Model('UserModel', function() {
 
