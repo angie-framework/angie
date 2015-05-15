@@ -61,7 +61,7 @@ class $LogProvider {
                 'server [port -- optional]       ' +
                 chalk.gray(
                     'Start the Angie Webserver (shortcut with s). Default port ' +
-                    'is 9000.'
+                    'is 3000.'
                 )
             );
             me.log(
@@ -86,6 +86,13 @@ class $LogProvider {
                 chalk.gray(
                     'Checks to see if the database and the specified ' +
                     'models are out of sync. Generates NO files.'
+                )
+            );
+            me.log(
+                'test                            ' +
+                chalk.gray(
+                    'Runs the Angie test suite and prints the results in the ' +
+                    'console'
                 )
             );
             me.log('\n');
