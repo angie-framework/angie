@@ -1,6 +1,6 @@
-## Angie
+<h2>Angie</h2>
 
-### About
+<h3>About</h3>
 Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.
 
 Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.
@@ -9,24 +9,24 @@ For more details on how to get started, please see the quickstart section.
 
 AngularJS is in no way used or affiliated with this project.
 
-### News
+<h3>News</h3>
 
-#### Second Developer Preview: June 15<sup>th</sup>, 2015
+<h4>Second Developer Preview: June 15<sup>th</sup>, 2015</h4>
 I will tentatively be launching the second developer preview on June 15<sup>th</sup>. This preview will include full ORM support, better templating support, and both Template and API style views. The preview will not include the full range of possible serializers or renderers.
 
-#### Angie Module Dependencies
+<h4>Angie Module Dependencies</h4>
 I was considering not including application dependencies, but they are the best way to include plugins or extensions on to the Angie code. I've added a way to add dependencies at the AngieFile level. Adding root folders of other Angie projects to the "dependencies" object within the AngieFile
 will then extend all of the providers from that project on to the target project. Enjoy!
 
-#### First Developer Preview: May 15<sup>th</sup>, 2015
+<h4>First Developer Preview: May 15<sup>th</sup>, 2015</h4>
 I am happy to announce that I will be releasing the first developer preview of Angie and my vision for it's development on May 15<sup>th</sup>. I will also be doing an open call for contributors at this time. You will be able to use some of the functionality by following the quickstart guide.
 
-### Quickstart
+<h3>Quickstart</h3>
 Angie will work with any version of npm 0.10.0+, however, I recommend using nvm. It cannot be downloaded via npm:
 [nvm](https://github.com/creationix/nvm)
 Please visit this link and follow the instructions listed for iojs-2.0.1
 
-#### First, we're going to need some packages!
+<h4>First, we're going to need some packages!</h4>
 In the directory you would like your project to live, please run the following command:
 ```bash
     npm install -g babel gulp-cli angie
@@ -46,8 +46,8 @@ We can test that the application runs successfully by running the following comm
 Once your server is running, you should visit
 [localhost:3000/](http://localhost:3000) in your browser. If you see the text "Angie Test Page," all is well.
 
-### Now we can write some code!
-I like to encourage proper developer behavior whenever possible. Therefore, for the time being, it is not possible to load modules outside of the folders which have been scaffolded. That is to say that modules outside of these folders will not be loaded. However, any type of module can live in any of the prescribed folders.
+<h4>Now we can write some code!</h4>
+I like to encourage developer behavior whenever possible. Therefore, for the time being, it is not possible to load modules outside of the folders which have been scaffolded. That is to say that modules outside of these folders will not be loaded. However, any type of module can live in any of the prescribed folders.
 
 Let's start by setting up some routes! In the configs directory, create a file called `routes.config.js` or `routes.config.es6`. Add the following code to that file:
 ```javascript
