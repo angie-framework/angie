@@ -1,4 +1,7 @@
 app
-dep
-site
-bin/_server.js
+bower_components
+coverage
+debug
+doc
+node_modules
+TODO.txt
