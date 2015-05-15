@@ -1,4 +1,5 @@
 <h2>Angie</h2>
+*Note: This project is in Beta. The current release is a developer preview.*
 
 <h3>About</h3>
 Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.
