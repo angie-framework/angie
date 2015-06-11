@@ -4,4 +4,6 @@ coverage
 debug
 doc
 node_modules
+.editorconfig
 TODO.txt
+travis.yml
