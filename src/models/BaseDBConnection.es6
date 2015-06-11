@@ -7,11 +7,7 @@ import util from '../util/util';
 import $log from '../util/$LogProvider';
 import $Exceptions from '../util/$ExceptionsProvider';
 
-const TYPES = {
-        'CharField': 'TEXT',
-        'IntegerField': 'INTEGER'
-    },
-    IGNORE_KEYS = [
+const IGNORE_KEYS = [
         'database',
         'tail',
         'head',
@@ -89,7 +85,7 @@ export default class BaseDBConnection {
             $Exceptions.$$invalidModelReference();
         }
 
-        keys.forEach(function(key, i) {
+        keys.forEach(function(key) {
             if (IGNORE_KEYS.indexOf(key) === -1) {
                 queryKeys.push(key);
                 values.push(`'${args[key]}'`);
@@ -107,14 +103,13 @@ export default class BaseDBConnection {
             $Exceptions.$$invalidModelReference();
         }
 
-        let filterQuery = this.filterQuery(args);
+        let filterQuery = this.filterQuery(args),
+            idSet = this.queryInString(args.rows, 'id');
         if (!filterQuery) {
             $log.warn('No filter query in UPDATE statement.');
-            return;
+        } else {
+            return `UPDATE ${args.model.name} SET ${filterQuery} WHERE id in ${idSet};`;
         }
-
-        idSet = this.queryInString(args.rows, 'id');
-        return `UPDATE ${args.model.name} SET ${filterQuery} WHERE id in ${idSet};`;
     }
     queryInString(args = {}, key) {
         let fieldSet = [];
@@ -183,7 +178,7 @@ export default class BaseDBConnection {
                 }
                 errors.push(queryset.errors);
 
-                rows.forEach(function(row, i) {
+                rows.forEach(function(row) {
                     queryset.forEach(function(queryRow) {
                         if (
                             !isNaN(+row[ relFieldNames[ v ] ]) &&

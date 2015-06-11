@@ -14,7 +14,6 @@ describe('$CacheFactory', function() {
     });
     describe('constructor', function() {
         it('test constructor instantiates cache', function() {
-            let cache = new $cacheFactory('test');
             expect(global.__AngieCache__.hasOwnProperty('test')).to.be.true;
             expect(cache.cache).to.deep.eq({});
         });

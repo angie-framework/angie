@@ -1,8 +1,6 @@
 'use strict'; 'use strong';
 
-import angular from '../Base';
 import util from '../util/util';
-import $log from '../util/$LogProvider';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
 import AngieDatabaseRouter from './AngieDatabaseRouter';
 
@@ -97,7 +95,7 @@ export class BaseModel {
                 arguments[1](new Error('Invalid Query String'));
             });
         }
-        return this.__prep__.apply(this, args).query(query, this.name, 'all');
+        return this.__prep__.apply(this, args).raw(query, this);
     }
     __prep__() {
         const args = arguments[0],
@@ -149,21 +147,22 @@ AngieDBObject.prototype.update = function() {
 
     let updateObj = {};
     for (let key in args) {
-        const val = args[ field ] || null;
+        const val = args[ key ] || null;
         if (IGNORE_KEYS.indexOf(key) > -1) {
             continue;
         }
         else if (
-            me[ key ] &&
-            me[ key ].validate &&
-            me[ key ].validate(val)
+            this[ key ] &&
+            this[ key ].validate &&
+            this[ key ].validate(val)
         ) {
-            createObj[field] = val;
+            updateObj[ key ] = val;
         } else {
-            $ExceptionsProvider.$$invalidModelFieldReference(me.name, field);
+            $ExceptionsProvider.$$invalidModelFieldReference(this.name, key);
         }
     }
 
+    util.extend(args, updateObj);
     return this.database.update(args);
 };
 

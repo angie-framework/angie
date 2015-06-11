@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
@@ -33,11 +33,11 @@
     "chai": "^2.3.0",
     "connect": "^2.x.x",
     "electron-prebuilt": "*",
+    "esdoc": "^0.1.2",
     "gulp": "^3.8.11",
     "gulp-cli": "^0.2.0",
     "gulp-eslint": "^0.12.0",
     "gulp-istanbul": "^0.9.0",
-    "gulp-jsdoc": "^0.1.4",
     "gulp-mocha": "^2.0.1",
     "isparta": "^3.0.3",
     "mocha": "^2.2.4",
@@ -47,13 +47,10 @@
   "dependencies": {
     "babel": "^5.1.13",
     "chalk": "^1.0.0",
-    "es6-module-loader": "^0.16.6",
     "firebase": "^2.2.4",
     "mysql": "^2.6.2",
-    "mysql2": "^0.15.5",
     "node-gyp": "^1.0.3",
     "node-watch": "^0.3.4",
-    "sqlite3": "^3.0.5",
-    "systemjs": "^0.16.11"
+    "sqlite3": "^3.0.5"
   }
 }

@@ -1,7 +1,6 @@
 'use strict'; 'use strong';
 
 import BaseDBConnection from './BaseDBConnection';
-import util from '../util/util';
 import $log from '../util/$LogProvider';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
 
@@ -28,7 +27,7 @@ export default class MySqlConnection extends BaseDBConnection {
                 database: name || db.name || db.alias
             });
 
-            this.connection.on('error', function(e) {
+            this.connection.on('error', function() {
                 $ExceptionsProvider.$$databaseConnectivityError(db);
                 if (db.options && db.options.hardErrors) {
                     p.exit(1);
@@ -57,19 +56,16 @@ export default class MySqlConnection extends BaseDBConnection {
     }
     connect() {
         let me = this;
-        return new Promise(function(resolve, reject) {
+        return new Promise(function() {
             me.connection.connect(arguments[0]);
         }).then(
             () => $log.info('Connection successful'),
-            (e) =>
+            () =>
                 $ExceptionsProvider.$$databaseConnectivityError(me.database)
         );
     }
     disconnect() {
         return this.connection.end();
-    }
-    query() {
-        return run.apply(this, arguments[0].model, arguments);
     }
     run(query, model) {
         let me = this,
@@ -111,9 +107,11 @@ export default class MySqlConnection extends BaseDBConnection {
         const query = super.update.apply(this, arguments);
         return this.run(query, arguments[0].model);
     }
+    raw(query, model) {
+        return this.run(query, model);
+    }
     sync() {
-        let me = this,
-            db = this.database;
+        let me = this;
 
         // Don't worry about the error state, handled by connection
         return super.sync().then(() => me.connect().then(arguments[0]))
@@ -145,8 +143,7 @@ export default class MySqlConnection extends BaseDBConnection {
             });
     }
     migrate() {
-        let me = this,
-            db = this.database;
+        let me = this;
 
         return super.migrate().then(() => me.connect().then(arguments[0]))
             .then(function() {

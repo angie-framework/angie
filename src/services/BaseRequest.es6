@@ -220,7 +220,7 @@ class BaseRequest {
 
         prom.then(function() {
             if (error) {
-                $log.error(e);
+                $log.error(error);
                 me.response.writeHead(
                     500,
                     RESPONSE_HEADER_MESSAGES['500'],

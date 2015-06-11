@@ -1,11 +1,9 @@
 'use strict'; 'use strong';
 
-const $http =           require('http');
+// const $http =           require('http');
 
 class $Resource {
-    constructor(args) {
-        url =
-    }
+    constructor() {}
     get() {}
     post() {}
     put() {}

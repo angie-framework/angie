@@ -1,6 +1,5 @@
 'use strict';
 
-import angular from '../../../src/Angular';
 import app from '../../../src/Base';
 import compile from '../../../src/services/$Compile';
 

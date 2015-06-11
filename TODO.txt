@@ -1,6 +1,14 @@
 - SMALLER SETS, but each set must be tested and documented
 
 - Website and docs (tests)
+    - site
+        - quickstart
+        - docs
+            - try creating with gulp
+        - contributors
+    - google on site
+    - scrap README, use for automated testing, link to site
+    - update version / publish
 
 ================================================================================
 
@@ -25,7 +33,11 @@
 
 - parse params from routes/urls
 
-===============================================================================-
+================================================================================
+
+- logging (standalone, separate repo, require as dependency)
+
+================================================================================
 
 - make compile understand expressions, directives
 - complex query arguments > < >= <=
@@ -35,7 +47,7 @@
 ================================================================================
 
 - broadcaster
-
+- resource - http requests
 - how do you serve this?
 
 ================================================================================
@@ -51,6 +63,7 @@
     - mobile mets and optimizations
 
 - desktop app for admin access
+    - admin - standalone, require as repo
 
 - how do you authenticate?
 
@@ -81,8 +94,6 @@
 - load modules from outside of folders
 
 - caching (standalone, separate repo, require as dependency)
-
-- logging (standalone, separate repo, require as dependency)
 
 - make testing easier with injector
 

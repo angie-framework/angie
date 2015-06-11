@@ -1,58 +1,42 @@
 'use strict'; 'use strong';
 
-// import $log from '../util/$LogProvider';
+let g = global;
 
-let cache;
-
-global.__AngieCache__ = cache = {};
+g.__AngieCache__ = {};
 
 class $CacheFactory {
-
-    /**
-     * @class
-     * @service
-     * @name $CacheFactory
-     * @alias $cacheFactory
-     * @description Creates a Cache instance
-     * @param {string} key The name of the instantiated cache
-     */
     constructor(key) {
         this.key = key;
-        if (!cache[key]) {
-            this.cache = cache[key] = {};
+        if (!g.__AngieCache__[ key ]) {
+            this.cache = g.__AngieCache__[ key ] = {};
         } else {
-            this.cache = cache[key];
+            this.cache = g.__AngieCache__[ key ];
         }
     }
-
-    /**
-     * @method
-     * @memberof $CacheFactory
-     * @name put
-     * @param {string} id The name of the key in the cache
-     * @param {string|object|boolean|undefined|number}
-     obj The value of the key in the cache
-     * @param {boolean} replace Should existing keys be replaced?
-     */
     put(id, obj, replace) {
-        if ((cache[this.key][id] && replace) || !cache[this.key][id]) {
-            cache[this.key][id] = obj;
+        if (
+            (g.__AngieCache__[ this.key ][ id ] && replace) ||
+            !g.__AngieCache__[ this.key ][ id ]
+        ) {
+            this.cache[ id ] = g.__AngieCache__[ this.key ][ id ] = obj;
         }
         return this;
     }
     get(id) {
-        return cache[this.key][id] || undefined;
+        return g.__AngieCache__[ this.key ][ id ] || undefined;
     }
     remove(id) {
-        delete cache[this.key][id];
+        delete this.cache[ id ];
+        delete g.__AngieCache__[ this.key ][ id ];
         return this;
     }
     removeAll() {
-        cache[this.key] = {};
+        this.cache = g.__AngieCache__[ this.key ] = {};
         return this;
     }
     delete() {
-        delete cache[this.key];
+        delete this.cache;
+        delete g.__AngieCache__[ this.key ];
     }
 }
 

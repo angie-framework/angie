@@ -36,7 +36,7 @@ const util = {
             } catch(e) {
                 return false;
             }
-        }
+        };
 
         let template;
         if (target.indexOf('/') > -1) {

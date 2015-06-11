@@ -1,18 +1,11 @@
 'use strict'; 'use strong';
 
 import BaseDBConnection from './BaseDBConnection';
-import app from '../Angular';
-import util from '../util/util';
 import $log from '../util/$LogProvider';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
 
 const sqlite3 =       require('sqlite3').verbose(),
       fs =            require('fs');
-
-const TYPES = {
-    'CharField': 'TEXT',
-    'IntegerField': 'INTEGER',
-};
 
 export default class SqliteConnection extends BaseDBConnection {
     constructor(database, destructive) {
@@ -99,6 +92,9 @@ export default class SqliteConnection extends BaseDBConnection {
         const query = super.update.apply(this, arguments);
         return this.query(query, arguments[0].model,  'all');
     }
+    raw(query, model) {
+        return this.query(query, model, 'all');
+    }
     sync() {
         let me = this;
         super.sync().then(function() {
@@ -135,8 +131,7 @@ export default class SqliteConnection extends BaseDBConnection {
         });
     }
     migrate() {
-        let me = this,
-            db = this.database;
+        let me = this;
 
         super.migrate().then(function() {
             let models = me.models(),

@@ -1,7 +1,5 @@
 'use strict'; 'use strong';
 
-import {config} from '../Config';
-
 const chalk =       require('chalk');
 
 class $Exceptions {
@@ -42,7 +40,7 @@ class $Exceptions {
     $$invalidModelReference() {
         throw new Error(
             err(`Invalid Model argument`)
-        )
+        );
     }
 }
 

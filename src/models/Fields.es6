@@ -18,6 +18,8 @@ class BaseField {
             if (args === 1) {
                 return;
             }
+
+            /* eslint-disable */
             [
                 this.minValue,
                 this.maxValue,
@@ -33,6 +35,8 @@ class BaseField {
                 nullable,
                 unique
             ];
+
+            /* eslint-enable */
         }
     }
     create() {
@@ -112,7 +116,7 @@ export class ForeignKeyField extends BaseField {
 
             // TODO deep nesting
             this.deepNesting = args.hasOwnProperty('deepNesting') ?
-                !!args.nesting : true
+                !!args.nesting : true;
         }
         this.rel = rel;
         this.type = 'ForeignKeyField';

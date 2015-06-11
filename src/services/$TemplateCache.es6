@@ -64,7 +64,7 @@ function $templateLoader(url, type = 'template') {
     });
 
     // Deliberately use a for loop so that we can break out of it
-    for (var i = templateDirs.length - 1; i >=0; --i) {
+    for (var i = templateDirs.length - 1; i >= 0; --i) {
         let dir = templateDirs[i],
             path = util.findFile(dir, url);
 

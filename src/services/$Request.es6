@@ -1,7 +1,6 @@
 'use strict'; 'use strong';
 
 import app from '../Base';
-import util from '../util/util';
 
 const url = require('url');
 

@@ -16,7 +16,7 @@ describe('$Injector', function() {
             mock(process, 'exit', function() {});
             app.service('test', 'test');
             app.service('test2', 'test2');
-            app.service('scope', 'test4');
+            app.service('$scope', 'test4');
         });
         afterEach(function() {
             app.services = {};
@@ -39,8 +39,8 @@ describe('$Injector', function() {
                 expect($log.error).to.not.have.been.called;
                 expect(process.exit).to.not.have.been.called;
             });
-            it('test $scope resolves to scope', function() {
-                expect(get('$scope')).to.eq('test4');
+            it('test scope resolves to $scope', function() {
+                expect(get('scope')).to.eq('test4');
                 expect($log.error).to.not.have.been.called;
                 expect(process.exit).to.not.have.been.called;
             });

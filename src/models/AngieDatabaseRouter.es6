@@ -44,9 +44,11 @@ export default function AngieDatabaseRouter(args) {
             case 'mysql':
                 database = new MySqlConnection(name, db, destructive);
                 break;
-            case 'firebase':
-                database = new FirebaseConnection(db, destructive);
-                break;
+
+            // TODO add for Firebase controls
+            // case 'firebase':
+            //     database = new FirebaseConnection(db, destructive);
+            //     break;
             default:
                 database = new SqliteConnection(db, destructive);
         }

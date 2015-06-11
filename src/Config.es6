@@ -1,7 +1,6 @@
 'use strict'; 'use strong';
 
 import util from './util/util';
-import $log from './util/$LogProvider';
 import $ExceptionsProvider from './util/$ExceptionsProvider';
 
 const fs =            require('fs');
@@ -49,7 +48,7 @@ export default class Config {
                 } catch(e) {
                     $ExceptionsProvider.$$invalidConfig();
                 }
-            }, function(e) {
+            }, function() {
                 $ExceptionsProvider.$$invalidConfig();
             });
         } else {

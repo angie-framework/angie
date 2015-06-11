@@ -13,15 +13,19 @@
             }
         ],
         "comma-spacing": false,
+        "consistent-return": false,
         "global-strict": [
             2,
             "always"
         ],
         "indent": 4,
         "key-spacing": false,
+        "new-cap": false,
         "no-empty": false,
+        "no-loop-func": false,
         "no-mixed-requires": false,
         "no-multi-spaces": false,
+        "no-shadow": false,
         "no-underscore-dangle": false,
         "no-use-before-define": false,
         "quotes": [ 1, "single" ]

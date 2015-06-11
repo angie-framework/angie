@@ -13,4 +13,4 @@ export default function shell() {
         input: p.stdin,
         output: p.stdout
     });
-};
+}
