@@ -1,14 +1,17 @@
-'use strict';
+'use strict'; 'use strong';
 
 import util from './util/util';
 import $log from './util/$LogProvider';
+import $Exceptions from './util/$ExceptionsProvider';
+import {BaseModel} from './models/BaseModel';
+import {$injectionBinder} from './services/$Injector';
 
-const System =      require('systemjs'),
+const // System =      require('systemjs'),
       fs =          require('fs');
 
 const p = process;
 
-System.transpiler = 'babel';
+//System.transpiler = 'babel';
 
 let angular = class Angular {
     constructor() {
@@ -20,11 +23,21 @@ let angular = class Angular {
         this.directives = {};
         this.__registry__ = {};
         this.__dependencies__ = [];
-        return this;
     }
-    constant(name, obj) {
-        __register__.call(this, 'constants', name, obj);
-        return this;
+    constant(name, obj = {}) {
+        return this.__register__('constants', name, obj);
+    }
+    service(name, obj = {}) {
+        return this.__register__('services', name, obj);
+    }
+    Controller(name, obj = {}) {
+        return this.__register__('Controllers', name, obj);
+    }
+    directive(name, obj = {}) {
+
+        // TODO dependencies
+        let dir = new $injectionBinder(obj)();
+        return this.__register__('directives', name, dir);
     }
     config(fn) {
         this.configs.push({
@@ -33,16 +46,26 @@ let angular = class Angular {
         });
         return this;
     }
-    service(name, obj) {
-        __register__.call(this, 'services', name, obj);
-        return this;
+    Model(name, obj = {}) {
+        obj = obj.prototype ? new obj() : typeof obj === 'function' ? obj() : obj;
+        name = typeof name === 'string' ? name : obj.name;
+
+        let instance = new BaseModel(name);
+
+        // Mock extend obj onto the instance
+        if (typeof obj === 'object') {
+            instance = this.extend(instance, obj);
+        } else {
+            $Exceptions.$$invalidModelConfig(name);
+        }
+
+        return this.__register__('Models', name, instance);
     }
-    Controller(name, obj) {
-        __register__.call(this, 'Controllers', name, obj);
-        return this;
-    }
-    Model(name, obj) {
-        __register__.call(this, 'Models', name, obj);
+    __register__(component, name, obj) {
+        if (this[component]) {
+            this.__registry__[name] = component;
+            this[component][name] = obj;
+        }
         return this;
     }
     loadDependencies(dependencies = []) {
@@ -135,17 +158,20 @@ let angular = class Angular {
             resolve();
         });
     }
+    __dropBootStrapMethods__() {
+        delete this.__register__;
+        delete this.constant;
+        delete this.service;
+        delete this.Controller;
+        delete this.directive;
+        delete this.config;
+        delete this.Model;
+        return this;
+    }
     static noop() {}
 };
 
 angular = util.extend(angular, util);
-
-function __register__(component, name, obj) {
-    if (this[component]) {
-        this.__registry__[name] = component;
-        this[component][name] = obj;
-    }
-}
 
 global.angular = angular;
 export default angular;

@@ -2,7 +2,8 @@
     "projectName": "%s",
     "databases": {
         "default": {
-            "name": "%s"
+            "type": "sqlite3",
+            "name": "%s.db"
         }
     },
     "templateDirs": [

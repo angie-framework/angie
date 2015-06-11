@@ -1,8 +1,10 @@
-'use strict';
+'use strict'; 'use strong';
 
 import angular from './Angular';
+import * as AngieModelFields from './models/Fields';
 import {$routeProvider} from './services/$RouteProvider';
 import $compile from './services/$Compile';
+import $ExceptionsProvider from './util/$ExceptionsProvider';
 import $log from './util/$LogProvider';
 import $injector, {$injectionBinder} from './services/$Injector';
 import {$templateCache, $resourceLoader} from './services/$TemplateCache';
@@ -13,24 +15,25 @@ let app;
 
 /* eslint-disable */
 
-/**
- * @overview
- * @name app
- */
 global.app = app = new angular()
-    .Model('UserModel', function() {
-
+    .Model('AngieUserModel', function() {
+        let obj = {};
         // TODO fields
-        // this.username = new CharField({
-        //     maxLength: 35,
-        //     defaultValue: 'test'
-        // });
-        this.name = 'angie_users';
-        this.save = function() {
+        obj.name = 'angie_user';
+        obj.username = new AngieModelFields.CharField({
+            minLength: 1,
+            maxLength: 50,
+            unique: true
+        });
+        obj.migration = new AngieModelFields.ForeignKeyField('angie_migrations', {
+            nullable: true,
+            nested: true
+        });
+        obj.save = function() {
             // TODO this would override the base, but using an es6 class will not
         };
-        return this;
-    }).Model('MigrationsModel', class MigrationsModel {
+        return obj;
+    }).Model('AngieMigrationsModel', class MigrationsModel {
 
 /*eslint-enable */
         constructor() {
@@ -48,7 +51,8 @@ global.app = app = new angular()
     })
     .service('$routeProvider', $routeProvider)
     .service('$compile', $compile)
-    .service('$logProvider', $log)
+    .service('$Log', $log)
+    .service('$Exceptions', $ExceptionsProvider)
     .service('$injector', $injector)
     .service('$injectionBinder', $injectionBinder)
     .service('$scope', {

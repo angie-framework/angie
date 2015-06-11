@@ -1,3 +1,0 @@
--- TODO BaseView -->
-    PageView, APIView -->
-        default to specific response types

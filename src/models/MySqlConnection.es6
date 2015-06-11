@@ -1,136 +1,182 @@
-'use strict';
+'use strict'; 'use strong';
 
 import BaseDBConnection from './BaseDBConnection';
+import util from '../util/util';
 import $log from '../util/$LogProvider';
+import $ExceptionsProvider from '../util/$ExceptionsProvider';
 
 const mysql =           require('mysql');
-      // fs =              require('fs');
 
-const p = process;
-      // DEFAULT_HOST = '127.0.0.1';
+const p = process,
+      DEFAULT_HOST = '127.0.0.1',
+      DEFAULT_PORT = 3306;
 
 export default class MySqlConnection extends BaseDBConnection {
-    constructor(database = 'default') {
-        super();
+    constructor(name, database, destructive) {
+        super(database, destructive);
 
-        // TODO this should not be necessary, this module should not be loaded
-        // unless you've already proven to have a sqlite config
-        if (checkConfig(this.config.databases[database])) {
-            throw new Error();
+        let db = this.database;
+
+        if (!db.username) {
+            $ExceptionsProvider.$$invalidDatabaseConfig();
         } else if (!this.connection) {
-            let me = this;
-            me.db = me.config.databases[database];
-            me.connection = mysql.createConnection({
-                host: me.db.host || '127.0.0.1',
-                port: me.db.port || 3306,
-                user: me.db.username || '',
-                password: me.db.password || '',
-                database: me.db.name
+            this.connection = mysql.createConnection({
+                host: db.host || DEFAULT_HOST,
+                port: db.port || DEFAULT_PORT,
+                user: db.username || '',
+                password: db.password || '',
+                database: name || db.name || db.alias
             });
-            me.connection.on('error', function(e) {
-                $log.error(e);
-                if (me.db.options.hardErrors) {
+
+            this.connection.on('error', function(e) {
+                $ExceptionsProvider.$$databaseConnectivityError(db);
+                if (db.options && db.options.hardErrors) {
                     p.exit(1);
                 }
             });
         }
     }
+    types(field) {
+        let type = field.type;
+        if (!type) {
+            return;
+        }
+        switch (type) {
+            case 'CharField':
+                return 'VARCHAR';
+
+            // TODO support different size integers: TINY, SMALL, MEDIUM
+            case 'IntegerField':
+                return 'INTEGER';
+            case 'ForeignKeyField':
+                return `INTEGER, ADD CONSTRAINT FOREIGN KEY(${field.fieldname}) ` +
+                    `REFERENCES ${field.rel}(id) ON DELETE CASCADE`;
+            default:
+                return undefined;
+        }
+    }
     connect() {
         let me = this;
-        me.connection.connect(function(e) {
-            if (e) {
-                throw new Error(e);
-            }
-            $log.info('Connection successful');
-            me.disconnect();
-        });
+        return new Promise(function(resolve, reject) {
+            me.connection.connect(arguments[0]);
+        }).then(
+            () => $log.info('Connection successful'),
+            (e) =>
+                $ExceptionsProvider.$$databaseConnectivityError(me.database)
+        );
     }
     disconnect() {
-        this.connection.end();
+        return this.connection.end();
     }
-    query(q) {
-        let me = this;
-        return new Promise(function(resolve, reject) {
-            me.connection.query(q, function(e, r, f) {
-
-                if (e) {
-                    $log.error(e);
-                    reject(e);
-                } else {
-                    resolve({
-                        data: r,
-                        fields: f
-                    });
-                }
+    query() {
+        return run.apply(this, arguments[0].model, arguments);
+    }
+    run(query, model) {
+        let me = this,
+            db = this.database,
+            name = db.name || db.alias;
+        return new Promise(function() {
+            try {
+                return me.connect().then(arguments[0]);
+            } catch(e) {}
+        }).then(function() {
+            return new Promise(function(resolve) {
+                $log.info(
+                    `MySql Query: ${name}: ${query}`
+                );
+                return me.connection.query(query, function(e, rows = []) {
+                    if (e) {
+                        $log.warn(e);
+                    }
+                    resolve([ rows, e ]);
+                });
             });
-        }).then(function(d) {
-            // me.disconnect(function() {
-            //     return d;
-            // });
-            return d;
-        }, function(e) {
-            $log.error(e);
-            if (me.db.options.hardErrors) {
-                p.exit(1);
-            }
-            return false;
+        }).then(function(args) {
+            return me.__querySet__(model, query, args[0], args[1]);
         });
     }
-    sync(database = 'default') {
-        let me = this;
+    all() {
+        const query = super.all.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    create() {
+        const query = super.create.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    delete() {
+        const query = super.delete.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    update() {
+        const query = super.update.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    sync() {
+        let me = this,
+            db = this.database;
 
-        if (checkConfig(me.config.databases[database])) {
-            $log.error('Invalid database configuration');
-            p.exit(1);
-        }
+        // Don't worry about the error state, handled by connection
+        return super.sync().then(() => me.connect().then(arguments[0]))
+            .then(function() {
 
-        super.sync();
+                let models = me.models(),
+                    proms = [];
 
-        // let tmpConnection = mysql.createConnection({
-        //         host: this.db.__resolvedHost__,
-        //         user: this.db.username || '',
-        //         password: this.db.password || '',
-        //         database: ''
-        //     });
+                for (let model in models) {
 
+                    // Fetch models and get model name
+                    let instance = models[ model ],
+                        modelName = instance.name || instance.alias ||
+                            me.name(model);
 
-        //tmpConnection.connect().query(
-        //    `CREATE SCHEMA ${this.db.name};`,
-            // function(e, r) {
-            //     if (e) {
-            //         process.exit(1);
-            //me.connect();
-                //var proms = [];
-        this.connect();
-                // me.models.forEach(function(v) {
-                //     let modelInstance = new app.Models[v],
-                //         tableName = modelInstance.name || v;
-                //     //proms.push(
-                //         me.query(
-                //             `CREATE TABLE \`${me.db.name}\`.\`${tableName}\`` +
-                //             ' (`id` int(11) NOT NULL AUTO_INCREMENT, ' +
-                //             'PRIMARY KEY (`id`) ' +
-                //             ') ENGINE=InnoDB DEFAULT CHARSET=latin1;'
-                //         );
-                //     //);
-                // });
-                // Promise.all(proms).then(function() {
-                //     process.exit(1);
-                // });
-                //me.disconnect();
-            //}
-        //);
+                    // Run a table creation with an ID for each table
+                    proms.push(me.run(
+                        `CREATE TABLE \`${modelName}\`` +
+                        ' (`id` int(11) NOT NULL AUTO_INCREMENT, ' +
+                        'PRIMARY KEY (`id`) ' +
+                        ') ENGINE=InnoDB DEFAULT CHARSET=latin1;'
+                    ));
+                }
+                return Promise.all(proms).then(function() {
+                    return me.migrate();
+                }).then(function() {
+                    return me.disconnect();
+                });
+            });
+    }
+    migrate() {
+        let me = this,
+            db = this.database;
+
+        return super.migrate().then(() => me.connect().then(arguments[0]))
+            .then(function() {
+                let models = me.models(),
+                    proms = [];
+
+                for (let model in models) {
+                    let instance = models[ model ],
+                        modelName = instance.name || instance.alias ||
+                            me.name(instance);
+                    instance.__fields__().forEach(function(field) {
+                        let nullable = instance[ field ].nullable ? ' NOT NULL' : '',
+                            unique = instance[ field ].unique ? ' UNIQUE' : '';
+                        instance[ field ].fieldname = field;
+                        proms.push(me.run(
+                            `ALTER TABLE \`${modelName}\` ADD \`${field}\` ` +
+                            `${me.types(instance[ field ])}` +
+                            (
+                                instance[ field ].maxLength ?
+                                `(${instance[ field ].maxLength})` : ''
+                            ) +
+                            `${instance[ field].type ===
+                                'ForeignKeyField' ? nullable : ''}${unique};`
+                        ));
+                    });
+                    if (me.destructive) {
+                        console.log('destructive');
+                    }
+                }
+                return Promise.all(proms);
+            });
     }
 }
-
-function checkConfig(db) {
-    return !db || !db || !db.type || db.type !== 'mysql' || !db.name || !db.host;
-}
-
-// TODO configure sync to work recursively
-// TODO how do we get the models into the registrar?
-// TODO prevent model duplicates?
-// TODO prevent models from installing outside of instances?
-// TODO migrate
-// TODO move check config into super
-// TODO configure which db is hit using database param

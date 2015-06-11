@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 
 // TODO if you duplicate, pull the type out

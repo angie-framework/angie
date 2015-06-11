@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 import {config} from './Config';
 import app from './Base';
@@ -6,8 +6,11 @@ import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
 import {
     BaseRequest,
-    RESPONSE_HEADER_MESSAGES
+    RESPONSE_HEADER_MESSAGES,
+    PRAGMA_HEADER,
+    NO_CACHE_HEADER
 } from './services/BaseRequest';
+import util from './util/util';
 import __mimetypes__ from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
@@ -21,7 +24,7 @@ let firstrun = true,
     port;
 
 export default function server(args) {
-    port = !isNaN(+args.port) ? args.port : 3000;
+    port = !isNaN(+args[2]) ? args[2] : 3000;
 
     if (firstrun) {
         $log.warn('"server" not suitable for production use.');
@@ -37,14 +40,14 @@ export default function server(args) {
                 asset;
 
             // A file cannot be in the static path if it doesn't have an extension, shortcut
+            // TODO you may want to move the asset loading block out of here
             if (path.indexOf('.') > -1) {
-                let assetCache = new $cacheFactory('staticAssets'),
-                    assetPath = path.split('/').pop();
+                let assetCache = new $cacheFactory('staticAssets');
 
-                if (assetCache.get(assetPath)) {
-                    asset = assetCache.get(assetPath);
+                if (assetCache.get(path)) {
+                    asset = assetCache.get(path);
                 } else {
-                    asset = $templateLoader(assetPath, 'static');
+                    asset = $templateLoader(path, 'static');
                 }
 
                 // We have an asset and must render a response
@@ -61,8 +64,24 @@ export default function server(args) {
                         contentType = 'text/plain';
                     }
 
-                    // Write the head
+                    // Set the content type
                     angieResponse.responseHeaders[ 'Content-Type' ] = contentType;
+
+                    // We do not want to cache responses
+                    if (
+                        config.hasOwnProperty('cacheStaticAssets') &&
+                        !config.cacheStaticAssets
+                    ) {
+                        angieResponse.responseHeaders = util.extend(
+                            angieResponse.responseHeaders,
+                            {
+                                'Expires': -1,
+                                'Pragma': PRAGMA_HEADER,
+                                'Cache-Control': NO_CACHE_HEADER
+                            }
+                        );
+                    }
+
                     response.writeHead(
                         200,
                         RESPONSE_HEADER_MESSAGES['200'],
@@ -70,8 +89,8 @@ export default function server(args) {
                     );
 
                     // Check if you have an image type asset
-                    response.write(asset);
                     $log.info(path, response._header);
+                    response.write(asset);
                 } else {
 
                     // We have no asset and must render a response
@@ -83,34 +102,45 @@ export default function server(args) {
                         RESPONSE_HEADER_MESSAGES['404'],
                         angieResponse.responseHeaders
                     );
-                    response.write(error);
                     $log.warn(path, response._header);
+                    response.write(error);
                 }
+
+                // End the response
+                response.end();
             } else {
-                angieResponse.route();
+                angieResponse.route().then(function() {
+                    console.log('DO I GET IN?');
+                    let code = response.statusCode;
+                    console.log(code);
+                    if (!code) {
+                        const error = $templateLoader('500.html');
 
-                let code = response.statusCode;
-                if (!code) {
-                    const error = $templateLoader('500.html');
+                        // TODO extrapolate this to responses
+                        response.writeHead(
+                            500,
+                            RESPONSE_HEADER_MESSAGES['500'],
+                            angieResponse.responseHeaders
+                        );
+                        response.write(error);
+                        $log.error(path, response._header);
+                    } else if (code < 400) {
+                        console.log($log.info, response._header);
+                        $log.info(path, response._header);
+                    } else if (code < 500) {
+                        $log.warn(path, response._header);
+                    } else {
+                        $log.error(path, response._header);
+                    }
+                    console.log('__DO I GET IN?');
+                    return true;
+                }).then(function() {
+                    console.log('DONE');
 
-                    // TODO extrapolate this to responses
-                    response.writeHead(
-                        500,
-                        RESPONSE_HEADER_MESSAGES['500'],
-                        angieResponse.responseHeaders
-                    );
-                    response.write(error);
-                    $log.error(path, response._header);
-                } else if (code < 400) {
-                    $log.info(path, response._header);
-                } else if (code < 500) {
-                    $log.warn(path, response._header);
-                } else {
-                    $log.error(path, response._header);
-                }
+                    // End the response
+                    response.end();
+                });
             }
-
-            response.end();
 
             // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
             // request.connection.end();
@@ -150,12 +180,16 @@ function restart() {
     // TODO live reload
 }
 
-function prepApp() {
+export function prepApp() {
 
     // Load any app dependencies
     return app.loadDependencies(config.dependencies).then(function() {
 
         // Bootstrap the angular application
-        return new Promise((resolve) => app.bootstrap().then(resolve));
+        return new Promise(
+            (resolve) => app.bootstrap().then(
+                app.__dropBootstrapMethods__
+            ).then(resolve)
+        );
     });
 }

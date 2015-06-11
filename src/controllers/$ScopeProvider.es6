@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 // TODO needs to dynamically know when to provide scope
 // There is no such thing as $rootScope

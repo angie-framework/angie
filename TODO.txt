@@ -1,0 +1,93 @@
+- SMALLER SETS, but each set must be tested and documented
+
+- Website and docs (tests)
+
+================================================================================
+
+- directives
+    - directives have no access to models
+    - template
+    - api view
+    - native directives
+
+================================================================================
+
+    - DB
+        - m2m
+        - migrations
+            - update
+            - commonize
+            - have to change flags on the fields (unique, lengths, nullable)
+        - migrations destructive
+        - basic firebase
+
+================================================================================
+
+- parse params from routes/urls
+
+===============================================================================-
+
+- make compile understand expressions, directives
+- complex query arguments > < >= <=
+    - foreign key args other than id
+- deep nesting
+
+================================================================================
+
+- broadcaster
+
+- how do you serve this?
+
+================================================================================
+
+- improve server refresh / REPL refresh
+
+- resource loader
+    - load different types of files and compile
+    - references to popular libraries
+
+- mobile optimization
+    - native app with cordova
+    - mobile mets and optimizations
+
+- desktop app for admin access
+
+- how do you authenticate?
+
+================================================================================
+
+- custom web components
+- joins
+
+================================================================================
+
+- real time data binder from backend
+    - websocket
+    - long polling
+    - firebase
+
+- forms
+
+- DB
+    - mongo
+    - firebase
+      - meta table field
+      - object for each table
+      - create moot fields for migrations
+    - postgres
+    - couch
+    - make db
+
+- load modules from outside of folders
+
+- caching (standalone, separate repo, require as dependency)
+
+- logging (standalone, separate repo, require as dependency)
+
+- make testing easier with injector
+
+- cluster
+
+- make ORM standalone, separate repo, require as dependency
+
+- i18n/l10n

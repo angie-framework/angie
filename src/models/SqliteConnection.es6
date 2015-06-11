@@ -1,95 +1,172 @@
-'use strict';
+'use strict'; 'use strong';
 
 import BaseDBConnection from './BaseDBConnection';
 import app from '../Angular';
+import util from '../util/util';
 import $log from '../util/$LogProvider';
+import $ExceptionsProvider from '../util/$ExceptionsProvider';
 
 const sqlite3 =       require('sqlite3').verbose(),
       fs =            require('fs');
 
+const TYPES = {
+    'CharField': 'TEXT',
+    'IntegerField': 'INTEGER',
+};
+
 export default class SqliteConnection extends BaseDBConnection {
-    constructor(database = 'default') {
-        super();
+    constructor(database, destructive) {
+        super(database, destructive);
 
-        // TODO this should not be necessary, this module should not be loaded
-        // unless you've already proven to have a sqlite config
-        if (checkConfig(this.config.databases[database])) {
-            throw new Error();
-        } else if (!this.db) {
-            //try {
-            //    this.db = new sqlite3.Database(`:${this.config.databases.default.name}:`);
-            //} catch(e) {
-            //    throw new Error(`ANGIE [Error]: ${e}`);
-            //} //finally {
+        let db = this.database;
+        if (!db.name) {
+            $ExceptionsProvider.$$invalidDatabaseConfig();
+        }
+    }
+    types(field) {
+        let type = field.type;
+        if (!type) {
+            return;
+        }
+        switch (type) {
+            case 'CharField':
+                return 'TEXT';
 
-                // TODO find a way to commonize the serialization
-                // this.db.serialize(function() {
-                //
-                //     //this.db.run('CREATE TABLE lorem');
-                // });
-            //}
+            // TODO support different size integers: TINY, SMALL, MEDIUM
+            case 'IntegerField':
+                return 'INTEGER';
+            case 'ForeignKeyField':
+                return `INTEGER REFERENCES ${field.rel}(id)`;
+            default:
+                return undefined;
         }
     }
     connect() {
-
+        let db = this.database;
+        if (!this.connection) {
+            try {
+                this.connection = new sqlite3.Database(db.name);
+                $log.info('Connection successful');
+            } catch(err) {
+                $ExceptionsProvider.$$databaseConnectivityError(db);
+            }
+        }
+        return this.connection;
     }
-    sync(database = 'default') {
-        let filename = this.config.databases[database].name;
-        if (checkConfig(this.config.databases[database]) || !filename) {
-            $log.error('Invalid DB configuration');
-        } else if (!/\.db/.test(filename)) {
-            $log.error('Invalid filename');
-        }
+    serialize(fn) {
+        return this.connect().serialize(fn);
+    }
+    disconnect() {
+        this.connect().close();
+        return this;
+    }
+    query(query, model, key) {
+        let me = this,
+            db = this.database,
+            name = db.name || db.alias;
+        return new Promise(function(resolve) {
+            $log.info(`Sqlite3 Query: ${name}: ${query}`);
+            return me.serialize(resolve);
+        }).then(function() {
+            return new Promise(function(resolve) {
+                me.connection[ key ](query, function(e, rows = []) {
+                    if (e) {
+                        $log.warn(e);
+                    }
+                    resolve([ rows, e ]);
+                });
+            });
+        }).then(function(args) {
+            return me.__querySet__(model, query, args[0], args[1]);
+        });
+    }
+    run(query, model) {
+        return this.query(query, model, 'run');
+    }
+    all() {
+        const query = super.all.apply(this, arguments);
+        return this.query(query, arguments[0].model, 'all');
+    }
+    create() {
+        const query = super.create.apply(this, arguments);
+        return this.query(query, arguments[0].model, 'all');
+    }
+    delete() {
+        const query = super.delete.apply(this, arguments);
+        return this.query(query, arguments[0].model,  'all');
+    }
+    update() {
+        const query = super.update.apply(this, arguments);
+        return this.query(query, arguments[0].model,  'all');
+    }
+    sync() {
+        let me = this;
+        super.sync().then(function() {
+            let db = me.database,
+                proms = [];
 
-        super.sync();
+            // TODO test this in another directory
+            if (!fs.existsSync(db.name)) {
 
-        // let dir = filename.split('/').length ? filename.split('/').pop().join('/') : null,
-        //     file = filename.split('/').length ? filename.split('/').pop() : filename;
-        // if (dir) {
-        //     mkdirp.sync(dir);
-        // }
+                // Connection does not exist and we must touch the db file
+                fs.closeSync(fs.openSync(db.name, 'w'));
+            }
 
-        // TODO right now this must be a byproduct of an existing directory
-        if (!fs.existsSync(filename)) {
-            fs.closeSync(fs.openSync(filename, 'w'));
-        }
+            let models = me.models();
+            for (let model in models) {
 
-        // There shouldn't be this.db at this point
-        if (!this.db) {
-            this.db = new sqlite3.Database(filename);
-        }
+                // Fetch models and get model name
+                let instance = models[ model ],
+                    modelName = instance.name || instance.alias ||
+                        me.name(instance);
 
-        let db = this.db;
-
-        // TODO don't serialize each time
-        this.db.serialize(function() {
-            this.models.forEach(function(v) {
-
-                // Collect models from angular app
-                let modelInstance = new app.Models[v]();
-                db.run(`CREATE TABLE ${name(filename, modelInstance)}`);
-
-                // Reads model classes and finds their fields
+                // Run a table creation with an ID for each table
+                proms.push(me.run(
+                    `CREATE TABLE ${modelName} ` +
+                        '(id INTEGER PRIMARY KEY AUTOINCREMENT);',
+                    modelName
+                ));
+            }
+            return Promise.all(proms).then(function() {
+                return me.migrate();
+            }).then(function() {
+                return me.disconnect();
             });
         });
     }
+    migrate() {
+        let me = this,
+            db = this.database;
 
-    // TODO this is unecessary, but this should be a shorthand regardless
-    // static serialize(db, fn) {
-    //     return db.serialize(fn);
-    // }
+        super.migrate().then(function() {
+            let models = me.models(),
+                proms = [];
 
-}
-
-function checkConfig(db) {
-    return !db || !db.default || !db.type || db.type !== 'sqlite3';
-}
-function name(filename, modelInstance) {
-    return modelInstance.name || filename;
+            for (let model in models) {
+                let instance = models[ model ],
+                    modelName = instance.name || instance.alias ||
+                        me.name(instance);
+                instance.__fields__().forEach(function(field) {
+                    let nullable = instance[ field ].nullable ? ' NOT NULL' : '',
+                        unique = instance[ field ].unique ? ' UNIQUE' : '';
+                    instance[ field ].fieldname = field;
+                    proms.push(me.run(
+                        `ALTER TABLE ${modelName} ADD COLUMN ${field} ` +
+                            `${me.types(instance[ field ])}` +
+                            `${instance[ field].type ===
+                                'ForeignKeyField' ? nullable : ''}${unique};`
+                    ));
+                });
+                if (me.destructive) {
+                    console.log('destructive');
+                }
+            }
+            return Promise.all(proms);
+        });
+    }
 }
 
 // TODO configure sync to work recursively
-// TODO how do we get the models into the registrar?
 // TODO prevent model duplicates?
 // TODO prevent models from installing outside of instances?
 // TODO migrate

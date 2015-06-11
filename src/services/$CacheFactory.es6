@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 // import $log from '../util/$LogProvider';
 

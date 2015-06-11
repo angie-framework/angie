@@ -1,10 +1,11 @@
-'use strict';
+'use strict'; 'use strong';
 
 import Config from './Config';
 import $log from './util/$LogProvider';
 import createProject from './util/scaffold/project';
-import {default as DB} from './Database';
+import AngieDatabaseRouter from './models/AngieDatabaseRouter';
 import server from './Server';
+import shell from './util/shell';
 
 const exec =        require('child_process').exec;
 
@@ -20,16 +21,14 @@ p.argv.forEach(function(v) {
 
 // Reassign config calls
 let __server__ = requiresConfig.bind(null, server),
-    __db__ = requiresConfig.bind(null, function() {
-        return new DB();
-    });
+    __db__ = requiresConfig.bind(null, AngieDatabaseRouter);
 
 if (args.length === 1) {
     args.push('');
 }
 
 // Route the CLI request to a specific command
-switch (args[1]) {
+switch (args[1].toLowerCase()) {
     case '':
         $log.help();
         break;
@@ -37,23 +36,27 @@ switch (args[1]) {
         $log.help();
         break;
     case 'server':
-        __server__({ port: args[2] });
+        __server__();
         break;
     case 's':
-        __server__({ port: args[2] });
+        __server__();
         break;
     case 'cluster':
         break;
-    case 'createProject':
+    case 'createproject':
         createProject({ name: args[2] });
         break;
     case 'syncdb':
-        __db__();
+        __db__().then((db) => db.sync());
         break;
-    case 'migrations':
+    case 'migrate':
+        __db__().then((db) => db.migrate());
         break;
     case 'test':
         runTests();
+        break;
+    case 'shell':
+        shell();
         break;
     default:
         $log.help();
@@ -86,9 +89,6 @@ function requiresConfig(fn) {
 }
 
 // TODO make all commands here
-    // TODO make instance (app)
     // TODO create database
     // TODO migrate database
     // TODO cluster
-    // TODO docs
-    // TODO shell

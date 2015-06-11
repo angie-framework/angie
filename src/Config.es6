@@ -1,6 +1,8 @@
-'use strict';
+'use strict'; 'use strong';
 
+import util from './util/util';
 import $log from './util/$LogProvider';
+import $ExceptionsProvider from './util/$ExceptionsProvider';
 
 const fs =            require('fs');
 
@@ -11,37 +13,49 @@ let config = {};
 export default class Config {
     constructor() {
         if (Object.keys(config).length === 0) {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function() {
 
-                // TODO different cases of AngieFile, angiefile, angieFile, Angiefile, angie_file
+                // Use the file finder to check against filetype
+                let fileNames = [
+                        'angiefile',
+                        'angieFile',
+                        'Angiefile',
+                        'AngieFile'
+                    ],
+                    acceptedFileNames = [],
+                    file;
+
+                fileNames.forEach(function(name) {
+                    acceptedFileNames.push(`${name}.json`);
+                    acceptedFileNames.push(`${name}.js`);
+                    acceptedFileNames.push(`${name}.es6`);
+                });
+
+                acceptedFileNames.forEach(function(name) {
+                    let tmpFile = util.findFile(p.cwd(), name);
+                    if (tmpFile) {
+                        file = tmpFile;
+                    }
+                });
+
                 try {
-                    resolve(fs.readFileSync('AngieFile.json', 'utf8'));
+                    arguments[0](fs.readFileSync(file, 'utf8'));
                 } catch(e) {
-                    reject(e);
+                    arguments[1](e);
                 }
             }).then(function(stdout) {
                 try {
                     config = JSON.parse(stdout);
                 } catch(e) {
-                    $log.error(e);
-                    p.exit(1);
+                    $ExceptionsProvider.$$invalidConfig();
                 }
             }, function(e) {
-                $log.error(e);
-                p.exit(1);
+                $ExceptionsProvider.$$invalidConfig();
             });
         } else {
-            return new Promise(resolve => resolve());
+            return new Promise(() => arguments[0]());
         }
-    }
-    // static __forceSet__(obj) {
-    //     config = obj;
-    // }
-    static fetch() {
-        return config;
     }
 }
 
 export {config};
-
-// TODO what if it is not a linux machine?

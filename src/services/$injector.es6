@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 import app from '../Base';
 import $log from '../util/$LogProvider';
@@ -20,15 +20,14 @@ const $injector = {
 
                 // I don't think that this warrants a hard return, maybe just
                 // odd spacing
-                // TODO write a test around this
                 $log.warn('Invalid spacing found in $injector');
                 continue;
-            } else if (arg === '$scope') {
-                arg = 'scope';
+            } else if (arg === 'scope') {
+                arg = '$scope';
             }
 
             try {
-                provision = app[app.__registry__[arg]][arg];
+                provision = app[ app.__registry__[ arg ] ][ arg ];
             } catch (e) {
                 $$providerErr(e, arg);
             }

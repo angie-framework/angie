@@ -1,15 +1,15 @@
-'use strict';
+'use strict'; 'use strong';
 
 const chalk =           require('chalk'),
       exec =            require('child_process').exec;
 
 const p = process,
-      bold = chalk.bold;
-    //   LOG_LEVELS = {
-    //       'debug': true,
-    //       'info': true,
-    //       'error': true
-    //   };
+      bold = chalk.bold,
+      LOG_LEVELS = {
+          debug: 'debug',
+          info: true,
+          error: true
+      };
 
 let ENABLE_DEBUG = true;
 
@@ -18,25 +18,27 @@ class $LogProvider {
         // TODO configure logfile here from AngieFile
     }
     log() {
-        console.log.apply(null, arguments);
+        p.stdout.write(null, arguments);
     }
     bold() {
-        return this.log(bold.apply(null, arguments));
+        return p.stdout.write(bold.apply(null, arguments));
     }
     info() {
         let args = __carriage__.apply(null, arguments);
         args.unshift('ANGIE: [Info]');
-        console.info(chalk.green(bold.apply(null, args)));
+        args.push('\n');
+        p.stdout.write(chalk.green(bold.apply(null, args)));
     }
     debug() {
-        if (ENABLE_DEBUG === 'debug') {
+        if (ENABLE_DEBUG === LOG_LEVELS.debug) {
             this.info.apply(this, arguments);
         }
     }
     warn() {
         let args = __carriage__.apply(null, arguments);
         args.unshift('ANGIE: [Warning]');
-        console.log(chalk.yellow(bold.apply(null, args)));
+        args.push('\n');
+        p.stdout.write(chalk.yellow(bold.apply(null, args)));
     }
     error() {
         let args = __carriage__.apply(null, arguments);
@@ -44,7 +46,11 @@ class $LogProvider {
             args[0] = args[0].stack;
         }
         args.unshift('ANGIE: [Error]');
-        console.error(chalk.red(bold.apply(null, args)));
+        args.push('\n');
+        p.stdout.write(chalk.red(bold.apply(null, args)));
+    }
+    shell() {
+        return chalk.cyan(bold('angie > '));
     }
     help() {
         let me = this;
@@ -76,9 +82,10 @@ class $LogProvider {
                 )
             );
             me.log(
-                'syncdb                          ' +
+                'syncdb [database]               ' +
                 chalk.gray(
-                    'Sync the current specified databases in the AngieFile.'
+                    'Sync the current specified databases in the AngieFile. ' +
+                    'Defaults to the default created database'
                 )
             );
             me.log(

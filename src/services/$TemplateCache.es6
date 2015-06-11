@@ -1,8 +1,9 @@
-'use strict';
+'use strict'; 'use strong';
 
 import {config} from '../Config';
 import app from '../Base';
 import $cacheFactory from './$CacheFactory';
+import util from '../util/util';
 // import $log from '../util/$LogProvider';
 
 const fs =      require('fs');
@@ -22,12 +23,13 @@ class $TemplateCache extends $cacheFactory {
         if (!template) {
             template = $templateLoader(url);
         }
-        this.put(url, template);
+        if (template && config.cacheStaticAssets) {
+            this.put(url, template);
+        }
         return template;
     }
 }
 
-// TODO deep find templates
 function $templateLoader(url, type = 'template') {
 
     // Clone them template dirs
@@ -36,10 +38,6 @@ function $templateLoader(url, type = 'template') {
     ),
     template;
 
-    if (url.charAt(0) !== '/') {
-        url = `/${url}`;
-    }
-
     // Add the default Angie template dirs to the existing config template dirs
     if (type === 'template') {
         templateDirs.push(ANGIE_TEMPLATE_DIR);
@@ -47,42 +45,49 @@ function $templateLoader(url, type = 'template') {
         templateDirs = templateDirs.concat(ANGIE_STATIC_DIRS);
     }
 
-    // Returns the first matching template by name
-    templateDirs.some(function(v) {
-        if (v !== ANGIE_TEMPLATE_DIR && ANGIE_STATIC_DIRS.indexOf(v) === -1) {
-            if (v.indexOf(p.cwd()) === -1) {
-                if (v.charAt(0) !== '/') {
-                    v = `${p.cwd()}/${v}`;
-                } else {
-                    v = `${p.cwd()}${v}`;
-                }
-                if (v.charAt(v.length - 1) === '/') {
-                    v = v.slice(0, -1);
-                }
+    templateDirs = templateDirs.map(function(dir) {
+        if (
+            ANGIE_TEMPLATE_DIR !== dir &&
+            ANGIE_STATIC_DIRS.indexOf(dir) === -1 &&
+            dir.indexOf(p.cwd()) === -1
+        ) {
+            if (dir.charAt(0) === '/') {
+                dir = dir.slice(1, dir.length - 1);
             }
-        }
+            dir = `${p.cwd()}/${dir}`;
 
-        try {
-
-            // TODO you could replace this with a deep find, but it would be slower
-            template = fs.readFileSync(`${v}${url}`);
-            return true;
-        } catch(e) {
-            return false;
         }
+        if (dir[ dir.length - 1 ] === '/') {
+            dir = dir.slice(0, -1);
+        }
+        return dir;
     });
+
+    // Deliberately use a for loop so that we can break out of it
+    for (var i = templateDirs.length - 1; i >=0; --i) {
+        let dir = templateDirs[i],
+            path = util.findFile(dir, url);
+
+        if (typeof path === 'string') {
+            template = fs.readFileSync(path);
+        }
+    }
 
     if (!template) {
         return false;
-    } else if (type === 'template') {
-        $templateCache.put(url, template);
-    } else if (config.cacheStaticAssets !== true) {
+    } else if (
+        type === 'static' &&
+        config.hasOwnProperty('cacheStaticAssets') &&
+        config.cacheStaticAssets
+    ) {
+        // TODO you may want to put this in the asset loading block
         new $cacheFactory('staticAssets').put(url, template);
     }
     return template;
 }
 
 
+// TODO this is really more of a directive functionality
 // TODO make this work with .css, .less, .scss, .haml
 // TODO move this to $resource
 // TODO auto load angular, jquery, underscore, etc.
@@ -111,7 +116,7 @@ function $resourceLoader() {
     files.forEach(function(resource) {
 
         // Return if not a js file
-        if (!resource.split('.').pop() === 'js') {
+        if (resource.split('.').pop() !== 'js') {
             return;
         }
 
@@ -142,7 +147,7 @@ function $resourceLoader() {
         if (index > -1) {
             $response.__responseContent__.splice(index, 0, asset);
         } else {
-            $response.__responseContent__ += asset;
+            $response.__responseContent__ = $response.__responseContent__ + asset;
         }
     });
 }

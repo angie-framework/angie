@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 import angular from '../Angular';
 
