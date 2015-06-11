@@ -1,0 +1,1525 @@
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "expression": {
+        "type": "Literal",
+        "value": "use strict",
+        "raw": "'use strict'",
+        "range": [
+          0,
+          12
+        ],
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 12
+          }
+        }
+      },
+      "range": [
+        0,
+        13
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expression": {
+        "type": "Literal",
+        "value": "use strong",
+        "raw": "'use strong'",
+        "range": [
+          14,
+          26
+        ],
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 14
+          },
+          "end": {
+            "line": 1,
+            "column": 26
+          }
+        }
+      },
+      "range": [
+        14,
+        27
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 14
+        },
+        "end": {
+          "line": 1,
+          "column": 27
+        }
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "BaseDBConnection",
+            "range": [
+              36,
+              52
+            ],
+            "loc": {
+              "start": {
+                "line": 3,
+                "column": 7
+              },
+              "end": {
+                "line": 3,
+                "column": 23
+              }
+            }
+          },
+          "range": [
+            36,
+            52
+          ],
+          "loc": {
+            "start": {
+              "line": 3,
+              "column": 7
+            },
+            "end": {
+              "line": 3,
+              "column": 23
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "./BaseDBConnection",
+        "raw": "'./BaseDBConnection'",
+        "range": [
+          58,
+          78
+        ],
+        "loc": {
+          "start": {
+            "line": 3,
+            "column": 29
+          },
+          "end": {
+            "line": 3,
+            "column": 49
+          }
+        }
+      },
+      "range": [
+        29,
+        79
+      ],
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 3,
+          "column": 50
+        }
+      },
+      "trailingComments": [
+        {
+          "type": "Line",
+          "value": " import $log from '../util/$LogProvider';",
+          "range": [
+            80,
+            123
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 4,
+              "column": 43
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " import app from '../Angular';",
+          "range": [
+            124,
+            156
+          ],
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 0
+            },
+            "end": {
+              "line": 5,
+              "column": 32
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "VariableDeclaration",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "Firebase",
+            "range": [
+              164,
+              172
+            ],
+            "loc": {
+              "start": {
+                "line": 7,
+                "column": 6
+              },
+              "end": {
+                "line": 7,
+                "column": 14
+              }
+            }
+          },
+          "init": {
+            "type": "CallExpression",
+            "callee": {
+              "type": "Identifier",
+              "name": "require",
+              "range": [
+                182,
+                189
+              ],
+              "loc": {
+                "start": {
+                  "line": 7,
+                  "column": 24
+                },
+                "end": {
+                  "line": 7,
+                  "column": 31
+                }
+              }
+            },
+            "arguments": [
+              {
+                "type": "Literal",
+                "value": "firebase",
+                "raw": "'firebase'",
+                "range": [
+                  190,
+                  200
+                ],
+                "loc": {
+                  "start": {
+                    "line": 7,
+                    "column": 32
+                  },
+                  "end": {
+                    "line": 7,
+                    "column": 42
+                  }
+                }
+              }
+            ],
+            "range": [
+              182,
+              201
+            ],
+            "loc": {
+              "start": {
+                "line": 7,
+                "column": 24
+              },
+              "end": {
+                "line": 7,
+                "column": 43
+              }
+            }
+          },
+          "range": [
+            164,
+            201
+          ],
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 6
+            },
+            "end": {
+              "line": 7,
+              "column": 43
+            }
+          }
+        }
+      ],
+      "kind": "const",
+      "range": [
+        158,
+        202
+      ],
+      "loc": {
+        "start": {
+          "line": 7,
+          "column": 0
+        },
+        "end": {
+          "line": 7,
+          "column": 44
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Line",
+          "value": " import $log from '../util/$LogProvider';",
+          "range": [
+            80,
+            123
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 4,
+              "column": 43
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " import app from '../Angular';",
+          "range": [
+            124,
+            156
+          ],
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 0
+            },
+            "end": {
+              "line": 5,
+              "column": 32
+            }
+          }
+        }
+      ],
+      "trailingComments": [
+        {
+          "type": "Line",
+          "value": " FirebaseTokenGenerator = require(\"firebase-token-generator.js\");",
+          "range": [
+            209,
+            276
+          ],
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 6
+            },
+            "end": {
+              "line": 8,
+              "column": 73
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " mysql =           require('mysql'),",
+          "range": [
+            283,
+            321
+          ],
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 6
+            },
+            "end": {
+              "line": 9,
+              "column": 44
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " mkdirp =          require('mkdirp'),",
+          "range": [
+            328,
+            367
+          ],
+          "loc": {
+            "start": {
+              "line": 10,
+              "column": 6
+            },
+            "end": {
+              "line": 10,
+              "column": 45
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " fs =              require('fs');",
+          "range": [
+            374,
+            409
+          ],
+          "loc": {
+            "start": {
+              "line": 11,
+              "column": 6
+            },
+            "end": {
+              "line": 11,
+              "column": 41
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " const p = process;",
+          "range": [
+            411,
+            432
+          ],
+          "loc": {
+            "start": {
+              "line": 13,
+              "column": 0
+            },
+            "end": {
+              "line": 13,
+              "column": 21
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "ExportDefaultDeclaration",
+      "declaration": {
+        "type": "FunctionDeclaration",
+        "id": {
+          "type": "Identifier",
+          "name": "checkConfig",
+          "range": [
+            1262,
+            1273
+          ],
+          "loc": {
+            "start": {
+              "line": 47,
+              "column": 9
+            },
+            "end": {
+              "line": 47,
+              "column": 20
+            }
+          }
+        },
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "db",
+            "range": [
+              1274,
+              1276
+            ],
+            "loc": {
+              "start": {
+                "line": 47,
+                "column": 21
+              },
+              "end": {
+                "line": 47,
+                "column": 23
+              }
+            }
+          }
+        ],
+        "body": {
+          "type": "BlockStatement",
+          "body": [
+            {
+              "type": "ReturnStatement",
+              "argument": {
+                "type": "UnaryExpression",
+                "operator": "!",
+                "argument": {
+                  "type": "MemberExpression",
+                  "computed": false,
+                  "object": {
+                    "type": "Identifier",
+                    "name": "db",
+                    "range": [
+                      1292,
+                      1294
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 48,
+                        "column": 12
+                      },
+                      "end": {
+                        "line": 48,
+                        "column": 14
+                      }
+                    }
+                  },
+                  "property": {
+                    "type": "Identifier",
+                    "name": "url",
+                    "range": [
+                      1295,
+                      1298
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 48,
+                        "column": 15
+                      },
+                      "end": {
+                        "line": 48,
+                        "column": 18
+                      }
+                    }
+                  },
+                  "range": [
+                    1292,
+                    1298
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 48,
+                      "column": 12
+                    },
+                    "end": {
+                      "line": 48,
+                      "column": 18
+                    }
+                  }
+                },
+                "prefix": true,
+                "range": [
+                  1291,
+                  1298
+                ],
+                "loc": {
+                  "start": {
+                    "line": 48,
+                    "column": 11
+                  },
+                  "end": {
+                    "line": 48,
+                    "column": 18
+                  }
+                }
+              },
+              "range": [
+                1284,
+                1299
+              ],
+              "loc": {
+                "start": {
+                  "line": 48,
+                  "column": 4
+                },
+                "end": {
+                  "line": 48,
+                  "column": 19
+                }
+              }
+            }
+          ],
+          "range": [
+            1278,
+            1301
+          ],
+          "loc": {
+            "start": {
+              "line": 47,
+              "column": 25
+            },
+            "end": {
+              "line": 49,
+              "column": 1
+            }
+          }
+        },
+        "generator": false,
+        "expression": false,
+        "range": [
+          1253,
+          1301
+        ],
+        "loc": {
+          "start": {
+            "line": 47,
+            "column": 0
+          },
+          "end": {
+            "line": 49,
+            "column": 1
+          }
+        },
+        "leadingComments": [
+          {
+            "type": "Line",
+            "value": " You do not have to do much to syncdb here",
+            "range": [
+              1147,
+              1191
+            ],
+            "loc": {
+              "start": {
+                "line": 42,
+                "column": 8
+              },
+              "end": {
+                "line": 42,
+                "column": 52
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " TODO add empty fields fore records added",
+            "range": [
+              1200,
+              1243
+            ],
+            "loc": {
+              "start": {
+                "line": 43,
+                "column": 8
+              },
+              "end": {
+                "line": 43,
+                "column": 51
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " FirebaseTokenGenerator = require(\"firebase-token-generator.js\");",
+            "range": [
+              209,
+              276
+            ],
+            "loc": {
+              "start": {
+                "line": 8,
+                "column": 6
+              },
+              "end": {
+                "line": 8,
+                "column": 73
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " mysql =           require('mysql'),",
+            "range": [
+              283,
+              321
+            ],
+            "loc": {
+              "start": {
+                "line": 9,
+                "column": 6
+              },
+              "end": {
+                "line": 9,
+                "column": 44
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " mkdirp =          require('mkdirp'),",
+            "range": [
+              328,
+              367
+            ],
+            "loc": {
+              "start": {
+                "line": 10,
+                "column": 6
+              },
+              "end": {
+                "line": 10,
+                "column": 45
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " fs =              require('fs');",
+            "range": [
+              374,
+              409
+            ],
+            "loc": {
+              "start": {
+                "line": 11,
+                "column": 6
+              },
+              "end": {
+                "line": 11,
+                "column": 41
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " const p = process;",
+            "range": [
+              411,
+              432
+            ],
+            "loc": {
+              "start": {
+                "line": 13,
+                "column": 0
+              },
+              "end": {
+                "line": 13,
+                "column": 21
+              }
+            }
+          }
+        ],
+        "trailingComments": [
+          {
+            "type": "Line",
+            "value": " TODO security around this connection",
+            "range": [
+              1303,
+              1342
+            ],
+            "loc": {
+              "start": {
+                "line": 51,
+                "column": 0
+              },
+              "end": {
+                "line": 51,
+                "column": 39
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " Firebase is a little different",
+            "range": [
+              1345,
+              1378
+            ],
+            "loc": {
+              "start": {
+                "line": 54,
+                "column": 0
+              },
+              "end": {
+                "line": 54,
+                "column": 33
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " The data is basically just kvps",
+            "range": [
+              1383,
+              1417
+            ],
+            "loc": {
+              "start": {
+                "line": 55,
+                "column": 4
+              },
+              "end": {
+                "line": 55,
+                "column": 38
+              }
+            }
+          },
+          {
+            "type": "Line",
+            "value": " We need to create one big list per model",
+            "range": [
+              1422,
+              1465
+            ],
+            "loc": {
+              "start": {
+                "line": 56,
+                "column": 4
+              },
+              "end": {
+                "line": 56,
+                "column": 47
+              }
+            }
+          }
+        ]
+      },
+      "range": [
+        434,
+        1251
+      ],
+      "loc": {
+        "start": {
+          "line": 15,
+          "column": 0
+        },
+        "end": {
+          "line": 45,
+          "column": 1
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Line",
+          "value": " FirebaseTokenGenerator = require(\"firebase-token-generator.js\");",
+          "range": [
+            209,
+            276
+          ],
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 6
+            },
+            "end": {
+              "line": 8,
+              "column": 73
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " mysql =           require('mysql'),",
+          "range": [
+            283,
+            321
+          ],
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 6
+            },
+            "end": {
+              "line": 9,
+              "column": 44
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " mkdirp =          require('mkdirp'),",
+          "range": [
+            328,
+            367
+          ],
+          "loc": {
+            "start": {
+              "line": 10,
+              "column": 6
+            },
+            "end": {
+              "line": 10,
+              "column": 45
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " fs =              require('fs');",
+          "range": [
+            374,
+            409
+          ],
+          "loc": {
+            "start": {
+              "line": 11,
+              "column": 6
+            },
+            "end": {
+              "line": 11,
+              "column": 41
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " const p = process;",
+          "range": [
+            411,
+            432
+          ],
+          "loc": {
+            "start": {
+              "line": 13,
+              "column": 0
+            },
+            "end": {
+              "line": 13,
+              "column": 21
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Identifier",
+      "id": {
+        "type": "Identifier",
+        "name": "checkConfig",
+        "range": [
+          1262,
+          1273
+        ],
+        "loc": {
+          "start": {
+            "line": 47,
+            "column": 9
+          },
+          "end": {
+            "line": 47,
+            "column": 20
+          }
+        }
+      },
+      "params": [
+        {
+          "type": "Identifier",
+          "name": "db",
+          "range": [
+            1274,
+            1276
+          ],
+          "loc": {
+            "start": {
+              "line": 47,
+              "column": 21
+            },
+            "end": {
+              "line": 47,
+              "column": 23
+            }
+          }
+        }
+      ],
+      "body": {
+        "type": "BlockStatement",
+        "body": [
+          {
+            "type": "ReturnStatement",
+            "argument": {
+              "type": "UnaryExpression",
+              "operator": "!",
+              "argument": {
+                "type": "MemberExpression",
+                "computed": false,
+                "object": {
+                  "type": "Identifier",
+                  "name": "db",
+                  "range": [
+                    1292,
+                    1294
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 48,
+                      "column": 12
+                    },
+                    "end": {
+                      "line": 48,
+                      "column": 14
+                    }
+                  }
+                },
+                "property": {
+                  "type": "Identifier",
+                  "name": "url",
+                  "range": [
+                    1295,
+                    1298
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 48,
+                      "column": 15
+                    },
+                    "end": {
+                      "line": 48,
+                      "column": 18
+                    }
+                  }
+                },
+                "range": [
+                  1292,
+                  1298
+                ],
+                "loc": {
+                  "start": {
+                    "line": 48,
+                    "column": 12
+                  },
+                  "end": {
+                    "line": 48,
+                    "column": 18
+                  }
+                }
+              },
+              "prefix": true,
+              "range": [
+                1291,
+                1298
+              ],
+              "loc": {
+                "start": {
+                  "line": 48,
+                  "column": 11
+                },
+                "end": {
+                  "line": 48,
+                  "column": 18
+                }
+              }
+            },
+            "range": [
+              1284,
+              1299
+            ],
+            "loc": {
+              "start": {
+                "line": 48,
+                "column": 4
+              },
+              "end": {
+                "line": 48,
+                "column": 19
+              }
+            }
+          }
+        ],
+        "range": [
+          1278,
+          1301
+        ],
+        "loc": {
+          "start": {
+            "line": 47,
+            "column": 25
+          },
+          "end": {
+            "line": 49,
+            "column": 1
+          }
+        }
+      },
+      "generator": false,
+      "expression": false,
+      "range": [
+        1253,
+        1301
+      ],
+      "loc": {
+        "start": {
+          "line": 47,
+          "column": 0
+        },
+        "end": {
+          "line": 49,
+          "column": 1
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Line",
+          "value": " You do not have to do much to syncdb here",
+          "range": [
+            1147,
+            1191
+          ],
+          "loc": {
+            "start": {
+              "line": 42,
+              "column": 8
+            },
+            "end": {
+              "line": 42,
+              "column": 52
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " TODO add empty fields fore records added",
+          "range": [
+            1200,
+            1243
+          ],
+          "loc": {
+            "start": {
+              "line": 43,
+              "column": 8
+            },
+            "end": {
+              "line": 43,
+              "column": 51
+            }
+          }
+        }
+      ],
+      "trailingComments": [
+        {
+          "type": "Line",
+          "value": " TODO security around this connection",
+          "range": [
+            1303,
+            1342
+          ],
+          "loc": {
+            "start": {
+              "line": 51,
+              "column": 0
+            },
+            "end": {
+              "line": 51,
+              "column": 39
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " Firebase is a little different",
+          "range": [
+            1345,
+            1378
+          ],
+          "loc": {
+            "start": {
+              "line": 54,
+              "column": 0
+            },
+            "end": {
+              "line": 54,
+              "column": 33
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " The data is basically just kvps",
+          "range": [
+            1383,
+            1417
+          ],
+          "loc": {
+            "start": {
+              "line": 55,
+              "column": 4
+            },
+            "end": {
+              "line": 55,
+              "column": 38
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " We need to create one big list per model",
+          "range": [
+            1422,
+            1465
+          ],
+          "loc": {
+            "start": {
+              "line": 56,
+              "column": 4
+            },
+            "end": {
+              "line": 56,
+              "column": 47
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "sourceType": "module",
+  "range": [
+    0,
+    1301
+  ],
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 49,
+      "column": 1
+    }
+  },
+  "comments": [
+    {
+      "type": "Line",
+      "value": " import $log from '../util/$LogProvider';",
+      "range": [
+        80,
+        123
+      ],
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 0
+        },
+        "end": {
+          "line": 4,
+          "column": 43
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " import app from '../Angular';",
+      "range": [
+        124,
+        156
+      ],
+      "loc": {
+        "start": {
+          "line": 5,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 32
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " FirebaseTokenGenerator = require(\"firebase-token-generator.js\");",
+      "range": [
+        209,
+        276
+      ],
+      "loc": {
+        "start": {
+          "line": 8,
+          "column": 6
+        },
+        "end": {
+          "line": 8,
+          "column": 73
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " mysql =           require('mysql'),",
+      "range": [
+        283,
+        321
+      ],
+      "loc": {
+        "start": {
+          "line": 9,
+          "column": 6
+        },
+        "end": {
+          "line": 9,
+          "column": 44
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " mkdirp =          require('mkdirp'),",
+      "range": [
+        328,
+        367
+      ],
+      "loc": {
+        "start": {
+          "line": 10,
+          "column": 6
+        },
+        "end": {
+          "line": 10,
+          "column": 45
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " fs =              require('fs');",
+      "range": [
+        374,
+        409
+      ],
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 6
+        },
+        "end": {
+          "line": 11,
+          "column": 41
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " const p = process;",
+      "range": [
+        411,
+        432
+      ],
+      "loc": {
+        "start": {
+          "line": 13,
+          "column": 0
+        },
+        "end": {
+          "line": 13,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " model",
+      "range": [
+        903,
+        911
+      ],
+      "loc": {
+        "start": {
+          "line": 31,
+          "column": 8
+        },
+        "end": {
+          "line": 31,
+          "column": 16
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " let data = this.read(model);",
+      "range": [
+        920,
+        951
+      ],
+      "loc": {
+        "start": {
+          "line": 32,
+          "column": 8
+        },
+        "end": {
+          "line": 32,
+          "column": 39
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " TODO can you set a specific instance of a model?",
+      "range": [
+        961,
+        1012
+      ],
+      "loc": {
+        "start": {
+          "line": 34,
+          "column": 8
+        },
+        "end": {
+          "line": 34,
+          "column": 59
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": "data[data.length] = {};",
+      "range": [
+        1022,
+        1047
+      ],
+      "loc": {
+        "start": {
+          "line": 36,
+          "column": 8
+        },
+        "end": {
+          "line": 36,
+          "column": 33
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": "this.db.set(data[data.length], {})",
+      "range": [
+        1056,
+        1092
+      ],
+      "loc": {
+        "start": {
+          "line": 37,
+          "column": 8
+        },
+        "end": {
+          "line": 37,
+          "column": 44
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " You do not have to do much to syncdb here",
+      "range": [
+        1147,
+        1191
+      ],
+      "loc": {
+        "start": {
+          "line": 42,
+          "column": 8
+        },
+        "end": {
+          "line": 42,
+          "column": 52
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " TODO add empty fields fore records added",
+      "range": [
+        1200,
+        1243
+      ],
+      "loc": {
+        "start": {
+          "line": 43,
+          "column": 8
+        },
+        "end": {
+          "line": 43,
+          "column": 51
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " TODO security around this connection",
+      "range": [
+        1303,
+        1342
+      ],
+      "loc": {
+        "start": {
+          "line": 51,
+          "column": 0
+        },
+        "end": {
+          "line": 51,
+          "column": 39
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Firebase is a little different",
+      "range": [
+        1345,
+        1378
+      ],
+      "loc": {
+        "start": {
+          "line": 54,
+          "column": 0
+        },
+        "end": {
+          "line": 54,
+          "column": 33
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " The data is basically just kvps",
+      "range": [
+        1383,
+        1417
+      ],
+      "loc": {
+        "start": {
+          "line": 55,
+          "column": 4
+        },
+        "end": {
+          "line": 55,
+          "column": 38
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " We need to create one big list per model",
+      "range": [
+        1422,
+        1465
+      ],
+      "loc": {
+        "start": {
+          "line": 56,
+          "column": 4
+        },
+        "end": {
+          "line": 56,
+          "column": 47
+        }
+      }
+    }
+  ]
+}

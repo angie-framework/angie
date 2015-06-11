@@ -48,16 +48,13 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
         ).on('end', cb);
     });
 });
-gulp.task('jsdoc', [ 'eslint' ], function(cb) {
-    exec(`esdoc -c esdoc.json`, cb);
+gulp.task('esdoc', [ 'mocha' ], function(cb) {
+    exec('esdoc -c esdoc.json', cb);
 });
-gulp.task('watch:mocha', [ 'mocha' ], function() {
-    gulp.watch([ src, testSrc ], [ 'mocha' ]);
+gulp.task('watch', [ 'esdoc' ], function() {
+    gulp.watch([ src ], [ 'esdoc' ]);
 });
-gulp.task('watch:jsdoc', [ 'jsdoc' ], function() {
-    gulp.watch([ src ], [ 'jsdoc' ]);
-});
-gulp.task('default', [ 'mocha' ]);
+gulp.task('default', [ 'esdoc' ]);
 
 
 

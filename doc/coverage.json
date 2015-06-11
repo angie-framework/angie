@@ -1,0 +1,103 @@
+{
+  "coverage": "1.86%",
+  "expectCount": 161,
+  "actualCount": 3,
+  "files": {
+    "src/util/$ExceptionsProvider.es6": {
+      "expectCount": 9,
+      "actualCount": 0
+    },
+    "src/services/$CacheFactory.es6": {
+      "expectCount": 9,
+      "actualCount": 0
+    },
+    "src/services/$injector.es6": {
+      "expectCount": 7,
+      "actualCount": 0
+    },
+    "src/util/$LogProvider.es6": {
+      "expectCount": 11,
+      "actualCount": 0
+    },
+    "src/services/$Request.es6": {
+      "expectCount": 3,
+      "actualCount": 0
+    },
+    "src/services/$Responses.es6": {
+      "expectCount": 3,
+      "actualCount": 0
+    },
+    "src/services/$RouteProvider.es6": {
+      "expectCount": 5,
+      "actualCount": 0
+    },
+    "src/controllers/$ScopeProvider.es6": {
+      "expectCount": 2,
+      "actualCount": 0
+    },
+    "src/services/$TemplateCache.es6": {
+      "expectCount": 3,
+      "actualCount": 0
+    },
+    "src/models/AngieDatabaseRouter.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    },
+    "src/Angular.es6": {
+      "expectCount": 17,
+      "actualCount": 3
+    },
+    "src/models/BaseDBConnection.es6": {
+      "expectCount": 16,
+      "actualCount": 0
+    },
+    "src/models/Fields.es6": {
+      "expectCount": 6,
+      "actualCount": 0
+    },
+    "src/models/BaseModel.es6": {
+      "expectCount": 12,
+      "actualCount": 0
+    },
+    "src/services/BaseRequest.es6": {
+      "expectCount": 14,
+      "actualCount": 0
+    },
+    "src/Config.es6": {
+      "expectCount": 2,
+      "actualCount": 0
+    },
+    "src/models/MySqlConnection.es6": {
+      "expectCount": 14,
+      "actualCount": 0
+    },
+    "src/models/SqliteConnection.es6": {
+      "expectCount": 16,
+      "actualCount": 0
+    },
+    "src/models/FirebaseConnection.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    },
+    "src/services/$Compile.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    },
+    "src/services/$Resource.es6": {
+      "expectCount": 6,
+      "actualCount": 0
+    },
+    "src/util/scaffold/project.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    },
+    "src/Server.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    },
+    "src/util/shell.es6": {
+      "expectCount": 1,
+      "actualCount": 0
+    }
+  }
+}

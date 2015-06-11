@@ -5,7 +5,7 @@
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
   "scripts": {
-    "test": "gulp",
+    "test": "gulp mocha",
     "postinstall": "bower install"
   },
   "engines": {

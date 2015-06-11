@@ -5,8 +5,8 @@ import $log from '../util/$LogProvider';
 
 const p = process;
 
-const $injector = {
-    get: function() {
+class $Injector {
+    get() {
         if (!arguments.length) {
             $$injectorErr();
         }
@@ -27,7 +27,7 @@ const $injector = {
             }
 
             try {
-                provision = app[ app.__registry__[ arg ] ][ arg ];
+                provision = app[ app._registry[ arg ] ][ arg ];
             } catch (e) {
                 $$providerErr(e, arg);
             }
@@ -38,23 +38,23 @@ const $injector = {
             }
         }
         return providers.length > 1 ? providers : providers[0] ? providers[0] : [];
-    },
+    }
     stringCheck(s) {
         return !!s.length;
-    },
+    }
     objectCheck(o) {
         return !!Object.keys(o).length;
-    },
+    }
     functionCheck() {
         return true;
-    },
+    }
     booleanCheck() {
         return true;
-    },
+    }
     numberCheck() {
         return true;
     }
-};
+}
 
 function $injectionBinder(fn) {
     try {
@@ -86,6 +86,7 @@ function $$providerErr(e, arg) {
     p.exit(1);
 }
 
+const $injector = new $Injector();
 export default $injector;
 export {$injectionBinder};
 

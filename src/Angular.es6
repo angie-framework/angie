@@ -6,14 +6,21 @@ import $Exceptions from './util/$ExceptionsProvider';
 import {BaseModel} from './models/BaseModel';
 import {$injectionBinder} from './services/$Injector';
 
-const // System =      require('systemjs'),
-      fs =          require('fs');
+const fs =          require('fs');
 
 const p = process;
 
-//System.transpiler = 'babel';
+/**
+ * This is the default Angie Angular class. It is instantiated and given
+ * the namespace `global.app`. Static methods are available via this
+ * instance.
+ * @example
+ */
+class Angular {
 
-let angular = class Angular {
+    /**
+     * Constructor
+     */
     constructor() {
         this.constants = {};
         this.configs = [];
@@ -21,23 +28,30 @@ let angular = class Angular {
         this.Controllers = {};
         this.Models = {};
         this.directives = {};
-        this.__registry__ = {};
-        this.__dependencies__ = [];
+        this._registry = {};
+        this._dependencies = [];
     }
+
+    /**
+     * Creates an Angie Angular constant provider
+     * @param {string} name The name of the constant being created
+     * @param {object|string|number|Array<>|boolean} obj The object value
+     * @returns {object} this instanceof Angular
+     */
     constant(name, obj = {}) {
-        return this.__register__('constants', name, obj);
+        return this._register('constants', name, obj);
     }
     service(name, obj = {}) {
-        return this.__register__('services', name, obj);
+        return this._register('services', name, obj);
     }
     Controller(name, obj = {}) {
-        return this.__register__('Controllers', name, obj);
+        return this._register('Controllers', name, obj);
     }
     directive(name, obj = {}) {
 
         // TODO dependencies
         let dir = new $injectionBinder(obj)();
-        return this.__register__('directives', name, dir);
+        return this._register('directives', name, dir);
     }
     config(fn) {
         this.configs.push({
@@ -59,11 +73,11 @@ let angular = class Angular {
             $Exceptions.$$invalidModelConfig(name);
         }
 
-        return this.__register__('Models', name, instance);
+        return this._register('Models', name, instance);
     }
-    __register__(component, name, obj) {
+    _register(component, name, obj) {
         if (this[component]) {
-            this.__registry__[name] = component;
+            this._registry[name] = component;
             this[component][name] = obj;
         }
         return this;
@@ -73,7 +87,7 @@ let angular = class Angular {
             proms = [];
 
         // Add dependencies
-        this.__dependencies__ = this.__dependencies__.concat(dependencies);
+        this._dependencies = this._dependencies.concat(dependencies);
 
         if (dependencies) {
             dependencies.forEach(function(v) {
@@ -141,8 +155,6 @@ let angular = class Angular {
         });
 
         // Import the app
-        // TODO use the System module loader
-        //return System.import(`${__dirname}/Base.es6`).then(function(app)
         return new Promise(function(resolve) {
 
             // Once all of the modules are loaded, run the configs
@@ -159,7 +171,7 @@ let angular = class Angular {
         });
     }
     __dropBootStrapMethods__() {
-        delete this.__register__;
+        delete this._register;
         delete this.constant;
         delete this.service;
         delete this.Controller;
@@ -169,9 +181,8 @@ let angular = class Angular {
         return this;
     }
     static noop() {}
-};
+}
 
-angular = util.extend(angular, util);
-
-global.angular = angular;
+Angular = util.extend(Angular, util);
+const angular = global.angular = class angular extends Angular{};
 export default angular;

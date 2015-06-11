@@ -8,6 +8,7 @@
         - contributors
     - google on site
     - scrap README, use for automated testing, link to site
+    - pre-push hook to run tests/docs
     - update version / publish
 
 ================================================================================
