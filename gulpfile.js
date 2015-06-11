@@ -49,7 +49,20 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
     });
 });
 gulp.task('esdoc', [ 'mocha' ], function(cb) {
-    exec('esdoc -c esdoc.json', cb);
+    exec('esdoc -c esdoc.json', function() {
+        var template = fs.readFileSync('doc/index.html', 'utf8');
+        console.log(template);
+        template = template.replace(
+            '</head>',
+            '<script type="text/javascript">window.onload = function() { if ' +
+            '(parent) { var h = document.getElementsByTagName("head")[0], ' +
+            'arrStyleSheets = parent.document.getElementsByTagName("link"); for ' +
+            '(var i = 0; i < arrStyleSheets.length; i++) { h.appendChild(' +
+            'arrStyleSheets[i].cloneNode(true));}}};</script></head>'
+        );
+        console.log(template);
+        fs.writeFileSync('doc/index.html', template, 'utf8', { 'flags': 'w+' });
+    });
 });
 gulp.task('watch', [ 'esdoc' ], function() {
     gulp.watch([ src ], [ 'esdoc' ]);
