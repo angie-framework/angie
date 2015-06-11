@@ -5,5 +5,5 @@ debug
 doc
 node_modules
 .editorconfig
+.travis.yml
 TODO.txt
-travis.yml
