@@ -54,7 +54,7 @@ gulp.task('esdoc', [ 'mocha' ], function(cb) {
             '<script type=\'text/javascript\'>window.addEventListener(\'message\', ' +
             'function(event) {var style = document.createElement(\'link\'); ' +
             'document.head.appendChild(style); style.rel = \'stylesheet\'; ' +
-            'style.src = event.data;});</script></head>'
+            'style.href = event.data;});</script></head>'
         );
         console.log(template);
         fs.writeFileSync('doc/index.html', template, 'utf8', { 'flags': 'w+' });
