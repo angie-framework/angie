@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/util/util.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,82 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/util/util.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+const fs =          require(&apos;fs&apos;);
+
+const util = {
+    extend: function extend(target) {
+        let __target__;
+
+        if (typeof target === &apos;function&apos;) {
+            __target__ = target;
+            target = target.prototype;
+        } else if (typeof target !== &apos;object&apos;) {
+            return target;
+        }
+
+        let args = Array.prototype.slice.call(arguments, 1, arguments.length);
+        args.forEach(function(src) {
+            if (typeof src === &apos;object&apos;) {
+                for (let key in src) {
+                    target[key] = src[key];
+                }
+            }
+        });
+
+        return __target__ || target;
+    },
+    findFile: function findFile(root, target) {
+
+        // Handle slashes
+        target = target.charAt(0) === &apos;/&apos; ? target.slice(1, target.length) : target;
+
+        // Pull this out because it is used several times
+        const fileDirectoryExists = function fileDirectoryExists(n, t) {
+            try {
+                return fs.lstatSync(n)[ `is${t}` ]();
+            } catch(e) {
+                return false;
+            }
+        };
+
+        let template;
+        if (target.indexOf(&apos;/&apos;) &gt; -1) {
+
+            // We can just search the root for the file
+            template = `${root}/${target}`;
+        } else {
+
+            // If file has no slash, search in all directories
+            const fn = function deepFindFile(root, target) {
+                fs.readdirSync(root).forEach(function(file) {
+                    let isDir = fileDirectoryExists(file, &apos;Directory&apos;);
+                    if (isDir) {
+
+                        // We have a directory and we need to recurse through it
+                        fn(`${root}/${file}`, target);
+                    } else if (file.indexOf(target) &gt; -1) {
+                        template = `${root}/${target}`;
+                    }
+                });
+            };
+
+            // Recursively call for all roots
+            fn(root, target);
+        }
+
+        // Check to see that the &apos;template&apos; we found is an actual file
+        if (template &amp;&amp; fileDirectoryExists(template, &apos;File&apos;)) {
+            return template;
+        }
+        return undefined;
+    }
+};
+
+export default util;
+</code></pre>
 </div>
 
 <footer class="footer">

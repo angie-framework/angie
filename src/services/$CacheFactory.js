@@ -40,5 +40,4 @@ class $CacheFactory {
     }
 }
 
-const $cacheFactory = $CacheFactory;
-export default $cacheFactory;
+export default class $cacheFactory extends $CacheFactory {}

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 // TODO pathify? system?
 import app from '../../../src/Base';

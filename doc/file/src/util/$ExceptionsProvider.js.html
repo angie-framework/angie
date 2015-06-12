@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/util/$ExceptionsProvider.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,60 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/util/$ExceptionsProvider.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+const chalk =       require(&apos;chalk&apos;);
+
+class $Exceptions {
+    constructor() {}
+    $$databaseConnectivityError(database) {
+        let message;
+        switch (database.type) {
+            case &apos;mysql&apos;:
+                message = `Could not find MySql database ${database.name || database.alias}@` +
+                    `${database.host || &apos;127.0.0.1&apos;}:${database.port || 3306}`;
+                break;
+            default:
+                message = `Could not find ${database.name} in filesystem.`;
+        }
+        throw new Error(err(message));
+    }
+    $$databaseTableExists(e) {
+        throw new Error(err(e));
+    }
+    $$invalidConfig(type = &apos;&apos;) {
+        throw new Error(
+            err(`Invalid ${type} configuration settings. Please check your AngieFile.`)
+        );
+    }
+    $$invalidDatabaseConfig() {
+        return this.$$invalidConfig(&apos;database&apos;);
+    }
+    $$invalidModelConfig(name) {
+        throw new Error(
+            err(`Invalid Model configuration for model ${name} &lt;-- ${name}Provider`)
+        );
+    }
+    $$invalidModelFieldReference(name = &apos;&apos;, field) {
+        throw new Error(
+            err(`Invalid param for Model ${name}@${field}`)
+        );
+    }
+    $$invalidModelReference() {
+        throw new Error(
+            err(`Invalid Model argument`)
+        );
+    }
+}
+
+function err() {
+    return chalk.red(chalk.bold.apply(null, arguments));
+}
+
+const $ExceptionsProvider = new $Exceptions();
+export default $ExceptionsProvider;
+</code></pre>
 </div>
 
 <footer class="footer">

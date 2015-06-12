@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/models/FirebaseConnection.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,64 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/models/FirebaseConnection.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import BaseDBConnection from &apos;./BaseDBConnection&apos;;
+// import $log from &apos;../util/$LogProvider&apos;;
+// import app from &apos;../Angular&apos;;
+
+const Firebase =        require(&apos;firebase&apos;);
+      // FirebaseTokenGenerator = require(&quot;firebase-token-generator.js&quot;);
+      // mysql =           require(&apos;mysql&apos;),
+      // mkdirp =          require(&apos;mkdirp&apos;),
+      // fs =              require(&apos;fs&apos;);
+
+// const p = process;
+
+export default class FirebaseConnection extends BaseDBConnection {
+    constructor(database = &apos;default&apos;) {
+        super();
+        if (checkConfig(this.config.databases[database])) {
+            throw new Error();
+        } else {
+            this.db = new Firebase(this.config.databases[database].url);
+        }
+
+    }
+    read(model) {
+        this.db.child(model.name).on(&apos;value&apos;, function(data) {
+            return data;
+        });
+    }
+    create() {
+        // model
+        // let data = this.read(model);
+
+        // TODO can you set a specific instance of a model?
+
+        //data[data.length] = {};
+        //this.db.set(data[data.length], {})
+    }
+    syncdb() {
+        super.syncdb();
+
+        // You do not have to do much to syncdb here
+        // TODO add empty fields fore records added
+    }
+}
+
+function checkConfig(db) {
+    return !db.url;
+}
+
+// TODO security around this connection
+
+
+// Firebase is a little different
+    // The data is basically just kvps
+    // We need to create one big list per model
+</code></pre>
 </div>
 
 <footer class="footer">

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/services/$TemplateCache.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/benderTheCrime/angie.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/services/$CacheFactory.js~$CacheFactory.html">$CacheFactory</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$ExceptionsProvider.js~$Exceptions.html">$Exceptions</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$injector.js~$Injector.html">$Injector</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$LogProvider.js~$LogProvider.html">$LogProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Request.js~$Request.html">$Request</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Responses.js~$Response.html">$Response</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$RouteProvider.js~$RouteProvider.html">$RouteProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/controllers/$ScopeProvider.js~$ScopeProvider.html">$ScopeProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$TemplateCache.js~$TemplateCache.html">$TemplateCache</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Angular.js~Angular.html">Angular</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/BaseDBConnection.js~BaseDBConnection.html">BaseDBConnection</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/Fields.js~BaseField.html">BaseField</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/BaseModel.js~BaseModel.html">BaseModel</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/BaseRequest.js~BaseRequest.html">BaseRequest</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Config.js~Config.html">Config</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/MySqlConnection.js~MySqlConnection.html">MySqlConnection</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/SqliteConnection.js~SqliteConnection.html">SqliteConnection</a></span></li>
+</ul>
+</div>
+
+
+
+<div data-ice="functionWrap">
+  <h2><a href="function/">Function</a></h2>
+  <ul>
+    
+  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-AngieDatabaseRouter">AngieDatabaseRouter</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-checkConfig">checkConfig</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-compile">compile</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-createProject">createProject</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-restart">restart</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/services/$TemplateCache.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import {config} from &apos;../Config&apos;;
+import app from &apos;../Base&apos;;
+import $cacheFactory from &apos;./$CacheFactory&apos;;
+import util from &apos;../util/util&apos;;
+// import $log from &apos;../util/$LogProvider&apos;;
+
+const fs =      require(&apos;fs&apos;);
+
+const p = process,
+      ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`,
+
+      // TODO do you want to replace this with another dir?
+      ANGIE_STATIC_DIRS = [];
+
+class $TemplateCache extends $cacheFactory {
+    constructor() {
+        super(&apos;templateCache&apos;);
+    }
+    get(url) {
+        let template = super.get(url);
+        if (!template) {
+            template = $templateLoader(url);
+        }
+        if (template &amp;&amp; config.cacheStaticAssets) {
+            this.put(url, template);
+        }
+        return template;
+    }
+}
+
+function $templateLoader(url, type = &apos;template&apos;) {
+
+    // Clone them template dirs
+    let templateDirs = (
+        config[ `${type}Dirs` ].slice() || []
+    ),
+    template;
+
+    // Add the default Angie template dirs to the existing config template dirs
+    if (type === &apos;template&apos;) {
+        templateDirs.push(ANGIE_TEMPLATE_DIR);
+    } else if (type === &apos;static&apos;) {
+        templateDirs = templateDirs.concat(ANGIE_STATIC_DIRS);
+    }
+
+    templateDirs = templateDirs.map(function(dir) {
+        if (
+            ANGIE_TEMPLATE_DIR !== dir &amp;&amp;
+            ANGIE_STATIC_DIRS.indexOf(dir) === -1 &amp;&amp;
+            dir.indexOf(p.cwd()) === -1
+        ) {
+            if (dir.charAt(0) === &apos;/&apos;) {
+                dir = dir.slice(1, dir.length - 1);
+            }
+            dir = `${p.cwd()}/${dir}`;
+
+        }
+        if (dir[ dir.length - 1 ] === &apos;/&apos;) {
+            dir = dir.slice(0, -1);
+        }
+        return dir;
+    });
+
+    // Deliberately use a for loop so that we can break out of it
+    for (var i = templateDirs.length - 1; i &gt;= 0; --i) {
+        let dir = templateDirs[i],
+            path = util.findFile(dir, url);
+
+        if (typeof path === &apos;string&apos;) {
+            template = fs.readFileSync(path);
+        }
+    }
+
+    if (!template) {
+        return false;
+    } else if (
+        type === &apos;static&apos; &amp;&amp;
+        config.hasOwnProperty(&apos;cacheStaticAssets&apos;) &amp;&amp;
+        config.cacheStaticAssets
+    ) {
+        // TODO you may want to put this in the asset loading block
+        new $cacheFactory(&apos;staticAssets&apos;).put(url, template);
+    }
+    return template;
+}
+
+
+// TODO this is really more of a directive functionality
+// TODO make this work with .css, .less, .scss, .haml
+// TODO move this to $resource
+// TODO auto load angular, jquery, underscore, etc.
+function $resourceLoader() {
+
+    // TODO I&apos;m not sure why or how you could call this without a response object
+    const $injector = app.services.$injector,
+          $response = $injector.get(&apos;$response&apos;);
+
+    if (!$response) {
+        return false;
+    }
+
+    // TODO accepts a string or an array
+    // Options for loading files are:
+        // Inline: loads the script into script tags
+        // Script: attaches the url to the response resource
+    let files = arguments[0];
+
+    const loadStyle = arguments[1] || &apos;src&apos;;
+
+    if (typeof files === &apos;string&apos;) {
+        files = [ files ];
+    }
+
+    files.forEach(function(resource) {
+
+        // Return if not a js file
+        if (resource.split(&apos;.&apos;).pop() !== &apos;js&apos;) {
+            return;
+        }
+
+        // TODO put this into a template?
+        let asset = &apos;&lt;script type=\&apos;text/javascript\&apos;&apos;;
+        if (loadStyle === &apos;src&apos;) {
+            asset += ` src=&apos;${resource}&apos;&gt;`;
+        } else {
+            let assetCache = new $cacheFactory(&apos;staticAssets&apos;),
+                assetPath = resource.split(&apos;/&apos;).pop(),
+                staticAsset;
+
+            asset += &apos;&gt;&apos;;
+            if (assetCache.get(assetPath)) {
+                staticAsset = assetCache.get(assetPath);
+            } else {
+                staticAsset = $templateLoader(assetPath, &apos;static&apos;);
+            }
+
+            if (staticAsset.length) {
+                asset += `\n${staticAsset}`;
+            }
+        }
+
+        asset += &apos;&lt;/script&gt;&apos;;
+
+        let index = $response.__responseContent__.indexOf(&apos;&lt;/body&gt;&apos;);
+        if (index &gt; -1) {
+            $response.__responseContent__.splice(index, 0, asset);
+        } else {
+            $response.__responseContent__ = $response.__responseContent__ + asset;
+        }
+    });
+}
+
+const $templateCache = new $TemplateCache();
+export {$templateCache, $templateLoader, $resourceLoader};
+</code></pre>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.1.2)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

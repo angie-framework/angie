@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/models/AngieDatabaseRouter.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,71 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/models/AngieDatabaseRouter.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import {config} from &apos;../Config&apos;;
+import $cacheFactory from &apos;../services/$cacheFactory&apos;;
+import $ExceptionsProvider from &apos;../util/$ExceptionsProvider&apos;;
+import SqliteConnection from &apos;./SqliteConnection&apos;;
+import MySqlConnection from &apos;./MySqlConnection&apos;;
+
+export default function AngieDatabaseRouter(args) {
+    let databases = new $cacheFactory(&apos;databases&apos;),
+        database;
+
+    if (!config) {
+        $ExceptionsProvider.$$configError();
+    }
+
+    let name = &apos;default&apos;;
+    if (typeof args === &apos;object&apos; &amp;&amp; args.length) {
+        args.forEach(function(arg) {
+            if (Object.keys(config.databases || {}).indexOf(args[2]) &gt; -1) {
+                name = arg;
+            }
+        });
+    } else if (typeof args === &apos;string&apos;) {
+        name = args;
+    }
+
+    // Check to see if the database is in memory
+    database = databases.get(name);
+    if (database) {
+        return database;
+    }
+
+    let db = config.databases ? config.databases[name] : undefined,
+        destructive = process.argv.indexOf(&apos;--destructive&apos;) &gt; -1;
+
+    if (db &amp;&amp; db.type) {
+        let type = db.type;
+
+        // TODO call these with the actual DB, we should not have to check
+        // the config once it&apos;s in a bucket
+
+        switch (type.toLowerCase()) {
+            case &apos;mysql&apos;:
+                database = new MySqlConnection(name, db, destructive);
+                break;
+
+            // TODO add for Firebase controls
+            // case &apos;firebase&apos;:
+            //     database = new FirebaseConnection(db, destructive);
+            //     break;
+            default:
+                database = new SqliteConnection(db, destructive);
+        }
+    }
+    if (!database) {
+        $ExceptionsProvider.$$invalidDatabaseConfig();
+    }
+
+    // Setup a cache of database connections in memory already
+    databases.put(name, database);
+    return database;
+}
+</code></pre>
 </div>
 
 <footer class="footer">

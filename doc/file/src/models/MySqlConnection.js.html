@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/models/MySqlConnection.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/benderTheCrime/angie.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/services/$CacheFactory.js~$CacheFactory.html">$CacheFactory</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$ExceptionsProvider.js~$Exceptions.html">$Exceptions</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$injector.js~$Injector.html">$Injector</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$LogProvider.js~$LogProvider.html">$LogProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Request.js~$Request.html">$Request</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Responses.js~$Response.html">$Response</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$RouteProvider.js~$RouteProvider.html">$RouteProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/controllers/$ScopeProvider.js~$ScopeProvider.html">$ScopeProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$TemplateCache.js~$TemplateCache.html">$TemplateCache</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Angular.js~Angular.html">Angular</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/BaseDBConnection.js~BaseDBConnection.html">BaseDBConnection</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/Fields.js~BaseField.html">BaseField</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/BaseModel.js~BaseModel.html">BaseModel</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/BaseRequest.js~BaseRequest.html">BaseRequest</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Config.js~Config.html">Config</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/MySqlConnection.js~MySqlConnection.html">MySqlConnection</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/models/SqliteConnection.js~SqliteConnection.html">SqliteConnection</a></span></li>
+</ul>
+</div>
+
+
+
+<div data-ice="functionWrap">
+  <h2><a href="function/">Function</a></h2>
+  <ul>
+    
+  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-AngieDatabaseRouter">AngieDatabaseRouter</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-checkConfig">checkConfig</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-compile">compile</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-createProject">createProject</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-restart">restart</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/models/MySqlConnection.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import BaseDBConnection from &apos;./BaseDBConnection&apos;;
+import $log from &apos;../util/$LogProvider&apos;;
+import $ExceptionsProvider from &apos;../util/$ExceptionsProvider&apos;;
+
+const mysql =           require(&apos;mysql&apos;);
+
+const p = process,
+      DEFAULT_HOST = &apos;127.0.0.1&apos;,
+      DEFAULT_PORT = 3306;
+
+export default class MySqlConnection extends BaseDBConnection {
+    constructor(name, database, destructive) {
+        super(database, destructive);
+
+        let db = this.database;
+
+        if (!db.username) {
+            $ExceptionsProvider.$$invalidDatabaseConfig();
+        } else if (!this.connection) {
+            this.connection = mysql.createConnection({
+                host: db.host || DEFAULT_HOST,
+                port: db.port || DEFAULT_PORT,
+                user: db.username || &apos;&apos;,
+                password: db.password || &apos;&apos;,
+                database: name || db.name || db.alias
+            });
+
+            this.connection.on(&apos;error&apos;, function() {
+                $ExceptionsProvider.$$databaseConnectivityError(db);
+                if (db.options &amp;&amp; db.options.hardErrors) {
+                    p.exit(1);
+                }
+            });
+        }
+    }
+    types(field) {
+        let type = field.type;
+        if (!type) {
+            return;
+        }
+        switch (type) {
+            case &apos;CharField&apos;:
+                return &apos;VARCHAR&apos;;
+
+            // TODO support different size integers: TINY, SMALL, MEDIUM
+            case &apos;IntegerField&apos;:
+                return &apos;INTEGER&apos;;
+            case &apos;ForeignKeyField&apos;:
+                return `INTEGER, ADD CONSTRAINT FOREIGN KEY(${field.fieldname}) ` +
+                    `REFERENCES ${field.rel}(id) ON DELETE CASCADE`;
+            default:
+                return undefined;
+        }
+    }
+    connect() {
+        let me = this;
+        return new Promise(function() {
+            me.connection.connect(arguments[0]);
+        }).then(
+            () =&gt; $log.info(&apos;Connection successful&apos;),
+            () =&gt;
+                $ExceptionsProvider.$$databaseConnectivityError(me.database)
+        );
+    }
+    disconnect() {
+        return this.connection.end();
+    }
+    run(query, model) {
+        let me = this,
+            db = this.database,
+            name = db.name || db.alias;
+        return new Promise(function() {
+            try {
+                return me.connect().then(arguments[0]);
+            } catch(e) {}
+        }).then(function() {
+            return new Promise(function(resolve) {
+                $log.info(
+                    `MySql Query: ${name}: ${query}`
+                );
+                return me.connection.query(query, function(e, rows = []) {
+                    if (e) {
+                        $log.warn(e);
+                    }
+                    resolve([ rows, e ]);
+                });
+            });
+        }).then(function(args) {
+            return me.__querySet__(model, query, args[0], args[1]);
+        });
+    }
+    all() {
+        const query = super.all.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    create() {
+        const query = super.create.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    delete() {
+        const query = super.delete.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    update() {
+        const query = super.update.apply(this, arguments);
+        return this.run(query, arguments[0].model);
+    }
+    raw(query, model) {
+        return this.run(query, model);
+    }
+    sync() {
+        let me = this;
+
+        // Don&apos;t worry about the error state, handled by connection
+        return super.sync().then(() =&gt; me.connect().then(arguments[0]))
+            .then(function() {
+
+                let models = me.models(),
+                    proms = [];
+
+                for (let model in models) {
+
+                    // Fetch models and get model name
+                    let instance = models[ model ],
+                        modelName = instance.name || instance.alias ||
+                            me.name(model);
+
+                    // Run a table creation with an ID for each table
+                    proms.push(me.run(
+                        `CREATE TABLE \`${modelName}\`` +
+                        &apos; (`id` int(11) NOT NULL AUTO_INCREMENT, &apos; +
+                        &apos;PRIMARY KEY (`id`) &apos; +
+                        &apos;) ENGINE=InnoDB DEFAULT CHARSET=latin1;&apos;
+                    ));
+                }
+                return Promise.all(proms).then(function() {
+                    return me.migrate();
+                }).then(function() {
+                    return me.disconnect();
+                });
+            });
+    }
+    migrate() {
+        let me = this;
+
+        return super.migrate().then(() =&gt; me.connect().then(arguments[0]))
+            .then(function() {
+                let models = me.models(),
+                    proms = [];
+
+                for (let model in models) {
+                    let instance = models[ model ],
+                        modelName = instance.name || instance.alias ||
+                            me.name(instance);
+                    instance.__fields__().forEach(function(field) {
+                        let nullable = instance[ field ].nullable ? &apos; NOT NULL&apos; : &apos;&apos;,
+                            unique = instance[ field ].unique ? &apos; UNIQUE&apos; : &apos;&apos;;
+                        instance[ field ].fieldname = field;
+                        proms.push(me.run(
+                            `ALTER TABLE \`${modelName}\` ADD \`${field}\` ` +
+                            `${me.types(instance[ field ])}` +
+                            (
+                                instance[ field ].maxLength ?
+                                `(${instance[ field ].maxLength})` : &apos;&apos;
+                            ) +
+                            `${instance[ field].type ===
+                                &apos;ForeignKeyField&apos; ? nullable : &apos;&apos;}${unique};`
+                        ));
+                    });
+                    if (me.destructive) {
+                        console.log(&apos;destructive&apos;);
+                    }
+                }
+                return Promise.all(proms);
+            });
+    }
+}
+</code></pre>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.1.2)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

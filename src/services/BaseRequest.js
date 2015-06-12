@@ -193,30 +193,23 @@ class BaseRequest {
 
         // TODO See if any views have this Controller associated
         // TODO instantiate directives beforehand
-        // for (let key in app.directives) {
-        //     let directive = app.directives[ key ];
-        //     if (
-        //         directive.Controller &&
-        //         directive.Controller === controllerName
-        //     ) {
-        //
-        //         if (directive.type === 'APIView') {
+        // prom.then(function() {
+        //     for (let key in app.directives) {
+        //         let directive = app.directives[ key ];
+        //         if (
+        //             directive.Controller &&
+        //             directive.Controller === controllerName &&
+        //             directive.type === 'APIView'
+        //         ) {
         //
         //             // APIViews cannot have templates, all templates are trashed
-        //             delete this.template;
-        //             // delete this.__responseContent__;
-        //             this.responseHeaders = {};
+        //             delete me.template;
+        //             delete me.__responseContent__;
+        //             me.responseHeaders = {};
         //
-        //             // TODO fire off link
         //         }
-        //
-        //         // TODO the execution of these directives should only occur
-        //         // in template compilation
-        //         // else if (directive.type === 'TemplateView') {
-        //         //
-        //         // }
         //     }
-        // }
+        // });
 
         prom.then(function() {
             if (error) {

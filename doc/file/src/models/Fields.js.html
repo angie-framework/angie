@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/models/Fields.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,132 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/models/Fields.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import util from &apos;../util/util&apos;;
+
+class BaseField {
+    constructor(
+        args = 0,
+        maxValue = undefined,
+        minLength = 0,
+        maxLength = undefined,
+        nullable = false,
+        unique = false
+    ) {
+        this.type = &apos;BaseField&apos;;
+        if (typeof args === &apos;object&apos;) {
+            util.extend(this, arguments[0]);
+        } else if (!isNaN(args)) {
+            if (args === 1) {
+                return;
+            }
+
+            /* eslint-disable */
+            [
+                this.minValue,
+                this.maxValue,
+                this.minLength,
+                this.maxLength,
+                this.nullable,
+                this.unique
+            ] = [
+                args,
+                maxValue,
+                minLength,
+                maxLength,
+                nullable,
+                unique
+            ];
+
+            /* eslint-enable */
+        }
+    }
+    create() {
+
+        // TODO this method is not responsible for migrating a model, only
+        // creating a field in a record when the model is instantiated
+        if (
+            this.default &amp;&amp;
+            this.validate(this.default)
+        ) {
+            this.value = this.default;
+        }
+    }
+    validate(value) {
+        value = value || this.value;
+        if (!value &amp;&amp; !this.nullable) {
+            return false;
+        }
+        if (typeof value === &apos;string&apos;) {
+            if (
+                (this.minLength &amp;&amp; value.length &lt;= this.minLength) ||
+                (this.maxLength &amp;&amp; value.length &gt;= this.maxLength)
+            ) {
+                return false;
+            }
+            return true;
+        } else {
+            if (
+                (this.minValue &amp;&amp; value &lt;= this.minValue) ||
+                (this.maxValue &amp;&amp; value &gt;= this.maxValue)
+            ) {
+                return false;
+            }
+            return true;
+        }
+    }
+}
+
+export class CharField extends BaseField {
+    constructor() {
+        super(...arguments);
+        this.type = &apos;CharField&apos;;
+    }
+    create() {
+        super.create();
+        if (!this.value) {
+            this.value = &apos;&apos;;
+        }
+    }
+    validate(value) {
+        value = this.value || value;
+        if (typeof value !== &apos;string&apos;) {
+            return false;
+        }
+        return super.validate(value);
+    }
+}
+
+export class IntegerField extends BaseField {
+    constructor() {
+        super(...arguments);
+        this.type = &apos;IntegerField&apos;;
+    }
+}
+
+export class ForeignKeyField extends BaseField {
+    constructor(rel, args) {
+        super(1);
+        if (!rel) {
+            return;
+        }
+
+        this.nesting = true;
+        this.deepNesting = false;
+        if (args &amp;&amp; typeof args === &apos;object&apos;) {
+            this.nesting = args.hasOwnProperty(&apos;nesting&apos;) ? !!args.nesting : true;
+
+            // TODO deep nesting
+            this.deepNesting = args.hasOwnProperty(&apos;deepNesting&apos;) ?
+                !!args.nesting : true;
+        }
+        this.rel = rel;
+        this.type = &apos;ForeignKeyField&apos;;
+    }
+}
+</code></pre>
 </div>
 
 <footer class="footer">

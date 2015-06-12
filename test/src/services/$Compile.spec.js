@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 import app from '../../../src/Base';
 import compile from '../../../src/services/$Compile';

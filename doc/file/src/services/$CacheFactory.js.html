@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/services/$CacheFactory.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,51 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/services/$CacheFactory.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+let g = global;
+
+g.__AngieCache__ = {};
+
+class $CacheFactory {
+    constructor(key) {
+        this.key = key;
+        if (!g.__AngieCache__[ key ]) {
+            this.cache = g.__AngieCache__[ key ] = {};
+        } else {
+            this.cache = g.__AngieCache__[ key ];
+        }
+    }
+    put(id, obj, replace) {
+        if (
+            (g.__AngieCache__[ this.key ][ id ] &amp;&amp; replace) ||
+            !g.__AngieCache__[ this.key ][ id ]
+        ) {
+            this.cache[ id ] = g.__AngieCache__[ this.key ][ id ] = obj;
+        }
+        return this;
+    }
+    get(id) {
+        return g.__AngieCache__[ this.key ][ id ] || undefined;
+    }
+    remove(id) {
+        delete this.cache[ id ];
+        delete g.__AngieCache__[ this.key ][ id ];
+        return this;
+    }
+    removeAll() {
+        this.cache = g.__AngieCache__[ this.key ] = {};
+        return this;
+    }
+    delete() {
+        delete this.cache;
+        delete g.__AngieCache__[ this.key ];
+    }
+}
+
+export default class $cacheFactory extends $CacheFactory {}
+</code></pre>
 </div>
 
 <footer class="footer">

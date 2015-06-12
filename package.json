@@ -8,8 +8,9 @@
     "test": "gulp mocha"
   },
   "engines": {
-    "iojs": "2.0.0",
-    "babel-node": "*"
+    "iojs": "*",
+    "babel-node": "*",
+    "node": "*"
   },
   "bin": {
     "angie": "bin/angie"
@@ -33,8 +34,8 @@
     "connect": "^2.x.x",
     "electron-prebuilt": "*",
     "esdoc": "^0.1.2",
-    "gulp": "^3.8.11",
-    "gulp-cli": "^0.2.0",
+    "gulp": "^3.9.0",
+    "gulp-cli": "*",
     "gulp-eslint": "^0.12.0",
     "gulp-istanbul": "^0.9.0",
     "gulp-mocha": "^2.0.1",

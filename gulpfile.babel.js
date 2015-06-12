@@ -1,19 +1,16 @@
-'use strict';
+'use strict'; 'use strong';
 
-require('babel/register');
+const gulp =        require('gulp'),
+      exec =        require('child_process').exec,
+      fs =          require('fs'),
+      eslint =      require('gulp-eslint'),
+      istanbul =    require('gulp-istanbul'),
+      isparta =     require('isparta'),
+      mocha =       require('gulp-mocha'),
+      chalk =       require('chalk');
 
-var gulp =        require('gulp'),
-    exec =        require('child_process').exec,
-    fs =          require('fs'),
-    eslint =      require('gulp-eslint'),
-    istanbul =    require('gulp-istanbul'),
-    isparta =     require('isparta'),
-    mocha =       require('gulp-mocha'),
-    chalk =       require('chalk');
-
-var src = 'src/**/*.es6',
-      testSrc = 'test/**/*.spec.es6',
-      coverageSrc = 'coverage',
+const src = 'src/**/*.js',
+      testSrc = 'test/**/*.spec.js',
       docSrc = 'doc';
 
 gulp.task('eslint', function () {
@@ -26,7 +23,7 @@ gulp.task('eslint', function () {
     );
 });
 gulp.task('mocha', [ 'eslint' ], function(cb) {
-    gulp.src([ src ]).pipe(
+    gulp.src(src).pipe(
         istanbul({
             instrumenter: isparta.Instrumenter,
             instrumenterOptions: {
@@ -34,14 +31,14 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
                     experimental: true
                 }
             },
-            includeUntested: true
+
+            // TODO Once coverage is up, include untested files
+            includeUntested: false
         })
     ).pipe(
         istanbul.hookRequire()
     ).on('finish', function() {
-        gulp.src([ testSrc ], {
-            read: false
-        }).pipe(mocha({
+        gulp.src(testSrc).pipe(mocha({
             reporter: 'nyan'
         })).pipe(
             istanbul.writeReports()
@@ -54,11 +51,10 @@ gulp.task('esdoc', [ 'mocha' ], function(cb) {
         console.log(template);
         template = template.replace(
             '</head>',
-            '<script type="text/javascript">window.onload = function() { if ' +
-            '(parent) { var h = document.getElementsByTagName("head")[0], ' +
-            'arrStyleSheets = parent.document.getElementsByTagName("link"); for ' +
-            '(var i = 0; i < arrStyleSheets.length; i++) { h.appendChild(' +
-            'arrStyleSheets[i].cloneNode(true));}}};</script></head>'
+            '<script type=\'text/javascript\'>window.addEventListener(\'message\', ' +
+            'function(event) {var style = document.createElement(\'link\'); ' +
+            'document.head.appendChild(style); style.rel = \'stylesheet\'; ' +
+            'style.src = event.data;});</script></head>'
         );
         console.log(template);
         fs.writeFileSync('doc/index.html', template, 'utf8', { 'flags': 'w+' });

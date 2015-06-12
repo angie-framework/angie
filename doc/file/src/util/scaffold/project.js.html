@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/util/scaffold/project.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,74 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/util/scaffold/project.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import $log from &apos;../$LogProvider&apos;;
+
+const fs =        require(&apos;fs&apos;),
+      util =      require(&apos;util&apos;);
+
+const p = process;
+
+export default function createProject(args) {
+    const name = args.name;
+
+    if (!name) {
+        $log.error(&apos;No project name specified&apos;);
+        p.exit(1);
+    } else if (!/([A-z]+)/.test(name)) {
+        $log.error(&apos;Invalid project name: must be all letters&apos;);
+        p.exit(1);
+    }
+
+    let file = name.indexOf(&apos;/&apos;) &lt; 0 ? name.split(&apos;/&apos;) : name,
+        dirname = file.length &gt; 1 ? file.splice(-1).join(&apos;/&apos;) : &apos;&apos;,
+        makeDir = `${p.cwd()}/${dirname}${dirname.length ? &apos;/&apos; : &apos;&apos;}${name}`,
+        makeSub = `${makeDir}/src`;
+
+    try {
+        fs.mkdirSync(makeDir);
+        fs.mkdirSync(makeSub);
+
+        [
+            &apos;constants&apos;,
+            &apos;configs&apos;,
+            &apos;services&apos;,
+            &apos;controllers&apos;,
+            &apos;models&apos;,
+            &apos;directives&apos;
+        ].forEach(function(v) {
+            fs.mkdirSync(`${makeSub}/${v}`);
+        });
+        [
+            &apos;static&apos;,
+            &apos;templates&apos;
+        ].forEach(function(v) {
+            fs.mkdirSync(`${makeDir}/${v}`);
+        });
+    } catch(e) {
+        $log.error(&apos;Project directory already exists&apos;);
+        p.exit(1);
+    } finally {
+        let template = fs.readFileSync(
+            `${__dirname}/../../templates/AngieFile.sample.json`,
+            &apos;utf8&apos;
+        );
+        template = util.format(template, name, name);
+        fs.writeFileSync(
+            `${makeDir}/AngieFile.json`,
+            template,
+            &apos;utf8&apos;
+        );
+    }
+
+    $log.info(&apos;Project successfully created&apos;);
+    p.exit(0);
+}
+
+// TODO create with . for settings in the same directory
+</code></pre>
 </div>
 
 <footer class="footer">

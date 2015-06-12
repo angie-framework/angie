@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; 'use strong';
 
 import $cacheFactory from '../../../src/services/$CacheFactory';
 

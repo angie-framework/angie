@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/index.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,102 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import Config from &apos;./Config&apos;;
+import $log from &apos;./util/$LogProvider&apos;;
+import createProject from &apos;./util/scaffold/project&apos;;
+import AngieDatabaseRouter from &apos;./models/AngieDatabaseRouter&apos;;
+import server from &apos;./Server&apos;;
+import shell from &apos;./util/shell&apos;;
+
+const exec =        require(&apos;child_process&apos;).exec;
+
+const p = process;
+
+// Remove trivial arguments
+let args = [];
+p.argv.forEach(function(v) {
+    if (v.match(/^(?:(?!(node|iojs)).)*$/)) {
+        args.push(v);
+    }
+});
+
+// Reassign config calls
+let __server__ = requiresConfig.bind(null, server),
+    __db__ = requiresConfig.bind(null, AngieDatabaseRouter);
+
+if (args.length === 1) {
+    args.push(&apos;&apos;);
+}
+
+// Route the CLI request to a specific command
+switch (args[1].toLowerCase()) {
+    case &apos;&apos;:
+        $log.help();
+        break;
+    case &apos;help&apos;:
+        $log.help();
+        break;
+    case &apos;server&apos;:
+        __server__();
+        break;
+    case &apos;s&apos;:
+        __server__();
+        break;
+    case &apos;cluster&apos;:
+        break;
+    case &apos;createproject&apos;:
+        createProject({ name: args[2] });
+        break;
+    case &apos;syncdb&apos;:
+        __db__().then((db) =&gt; db.sync());
+        break;
+    case &apos;migrate&apos;:
+        __db__().then((db) =&gt; db.migrate());
+        break;
+    case &apos;test&apos;:
+        runTests();
+        break;
+    case &apos;shell&apos;:
+        shell();
+        break;
+    default:
+        $log.help();
+}
+
+function runTests() {
+    // TODO is there any way to carry the stream output from gulp instead
+    // of capturing stdout?
+    exec(`cd ${__dirname} &amp;&amp; gulp`, function(e, std, err) {
+        $log.log(std);
+        if (err) {
+            $log.error(err);
+        }
+        if (e) {
+            throw new Error(e);
+        }
+    });
+}
+
+// Wrapper function for services which require configs to be loaded
+// TODO make config a service
+function requiresConfig(fn) {
+
+    // Fetch configs
+    return new Config().then(function() {
+        return fn(args);
+    }, function() {
+        p.exit(1);
+    });
+}
+
+// TODO make all commands here
+    // TODO create database
+    // TODO migrate database
+    // TODO cluster
+</code></pre>
 </div>
 
 <footer class="footer">

@@ -1,140 +1,140 @@
 window.esdocSearchIndex = [
   [
-    "angie/src/services/$cachefactory.es6~$cachefactory",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html",
-    "<span>$CacheFactory</span> <span class=\"search-result-import-path\">angie/src/services/$CacheFactory.es6</span>",
+    "angie/src/services/$cachefactory.js~$cachefactory",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html",
+    "<span>$CacheFactory</span> <span class=\"search-result-import-path\">angie/src/services/$CacheFactory.js</span>",
     "class"
   ],
   [
-    "angie/src/util/$exceptionsprovider.es6~$exceptions",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html",
-    "<span>$Exceptions</span> <span class=\"search-result-import-path\">angie/src/util/$ExceptionsProvider.es6</span>",
+    "angie/src/util/$exceptionsprovider.js~$exceptions",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html",
+    "<span>$Exceptions</span> <span class=\"search-result-import-path\">angie/src/util/$ExceptionsProvider.js</span>",
     "class"
   ],
   [
-    "angie/src/services/$injector.es6~$injector",
-    "class/src/services/$injector.es6~$Injector.html",
-    "<span>$Injector</span> <span class=\"search-result-import-path\">angie/src/services/$injector.es6</span>",
+    "angie/src/services/$injector.js~$injector",
+    "class/src/services/$injector.js~$Injector.html",
+    "<span>$Injector</span> <span class=\"search-result-import-path\">angie/src/services/$injector.js</span>",
     "class"
   ],
   [
-    "angie/src/util/$logprovider.es6~$logprovider",
-    "class/src/util/$LogProvider.es6~$LogProvider.html",
-    "<span>$LogProvider</span> <span class=\"search-result-import-path\">angie/src/util/$LogProvider.es6</span>",
+    "angie/src/util/$logprovider.js~$logprovider",
+    "class/src/util/$LogProvider.js~$LogProvider.html",
+    "<span>$LogProvider</span> <span class=\"search-result-import-path\">angie/src/util/$LogProvider.js</span>",
     "class"
   ],
   [
-    "angie/src/services/$request.es6~$request",
-    "class/src/services/$Request.es6~$Request.html",
-    "<span>$Request</span> <span class=\"search-result-import-path\">angie/src/services/$Request.es6</span>",
+    "angie/src/services/$request.js~$request",
+    "class/src/services/$Request.js~$Request.html",
+    "<span>$Request</span> <span class=\"search-result-import-path\">angie/src/services/$Request.js</span>",
     "class"
   ],
   [
-    "angie/src/services/$responses.es6~$response",
-    "class/src/services/$Responses.es6~$Response.html",
-    "<span>$Response</span> <span class=\"search-result-import-path\">angie/src/services/$Responses.es6</span>",
+    "angie/src/services/$responses.js~$response",
+    "class/src/services/$Responses.js~$Response.html",
+    "<span>$Response</span> <span class=\"search-result-import-path\">angie/src/services/$Responses.js</span>",
     "class"
   ],
   [
-    "angie/src/services/$routeprovider.es6~$routeprovider",
-    "class/src/services/$RouteProvider.es6~$RouteProvider.html",
-    "<span>$RouteProvider</span> <span class=\"search-result-import-path\">angie/src/services/$RouteProvider.es6</span>",
+    "angie/src/services/$routeprovider.js~$routeprovider",
+    "class/src/services/$RouteProvider.js~$RouteProvider.html",
+    "<span>$RouteProvider</span> <span class=\"search-result-import-path\">angie/src/services/$RouteProvider.js</span>",
     "class"
   ],
   [
-    "angie/src/controllers/$scopeprovider.es6~$scopeprovider",
-    "class/src/controllers/$ScopeProvider.es6~$ScopeProvider.html",
-    "<span>$ScopeProvider</span> <span class=\"search-result-import-path\">angie/src/controllers/$ScopeProvider.es6</span>",
+    "angie/src/controllers/$scopeprovider.js~$scopeprovider",
+    "class/src/controllers/$ScopeProvider.js~$ScopeProvider.html",
+    "<span>$ScopeProvider</span> <span class=\"search-result-import-path\">angie/src/controllers/$ScopeProvider.js</span>",
     "class"
   ],
   [
-    "angie/src/services/$templatecache.es6~$templatecache",
-    "class/src/services/$TemplateCache.es6~$TemplateCache.html",
-    "<span>$TemplateCache</span> <span class=\"search-result-import-path\">angie/src/services/$TemplateCache.es6</span>",
+    "angie/src/services/$templatecache.js~$templatecache",
+    "class/src/services/$TemplateCache.js~$TemplateCache.html",
+    "<span>$TemplateCache</span> <span class=\"search-result-import-path\">angie/src/services/$TemplateCache.js</span>",
     "class"
   ],
   [
-    "angie/src/models/angiedatabaserouter.es6~angiedatabaserouter",
+    "angie/src/models/angiedatabaserouter.js~angiedatabaserouter",
     "function/index.html#static-function-AngieDatabaseRouter",
-    "<span>AngieDatabaseRouter</span> <span class=\"search-result-import-path\">angie/src/models/AngieDatabaseRouter.es6</span>",
+    "<span>AngieDatabaseRouter</span> <span class=\"search-result-import-path\">angie/src/models/AngieDatabaseRouter.js</span>",
     "function"
   ],
   [
-    "angie/src/angular.es6~angular",
-    "class/src/Angular.es6~Angular.html",
-    "<span>Angular</span> <span class=\"search-result-import-path\">angie/src/Angular.es6</span>",
+    "angie/src/angular.js~angular",
+    "class/src/Angular.js~Angular.html",
+    "<span>Angular</span> <span class=\"search-result-import-path\">angie/src/Angular.js</span>",
     "class"
   ],
   [
-    "angie/src/models/basedbconnection.es6~basedbconnection",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html",
-    "<span>BaseDBConnection</span> <span class=\"search-result-import-path\">angie/src/models/BaseDBConnection.es6</span>",
+    "angie/src/models/basedbconnection.js~basedbconnection",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html",
+    "<span>BaseDBConnection</span> <span class=\"search-result-import-path\">angie/src/models/BaseDBConnection.js</span>",
     "class"
   ],
   [
-    "angie/src/models/fields.es6~basefield",
-    "class/src/models/Fields.es6~BaseField.html",
-    "<span>BaseField</span> <span class=\"search-result-import-path\">angie/src/models/Fields.es6</span>",
+    "angie/src/models/fields.js~basefield",
+    "class/src/models/Fields.js~BaseField.html",
+    "<span>BaseField</span> <span class=\"search-result-import-path\">angie/src/models/Fields.js</span>",
     "class"
   ],
   [
-    "angie/src/models/basemodel.es6~basemodel",
-    "class/src/models/BaseModel.es6~BaseModel.html",
-    "<span>BaseModel</span> <span class=\"search-result-import-path\">angie/src/models/BaseModel.es6</span>",
+    "angie/src/models/basemodel.js~basemodel",
+    "class/src/models/BaseModel.js~BaseModel.html",
+    "<span>BaseModel</span> <span class=\"search-result-import-path\">angie/src/models/BaseModel.js</span>",
     "class"
   ],
   [
-    "angie/src/services/baserequest.es6~baserequest",
-    "class/src/services/BaseRequest.es6~BaseRequest.html",
-    "<span>BaseRequest</span> <span class=\"search-result-import-path\">angie/src/services/BaseRequest.es6</span>",
+    "angie/src/services/baserequest.js~baserequest",
+    "class/src/services/BaseRequest.js~BaseRequest.html",
+    "<span>BaseRequest</span> <span class=\"search-result-import-path\">angie/src/services/BaseRequest.js</span>",
     "class"
   ],
   [
-    "angie/src/config.es6~config",
-    "class/src/Config.es6~Config.html",
-    "<span>Config</span> <span class=\"search-result-import-path\">angie/src/Config.es6</span>",
+    "angie/src/config.js~config",
+    "class/src/Config.js~Config.html",
+    "<span>Config</span> <span class=\"search-result-import-path\">angie/src/Config.js</span>",
     "class"
   ],
   [
-    "angie/src/models/mysqlconnection.es6~mysqlconnection",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html",
-    "<span>MySqlConnection</span> <span class=\"search-result-import-path\">angie/src/models/MySqlConnection.es6</span>",
+    "angie/src/models/mysqlconnection.js~mysqlconnection",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html",
+    "<span>MySqlConnection</span> <span class=\"search-result-import-path\">angie/src/models/MySqlConnection.js</span>",
     "class"
   ],
   [
-    "angie/src/models/sqliteconnection.es6~sqliteconnection",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html",
-    "<span>SqliteConnection</span> <span class=\"search-result-import-path\">angie/src/models/SqliteConnection.es6</span>",
+    "angie/src/models/sqliteconnection.js~sqliteconnection",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html",
+    "<span>SqliteConnection</span> <span class=\"search-result-import-path\">angie/src/models/SqliteConnection.js</span>",
     "class"
   ],
   [
-    "angie/src/models/firebaseconnection.es6~checkconfig",
+    "angie/src/models/firebaseconnection.js~checkconfig",
     "function/index.html#static-function-checkConfig",
-    "<span>checkConfig</span> <span class=\"search-result-import-path\">angie/src/models/FirebaseConnection.es6</span>",
+    "<span>checkConfig</span> <span class=\"search-result-import-path\">angie/src/models/FirebaseConnection.js</span>",
     "function"
   ],
   [
-    "angie/src/services/$compile.es6~compile",
+    "angie/src/services/$compile.js~compile",
     "function/index.html#static-function-compile",
-    "<span>compile</span> <span class=\"search-result-import-path\">angie/src/services/$Compile.es6</span>",
+    "<span>compile</span> <span class=\"search-result-import-path\">angie/src/services/$Compile.js</span>",
     "function"
   ],
   [
-    "angie/src/util/scaffold/project.es6~createproject",
+    "angie/src/util/scaffold/project.js~createproject",
     "function/index.html#static-function-createProject",
-    "<span>createProject</span> <span class=\"search-result-import-path\">angie/src/util/scaffold/project.es6</span>",
+    "<span>createProject</span> <span class=\"search-result-import-path\">angie/src/util/scaffold/project.js</span>",
     "function"
   ],
   [
-    "angie/src/server.es6~restart",
+    "angie/src/server.js~restart",
     "function/index.html#static-function-restart",
-    "<span>restart</span> <span class=\"search-result-import-path\">angie/src/Server.es6</span>",
+    "<span>restart</span> <span class=\"search-result-import-path\">angie/src/Server.js</span>",
     "function"
   ],
   [
-    "angie/src/util/shell.es6~shell",
+    "angie/src/util/shell.js~shell",
     "function/index.html#static-function-shell",
-    "<span>shell</span> <span class=\"search-result-import-path\">angie/src/util/shell.es6</span>",
+    "<span>shell</span> <span class=\"search-result-import-path\">angie/src/util/shell.js</span>",
     "function"
   ],
   [
@@ -462,999 +462,999 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/angular.es6",
-    "file/src/Angular.es6.html",
-    "src/Angular.es6",
+    "src/angular.js",
+    "file/src/Angular.js.html",
+    "src/Angular.js",
     "file"
   ],
   [
-    "src/angular.es6~angular#controller",
-    "class/src/Angular.es6~Angular.html#instance-method-Controller",
-    "src/Angular.es6~Angular#Controller",
+    "src/angular.js~angular#controller",
+    "class/src/Angular.js~Angular.html#instance-method-Controller",
+    "src/Angular.js~Angular#Controller",
     "method"
   ],
   [
-    "src/angular.es6~angular#controllers",
-    "class/src/Angular.es6~Angular.html#instance-member-Controllers",
-    "src/Angular.es6~Angular#Controllers",
+    "src/angular.js~angular#controllers",
+    "class/src/Angular.js~Angular.html#instance-member-Controllers",
+    "src/Angular.js~Angular#Controllers",
     "member"
   ],
   [
-    "src/angular.es6~angular#model",
-    "class/src/Angular.es6~Angular.html#instance-method-Model",
-    "src/Angular.es6~Angular#Model",
+    "src/angular.js~angular#model",
+    "class/src/Angular.js~Angular.html#instance-method-Model",
+    "src/Angular.js~Angular#Model",
     "method"
   ],
   [
-    "src/angular.es6~angular#models",
-    "class/src/Angular.es6~Angular.html#instance-member-Models",
-    "src/Angular.es6~Angular#Models",
+    "src/angular.js~angular#models",
+    "class/src/Angular.js~Angular.html#instance-member-Models",
+    "src/Angular.js~Angular#Models",
     "member"
   ],
   [
-    "src/angular.es6~angular#bootstrap",
-    "class/src/Angular.es6~Angular.html#instance-method-bootstrap",
-    "src/Angular.es6~Angular#bootstrap",
+    "src/angular.js~angular#bootstrap",
+    "class/src/Angular.js~Angular.html#instance-method-bootstrap",
+    "src/Angular.js~Angular#bootstrap",
     "method"
   ],
   [
-    "src/angular.es6~angular#config",
-    "class/src/Angular.es6~Angular.html#instance-method-config",
-    "src/Angular.es6~Angular#config",
+    "src/angular.js~angular#config",
+    "class/src/Angular.js~Angular.html#instance-method-config",
+    "src/Angular.js~Angular#config",
     "method"
   ],
   [
-    "src/angular.es6~angular#configs",
-    "class/src/Angular.es6~Angular.html#instance-member-configs",
-    "src/Angular.es6~Angular#configs",
+    "src/angular.js~angular#configs",
+    "class/src/Angular.js~Angular.html#instance-member-configs",
+    "src/Angular.js~Angular#configs",
     "member"
   ],
   [
-    "src/angular.es6~angular#constant",
-    "class/src/Angular.es6~Angular.html#instance-method-constant",
-    "src/Angular.es6~Angular#constant",
+    "src/angular.js~angular#constant",
+    "class/src/Angular.js~Angular.html#instance-method-constant",
+    "src/Angular.js~Angular#constant",
     "method"
   ],
   [
-    "src/angular.es6~angular#constants",
-    "class/src/Angular.es6~Angular.html#instance-member-constants",
-    "src/Angular.es6~Angular#constants",
+    "src/angular.js~angular#constants",
+    "class/src/Angular.js~Angular.html#instance-member-constants",
+    "src/Angular.js~Angular#constants",
     "member"
   ],
   [
-    "src/angular.es6~angular#constructor",
-    "class/src/Angular.es6~Angular.html#instance-constructor-constructor",
-    "src/Angular.es6~Angular#constructor",
+    "src/angular.js~angular#constructor",
+    "class/src/Angular.js~Angular.html#instance-constructor-constructor",
+    "src/Angular.js~Angular#constructor",
     "method"
   ],
   [
-    "src/angular.es6~angular#directive",
-    "class/src/Angular.es6~Angular.html#instance-method-directive",
-    "src/Angular.es6~Angular#directive",
+    "src/angular.js~angular#directive",
+    "class/src/Angular.js~Angular.html#instance-method-directive",
+    "src/Angular.js~Angular#directive",
     "method"
   ],
   [
-    "src/angular.es6~angular#directives",
-    "class/src/Angular.es6~Angular.html#instance-member-directives",
-    "src/Angular.es6~Angular#directives",
+    "src/angular.js~angular#directives",
+    "class/src/Angular.js~Angular.html#instance-member-directives",
+    "src/Angular.js~Angular#directives",
     "member"
   ],
   [
-    "src/angular.es6~angular#loaddependencies",
-    "class/src/Angular.es6~Angular.html#instance-method-loadDependencies",
-    "src/Angular.es6~Angular#loadDependencies",
+    "src/angular.js~angular#loaddependencies",
+    "class/src/Angular.js~Angular.html#instance-method-loadDependencies",
+    "src/Angular.js~Angular#loadDependencies",
     "method"
   ],
   [
-    "src/angular.es6~angular#service",
-    "class/src/Angular.es6~Angular.html#instance-method-service",
-    "src/Angular.es6~Angular#service",
+    "src/angular.js~angular#service",
+    "class/src/Angular.js~Angular.html#instance-method-service",
+    "src/Angular.js~Angular#service",
     "method"
   ],
   [
-    "src/angular.es6~angular#services",
-    "class/src/Angular.es6~Angular.html#instance-member-services",
-    "src/Angular.es6~Angular#services",
+    "src/angular.js~angular#services",
+    "class/src/Angular.js~Angular.html#instance-member-services",
+    "src/Angular.js~Angular#services",
     "member"
   ],
   [
-    "src/angular.es6~angular.noop",
-    "class/src/Angular.es6~Angular.html#static-method-noop",
-    "src/Angular.es6~Angular.noop",
+    "src/angular.js~angular.noop",
+    "class/src/Angular.js~Angular.html#static-method-noop",
+    "src/Angular.js~Angular.noop",
     "method"
   ],
   [
-    "src/base.es6",
-    "file/src/Base.es6.html",
-    "src/Base.es6",
+    "src/base.js",
+    "file/src/Base.js.html",
+    "src/Base.js",
     "file"
   ],
   [
-    "src/config.es6",
-    "file/src/Config.es6.html",
-    "src/Config.es6",
+    "src/config.js",
+    "file/src/Config.js.html",
+    "src/Config.js",
     "file"
   ],
   [
-    "src/config.es6~config#constructor",
-    "class/src/Config.es6~Config.html#instance-constructor-constructor",
-    "src/Config.es6~Config#constructor",
+    "src/config.js~config#constructor",
+    "class/src/Config.js~Config.html#instance-constructor-constructor",
+    "src/Config.js~Config#constructor",
     "method"
   ],
   [
-    "src/server.es6",
-    "file/src/Server.es6.html",
-    "src/Server.es6",
+    "src/server.js",
+    "file/src/Server.js.html",
+    "src/Server.js",
     "file"
   ],
   [
-    "src/controllers/$scopeprovider.es6",
-    "file/src/controllers/$ScopeProvider.es6.html",
-    "src/controllers/$ScopeProvider.es6",
+    "src/controllers/$scopeprovider.js",
+    "file/src/controllers/$ScopeProvider.js.html",
+    "src/controllers/$ScopeProvider.js",
     "file"
   ],
   [
-    "src/controllers/$scopeprovider.es6~$scopeprovider#contructor",
-    "class/src/controllers/$ScopeProvider.es6~$ScopeProvider.html#instance-method-contructor",
-    "src/controllers/$ScopeProvider.es6~$ScopeProvider#contructor",
+    "src/controllers/$scopeprovider.js~$scopeprovider#contructor",
+    "class/src/controllers/$ScopeProvider.js~$ScopeProvider.html#instance-method-contructor",
+    "src/controllers/$ScopeProvider.js~$ScopeProvider#contructor",
     "method"
   ],
   [
-    "src/index.es6",
-    "file/src/index.es6.html",
-    "src/index.es6",
+    "src/index.js",
+    "file/src/index.js.html",
+    "src/index.js",
     "file"
   ],
   [
-    "src/models/angiedatabaserouter.es6",
-    "file/src/models/AngieDatabaseRouter.es6.html",
-    "src/models/AngieDatabaseRouter.es6",
+    "src/models/angiedatabaserouter.js",
+    "file/src/models/AngieDatabaseRouter.js.html",
+    "src/models/AngieDatabaseRouter.js",
     "file"
   ],
   [
-    "src/models/basedbconnection.es6",
-    "file/src/models/BaseDBConnection.es6.html",
-    "src/models/BaseDBConnection.es6",
+    "src/models/basedbconnection.js",
+    "file/src/models/BaseDBConnection.js.html",
+    "src/models/BaseDBConnection.js",
     "file"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#all",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-all",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#all",
+    "src/models/basedbconnection.js~basedbconnection#all",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-all",
+    "src/models/BaseDBConnection.js~BaseDBConnection#all",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#constructor",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-constructor-constructor",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#constructor",
+    "src/models/basedbconnection.js~basedbconnection#constructor",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-constructor-constructor",
+    "src/models/BaseDBConnection.js~BaseDBConnection#constructor",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#create",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-create",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#create",
+    "src/models/basedbconnection.js~basedbconnection#create",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-create",
+    "src/models/BaseDBConnection.js~BaseDBConnection#create",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#database",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-member-database",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#database",
+    "src/models/basedbconnection.js~basedbconnection#database",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-member-database",
+    "src/models/BaseDBConnection.js~BaseDBConnection#database",
     "member"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#delete",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-delete",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#delete",
+    "src/models/basedbconnection.js~basedbconnection#delete",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-delete",
+    "src/models/BaseDBConnection.js~BaseDBConnection#delete",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#destructive",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-member-destructive",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#destructive",
+    "src/models/basedbconnection.js~basedbconnection#destructive",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-member-destructive",
+    "src/models/BaseDBConnection.js~BaseDBConnection#destructive",
     "member"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#fetch",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-fetch",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#fetch",
+    "src/models/basedbconnection.js~basedbconnection#fetch",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-fetch",
+    "src/models/BaseDBConnection.js~BaseDBConnection#fetch",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#filter",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-filter",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#filter",
+    "src/models/basedbconnection.js~basedbconnection#filter",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-filter",
+    "src/models/BaseDBConnection.js~BaseDBConnection#filter",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#filterquery",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-filterQuery",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#filterQuery",
+    "src/models/basedbconnection.js~basedbconnection#filterquery",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-filterQuery",
+    "src/models/BaseDBConnection.js~BaseDBConnection#filterQuery",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#migrate",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-migrate",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#migrate",
+    "src/models/basedbconnection.js~basedbconnection#migrate",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-migrate",
+    "src/models/BaseDBConnection.js~BaseDBConnection#migrate",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#models",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-models",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#models",
+    "src/models/basedbconnection.js~basedbconnection#models",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-models",
+    "src/models/BaseDBConnection.js~BaseDBConnection#models",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#name",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-name",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#name",
+    "src/models/basedbconnection.js~basedbconnection#name",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-name",
+    "src/models/BaseDBConnection.js~BaseDBConnection#name",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#queryinstring",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-queryInString",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#queryInString",
+    "src/models/basedbconnection.js~basedbconnection#queryinstring",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-queryInString",
+    "src/models/BaseDBConnection.js~BaseDBConnection#queryInString",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#sync",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-sync",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#sync",
+    "src/models/basedbconnection.js~basedbconnection#sync",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-sync",
+    "src/models/BaseDBConnection.js~BaseDBConnection#sync",
     "method"
   ],
   [
-    "src/models/basedbconnection.es6~basedbconnection#update",
-    "class/src/models/BaseDBConnection.es6~BaseDBConnection.html#instance-method-update",
-    "src/models/BaseDBConnection.es6~BaseDBConnection#update",
+    "src/models/basedbconnection.js~basedbconnection#update",
+    "class/src/models/BaseDBConnection.js~BaseDBConnection.html#instance-method-update",
+    "src/models/BaseDBConnection.js~BaseDBConnection#update",
     "method"
   ],
   [
-    "src/models/basemodel.es6",
-    "file/src/models/BaseModel.es6.html",
-    "src/models/BaseModel.es6",
+    "src/models/basemodel.js",
+    "file/src/models/BaseModel.js.html",
+    "src/models/BaseModel.js",
     "file"
   ],
   [
-    "src/models/basemodel.es6~basemodel#all",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-all",
-    "src/models/BaseModel.es6~BaseModel#all",
+    "src/models/basemodel.js~basemodel#all",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-all",
+    "src/models/BaseModel.js~BaseModel#all",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#constructor",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-constructor-constructor",
-    "src/models/BaseModel.es6~BaseModel#constructor",
+    "src/models/basemodel.js~basemodel#constructor",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-constructor-constructor",
+    "src/models/BaseModel.js~BaseModel#constructor",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#create",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-create",
-    "src/models/BaseModel.es6~BaseModel#create",
+    "src/models/basemodel.js~basemodel#create",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-create",
+    "src/models/BaseModel.js~BaseModel#create",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#database",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-member-database",
-    "src/models/BaseModel.es6~BaseModel#database",
+    "src/models/basemodel.js~basemodel#database",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-member-database",
+    "src/models/BaseModel.js~BaseModel#database",
     "member"
   ],
   [
-    "src/models/basemodel.es6~basemodel#delete",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-delete",
-    "src/models/BaseModel.es6~BaseModel#delete",
+    "src/models/basemodel.js~basemodel#delete",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-delete",
+    "src/models/BaseModel.js~BaseModel#delete",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#exists",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-exists",
-    "src/models/BaseModel.es6~BaseModel#exists",
+    "src/models/basemodel.js~basemodel#exists",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-exists",
+    "src/models/BaseModel.js~BaseModel#exists",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#fetch",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-fetch",
-    "src/models/BaseModel.es6~BaseModel#fetch",
+    "src/models/basemodel.js~basemodel#fetch",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-fetch",
+    "src/models/BaseModel.js~BaseModel#fetch",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#fields",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-member-fields",
-    "src/models/BaseModel.es6~BaseModel#fields",
+    "src/models/basemodel.js~basemodel#fields",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-member-fields",
+    "src/models/BaseModel.js~BaseModel#fields",
     "member"
   ],
   [
-    "src/models/basemodel.es6~basemodel#filter",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-filter",
-    "src/models/BaseModel.es6~BaseModel#filter",
+    "src/models/basemodel.js~basemodel#filter",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-filter",
+    "src/models/BaseModel.js~BaseModel#filter",
     "method"
   ],
   [
-    "src/models/basemodel.es6~basemodel#name",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-member-name",
-    "src/models/BaseModel.es6~BaseModel#name",
+    "src/models/basemodel.js~basemodel#name",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-member-name",
+    "src/models/BaseModel.js~BaseModel#name",
     "member"
   ],
   [
-    "src/models/basemodel.es6~basemodel#query",
-    "class/src/models/BaseModel.es6~BaseModel.html#instance-method-query",
-    "src/models/BaseModel.es6~BaseModel#query",
+    "src/models/basemodel.js~basemodel#query",
+    "class/src/models/BaseModel.js~BaseModel.html#instance-method-query",
+    "src/models/BaseModel.js~BaseModel#query",
     "method"
   ],
   [
-    "src/models/fields.es6",
-    "file/src/models/Fields.es6.html",
-    "src/models/Fields.es6",
+    "src/models/fields.js",
+    "file/src/models/Fields.js.html",
+    "src/models/Fields.js",
     "file"
   ],
   [
-    "src/models/fields.es6~basefield#constructor",
-    "class/src/models/Fields.es6~BaseField.html#instance-constructor-constructor",
-    "src/models/Fields.es6~BaseField#constructor",
+    "src/models/fields.js~basefield#constructor",
+    "class/src/models/Fields.js~BaseField.html#instance-constructor-constructor",
+    "src/models/Fields.js~BaseField#constructor",
     "method"
   ],
   [
-    "src/models/fields.es6~basefield#create",
-    "class/src/models/Fields.es6~BaseField.html#instance-method-create",
-    "src/models/Fields.es6~BaseField#create",
+    "src/models/fields.js~basefield#create",
+    "class/src/models/Fields.js~BaseField.html#instance-method-create",
+    "src/models/Fields.js~BaseField#create",
     "method"
   ],
   [
-    "src/models/fields.es6~basefield#type",
-    "class/src/models/Fields.es6~BaseField.html#instance-member-type",
-    "src/models/Fields.es6~BaseField#type",
+    "src/models/fields.js~basefield#type",
+    "class/src/models/Fields.js~BaseField.html#instance-member-type",
+    "src/models/Fields.js~BaseField#type",
     "member"
   ],
   [
-    "src/models/fields.es6~basefield#validate",
-    "class/src/models/Fields.es6~BaseField.html#instance-method-validate",
-    "src/models/Fields.es6~BaseField#validate",
+    "src/models/fields.js~basefield#validate",
+    "class/src/models/Fields.js~BaseField.html#instance-method-validate",
+    "src/models/Fields.js~BaseField#validate",
     "method"
   ],
   [
-    "src/models/fields.es6~basefield#value",
-    "class/src/models/Fields.es6~BaseField.html#instance-member-value",
-    "src/models/Fields.es6~BaseField#value",
+    "src/models/fields.js~basefield#value",
+    "class/src/models/Fields.js~BaseField.html#instance-member-value",
+    "src/models/Fields.js~BaseField#value",
     "member"
   ],
   [
-    "src/models/firebaseconnection.es6",
-    "file/src/models/FirebaseConnection.es6.html",
-    "src/models/FirebaseConnection.es6",
+    "src/models/firebaseconnection.js",
+    "file/src/models/FirebaseConnection.js.html",
+    "src/models/FirebaseConnection.js",
     "file"
   ],
   [
-    "src/models/mysqlconnection.es6",
-    "file/src/models/MySqlConnection.es6.html",
-    "src/models/MySqlConnection.es6",
+    "src/models/mysqlconnection.js",
+    "file/src/models/MySqlConnection.js.html",
+    "src/models/MySqlConnection.js",
     "file"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#all",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-all",
-    "src/models/MySqlConnection.es6~MySqlConnection#all",
+    "src/models/mysqlconnection.js~mysqlconnection#all",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-all",
+    "src/models/MySqlConnection.js~MySqlConnection#all",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#connect",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-connect",
-    "src/models/MySqlConnection.es6~MySqlConnection#connect",
+    "src/models/mysqlconnection.js~mysqlconnection#connect",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-connect",
+    "src/models/MySqlConnection.js~MySqlConnection#connect",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#connection",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-member-connection",
-    "src/models/MySqlConnection.es6~MySqlConnection#connection",
+    "src/models/mysqlconnection.js~mysqlconnection#connection",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-member-connection",
+    "src/models/MySqlConnection.js~MySqlConnection#connection",
     "member"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#constructor",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-constructor-constructor",
-    "src/models/MySqlConnection.es6~MySqlConnection#constructor",
+    "src/models/mysqlconnection.js~mysqlconnection#constructor",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-constructor-constructor",
+    "src/models/MySqlConnection.js~MySqlConnection#constructor",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#create",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-create",
-    "src/models/MySqlConnection.es6~MySqlConnection#create",
+    "src/models/mysqlconnection.js~mysqlconnection#create",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-create",
+    "src/models/MySqlConnection.js~MySqlConnection#create",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#delete",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-delete",
-    "src/models/MySqlConnection.es6~MySqlConnection#delete",
+    "src/models/mysqlconnection.js~mysqlconnection#delete",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-delete",
+    "src/models/MySqlConnection.js~MySqlConnection#delete",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#disconnect",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-disconnect",
-    "src/models/MySqlConnection.es6~MySqlConnection#disconnect",
+    "src/models/mysqlconnection.js~mysqlconnection#disconnect",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-disconnect",
+    "src/models/MySqlConnection.js~MySqlConnection#disconnect",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#migrate",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-migrate",
-    "src/models/MySqlConnection.es6~MySqlConnection#migrate",
+    "src/models/mysqlconnection.js~mysqlconnection#migrate",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-migrate",
+    "src/models/MySqlConnection.js~MySqlConnection#migrate",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#raw",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-raw",
-    "src/models/MySqlConnection.es6~MySqlConnection#raw",
+    "src/models/mysqlconnection.js~mysqlconnection#raw",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-raw",
+    "src/models/MySqlConnection.js~MySqlConnection#raw",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#run",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-run",
-    "src/models/MySqlConnection.es6~MySqlConnection#run",
+    "src/models/mysqlconnection.js~mysqlconnection#run",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-run",
+    "src/models/MySqlConnection.js~MySqlConnection#run",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#sync",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-sync",
-    "src/models/MySqlConnection.es6~MySqlConnection#sync",
+    "src/models/mysqlconnection.js~mysqlconnection#sync",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-sync",
+    "src/models/MySqlConnection.js~MySqlConnection#sync",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#types",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-types",
-    "src/models/MySqlConnection.es6~MySqlConnection#types",
+    "src/models/mysqlconnection.js~mysqlconnection#types",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-types",
+    "src/models/MySqlConnection.js~MySqlConnection#types",
     "method"
   ],
   [
-    "src/models/mysqlconnection.es6~mysqlconnection#update",
-    "class/src/models/MySqlConnection.es6~MySqlConnection.html#instance-method-update",
-    "src/models/MySqlConnection.es6~MySqlConnection#update",
+    "src/models/mysqlconnection.js~mysqlconnection#update",
+    "class/src/models/MySqlConnection.js~MySqlConnection.html#instance-method-update",
+    "src/models/MySqlConnection.js~MySqlConnection#update",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6",
-    "file/src/models/SqliteConnection.es6.html",
-    "src/models/SqliteConnection.es6",
+    "src/models/sqliteconnection.js",
+    "file/src/models/SqliteConnection.js.html",
+    "src/models/SqliteConnection.js",
     "file"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#all",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-all",
-    "src/models/SqliteConnection.es6~SqliteConnection#all",
+    "src/models/sqliteconnection.js~sqliteconnection#all",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-all",
+    "src/models/SqliteConnection.js~SqliteConnection#all",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#connect",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-connect",
-    "src/models/SqliteConnection.es6~SqliteConnection#connect",
+    "src/models/sqliteconnection.js~sqliteconnection#connect",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-connect",
+    "src/models/SqliteConnection.js~SqliteConnection#connect",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#connection",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-member-connection",
-    "src/models/SqliteConnection.es6~SqliteConnection#connection",
+    "src/models/sqliteconnection.js~sqliteconnection#connection",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-member-connection",
+    "src/models/SqliteConnection.js~SqliteConnection#connection",
     "member"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#constructor",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-constructor-constructor",
-    "src/models/SqliteConnection.es6~SqliteConnection#constructor",
+    "src/models/sqliteconnection.js~sqliteconnection#constructor",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-constructor-constructor",
+    "src/models/SqliteConnection.js~SqliteConnection#constructor",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#create",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-create",
-    "src/models/SqliteConnection.es6~SqliteConnection#create",
+    "src/models/sqliteconnection.js~sqliteconnection#create",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-create",
+    "src/models/SqliteConnection.js~SqliteConnection#create",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#delete",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-delete",
-    "src/models/SqliteConnection.es6~SqliteConnection#delete",
+    "src/models/sqliteconnection.js~sqliteconnection#delete",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-delete",
+    "src/models/SqliteConnection.js~SqliteConnection#delete",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#disconnect",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-disconnect",
-    "src/models/SqliteConnection.es6~SqliteConnection#disconnect",
+    "src/models/sqliteconnection.js~sqliteconnection#disconnect",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-disconnect",
+    "src/models/SqliteConnection.js~SqliteConnection#disconnect",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#migrate",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-migrate",
-    "src/models/SqliteConnection.es6~SqliteConnection#migrate",
+    "src/models/sqliteconnection.js~sqliteconnection#migrate",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-migrate",
+    "src/models/SqliteConnection.js~SqliteConnection#migrate",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#query",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-query",
-    "src/models/SqliteConnection.es6~SqliteConnection#query",
+    "src/models/sqliteconnection.js~sqliteconnection#query",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-query",
+    "src/models/SqliteConnection.js~SqliteConnection#query",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#raw",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-raw",
-    "src/models/SqliteConnection.es6~SqliteConnection#raw",
+    "src/models/sqliteconnection.js~sqliteconnection#raw",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-raw",
+    "src/models/SqliteConnection.js~SqliteConnection#raw",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#run",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-run",
-    "src/models/SqliteConnection.es6~SqliteConnection#run",
+    "src/models/sqliteconnection.js~sqliteconnection#run",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-run",
+    "src/models/SqliteConnection.js~SqliteConnection#run",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#serialize",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-serialize",
-    "src/models/SqliteConnection.es6~SqliteConnection#serialize",
+    "src/models/sqliteconnection.js~sqliteconnection#serialize",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-serialize",
+    "src/models/SqliteConnection.js~SqliteConnection#serialize",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#sync",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-sync",
-    "src/models/SqliteConnection.es6~SqliteConnection#sync",
+    "src/models/sqliteconnection.js~sqliteconnection#sync",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-sync",
+    "src/models/SqliteConnection.js~SqliteConnection#sync",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#types",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-types",
-    "src/models/SqliteConnection.es6~SqliteConnection#types",
+    "src/models/sqliteconnection.js~sqliteconnection#types",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-types",
+    "src/models/SqliteConnection.js~SqliteConnection#types",
     "method"
   ],
   [
-    "src/models/sqliteconnection.es6~sqliteconnection#update",
-    "class/src/models/SqliteConnection.es6~SqliteConnection.html#instance-method-update",
-    "src/models/SqliteConnection.es6~SqliteConnection#update",
+    "src/models/sqliteconnection.js~sqliteconnection#update",
+    "class/src/models/SqliteConnection.js~SqliteConnection.html#instance-method-update",
+    "src/models/SqliteConnection.js~SqliteConnection#update",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6",
-    "file/src/services/$CacheFactory.es6.html",
-    "src/services/$CacheFactory.es6",
+    "src/services/$cachefactory.js",
+    "file/src/services/$CacheFactory.js.html",
+    "src/services/$CacheFactory.js",
     "file"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#cache",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-member-cache",
-    "src/services/$CacheFactory.es6~$CacheFactory#cache",
+    "src/services/$cachefactory.js~$cachefactory#cache",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-member-cache",
+    "src/services/$CacheFactory.js~$CacheFactory#cache",
     "member"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#constructor",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-constructor-constructor",
-    "src/services/$CacheFactory.es6~$CacheFactory#constructor",
+    "src/services/$cachefactory.js~$cachefactory#constructor",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-constructor-constructor",
+    "src/services/$CacheFactory.js~$CacheFactory#constructor",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#delete",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-method-delete",
-    "src/services/$CacheFactory.es6~$CacheFactory#delete",
+    "src/services/$cachefactory.js~$cachefactory#delete",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-method-delete",
+    "src/services/$CacheFactory.js~$CacheFactory#delete",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#get",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-method-get",
-    "src/services/$CacheFactory.es6~$CacheFactory#get",
+    "src/services/$cachefactory.js~$cachefactory#get",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-method-get",
+    "src/services/$CacheFactory.js~$CacheFactory#get",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#key",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-member-key",
-    "src/services/$CacheFactory.es6~$CacheFactory#key",
+    "src/services/$cachefactory.js~$cachefactory#key",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-member-key",
+    "src/services/$CacheFactory.js~$CacheFactory#key",
     "member"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#put",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-method-put",
-    "src/services/$CacheFactory.es6~$CacheFactory#put",
+    "src/services/$cachefactory.js~$cachefactory#put",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-method-put",
+    "src/services/$CacheFactory.js~$CacheFactory#put",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#remove",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-method-remove",
-    "src/services/$CacheFactory.es6~$CacheFactory#remove",
+    "src/services/$cachefactory.js~$cachefactory#remove",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-method-remove",
+    "src/services/$CacheFactory.js~$CacheFactory#remove",
     "method"
   ],
   [
-    "src/services/$cachefactory.es6~$cachefactory#removeall",
-    "class/src/services/$CacheFactory.es6~$CacheFactory.html#instance-method-removeAll",
-    "src/services/$CacheFactory.es6~$CacheFactory#removeAll",
+    "src/services/$cachefactory.js~$cachefactory#removeall",
+    "class/src/services/$CacheFactory.js~$CacheFactory.html#instance-method-removeAll",
+    "src/services/$CacheFactory.js~$CacheFactory#removeAll",
     "method"
   ],
   [
-    "src/services/$compile.es6",
-    "file/src/services/$Compile.es6.html",
-    "src/services/$Compile.es6",
+    "src/services/$compile.js",
+    "file/src/services/$Compile.js.html",
+    "src/services/$Compile.js",
     "file"
   ],
   [
-    "src/services/$request.es6",
-    "file/src/services/$Request.es6.html",
-    "src/services/$Request.es6",
+    "src/services/$request.js",
+    "file/src/services/$Request.js.html",
+    "src/services/$Request.js",
     "file"
   ],
   [
-    "src/services/$request.es6~$request#constructor",
-    "class/src/services/$Request.es6~$Request.html#instance-constructor-constructor",
-    "src/services/$Request.es6~$Request#constructor",
+    "src/services/$request.js~$request#constructor",
+    "class/src/services/$Request.js~$Request.html#instance-constructor-constructor",
+    "src/services/$Request.js~$Request#constructor",
     "method"
   ],
   [
-    "src/services/$request.es6~$request#request",
-    "class/src/services/$Request.es6~$Request.html#instance-member-request",
-    "src/services/$Request.es6~$Request#request",
+    "src/services/$request.js~$request#request",
+    "class/src/services/$Request.js~$Request.html#instance-member-request",
+    "src/services/$Request.js~$Request#request",
     "member"
   ],
   [
-    "src/services/$resource.es6",
-    "file/src/services/$Resource.es6.html",
-    "src/services/$Resource.es6",
+    "src/services/$resource.js",
+    "file/src/services/$Resource.js.html",
+    "src/services/$Resource.js",
     "file"
   ],
   [
-    "src/services/$resource.es6~$resource#constructor",
+    "src/services/$resource.js~$resource#constructor",
     "undefined#instance-constructor-constructor",
-    "src/services/$Resource.es6~$Resource#constructor",
+    "src/services/$Resource.js~$Resource#constructor",
     "method"
   ],
   [
-    "src/services/$resource.es6~$resource#delete",
+    "src/services/$resource.js~$resource#delete",
     "undefined#instance-method-delete",
-    "src/services/$Resource.es6~$Resource#delete",
+    "src/services/$Resource.js~$Resource#delete",
     "method"
   ],
   [
-    "src/services/$resource.es6~$resource#get",
+    "src/services/$resource.js~$resource#get",
     "undefined#instance-method-get",
-    "src/services/$Resource.es6~$Resource#get",
+    "src/services/$Resource.js~$Resource#get",
     "method"
   ],
   [
-    "src/services/$resource.es6~$resource#post",
+    "src/services/$resource.js~$resource#post",
     "undefined#instance-method-post",
-    "src/services/$Resource.es6~$Resource#post",
+    "src/services/$Resource.js~$Resource#post",
     "method"
   ],
   [
-    "src/services/$resource.es6~$resource#put",
+    "src/services/$resource.js~$resource#put",
     "undefined#instance-method-put",
-    "src/services/$Resource.es6~$Resource#put",
+    "src/services/$Resource.js~$Resource#put",
     "method"
   ],
   [
-    "src/services/$resource.es6~$resource#update",
+    "src/services/$resource.js~$resource#update",
     "undefined#instance-method-update",
-    "src/services/$Resource.es6~$Resource#update",
+    "src/services/$Resource.js~$Resource#update",
     "method"
   ],
   [
-    "src/services/$responses.es6",
-    "file/src/services/$Responses.es6.html",
-    "src/services/$Responses.es6",
+    "src/services/$responses.js",
+    "file/src/services/$Responses.js.html",
+    "src/services/$Responses.js",
     "file"
   ],
   [
-    "src/services/$responses.es6~$response#constructor",
-    "class/src/services/$Responses.es6~$Response.html#instance-constructor-constructor",
-    "src/services/$Responses.es6~$Response#constructor",
+    "src/services/$responses.js~$response#constructor",
+    "class/src/services/$Responses.js~$Response.html#instance-constructor-constructor",
+    "src/services/$Responses.js~$Response#constructor",
     "method"
   ],
   [
-    "src/services/$responses.es6~$response#response",
-    "class/src/services/$Responses.es6~$Response.html#instance-member-response",
-    "src/services/$Responses.es6~$Response#response",
+    "src/services/$responses.js~$response#response",
+    "class/src/services/$Responses.js~$Response.html#instance-member-response",
+    "src/services/$Responses.js~$Response#response",
     "member"
   ],
   [
-    "src/services/$routeprovider.es6",
-    "file/src/services/$RouteProvider.es6.html",
-    "src/services/$RouteProvider.es6",
+    "src/services/$routeprovider.js",
+    "file/src/services/$RouteProvider.js.html",
+    "src/services/$RouteProvider.js",
     "file"
   ],
   [
-    "src/services/$routeprovider.es6~$routeprovider.fetch",
-    "class/src/services/$RouteProvider.es6~$RouteProvider.html#static-method-fetch",
-    "src/services/$RouteProvider.es6~$RouteProvider.fetch",
+    "src/services/$routeprovider.js~$routeprovider.fetch",
+    "class/src/services/$RouteProvider.js~$RouteProvider.html#static-method-fetch",
+    "src/services/$RouteProvider.js~$RouteProvider.fetch",
     "method"
   ],
   [
-    "src/services/$routeprovider.es6~$routeprovider.otherwise",
-    "class/src/services/$RouteProvider.es6~$RouteProvider.html#static-method-otherwise",
-    "src/services/$RouteProvider.es6~$RouteProvider.otherwise",
+    "src/services/$routeprovider.js~$routeprovider.otherwise",
+    "class/src/services/$RouteProvider.js~$RouteProvider.html#static-method-otherwise",
+    "src/services/$RouteProvider.js~$RouteProvider.otherwise",
     "method"
   ],
   [
-    "src/services/$routeprovider.es6~$routeprovider.when",
-    "class/src/services/$RouteProvider.es6~$RouteProvider.html#static-method-when",
-    "src/services/$RouteProvider.es6~$RouteProvider.when",
+    "src/services/$routeprovider.js~$routeprovider.when",
+    "class/src/services/$RouteProvider.js~$RouteProvider.html#static-method-when",
+    "src/services/$RouteProvider.js~$RouteProvider.when",
     "method"
   ],
   [
-    "src/services/$routeprovider.es6~$stateprovider#constructor",
+    "src/services/$routeprovider.js~$stateprovider#constructor",
     "undefined#instance-constructor-constructor",
-    "src/services/$RouteProvider.es6~$StateProvider#constructor",
+    "src/services/$RouteProvider.js~$StateProvider#constructor",
     "method"
   ],
   [
-    "src/services/$templatecache.es6",
-    "file/src/services/$TemplateCache.es6.html",
-    "src/services/$TemplateCache.es6",
+    "src/services/$templatecache.js",
+    "file/src/services/$TemplateCache.js.html",
+    "src/services/$TemplateCache.js",
     "file"
   ],
   [
-    "src/services/$templatecache.es6~$templatecache#constructor",
-    "class/src/services/$TemplateCache.es6~$TemplateCache.html#instance-constructor-constructor",
-    "src/services/$TemplateCache.es6~$TemplateCache#constructor",
+    "src/services/$templatecache.js~$templatecache#constructor",
+    "class/src/services/$TemplateCache.js~$TemplateCache.html#instance-constructor-constructor",
+    "src/services/$TemplateCache.js~$TemplateCache#constructor",
     "method"
   ],
   [
-    "src/services/$templatecache.es6~$templatecache#get",
-    "class/src/services/$TemplateCache.es6~$TemplateCache.html#instance-method-get",
-    "src/services/$TemplateCache.es6~$TemplateCache#get",
+    "src/services/$templatecache.js~$templatecache#get",
+    "class/src/services/$TemplateCache.js~$TemplateCache.html#instance-method-get",
+    "src/services/$TemplateCache.js~$TemplateCache#get",
     "method"
   ],
   [
-    "src/services/$injector.es6",
-    "file/src/services/$injector.es6.html",
-    "src/services/$injector.es6",
+    "src/services/$injector.js",
+    "file/src/services/$injector.js.html",
+    "src/services/$injector.js",
     "file"
   ],
   [
-    "src/services/$injector.es6~$injector#booleancheck",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-booleanCheck",
-    "src/services/$injector.es6~$Injector#booleanCheck",
+    "src/services/$injector.js~$injector#booleancheck",
+    "class/src/services/$injector.js~$Injector.html#instance-method-booleanCheck",
+    "src/services/$injector.js~$Injector#booleanCheck",
     "method"
   ],
   [
-    "src/services/$injector.es6~$injector#functioncheck",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-functionCheck",
-    "src/services/$injector.es6~$Injector#functionCheck",
+    "src/services/$injector.js~$injector#functioncheck",
+    "class/src/services/$injector.js~$Injector.html#instance-method-functionCheck",
+    "src/services/$injector.js~$Injector#functionCheck",
     "method"
   ],
   [
-    "src/services/$injector.es6~$injector#get",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-get",
-    "src/services/$injector.es6~$Injector#get",
+    "src/services/$injector.js~$injector#get",
+    "class/src/services/$injector.js~$Injector.html#instance-method-get",
+    "src/services/$injector.js~$Injector#get",
     "method"
   ],
   [
-    "src/services/$injector.es6~$injector#numbercheck",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-numberCheck",
-    "src/services/$injector.es6~$Injector#numberCheck",
+    "src/services/$injector.js~$injector#numbercheck",
+    "class/src/services/$injector.js~$Injector.html#instance-method-numberCheck",
+    "src/services/$injector.js~$Injector#numberCheck",
     "method"
   ],
   [
-    "src/services/$injector.es6~$injector#objectcheck",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-objectCheck",
-    "src/services/$injector.es6~$Injector#objectCheck",
+    "src/services/$injector.js~$injector#objectcheck",
+    "class/src/services/$injector.js~$Injector.html#instance-method-objectCheck",
+    "src/services/$injector.js~$Injector#objectCheck",
     "method"
   ],
   [
-    "src/services/$injector.es6~$injector#stringcheck",
-    "class/src/services/$injector.es6~$Injector.html#instance-method-stringCheck",
-    "src/services/$injector.es6~$Injector#stringCheck",
+    "src/services/$injector.js~$injector#stringcheck",
+    "class/src/services/$injector.js~$Injector.html#instance-method-stringCheck",
+    "src/services/$injector.js~$Injector#stringCheck",
     "method"
   ],
   [
-    "src/services/baserequest.es6",
-    "file/src/services/BaseRequest.es6.html",
-    "src/services/BaseRequest.es6",
+    "src/services/baserequest.js",
+    "file/src/services/BaseRequest.js.html",
+    "src/services/BaseRequest.js",
     "file"
   ],
   [
-    "src/services/baserequest.es6~baserequest#constructor",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-constructor-constructor",
-    "src/services/BaseRequest.es6~BaseRequest#constructor",
+    "src/services/baserequest.js~baserequest#constructor",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-constructor-constructor",
+    "src/services/BaseRequest.js~BaseRequest#constructor",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#controllerpath",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-method-controllerPath",
-    "src/services/BaseRequest.es6~BaseRequest#controllerPath",
+    "src/services/baserequest.js~baserequest#controllerpath",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-method-controllerPath",
+    "src/services/BaseRequest.js~BaseRequest#controllerPath",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#defaultpath",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-method-defaultPath",
-    "src/services/BaseRequest.es6~BaseRequest#defaultPath",
+    "src/services/baserequest.js~baserequest#defaultpath",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-method-defaultPath",
+    "src/services/BaseRequest.js~BaseRequest#defaultPath",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#errorpath",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-method-errorPath",
-    "src/services/BaseRequest.es6~BaseRequest#errorPath",
+    "src/services/baserequest.js~baserequest#errorpath",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-method-errorPath",
+    "src/services/BaseRequest.js~BaseRequest#errorPath",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#otherpath",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-method-otherPath",
-    "src/services/BaseRequest.es6~BaseRequest#otherPath",
+    "src/services/baserequest.js~baserequest#otherpath",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-method-otherPath",
+    "src/services/BaseRequest.js~BaseRequest#otherPath",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#otherwise",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-otherwise",
-    "src/services/BaseRequest.es6~BaseRequest#otherwise",
+    "src/services/baserequest.js~baserequest#otherwise",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-otherwise",
+    "src/services/BaseRequest.js~BaseRequest#otherwise",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#path",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-path",
-    "src/services/BaseRequest.es6~BaseRequest#path",
+    "src/services/baserequest.js~baserequest#path",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-path",
+    "src/services/BaseRequest.js~BaseRequest#path",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#request",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-request",
-    "src/services/BaseRequest.es6~BaseRequest#request",
+    "src/services/baserequest.js~baserequest#request",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-request",
+    "src/services/BaseRequest.js~BaseRequest#request",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#response",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-response",
-    "src/services/BaseRequest.es6~BaseRequest#response",
+    "src/services/baserequest.js~baserequest#response",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-response",
+    "src/services/BaseRequest.js~BaseRequest#response",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#responsecontenttype",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-responseContentType",
-    "src/services/BaseRequest.es6~BaseRequest#responseContentType",
+    "src/services/baserequest.js~baserequest#responsecontenttype",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-responseContentType",
+    "src/services/BaseRequest.js~BaseRequest#responseContentType",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#responseheaders",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-responseHeaders",
-    "src/services/BaseRequest.es6~BaseRequest#responseHeaders",
+    "src/services/baserequest.js~baserequest#responseheaders",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-responseHeaders",
+    "src/services/BaseRequest.js~BaseRequest#responseHeaders",
     "member"
   ],
   [
-    "src/services/baserequest.es6~baserequest#route",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-method-route",
-    "src/services/BaseRequest.es6~BaseRequest#route",
+    "src/services/baserequest.js~baserequest#route",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-method-route",
+    "src/services/BaseRequest.js~BaseRequest#route",
     "method"
   ],
   [
-    "src/services/baserequest.es6~baserequest#routes",
-    "class/src/services/BaseRequest.es6~BaseRequest.html#instance-member-routes",
-    "src/services/BaseRequest.es6~BaseRequest#routes",
+    "src/services/baserequest.js~baserequest#routes",
+    "class/src/services/BaseRequest.js~BaseRequest.html#instance-member-routes",
+    "src/services/BaseRequest.js~BaseRequest#routes",
     "member"
   ],
   [
-    "src/util/$exceptionsprovider.es6",
-    "file/src/util/$ExceptionsProvider.es6.html",
-    "src/util/$ExceptionsProvider.es6",
+    "src/util/$exceptionsprovider.js",
+    "file/src/util/$ExceptionsProvider.js.html",
+    "src/util/$ExceptionsProvider.js",
     "file"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$databaseconnectivityerror",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$databaseConnectivityError",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$databaseConnectivityError",
+    "src/util/$exceptionsprovider.js~$exceptions#$$databaseconnectivityerror",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$databaseConnectivityError",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$databaseConnectivityError",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$databasetableexists",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$databaseTableExists",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$databaseTableExists",
+    "src/util/$exceptionsprovider.js~$exceptions#$$databasetableexists",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$databaseTableExists",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$databaseTableExists",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$invalidconfig",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$invalidConfig",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$invalidConfig",
+    "src/util/$exceptionsprovider.js~$exceptions#$$invalidconfig",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$invalidConfig",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$invalidConfig",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$invaliddatabaseconfig",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$invalidDatabaseConfig",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$invalidDatabaseConfig",
+    "src/util/$exceptionsprovider.js~$exceptions#$$invaliddatabaseconfig",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$invalidDatabaseConfig",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$invalidDatabaseConfig",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$invalidmodelconfig",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$invalidModelConfig",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$invalidModelConfig",
+    "src/util/$exceptionsprovider.js~$exceptions#$$invalidmodelconfig",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$invalidModelConfig",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$invalidModelConfig",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$invalidmodelfieldreference",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$invalidModelFieldReference",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$invalidModelFieldReference",
+    "src/util/$exceptionsprovider.js~$exceptions#$$invalidmodelfieldreference",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$invalidModelFieldReference",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$invalidModelFieldReference",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#$$invalidmodelreference",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-method-$$invalidModelReference",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#$$invalidModelReference",
+    "src/util/$exceptionsprovider.js~$exceptions#$$invalidmodelreference",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-method-$$invalidModelReference",
+    "src/util/$ExceptionsProvider.js~$Exceptions#$$invalidModelReference",
     "method"
   ],
   [
-    "src/util/$exceptionsprovider.es6~$exceptions#constructor",
-    "class/src/util/$ExceptionsProvider.es6~$Exceptions.html#instance-constructor-constructor",
-    "src/util/$ExceptionsProvider.es6~$Exceptions#constructor",
+    "src/util/$exceptionsprovider.js~$exceptions#constructor",
+    "class/src/util/$ExceptionsProvider.js~$Exceptions.html#instance-constructor-constructor",
+    "src/util/$ExceptionsProvider.js~$Exceptions#constructor",
     "method"
   ],
   [
-    "src/util/$logprovider.es6",
-    "file/src/util/$LogProvider.es6.html",
-    "src/util/$LogProvider.es6",
+    "src/util/$logprovider.js",
+    "file/src/util/$LogProvider.js.html",
+    "src/util/$LogProvider.js",
     "file"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#bold",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-bold",
-    "src/util/$LogProvider.es6~$LogProvider#bold",
+    "src/util/$logprovider.js~$logprovider#bold",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-bold",
+    "src/util/$LogProvider.js~$LogProvider#bold",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#constructor",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-constructor-constructor",
-    "src/util/$LogProvider.es6~$LogProvider#constructor",
+    "src/util/$logprovider.js~$logprovider#constructor",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-constructor-constructor",
+    "src/util/$LogProvider.js~$LogProvider#constructor",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#debug",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-debug",
-    "src/util/$LogProvider.es6~$LogProvider#debug",
+    "src/util/$logprovider.js~$logprovider#debug",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-debug",
+    "src/util/$LogProvider.js~$LogProvider#debug",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#error",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-error",
-    "src/util/$LogProvider.es6~$LogProvider#error",
+    "src/util/$logprovider.js~$logprovider#error",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-error",
+    "src/util/$LogProvider.js~$LogProvider#error",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#help",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-help",
-    "src/util/$LogProvider.es6~$LogProvider#help",
+    "src/util/$logprovider.js~$logprovider#help",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-help",
+    "src/util/$LogProvider.js~$LogProvider#help",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#info",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-info",
-    "src/util/$LogProvider.es6~$LogProvider#info",
+    "src/util/$logprovider.js~$logprovider#info",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-info",
+    "src/util/$LogProvider.js~$LogProvider#info",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#log",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-log",
-    "src/util/$LogProvider.es6~$LogProvider#log",
+    "src/util/$logprovider.js~$logprovider#log",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-log",
+    "src/util/$LogProvider.js~$LogProvider#log",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#shell",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-shell",
-    "src/util/$LogProvider.es6~$LogProvider#shell",
+    "src/util/$logprovider.js~$logprovider#shell",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-shell",
+    "src/util/$LogProvider.js~$LogProvider#shell",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider#warn",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#instance-method-warn",
-    "src/util/$LogProvider.es6~$LogProvider#warn",
+    "src/util/$logprovider.js~$logprovider#warn",
+    "class/src/util/$LogProvider.js~$LogProvider.html#instance-method-warn",
+    "src/util/$LogProvider.js~$LogProvider#warn",
     "method"
   ],
   [
-    "src/util/$logprovider.es6~$logprovider.setdebuglevel",
-    "class/src/util/$LogProvider.es6~$LogProvider.html#static-method-setDebugLevel",
-    "src/util/$LogProvider.es6~$LogProvider.setDebugLevel",
+    "src/util/$logprovider.js~$logprovider.setdebuglevel",
+    "class/src/util/$LogProvider.js~$LogProvider.html#static-method-setDebugLevel",
+    "src/util/$LogProvider.js~$LogProvider.setDebugLevel",
     "method"
   ],
   [
-    "src/util/mimetypes.es6",
-    "file/src/util/MimeTypes.es6.html",
-    "src/util/MimeTypes.es6",
+    "src/util/mimetypes.js",
+    "file/src/util/MimeTypes.js.html",
+    "src/util/MimeTypes.js",
     "file"
   ],
   [
-    "src/util/scaffold/project.es6",
-    "file/src/util/scaffold/project.es6.html",
-    "src/util/scaffold/project.es6",
+    "src/util/scaffold/project.js",
+    "file/src/util/scaffold/project.js.html",
+    "src/util/scaffold/project.js",
     "file"
   ],
   [
-    "src/util/shell.es6",
-    "file/src/util/shell.es6.html",
-    "src/util/shell.es6",
+    "src/util/shell.js",
+    "file/src/util/shell.js.html",
+    "src/util/shell.js",
     "file"
   ],
   [
-    "src/util/util.es6",
-    "file/src/util/util.es6.html",
-    "src/util/util.es6",
+    "src/util/util.js",
+    "file/src/util/util.js.html",
+    "src/util/util.js",
     "file"
   ]
 ]

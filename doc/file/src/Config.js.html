@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/Config.js | API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   
   
-<script type='text/javascript'>window.addEventListener('message', function(event) {var style = document.createElement('link'); document.head.appendChild(style); style.rel = 'stylesheet'; style.src = event.data;});</script></head>
+</head>
 <body class="layout-container">
 
 <header>
@@ -73,10 +73,68 @@
 
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index"><h2 id="angie">Angie</h2>
-<p><em>Note: This project is in Beta. The current release is unstable</em></p>
-<p>Please see the <a href="http://benderthecrime.github.io/angie/#/about">site</a> for news, a quickstart, and documentation and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md">CHANGELOG</a> for an up to date list of changes.</p>
-</div>
+<div class="content" data-ice="content"><h1 data-ice="title">src/Config.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;; &apos;use strong&apos;;
+
+import util from &apos;./util/util&apos;;
+import $ExceptionsProvider from &apos;./util/$ExceptionsProvider&apos;;
+
+const fs =            require(&apos;fs&apos;);
+
+const p = process;
+
+let config = {};
+
+export default class Config {
+    constructor() {
+        if (Object.keys(config).length === 0) {
+            return new Promise(function() {
+
+                // Use the file finder to check against filetype
+                let fileNames = [
+                        &apos;angiefile&apos;,
+                        &apos;angieFile&apos;,
+                        &apos;Angiefile&apos;,
+                        &apos;AngieFile&apos;
+                    ],
+                    acceptedFileNames = [],
+                    file;
+
+                fileNames.forEach(function(name) {
+                    acceptedFileNames.push(`${name}.json`);
+                    acceptedFileNames.push(`${name}.js`);
+                    acceptedFileNames.push(`${name}.es6`);
+                });
+
+                acceptedFileNames.forEach(function(name) {
+                    let tmpFile = util.findFile(p.cwd(), name);
+                    if (tmpFile) {
+                        file = tmpFile;
+                    }
+                });
+
+                try {
+                    arguments[0](fs.readFileSync(file, &apos;utf8&apos;));
+                } catch(e) {
+                    arguments[1](e);
+                }
+            }).then(function(stdout) {
+                try {
+                    config = JSON.parse(stdout);
+                } catch(e) {
+                    $ExceptionsProvider.$$invalidConfig();
+                }
+            }, function() {
+                $ExceptionsProvider.$$invalidConfig();
+            });
+        } else {
+            return new Promise(() =&gt; arguments[0]());
+        }
+    }
+}
+
+export {config};
+</code></pre>
 </div>
 
 <footer class="footer">
