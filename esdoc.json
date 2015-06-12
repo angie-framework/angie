@@ -1,6 +1,7 @@
 {
   "source": "./src",
-  "destination": "./doc",
+  "destination": "../gh-pages-angie/html/doc",
   "autoPrivate": true,
-  "coverage": true
+  "coverage": true,
+  "styles": [ "../gh-pages-angie/css/doc.css" ]
 }

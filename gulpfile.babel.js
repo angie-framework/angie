@@ -2,7 +2,6 @@
 
 const gulp =        require('gulp'),
       exec =        require('child_process').exec,
-      fs =          require('fs'),
       eslint =      require('gulp-eslint'),
       istanbul =    require('gulp-istanbul'),
       isparta =     require('isparta'),
@@ -45,25 +44,19 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
         ).on('end', cb);
     });
 });
-gulp.task('esdoc', [ 'mocha' ], function(cb) {
-    exec('esdoc -c esdoc.json', function() {
-        var template = fs.readFileSync('doc/index.html', 'utf8');
-        console.log(template);
-        template = template.replace(
-            '</head>',
-            '<script type=\'text/javascript\'>window.addEventListener(\'message\', ' +
-            'function(event) {var style = document.createElement(\'link\'); ' +
-            'document.head.appendChild(style); style.rel = \'stylesheet\'; ' +
-            'style.href = event.data;});</script></head>'
-        );
-        console.log(template);
-        fs.writeFileSync('doc/index.html', template, 'utf8', { 'flags': 'w+' });
-    });
+gulp.task('esdoc', function(cb) {
+    exec('esdoc -c esdoc.json', cb);
 });
-gulp.task('watch', [ 'esdoc' ], function() {
-    gulp.watch([ src ], [ 'esdoc' ]);
+gulp.task('watch', [ 'mocha' ], function() {
+    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
 });
-gulp.task('default', [ 'esdoc' ]);
+gulp.task('watch:mocha', [ 'mocha' ], function() {
+    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha' ]);
+});
+gulp.task('watch:esdoc', [ 'esdoc' ], function() {
+    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'esdoc' ]);
+});
+gulp.task('default', [ 'mocha', 'esdoc' ]);
 
 function onErr(e) {
     console.error(e);
