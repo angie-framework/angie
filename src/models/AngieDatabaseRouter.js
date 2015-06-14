@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 import {config} from '../Config';
-import $cacheFactory from '../services/$cacheFactory';
+import $cacheFactory from '../services/$CacheFactory';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
 import SqliteConnection from './SqliteConnection';
 import MySqlConnection from './MySqlConnection';
