@@ -38,7 +38,7 @@ gulp.task('mocha', function(cb) {
         istanbul.hookRequire()
     ).on('finish', function() {
         gulp.src(testSrc).pipe(mocha({
-            reporter: 'nyan'
+            reporter: 'spec'
         })).pipe(
             istanbul.writeReports()
         ).on('end', cb);

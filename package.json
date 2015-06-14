@@ -32,7 +32,6 @@
     "babel-eslint": "^3.1.1",
     "chai": "^2.3.0",
     "connect": "^2.x.x",
-    "electron-prebuilt": "*",
     "esdoc": "^0.1.2",
     "gulp": "^3.9.0",
     "gulp-cli": "*",

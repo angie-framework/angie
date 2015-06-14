@@ -89,13 +89,15 @@ function _evalFn(str) {
         } else if (typeof val === 'object') {
             val = JSON.stringify(val);
         }
-        keyStr += `let ${key}=${val};`;
+
+        // I don't like having to use var here
+        keyStr += `var ${key}=${val};`;
     }
 
     // TODO This can be improved if keyStr is evaluated beforehand
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
-    return eval([ keyStr, str ].join(';'));
+    return eval([ keyStr, str ].join(''));
 
     /* eslint-enable */
 }

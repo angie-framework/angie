@@ -41,6 +41,7 @@
 ================================================================================
 
 - complex query arguments > < >= <=
+- shields for coverage, passing build, node version support, downloads
 
 ================================================================================
 - DB
@@ -96,6 +97,7 @@
     - mobile mets and optimizations
 
 - desktop app for admin access
+    - add electron (takes too long to install on builds)
     - admin - standalone, require as repo
 
 - how do you authenticate?
