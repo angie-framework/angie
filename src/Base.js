@@ -1,9 +1,7 @@
 'use strict'; 'use strong';
 
 import angular from './Angular';
-
-// TODO open this back up when you have an admin model
-// import * as AngieModelFields from './models/Fields';
+import * as AngieModelFields from './models/Fields';
 import {$routeProvider} from './services/$RouteProvider';
 import $compile from './services/$Compile';
 import $ExceptionsProvider from './util/$ExceptionsProvider';
@@ -52,6 +50,11 @@ global.app = app = new angular()
     })
     .service('$routeProvider', $routeProvider)
     .service('$compile', $compile)
+
+    // Model utilities
+    .service('$fields', AngieModelFields)
+
+    // Logging  utilities
     .service('$Log', $log)
     .service('$Exceptions', $ExceptionsProvider)
     .service('$injector', $injector)
