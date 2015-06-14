@@ -81,6 +81,8 @@ function $compile(t) {
 function _evalFn(str) {
     let keyStr = '';
 
+    console.log(str);
+
     // Perform any parsing that needs to be performed on the scope value
     for (let key in this) {
         let val = this[ key ];
@@ -93,6 +95,8 @@ function _evalFn(str) {
         }
         keyStr += `let ${key}=${val};`;
     }
+
+    console.log([ keyStr, str ].join(';'));
 
     // TODO This can be improved if keyStr is evaluated beforehand
     // Literal eval is executed in its own context here to reduce security issues
