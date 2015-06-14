@@ -95,7 +95,9 @@ function _evalFn(str) {
         } else if (typeof val === 'object') {
             val = JSON.stringify(val);
         }
-        keyStr += `let ${key}=${val};`;
+
+        // I don't like having to use var here
+        keyStr += `var ${key}=${val};`;
     }
 
     console.log('EVALSTR', [ keyStr, str ].join(''));
