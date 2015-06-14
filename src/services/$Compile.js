@@ -39,7 +39,7 @@ function $compile(t) {
      */
     return function _templateCompile (scope = {}) {
 
-        console.log(scope);
+        console.log('SCOPE', scope);
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template;
@@ -54,7 +54,9 @@ function $compile(t) {
             // Evaluate the expression
             try {
                 val = _evalFn.call(scope, parsedListener);
+                console.log('VAL', val);
             } catch(e) {
+                console.log(e);
                 $log.warn(e);
             }
 
@@ -81,7 +83,7 @@ function $compile(t) {
 function _evalFn(str) {
     let keyStr = '';
 
-    console.log(str);
+    console.log('STR', str);
 
     // Perform any parsing that needs to be performed on the scope value
     for (let key in this) {
@@ -96,12 +98,12 @@ function _evalFn(str) {
         keyStr += `let ${key}=${val};`;
     }
 
-    console.log([ keyStr, str ].join(';'));
+    console.log('EVALSTR', [ keyStr, str ].join(''));
 
     // TODO This can be improved if keyStr is evaluated beforehand
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
-    return eval([ keyStr, str ].join(';'));
+    return eval([ keyStr, str ].join(''));
 
     /* eslint-enable */
 }
