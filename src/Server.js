@@ -110,9 +110,7 @@ export default function server(args) {
                 response.end();
             } else {
                 angieResponse.route().then(function() {
-                    console.log('DO I GET IN?');
                     let code = response.statusCode;
-                    console.log(code);
                     if (!code) {
                         const error = $templateLoader('500.html');
 
@@ -125,17 +123,14 @@ export default function server(args) {
                         response.write(error);
                         $log.error(path, response._header);
                     } else if (code < 400) {
-                        console.log($log.info, response._header);
                         $log.info(path, response._header);
                     } else if (code < 500) {
                         $log.warn(path, response._header);
                     } else {
                         $log.error(path, response._header);
                     }
-                    console.log('__DO I GET IN?');
                     return true;
                 }).then(function() {
-                    console.log('DONE');
 
                     // End the response
                     response.end();

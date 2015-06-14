@@ -19,9 +19,19 @@ class $Exceptions {
     $$databaseTableExists(e) {
         throw new Error(err(e));
     }
+    $$injectorErr() {
+        throw new Error(
+            err('Injector cannot be called without a provider name')
+        );
+    }
     $$invalidConfig(type = '') {
         throw new Error(
             err(`Invalid ${type} configuration settings. Please check your AngieFile.`)
+        );
+    }
+    $$invalidDirectiveConfig(name = '') {
+        throw new Error(
+            err(`Invalid configuration for directive ${name}`)
         );
     }
     $$invalidDatabaseConfig() {
@@ -40,6 +50,14 @@ class $Exceptions {
     $$invalidModelReference() {
         throw new Error(
             err(`Invalid Model argument`)
+        );
+    }
+    $$providerErr() {
+
+        // TODO should result in a 500
+        let arg = Array.prototype.splice.call(arguments).join(', ');
+        throw new Error(
+            err(`Cannot find ${arg} <-- ${arg}Provider`)
         );
     }
 }

@@ -18,8 +18,6 @@ class BaseField {
             if (args === 1) {
                 return;
             }
-
-            /* eslint-disable */
             [
                 this.minValue,
                 this.maxValue,
@@ -35,8 +33,6 @@ class BaseField {
                 nullable,
                 unique
             ];
-
-            /* eslint-enable */
         }
     }
     create() {

@@ -48,9 +48,15 @@ class Angular {
         return this._register('Controllers', name, obj);
     }
     directive(name, obj = {}) {
-
-        // TODO dependencies
         let dir = new $injectionBinder(obj)();
+
+        if (dir.hasOwnProperty('Controller') && typeof dir.Controller !== 'string') {
+            delete dir.Controller;
+        }
+        if (dir.type === 'APIView' && !dir.hasOwnProperty('Controller')) {
+            $Exceptions.$$invalidDirectiveConfig(name);
+        }
+
         return this._register('directives', name, dir);
     }
     config(fn) {

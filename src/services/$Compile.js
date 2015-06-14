@@ -1,56 +1,107 @@
 'use strict'; 'use strong';
 
 import angular from '../Angular';
+import app from '../Base';
+import $log from '../util/$LogProvider';
 
-export default function compile(t) {
+/**
+ * @desc $compile is provided to any service, Controller, directive, Model, or view
+ * which has included it as an argument.
+ *
+ * It can also be referenced as `app.services.$compile`.
+ * @since 0.2.2
+ * @param {string} t Template string to be processed
+ * @returns {function} Template function, compiles in whatever scope is passed
+ * @example $compile('{{{test}}}')({ test: 1 }) === 1; // true
+ */
+function $compile(t) {
 
     if (!t) {
         return angular.noop;
     }
 
+    // We need to call template.toString() because we did not load with utf8
     let template = t.toString(),
+        listeners = template.match(/\{{3}[^\{{3}\}{3}]*\}{3}/g) || [],
 
-        // TODO you will have to modify this for punctuation
-        listeners = template.match(/\{{3}[a-zA-z0-9]+\}{3}/g) || [];
+        // Match on directives
+        directives = [];
 
-    // TODO this is pretty basic for now, does not handle expressions
-    // TODO expressions
-    // TODO controllers & directives
-    // TODO when you fix scope, fix this as well
+    for (let directive in app.directives) {
+        directives = directives.concat(template.match(directive) || []);
+    }
 
-    /* eslint-disable */
-    return function templateCompile (scope) {
+    /**
+     * @desc Function returned by $compile
+     * @since 0.2.2
+     * @param {object} scope [param={}] Template string to be processed
+     * @returns {string} The compiled template
+     */
+    return function _templateCompile (scope = {}) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template;
 
-    /* eslint-enable */
-        if (listeners && listeners.length) {
-            listeners.forEach(function(listener) {
-                let val,
+        console.log('LISTENERS', listeners);
 
-                    // TODO this will have to be modified when you are listening inside a
-                    // template
-                    parsedListener = listener.replace(/(\{|\})/g, '').trim();
+        // Parse simple listeners/expressions
+        listeners.forEach(function(listener) {
 
-                try {
+            console.log('LISTENER', listener);
 
-                    /* eslint-disable */
-                    val = eval(`scope.${parsedListener}`) || '';
+            // Remove the bracket mustaches
+            let parsedListener = listener.replace(/(\{|\}|\;)/g, '').trim(),
+                val = '';
 
-                    /* eslint-enable */
-                } catch(e) {} // Moot error, if it's not there, try something else
+            // Evaluate the expression
+            try {
+                val = _evalFn.call(scope, parsedListener);
+            } catch(e) {
+                $log.warn(e);
+            }
 
-                // TODO this will have to be modified when you are listening inside a
-                // template
-                tmpLet = tmpLet.replace(listener, val);
-            });
-        }
+            // Change the scope of the template
+            tmpLet = tmpLet.replace(listener, val);
+        });
+
+        // Parse directives
+        directives.forEach(function(directive) {
+            console.log(directive);
+
+            // Check to see if our directive is in a place we can handle it
+            // Restrict
+            // Parse arguments: attrs? element? scope?
+            // Fire link function
+        });
+
         return tmpLet;
     };
 }
 
+// A private function to evaluate the parsed template string in the context of
+// `scope`
+function _evalFn(str) {
+    let keyStr = '';
 
-// TODO you may just want to patch in the Angular compile and listen on {{{}}}
-// TODO you also need to parse child scopes
-// TODO use handlebars and then angular
+    // Perform any parsing that needs to be performed on the scope value
+    for (let key in this) {
+        let val = this[ key ];
+        if (!val) {
+            continue;
+        } else if (typeof val === 'symbol' || typeof val === 'string') {
+            val = `"${val}"`;
+        } else if (typeof val === 'object') {
+            val = JSON.stringify(val);
+        }
+        keyStr += `let ${key}=${val};`;
+    }
+
+    // TODO This can be improved if keyStr is evaluated beforehand
+    // Literal eval is executed in its own context here to reduce security issues
+    /* eslint-disable */
+    return eval([ keyStr, str ].join(';'));
+
+    /* eslint-enable */
+}
+
+export default $compile;

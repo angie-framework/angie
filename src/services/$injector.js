@@ -2,13 +2,12 @@
 
 import app from '../Base';
 import $log from '../util/$LogProvider';
-
-const p = process;
+import $ExceptionsProvider from '../util/$ExceptionsProvider';
 
 class $Injector {
     get() {
         if (!arguments.length) {
-            $$injectorErr();
+            $ExceptionsProvider.$$providerErr();
         }
 
         let providers = [];
@@ -29,12 +28,16 @@ class $Injector {
             try {
                 provision = app[ app._registry[ arg ] ][ arg ];
             } catch (e) {
-                $$providerErr(e, arg);
+
+                // TODO should result in a 500
+                $ExceptionsProvider.$$providerErr(arg);
             }
             if (provision && $injector[ `${typeof provision}Check` ](provision)) {
                 providers.push(provision);
             } else {
-                $$providerErr(null, arg);
+
+                // TODO should result in a 500
+                $ExceptionsProvider.$$providerErr(arg);
             }
         }
         return providers.length > 1 ? providers : providers[0] ? providers[0] : [];
@@ -57,10 +60,11 @@ class $Injector {
 }
 
 function $injectionBinder(fn) {
+    let str = fn.toString(),
+        args = str.match(/(function.*\(.*\))/g),
+        providers = [];
+
     try {
-        let str = fn.toString(),
-            args = str.match(/(function.*\(.*\))/g),
-            providers = [];
 
         args.forEach((v) => v.replace(/\s+/g, ''));
 
@@ -70,20 +74,8 @@ function $injectionBinder(fn) {
         }
         return providers.length ? fn.bind(null, ...providers) : fn.bind(null, providers);
     } catch(e) {
-        $$providerErr(e);
+        $ExceptionsProvider.$$providerErr(...args);
     }
-}
-
-function $$injectorErr() {
-    $log.error('Injector cannot be called without a provider name');
-    p.exit(1);
-}
-
-function $$providerErr(e, arg) {
-    $log.error(
-        arg ? `Cannot find ${arg} <-- ${arg}Provider ${e}` : e
-    );
-    p.exit(1);
 }
 
 const $injector = new $Injector();

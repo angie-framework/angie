@@ -28,6 +28,7 @@ const DEFAULT_CONTENT_TYPE = {
 class BaseRequest {
     constructor(path, request, response) {
 
+        // TODO convert this to docs
         // Cases:
         // Controller & templatePath (default) --> compiles template in scope
         // --> view
@@ -90,6 +91,7 @@ class BaseRequest {
             prom,
             error = false;
 
+        // TODO move all of this out to responses
         prom = new Promise(function(resolve, reject) {
             let controllerName = me.route.Controller;
 
@@ -108,23 +110,21 @@ class BaseRequest {
                         !me.controller.constructor ||
                         me.controller.constructor.name !== 'Promise'
                     ) {
-                        resolve();
+                        resolve(controllerName);
                     }
                 } else {
 
                     // TODO controller was not found despite being defined?
                     // TODO exception
-                    $log.error(`No Controller named "${controllerName}" could be found`);
-                    reject();
+                    reject(`No Controller named "${controllerName}" could be found`);
                 }
             } else {
-                resolve();
+                resolve(controllerName);
             }
         });
 
         // Find and load template
-        prom.then(function() {
-            console.log('DO I GET HERE');
+        prom.then(function(controllerName) {
             try {
                 if (
                     me.route.template &&
@@ -184,32 +184,38 @@ class BaseRequest {
                     me.response.__responseContent__ = me.responseContent;
                 }
             } catch(e) {
-                error = !!e;
+                error = e;
             } finally {
-                console.log('ALSO HERE');
-                return true;
+                return controllerName;
             }
+        }, function(e) {
+            return $log.error(e);
         });
 
         // TODO See if any views have this Controller associated
         // TODO instantiate directives beforehand
-        // prom.then(function() {
-        //     for (let key in app.directives) {
-        //         let directive = app.directives[ key ];
-        //         if (
-        //             directive.Controller &&
-        //             directive.Controller === controllerName &&
-        //             directive.type === 'APIView'
-        //         ) {
-        //
-        //             // APIViews cannot have templates, all templates are trashed
-        //             delete me.template;
-        //             delete me.__responseContent__;
-        //             me.responseHeaders = {};
-        //
-        //         }
-        //     }
-        // });
+        prom.then(function(controllerName) {
+            for (let key in app.__registry__) {
+                if (app.__registry__[ key ] === 'directive') {
+                    let directive = app.directives[ key ];
+                    if (
+                        directive.Controller &&
+                        directive.Controller === controllerName &&
+                        directive.type === 'APIView'
+                    ) {
+
+                        // APIViews cannot have templates, all templates are trashed
+                        delete me.template;
+                        delete me.__responseContent__;
+                        me.responseHeaders = {};
+
+                        // We have made it so only one APIView directive can
+                        // be fired at a time
+                        break;
+                    }
+                }
+            }
+        });
 
         prom.then(function() {
             if (error) {
@@ -228,7 +234,6 @@ class BaseRequest {
                 );
                 me.response.write(me.responseContent);
             }
-            console.log('AND HERE');
             return true;
         });
 

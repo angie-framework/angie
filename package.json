@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
@@ -51,6 +51,6 @@
     "mysql": "^2.6.2",
     "node-gyp": "^1.0.3",
     "node-watch": "^0.3.4",
-    "sqlite3": "^3.0.5"
+    "sqlite3": "3.0.8"
   }
 }

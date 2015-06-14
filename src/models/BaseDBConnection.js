@@ -198,7 +198,6 @@ export default class BaseDBConnection {
 
             // Resolves to a value in the connections currently
             const queryset = new AngieDBObject(me, model, query);
-            // console.log(rows);
             return util.extend(
                 rows,
                 { errors: errors },

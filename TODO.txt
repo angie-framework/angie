@@ -1,35 +1,75 @@
 - SMALLER SETS, but each set must be tested and documented
 
+- template
+    - your regex is wrong
+    - test
+        - compile
+            - test many expressions
+    - publish/version
+================================================================================
+
+- fix travis
+
 - Website and docs (tests)
     - site
         - quickstart
         - docs
         - contributors
+        - feedback
     - pre-push hook to run tests/docs
     - update version / publish
 
 ================================================================================
+    - parse params from routes/urls
+        - have it understand multiple content types
+        - if not content type, grabs from route extension
+================================================================================
 
-- directives
-    - directives have no access to models
-    - template
-    - api view
+
+    - make templates understand what to do with directives
+        - replace underscores and dashes in names / camelCase
+    - doc
+    - test
+        - angular
+            - directive
+        - base response
+            - directive & view
+        - injector
+================================================================================
+
+    - directives and controllers scoping works differently
     - native directives
 
 ================================================================================
 
-    - DB
-        - m2m
-        - migrations
-            - update
-            - commonize
-            - have to change flags on the fields (unique, lengths, nullable)
-        - migrations destructive
-        - basic firebase
+- complex query arguments > < >= <=
+
+================================================================================
+- DB
+    - m2m
+    - migrations
+        - update
+        - commonize
+        - have to change flags on the fields (unique, lengths, nullable)
+    - migrations destructive
+    - basic firebase
 
 ================================================================================
 
-- parse params from routes/urls
+    - config default allowed methods
+    - config default serializers
+    - directives have no access to models
+    - api view
+        - methods
+        - renderers
+            - JSON
+            - JSONP
+            - XML
+            - HTML
+        - serializers
+    - naming conventions for directives versus views
+        - view folders?
+
 
 ================================================================================
 
@@ -37,9 +77,6 @@
 
 ================================================================================
 
-- make compile understand expressions, directives
-- complex query arguments > < >= <=
-    - foreign key args other than id
 - deep nesting
 
 ================================================================================
@@ -69,6 +106,7 @@
 
 - custom web components
 - joins
+- evaluate espresso as a test framework
 
 ================================================================================
 

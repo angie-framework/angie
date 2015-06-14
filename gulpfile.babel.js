@@ -13,7 +13,7 @@ const src = 'src/**/*.js',
       docSrc = 'doc';
 
 gulp.task('eslint', function () {
-    return gulp.src(src).pipe(
+    gulp.src(src).pipe(
         eslint()
     ).pipe(
         eslint.format()
@@ -21,7 +21,7 @@ gulp.task('eslint', function () {
         eslint.failOnError()
     );
 });
-gulp.task('mocha', [ 'eslint' ], function(cb) {
+gulp.task('mocha', function(cb) {
     gulp.src(src).pipe(
         istanbul({
             instrumenter: isparta.Instrumenter,
@@ -47,17 +47,13 @@ gulp.task('mocha', [ 'eslint' ], function(cb) {
 gulp.task('esdoc', function(cb) {
     exec('esdoc -c esdoc.json', cb);
 });
-gulp.task('watch', [ 'mocha' ], function() {
+gulp.task('watch', [ 'eslint', 'mocha', 'esdoc' ], function() {
     gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
 });
-gulp.task('watch:mocha', [ 'mocha' ], function() {
+gulp.task('watch:mocha', [ 'eslint', 'mocha' ], function() {
     gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
 gulp.task('watch:esdoc', [ 'esdoc' ], function() {
     gulp.watch([ src, '../gh-pages-angie/**' ], [ 'esdoc' ]);
 });
-gulp.task('default', [ 'mocha', 'esdoc' ]);
-
-function onErr(e) {
-    console.error(e);
-}
+gulp.task('default', [ 'eslint', 'mocha', 'esdoc' ]);
