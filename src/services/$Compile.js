@@ -22,7 +22,7 @@ function $compile(t) {
 
     // We need to call template.toString() because we did not load with utf8
     let template = t.toString(),
-        listeners = template.match(/\{{3}[^\{{3}\}{3}]*\}{3}/g) || [],
+        listeners = template.match(/\{{3}[^\}]+\}{3}/g) || [],
 
         // Match on directives
         directives = [];
@@ -42,12 +42,8 @@ function $compile(t) {
         // Temporary template object, lets us hang on to our template
         let tmpLet = template;
 
-        console.log('LISTENERS', listeners);
-
         // Parse simple listeners/expressions
         listeners.forEach(function(listener) {
-
-            console.log('LISTENER', listener);
 
             // Remove the bracket mustaches
             let parsedListener = listener.replace(/(\{|\}|\;)/g, '').trim(),

@@ -1,14 +1,12 @@
 - SMALLER SETS, but each set must be tested and documented
 
-- template
-    - your regex is wrong
-    - test
-        - compile
-            - test many expressions
-    - publish/version
+
 ================================================================================
 
 - fix travis
+- publish/version
+
+================================================================================
 
 - Website and docs (tests)
     - site

@@ -7,7 +7,7 @@ import $ExceptionsProvider from '../util/$ExceptionsProvider';
 class $Injector {
     get() {
         if (!arguments.length) {
-            $ExceptionsProvider.$$providerErr();
+            $ExceptionsProvider.$$providerError();
         }
 
         let providers = [];
@@ -30,14 +30,14 @@ class $Injector {
             } catch (e) {
 
                 // TODO should result in a 500
-                $ExceptionsProvider.$$providerErr(arg);
+                $ExceptionsProvider.$$providerError(arg);
             }
             if (provision && $injector[ `${typeof provision}Check` ](provision)) {
                 providers.push(provision);
             } else {
 
                 // TODO should result in a 500
-                $ExceptionsProvider.$$providerErr(arg);
+                $ExceptionsProvider.$$providerError(arg);
             }
         }
         return providers.length > 1 ? providers : providers[0] ? providers[0] : [];

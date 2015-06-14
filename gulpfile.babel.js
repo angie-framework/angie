@@ -48,10 +48,10 @@ gulp.task('esdoc', function(cb) {
     exec('esdoc -c esdoc.json', cb);
 });
 gulp.task('watch', [ 'eslint', 'mocha', 'esdoc' ], function() {
-    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
+    gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
 });
 gulp.task('watch:mocha', [ 'eslint', 'mocha' ], function() {
-    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'mocha' ]);
+    gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
 gulp.task('watch:esdoc', [ 'esdoc' ], function() {
     gulp.watch([ src, '../gh-pages-angie/**' ], [ 'esdoc' ]);

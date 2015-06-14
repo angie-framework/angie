@@ -19,7 +19,7 @@ class $Exceptions {
     $$databaseTableExists(e) {
         throw new Error(err(e));
     }
-    $$injectorErr() {
+    $$injectorError() {
         throw new Error(
             err('Injector cannot be called without a provider name')
         );
@@ -52,7 +52,7 @@ class $Exceptions {
             err(`Invalid Model argument`)
         );
     }
-    $$providerErr() {
+    $$providerError() {
 
         // TODO should result in a 500
         let arg = Array.prototype.splice.call(arguments).join(', ');
