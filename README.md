@@ -5,4 +5,9 @@
 ![iojs support](https://img.shields.io/badge/iojs-1.7.1+-brightgreen.svg "iojs support")
 ![node support](https://img.shields.io/badge/node-0.12.0+-brightgreen.svg "node support")
 
+###Usage
+```bash
+npm i -g angie
+```
+
 Please see the [site](http://benderthecrime.github.io/angie/#/about) for news, a quickstart guide, and documentation and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md) for an up to date list of changes.
