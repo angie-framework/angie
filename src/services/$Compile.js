@@ -39,6 +39,8 @@ function $compile(t) {
      */
     return function _templateCompile (scope = {}) {
 
+        console.log(scope);
+
         // Temporary template object, lets us hang on to our template
         let tmpLet = template;
 

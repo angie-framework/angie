@@ -40,6 +40,7 @@ describe('$compile', function() {
             expect($log.warn).to.have.been.called;
         });
         it('test _templateCompile evaluates a single matched listener', function() {
+            console.log(scope);
             expect($compile('{{{test}}}')(scope)).to.eq('test');
         });
         it('test _templateCompile evaluates multiple matched listeners', function() {
