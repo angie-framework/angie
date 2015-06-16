@@ -20,8 +20,8 @@ p.argv.forEach(function(v) {
 });
 
 // Reassign config calls
-let __server__ = requiresConfig.bind(null, server),
-    __db__ = requiresConfig.bind(null, AngieDatabaseRouter);
+let _server = requiresConfig.bind(null, server),
+    _db = requiresConfig.bind(null, AngieDatabaseRouter);
 
 if (args.length === 1) {
     args.push('');
@@ -36,10 +36,10 @@ switch (args[1].toLowerCase()) {
         $log.help();
         break;
     case 'server':
-        __server__();
+        _server();
         break;
     case 's':
-        __server__();
+        _server();
         break;
     case 'cluster':
         break;
@@ -47,10 +47,10 @@ switch (args[1].toLowerCase()) {
         createProject({ name: args[2] });
         break;
     case 'syncdb':
-        __db__().then((db) => db.sync());
+        _db().then((db) => db.sync());
         break;
     case 'migrate':
-        __db__().then((db) => db.migrate());
+        _db().then((db) => db.migrate());
         break;
     case 'test':
         runTests();

@@ -25,6 +25,13 @@ const DEFAULT_CONTENT_TYPE = {
       PRAGMA_HEADER = 'no-cache',
       NO_CACHE_HEADER = 'private, no-cache, no-store, must-revalidate';
 
+/**
+ * @desc The BaseRequest class processes all of the incoming Angie requests. It
+ * can be required using a module import, but probably should not be unless it
+ * it being subclassed for a dependency package.
+ * @todo Make this class private
+ * @since 0.0.1
+ */
 class BaseRequest {
     constructor(path, request, response) {
 
@@ -75,16 +82,51 @@ class BaseRequest {
         this.routes = $routeProvider.fetch().routes;
         this.otherwise = $routeProvider.fetch().otherwise;
     }
-    route() {
+
+    /**
+     * @desc This method performs the route on the incoming request object and
+     * the associated path. If there is a matching path using RegExp, the
+     * existing matched params will be parsed out of the path. If not, a standard
+     * router will be used.
+     * @since 0.2.3
+     * @returns {function} BaseRequest.prototype.controllerPath or
+     * BaseRequest.prototype.otherPath
+     */
+    _route() {
+
+        //  TODO Also, we can add a check to see what the extension passed is for
+        // content type if the content type of the request has not already been
+        // set
 
         // If the route exists:
-        if (this.routes[ this.path ]) {
-            this.route = this.routes[ this.path ];
+        if (Object.keys(this.routes.regExp).length) {
+            for (let route in this.routes.regExp) {
 
-            return this.controllerPath();
-        } else {
-            return this.otherPath();
+                // Slice characters we do not need to instantiate a new RegExp
+                let regExpRoute = util.removeTrailingLeadingSlashes(route),
+
+                    // Cast the string key of the routes.regExp object as a
+                    // RegExp obj
+                    pattern = new RegExp(regExpRoute);
+                if (pattern.test(this.path)) {
+                    this.route = this.routes.regExp[ route ];
+
+                    // Hooray, we've set our route, now we need to do some additional
+                    // param parsing
+                    util.extend(
+                        this.request.query,
+                        $routeProvider._parseURLParams(pattern, this.path)
+                    );
+                }
+            }
+        } else if (this.routes[ this.path ]) {
+            this.route = this.routes[ this.path ];
         }
+
+        if (this.route) {
+            return this.controllerPath();
+        }
+        return this.otherPath();
     }
     controllerPath() {
         let me = this,
@@ -302,3 +344,5 @@ export {
     PRAGMA_HEADER,
     NO_CACHE_HEADER
 };
+
+// TODO break up this file

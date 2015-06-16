@@ -8,6 +8,7 @@ export default class $Request {
     constructor(request) {
         this.request = request;
         this.request.query = url.parse(request.url, true).query;
+
         app.service('$request', this.request);
     }
 }

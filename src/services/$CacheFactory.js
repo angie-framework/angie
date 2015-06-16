@@ -1,42 +1,40 @@
 'use strict'; 'use strong';
 
-let g = global;
-
-g.__AngieCache__ = {};
+let cache = {};
 
 class $CacheFactory {
     constructor(key) {
         this.key = key;
-        if (!g.__AngieCache__[ key ]) {
-            this.cache = g.__AngieCache__[ key ] = {};
+        if (!cache[ key ]) {
+            this.cache = cache[ key ] = {};
         } else {
-            this.cache = g.__AngieCache__[ key ];
+            this.cache = cache[ key ];
         }
     }
     put(id, obj, replace) {
         if (
-            (g.__AngieCache__[ this.key ][ id ] && replace) ||
-            !g.__AngieCache__[ this.key ][ id ]
+            (cache[ this.key ][ id ] && replace) ||
+            !cache[ this.key ][ id ]
         ) {
-            this.cache[ id ] = g.__AngieCache__[ this.key ][ id ] = obj;
+            this.cache[ id ] = cache[ this.key ][ id ] = obj;
         }
         return this;
     }
     get(id) {
-        return g.__AngieCache__[ this.key ][ id ] || undefined;
+        return cache[ this.key ][ id ] || undefined;
     }
     remove(id) {
         delete this.cache[ id ];
-        delete g.__AngieCache__[ this.key ][ id ];
+        delete cache[ this.key ][ id ];
         return this;
     }
     removeAll() {
-        this.cache = g.__AngieCache__[ this.key ] = {};
+        this.cache = cache[ this.key ] = {};
         return this;
     }
     delete() {
         delete this.cache;
-        delete g.__AngieCache__[ this.key ];
+        delete cache[ this.key ];
     }
 }
 

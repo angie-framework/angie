@@ -9,12 +9,11 @@ describe('$CacheFactory', function() {
         cache = new $cacheFactory('test');
     });
     afterEach(function() {
-        global.__AngieCache__ = {};
         cache.delete();
     });
     describe('constructor', function() {
         it('test constructor instantiates cache', function() {
-            expect(global.__AngieCache__.hasOwnProperty('test')).to.be.true;
+            expect(cache.key).to.eq('test');
             expect(cache.cache).to.deep.eq({});
         });
         it('test constructor assigns previously existing cache', function() {

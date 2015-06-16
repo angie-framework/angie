@@ -2,6 +2,7 @@
 
 
 // TODO if you duplicate, pull the type out
+// TODO undefined mimetype
 const __mimetypes__ = {
           css:      'text/css',
           jpg:      'image/jpeg',

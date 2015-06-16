@@ -1,13 +1,21 @@
 'use strict'; 'use strong';
 
-const fs =          require('fs');
+import fs from 'fs';
 
-const util = {
-    extend: function extend(target) {
-        let __target__;
+/**
+ * @desc util is a slient utility file which is not available via any provider
+ * on the app object. The only way to access the methods on this class is to
+ * import the module.
+ * @todo Make this class private
+ * @todo Make the helper class util resolve to Util everywhere, rename Util
+ * @since 0.2.3
+ */
+class Util {
+    static extend(target) {
+        let _target;
 
         if (typeof target === 'function') {
-            __target__ = target;
+            _target = target;
             target = target.prototype;
         } else if (typeof target !== 'object') {
             return target;
@@ -22,12 +30,12 @@ const util = {
             }
         });
 
-        return __target__ || target;
-    },
-    findFile: function findFile(root, target) {
+        return _target || target;
+    }
+    static findFile(root, target) {
 
         // Handle slashes
-        target = target.charAt(0) === '/' ? target.slice(1, target.length) : target;
+        target = Util.removeTrailingLeadingSlashes(target);
 
         // Pull this out because it is used several times
         const fileDirectoryExists = function fileDirectoryExists(n, t) {
@@ -69,6 +77,18 @@ const util = {
         }
         return undefined;
     }
-};
 
-export default util;
+    /**
+     * @desc Util helper to replace leading and trailing slashes
+     * @since 0.2.3
+     * @param {string} str [param=''] String to process
+     * @returns {string} The str param with stripped trailing and leading slashes
+     * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
+     */
+    static removeTrailingLeadingSlashes(str = '') {
+        str = str.charAt(0) === '/' ? str.slice(1, str.length) : str;
+        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
+    }
+}
+
+export default class util extends Util {}

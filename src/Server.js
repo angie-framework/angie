@@ -14,17 +14,20 @@ import util from './util/util';
 import __mimetypes__ from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
-const http =        require('http'),
-      url =         require('url'),
-      watch =       require('node-watch');
+import http from 'http';
+import url from 'url';
+import watch from 'node-watch';
+
+// const http =        require('http'),
+//       url =         require('url'),
+//       watch =       require('node-watch');
 
 const p = process;
 
-let firstrun = true,
-    port;
+let firstrun = true;
 
 export default function server(args) {
-    port = !isNaN(+args[2]) ? args[2] : 3000;
+    const port = !isNaN(args[2]) ? +args[2] : 3000;
 
     if (firstrun) {
         $log.warn('"server" not suitable for production use.');
@@ -35,8 +38,8 @@ export default function server(args) {
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
         http.createServer(function(request, response) {
-            let path = url.parse(request.url).pathname,
-                angieResponse = new BaseRequest(path, request, response),
+            const path = url.parse(request.url).pathname;
+            let angieResponse = new BaseRequest(path, request, response),
                 asset;
 
             // A file cannot be in the static path if it doesn't have an extension, shortcut
@@ -109,7 +112,7 @@ export default function server(args) {
                 // End the response
                 response.end();
             } else {
-                angieResponse.route().then(function() {
+                angieResponse._route().then(function() {
                     let code = response.statusCode;
                     if (!code) {
                         const error = $templateLoader('500.html');
@@ -140,7 +143,7 @@ export default function server(args) {
             // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
             // request.connection.end();
             // request.connection.destroy();
-        }).listen(+port);
+        }).listen(port);
 
         // Attempt to restart the webserver on change
         if (firstrun) {
@@ -151,7 +154,7 @@ export default function server(args) {
                         persistent: true,
                         recursive: true
                     };
-                watch(watchDirs, (() => restart()), restartObj);
+                watch(watchDirs, (() => restart(port)), restartObj);
             } catch(e) {
                 $log.error(e);
             }
@@ -165,7 +168,7 @@ export default function server(args) {
     });
 }
 
-function restart() {
+function restart(port) {
 
     // TODO this doesn't reload like you think it does
     prepApp().then(function() {
