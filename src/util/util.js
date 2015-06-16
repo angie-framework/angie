@@ -55,8 +55,10 @@ class Util {
 
             // If file has no slash, search in all directories
             const fn = function deepFindFile(root, target) {
-                fs.readdirSync(root).forEach(function(file) {
-                    let isDir = fileDirectoryExists(file, 'Directory');
+                let files = fs.readdirSync(root);
+                for (let i = 0; i < files.length; ++i) {
+                    let file = files[i],
+                        isDir = fileDirectoryExists(file, 'Directory');
                     if (isDir) {
 
                         // We have a directory and we need to recurse through it
@@ -64,7 +66,8 @@ class Util {
                     } else if (file.indexOf(target) > -1) {
                         template = `${root}/${target}`;
                     }
-                });
+                    if (template) break;
+                }
             };
 
             // Recursively call for all roots
@@ -78,6 +81,14 @@ class Util {
         return undefined;
     }
 
+    static removeLeadingSlashes(str) {
+        return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
+    }
+
+    static removeTrailingSlashes(str) {
+        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
+    }
+
     /**
      * @desc Util helper to replace leading and trailing slashes
      * @since 0.2.3
@@ -86,8 +97,7 @@ class Util {
      * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
      */
     static removeTrailingLeadingSlashes(str = '') {
-        str = str.charAt(0) === '/' ? str.slice(1, str.length) : str;
-        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
+        return Util.removeTrailingSlashes(Util.removeLeadingSlashes(str));
     }
 }
 

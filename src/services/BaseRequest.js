@@ -98,7 +98,7 @@ class BaseRequest {
         // content type if the content type of the request has not already been
         // set
 
-        // If the route exists:
+        // Check against all of the RegExp routes
         if (Object.keys(this.routes.regExp).length) {
             for (let route in this.routes.regExp) {
 
@@ -119,10 +119,14 @@ class BaseRequest {
                     );
                 }
             }
-        } else if (this.routes[ this.path ]) {
+        }
+
+        // Check for a matching string path
+        if (!this.route && this.routes[ this.path ]) {
             this.route = this.routes[ this.path ];
         }
 
+        // Route the request based on whether the route exists
         if (this.route) {
             return this.controllerPath();
         }

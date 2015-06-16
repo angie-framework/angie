@@ -46,15 +46,16 @@ function $templateLoader(url, type = 'template') {
     }
 
     templateDirs = templateDirs.map(function(dir) {
-        dir = util.removeTrailingLeadingSlashes(dir);
         if (
             ANGIE_TEMPLATE_DIR !== dir &&
             ANGIE_STATIC_DIRS.indexOf(dir) === -1 &&
             dir.indexOf(p.cwd()) === -1
         ) {
+            dir = util.removeLeadingSlashes(dir);
             dir = `${p.cwd()}/${dir}`;
 
         }
+        dir = util.removeTrailingSlashes(dir);
         return dir;
     });
 
