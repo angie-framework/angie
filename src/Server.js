@@ -15,6 +15,7 @@ import __mimetypes__ from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
 import http from 'http';
+import https from 'https';
 import url from 'url';
 import watch from 'node-watch';
 
@@ -27,7 +28,8 @@ const p = process;
 let firstrun = true;
 
 export default function server(args) {
-    const port = !isNaN(args[2]) ? +args[2] : 3000;
+    const useSSL = /\-+usessl/i.test(args),
+          port = useSSL ? 443 : !isNaN(args[2]) ? +args[2] : 3000;
 
     if (firstrun) {
         $log.warn('"server" not suitable for production use.');
@@ -37,7 +39,7 @@ export default function server(args) {
 
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
-        http.createServer(function(request, response) {
+        (useSSL ? https : http).createServer(function(request, response) {
             const path = url.parse(request.url).pathname;
             let angieResponse = new BaseRequest(path, request, response),
                 asset;

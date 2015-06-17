@@ -150,7 +150,10 @@ class BaseRequest {
                         done: resolve
                     };
 
-                    me.controller = new $injectionBinder(controller)(resolve);
+                    me.controller = new $injectionBinder(controller).call(
+                        app.services.$scope,
+                        resolve
+                    );
                     if (
                         !me.controller ||
                         !me.controller.constructor ||
@@ -241,8 +244,8 @@ class BaseRequest {
         // TODO See if any views have this Controller associated
         // TODO instantiate directives beforehand
         prom.then(function(controllerName) {
-            for (let key in app.__registry__) {
-                if (app.__registry__[ key ] === 'directive') {
+            for (let key in app._registry) {
+                if (app._registry[ key ] === 'directive') {
                     let directive = app.directives[ key ];
                     if (
                         directive.Controller &&

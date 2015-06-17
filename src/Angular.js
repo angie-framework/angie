@@ -88,6 +88,14 @@ class Angular {
         }
         return this;
     }
+
+    // Tear down a registered component
+    _tearDown(name) {
+        if (!name) return false;
+        let type = app._registry[ name ];
+        delete app._registry[ name ];
+        delete app[ type ][ name ];
+    }
     loadDependencies(dependencies = []) {
         let me = this,
             proms = [];
