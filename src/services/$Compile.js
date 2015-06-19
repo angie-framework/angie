@@ -107,7 +107,8 @@ function $compile(t) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
-            type;
+            type,
+            proms = [];
 
         // Parse simple listeners/expressions
         listeners.forEach(function(listener) {
@@ -142,122 +143,39 @@ function $compile(t) {
 
         const fn = function parseChildNodes(el) {
 
-                // Check to see if there is a directive in any of the types
-                directives.forEach(function(directive) {
-                    let pass = false,
-                        type;
+            // Check to see if there is a directive in any of the types
+            return directives.forEach(function(directive) {
 
-                    if (
-                        el.nodeType === 8 && el.innerHTML &&
-                        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
-                    ) {
-                        type = 'M';
-                    } else if (
-                        el.className &&
-                        directive._names.some((v) => el.className.indexOf(v) > -1)
-                    ) {
-                        type = 'C';
-                    } else if (
-                        directive._names.some((v) => !!(el.attributes && el.attributes[ v ]))
-                    ) {
-                        type = 'A';
-                    } else if (directive._names.indexOf(el.tagName) > -1) {
-                        type = 'E';
+                //console.log(directive._names);
+
+                proms.push(new Promise(
+                    _processDirective.bind(null, el, directive)
+                ));
+
+                // TODO To parse many directives, call this function several times
+                if (el.childNodes && el.childNodes.length) {
+                    let els = el.childNodes;
+                    for (let i = 0; i < els.length; ++i) {
+                        fn(els[ i ]);
                     }
+                }
+            });
+        };
 
-                    if (
-                        type && directive.hasOwnProperty('restrict') &&
-                        directive.restrict.indexOf('type') === -1
-                    ) {
-
-                        // If children, we need to call them
-                    }
-
-                    if (type && !pass) {
-
-                        // Templating
-                        // TODO commonize
-                        // TODO is this related to replace?
-                        if (
-                            directive.hasOwnProperty('templatePath') &&
-                            directive.templatePath.indexOf('.html') > -1
-                        ) {
-                            el.innerHTML += $templateLoader(path);
-                        } else if (directive.hasOwnProperty('template')) {
-                            el.innerHTML += directive.template;
-                        }
-
-                        // Watch attrs
-                        let attrs = el.attributes || {},
-                            parsedAttrs = {};
-                        for (let attr in attrs) {
-                            let attrName = util.toCamel(attr);
-                            parsedAttrs[ attrName ] = attrs[ attr ];
-                        }
-
-                        Object.observe(parsedAttrs, function(changes) {
-                            changes.forEach(function(change) {
-                                if (
-                                    el.setAttribute && change.name &&
-                                    change.object && change.object[ change.name ]
-                                ) {
-
-                                    console.log(util.toDash(change.name));
-                                    console.log(change.object[ change.name ]);
-                                    el.setAttribute(
-                                        util.toDash(change.name),
-                                        change.object[ change.name ]
-                                    );
-                                    console.log(el.outerHTML);
-                                    el.innerHTML = 'BLAH BLAH BLAH';
-                                }
-                            });
-                        });
-
-                        // Link functionality
-                        if (
-                            directive.hasOwnProperty('link') &&
-                            typeof directive.link === 'function'
-                        ) {
-
-                            // TODO does this need to happen asynchronously?
-                            directive.link.call(
-                                app.services.$scope,
-                                app.services.$scope,
-                                type !== 'M' ? el : null,
-                                parsedAttrs
-                            );
-                        }
-
-                        // Replace
-                        // TODO revisit this: does it replace existing children or
-                        // does it replace the top level element
-                        if (directive.replace) {
-                            el.outerHTML = el.innerHTML;
-                        }
-                    }
-
-                    if (el.childNodes) {
-                        let els;
-                        for (let node in (els = el.childNodes)) {
-                            fn(els[ node ]);
-                        }
-                    }
-                    return;
-                });
-
-                // If there is a directive or many, parse it
-                // To parse many directives, call this function several times
-            };
         if ($document.body) {
             fn($document.body);
         }
 
-        console.log('HTML', $document.querySelector('.footer').innerHTML)
+        console.log(proms.length);
 
-        // We can now tear down our $document service
-        app.services.$window = app.services.$document = {};
-        return (tmpLet = $document.documentElement.innerHTML);
+        return Promise.all(proms).then(function() {
+            console.log('All proms returned');
+            if ($document.body) {
+                tmpLet = `<!DOCTYPE html>\n${$document.documentElement.outerHTML}`;
+            }
+            app.services.$window = app.services.$document = {};
+            return tmpLet;
+        });
     };
 }
 
@@ -287,6 +205,106 @@ function _evalFn(str) {
     return eval([ keyStr, str ].join(''));
 
     /* eslint-enable */
+}
+
+function _processDirective(el, directive, resolve, reject) {
+    let replace = (d) =>
+            el.outerHTML = d.replace ? el.innerHTML : el.outerHTML,
+        pass = false,
+        type;
+
+    //console.log(el.nodeType, el.tagName, el.innerHTML, el.className);
+
+    if (
+        el.nodeType === 8 && el.innerHTML &&
+        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
+    ) {
+        type = 'M';
+    } else if (
+        el.className &&
+        directive._names.some((v) => el.className.indexOf(v) > -1)
+    ) {
+        type = 'C';
+    } else if (
+        el.attributes &&
+        directive._names.some((v) => !!(el.attributes[ v ]))
+    ) {
+        type = 'A';
+    } else if (el.tagName && directive._names.indexOf(el.tagName) > -1) {
+        type = 'E';
+    }
+
+    //console.log('here', type);
+
+    if (
+        type && directive.hasOwnProperty('restrict') &&
+        directive.restrict.indexOf(type) === -1
+    ) {
+        return resolve();
+    }
+
+    //console.log('here2', type, pass);
+
+    if (type && !pass) {
+
+        // Templating
+        if (
+            directive.hasOwnProperty('templatePath') &&
+            directive.templatePath.indexOf('.html') > -1
+        ) {
+            el.innerHTML += $templateLoader(path);
+        } else if (directive.hasOwnProperty('template')) {
+            el.innerHTML += directive.template;
+        }
+
+        // Watch attrs
+        let attrs = el.attributes || {},
+            parsedAttrs = {};
+        for (let attr in attrs) {
+            let attrName = util.toCamel(attr);
+            parsedAttrs[ attrName ] = attrs[ attr ];
+        }
+
+        Object.observe(parsedAttrs, function(changes) {
+            changes.forEach(function(change) {
+                if (
+                    el.setAttribute && change.name &&
+                    change.object && change.object[ change.name ]
+                ) {
+                    el.setAttribute(
+                        util.toDash(change.name),
+                        change.object[ change.name ]
+                    );
+                }
+            });
+        });
+
+        console.log('here 3', directive.link);
+
+        // Link functionality
+        if (
+            directive.hasOwnProperty('link') &&
+            typeof directive.link === 'function'
+        ) {
+            return new Promise(directive.link.bind(
+                app.services.$scope,
+                app.services.$scope,
+                type !== 'M' ? el : null,
+                parsedAttrs
+            )).then(function() {
+                console.log('IN THE THEN');
+                //console.log('here4');
+                replace(directive);
+                resolve();
+            });
+        } else {
+            //replace(directive);
+            resolve();
+        }
+    } else {
+        //console.log('here 5', resolve);
+        resolve();
+    }
 }
 
 export default $compile;

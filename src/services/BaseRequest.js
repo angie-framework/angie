@@ -9,7 +9,7 @@ import {$Response} from './$Responses';
 import {$routeProvider} from './$RouteProvider';
 import {$templateCache, $templateLoader} from './$TemplateCache';
 import {$injectionBinder} from './$Injector';
-import __mimetypes__ from '../util/MimeTypes';
+import _mimeTypes from '../util/MimeTypes';
 import $compile from './$Compile';
 
 
@@ -54,8 +54,8 @@ class BaseRequest {
         this.request = new $Request(request).request;
 
         // Make the response object available to the API
-        response.__responseContent__ = '';
         this.response = new $Response(response).response;
+        this.response._responseContent = '';
 
         // Parse out the response content type
         let contentType = this.request.headers.accept;
@@ -66,9 +66,9 @@ class BaseRequest {
             path.indexOf('.') > -1  &&
 
             // TODO mimetypes should never return undefined
-            __mimetypes__[ path.split('.').pop() ]
+            _mimeTypes[ path.split('.').pop() ]
         ) {
-            contentType = __mimetypes__[ path.split('.').pop() ];
+            contentType = _mimeTypes[ path.split('.').pop() ];
         } else {
             contentType = 'text/plain';
         }
@@ -134,8 +134,7 @@ class BaseRequest {
     }
     controllerPath() {
         let me = this,
-            prom,
-            error = false;
+            prom;
 
         // TODO move all of this out to responses
         prom = new Promise(function(resolve, reject) {
@@ -173,125 +172,119 @@ class BaseRequest {
         });
 
         // Find and load template
-        prom.then(function(controllerName) {
-            try {
+        prom = prom.then(function(controllerName) {
+            if (
+                me.route.template &&
+                typeof me.route.template === 'string' &&
+                me.route.template.length > 0
+            ) {
+                me.template = me.route.template;
+
+            } else if (me.route.templatePath) {
+
+                // Check to see if we can associate the template path with a
+                // mime type
                 if (
-                    me.route.template &&
-                    typeof me.route.template === 'string' &&
-                    me.route.template.length > 0
+                    me.route.templatePath.indexOf('.') > -1 &&
+
+                    // TODO mimetypes should never return undefined
+                    _mimeTypes[
+                        me.route.templatePath.split('.').pop()
+                    ]
                 ) {
-                    me.template = me.route.template;
-
-                } else if (me.route.templatePath) {
-
-                    // Check to see if we can associate the template path with a
-                    // mime type
-                    if (
-                        me.route.templatePath.indexOf('.') > -1 &&
-
-                        // TODO mimetypes should never return undefined
-                        __mimetypes__[
-                           me.route.templatePath.split('.').pop()
-                       ]
-                    ) {
-                        me.responseHeaders[ 'Content-Type' ] = __mimetypes__[
-                            me.route.templatePath.split('.').pop()
-                        ];
-                    }
-                    me.template = $templateCache.get(me.route.templatePath);
+                    me.responseHeaders[ 'Content-Type' ] = _mimeTypes[
+                        me.route.templatePath.split('.').pop()
+                    ];
                 }
-
-                // If there is a template/templatePath defined we should have a template
-                if (
-                    (me.route.template || me.route.templatePath) &&
-                    !me.template
-                ) {
-                    return me.errorPath();
-                } else if (
-                    config.hasOwnProperty('cacheStaticAssets') &&
-                    !config.cacheStaticAssets
-                ) {
-
-                    // If there is a template, check to see if caching is set
-                    me.responseHeaders = util.extend(me.responseHeaders, {
-                        'Expires': -1,
-                        'Pragma': PRAGMA_HEADER,
-                        'Cache-Control': NO_CACHE_HEADER
-                    });
-                }
-
-                // Pull the response back in from wherever it was before
-                me.responseContent = me.response.__responseContent__;
-
-                // TODO ^^ Still need to check here whether there is a template?
-                if (me.template) {
-
-                    // TODO render the template into the resoponse
-                    me.responseContent += $compile(me.template)(app.services.$scope);
-
-                    // TODO does this cause issues with directives
-                    me.response.__responseContent__ = me.responseContent;
-                }
-            } catch(e) {
-                error = e;
-            } finally {
-                return controllerName;
+                me.template = $templateCache.get(me.route.templatePath);
             }
-        }, function(e) {
-            return $log.error(e);
+
+            // If there is a template/templatePath defined we should have a template
+            if (
+                (me.route.template || me.route.templatePath) &&
+                !me.template
+            ) {
+                return me.unknownPath();
+            } else if (
+                config.hasOwnProperty('cacheStaticAssets') &&
+                !config.cacheStaticAssets
+            ) {
+
+                // If there is a template, check to see if caching is set
+                me.responseHeaders = util.extend(me.responseHeaders, {
+                    'Expires': -1,
+                    'Pragma': PRAGMA_HEADER,
+                    'Cache-Control': NO_CACHE_HEADER
+                });
+            }
+
+            // Pull the response back in from wherever it was before
+            me.responseContent = me.response._responseContent;
+
+            if (me.template) {
+
+                // Render the template into the resoponse
+                return new Promise(function(resolve) {
+                    return $compile(me.template)(
+                        app.services.$scope
+                    ).then(function(template) {
+                        resolve(template);
+                    });
+                }).then(function(template) {
+                    me.responseContent += template;
+                    me.response._responseContent = me.responseContent;
+
+                    return controllerName;
+                });
+            }
+
+            return controllerName;
         });
 
         // TODO See if any views have this Controller associated
-        // TODO instantiate directives beforehand
+        // prom = prom.then(function(controllerName) {
+        //     for (let key in app._registry) {
+        //         if (app._registry[ key ] === 'directive') {
+        //             let directive = app.directives[ key ];
+        //             if (
+        //                 directive.Controller &&
+        //                 directive.Controller === controllerName &&
+        //                 directive.type === 'APIView'
+        //             ) {
+        //
+        //                 // APIViews cannot have templates, all templates are trashed
+        //                 if (me.template) {
+        //                     delete me.template;
+        //                     delete me._responseContent;
+        //
+        //                     //me.responseHeaders = {};
+        //                     $log.warn(
+        //                         `Attempted to load template on view ${key}: ` +
+        //                         'Templates cannot be rendered by an APIView'
+        //                     );
+        //                 }
+        //
+        //
+        //                 // We have made it so only one APIView directive can
+        //                 // be fired at a time
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // });
+
         prom.then(function(controllerName) {
-            for (let key in app._registry) {
-                if (app._registry[ key ] === 'directive') {
-                    let directive = app.directives[ key ];
-                    if (
-                        directive.Controller &&
-                        directive.Controller === controllerName &&
-                        directive.type === 'APIView'
-                    ) {
-
-                        // APIViews cannot have templates, all templates are trashed
-                        if (me.template) {
-                            delete me.template;
-                            delete me.__responseContent__;
-
-                            //me.responseHeaders = {};
-                            $log.warn(
-                                `Attempted to load template on view ${key}: ` +
-                                'Templates cannot be rendered by an APIView'
-                            );
-                        }
-
-
-                        // We have made it so only one APIView directive can
-                        // be fired at a time
-                        break;
-                    }
-                }
-            }
+            me.response.writeHead(
+                200,
+                RESPONSE_HEADER_MESSAGES['200'],
+                me.responseHeaders
+            );
+            me.response.write(me.responseContent);
         });
 
-        prom.then(function() {
-            if (error) {
-                $log.error(error);
-                me.response.writeHead(
-                    500,
-                    RESPONSE_HEADER_MESSAGES['500'],
-                    me.responseHeaders
-                );
-                me.response.write(`<h1>${RESPONSE_HEADER_MESSAGES['500']}</h1>`);
-            } else {
-                me.response.writeHead(
-                    200,
-                    RESPONSE_HEADER_MESSAGES['200'],
-                    me.responseHeaders
-                );
-                me.response.write(me.responseContent);
-            }
-            return true;
+        prom.catch(function(e) {
+            $log.error(e);
+            return me.errorPath();
         });
 
         return prom;
@@ -310,7 +303,7 @@ class BaseRequest {
             });
         }
 
-        return this[ `${this.path === '/' ? 'default' : 'error'}Path` ]();
+        return this[ `${ this.path === '/' ? 'default' : 'unknown' }Path` ]();
     }
     defaultPath() {
 
@@ -319,7 +312,7 @@ class BaseRequest {
 
         // If the index page could not be found
         if (!index) {
-            return this.errorPath();
+            return this.unknownPath();
         }
 
         // Write the response
@@ -334,7 +327,7 @@ class BaseRequest {
             arguments[0]();
         });
     }
-    errorPath() {
+    unknownPath() {
 
         // Load page not found
         let fourOhFour = $templateLoader('404.html');
@@ -349,6 +342,14 @@ class BaseRequest {
             );
             me.response.write(fourOhFour);
         });
+    }
+    errorPath() {
+        this.response.writeHead(
+            500,
+            RESPONSE_HEADER_MESSAGES[ '500' ],
+            this.responseHeaders
+        );
+        this.response.write(`<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`);
     }
 }
 

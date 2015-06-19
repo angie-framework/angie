@@ -3,7 +3,7 @@
 
 // TODO if you duplicate, pull the type out
 // TODO undefined mimetype
-const __mimetypes__ = {
+const _mimeTypes = {
           css:      'text/css',
           jpg:      'image/jpeg',
           js:       'application/javascript',
@@ -11,4 +11,4 @@ const __mimetypes__ = {
           svg:      'image/svg+xml'
       };
 
-export default __mimetypes__;
+export default _mimeTypes;

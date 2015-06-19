@@ -11,7 +11,7 @@ import {
     NO_CACHE_HEADER
 } from './services/BaseRequest';
 import util from './util/util';
-import __mimetypes__ from './util/MimeTypes';
+import _mimeTypes from './util/MimeTypes';
 import $log from './util/$LogProvider';
 
 import http from 'http';
@@ -61,8 +61,8 @@ export default function server(args) {
                     let contentType;
 
                     // TODO mimetypes should never return undefined
-                    if (__mimetypes__[ path.split('.').pop() ]) {
-                        contentType = __mimetypes__[
+                    if (_mimeTypes[ path.split('.').pop() ]) {
+                        contentType = _mimeTypes[
                             path.split('.').pop()
                         ];
                     } else {
