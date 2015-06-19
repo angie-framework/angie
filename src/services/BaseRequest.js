@@ -254,9 +254,17 @@ class BaseRequest {
                     ) {
 
                         // APIViews cannot have templates, all templates are trashed
-                        delete me.template;
-                        delete me.__responseContent__;
-                        me.responseHeaders = {};
+                        if (me.template) {
+                            delete me.template;
+                            delete me.__responseContent__;
+
+                            //me.responseHeaders = {};
+                            $log.warn(
+                                `Attempted to load template on view ${key}: ` +
+                                'Templates cannot be rendered by an APIView'
+                            );
+                        }
+
 
                         // We have made it so only one APIView directive can
                         // be fired at a time

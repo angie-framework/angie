@@ -7,6 +7,7 @@ import fs from 'fs';
  * on the app object. The only way to access the methods on this class is to
  * import the module.
  * @todo Make this class private
+ * @todo Subclass
  * @todo Make the helper class util resolve to Util everywhere, rename Util
  * @since 0.2.3
  */
@@ -84,7 +85,6 @@ class Util {
     static removeLeadingSlashes(str) {
         return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
     }
-
     static removeTrailingSlashes(str) {
         return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
     }
@@ -99,6 +99,21 @@ class Util {
     static removeTrailingLeadingSlashes(str = '') {
         return Util.removeTrailingSlashes(Util.removeLeadingSlashes(str));
     }
+    static toCamel(str) {
+        return str.replace(/([-_][a-z])/i, '$1'.toUpperCase().replace(/-|_/, ''));
+    }
+    static toUnderscore(str) {
+        return Util.toFormat(str, '_');
+    }
+    static toDash(str) {
+        return Util.toFormat(str, '-');
+    }
+    static toFormat(str, del) {
+        return str.replace(/([A-Z])/g, `${del}$1`).toLowerCase();
+    }
 }
+
+class fileUtil {}
+class stringUtil {}
 
 export default class util extends Util {}

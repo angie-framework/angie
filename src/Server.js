@@ -32,7 +32,7 @@ export default function server(args) {
           port = useSSL ? 443 : !isNaN(args[2]) ? +args[2] : 3000;
 
     if (firstrun) {
-        $log.warn('"server" not suitable for production use.');
+        $log.warn('"angie server" not suitable for production use.');
     }
 
     prepApp().then(function() {
@@ -96,55 +96,66 @@ export default function server(args) {
                     // Check if you have an image type asset
                     $log.info(path, response._header);
                     response.write(asset);
-                } else {
-
-                    // We have no asset and must render a response
-                    const error = $templateLoader('404.html');
-
-                    // TODO extrapolate this to responses
-                    response.writeHead(
-                        404,
-                        RESPONSE_HEADER_MESSAGES['404'],
-                        angieResponse.responseHeaders
-                    );
-                    $log.warn(path, response._header);
-                    response.write(error);
                 }
+
+
+                // TODO I'm not sure we want this error statement, if there is
+                // not an asset, we should just try to route
+                // else {
+                //
+                //     // We have no asset and must render a response
+                //     const error = $templateLoader('404.html');
+                //
+                //     // TODO extrapolate this to responses
+                //     response.writeHead(
+                //         404,
+                //         RESPONSE_HEADER_MESSAGES['404'],
+                //         angieResponse.responseHeaders
+                //     );
+                //     $log.warn(path, response._header);
+                //     response.write(error);
+                // }
 
                 // End the response
                 response.end();
-            } else {
-                angieResponse._route().then(function() {
-                    let code = response.statusCode;
-                    if (!code) {
-                        const error = $templateLoader('500.html');
-
-                        // TODO extrapolate this to responses
-                        response.writeHead(
-                            500,
-                            RESPONSE_HEADER_MESSAGES['500'],
-                            angieResponse.responseHeaders
-                        );
-                        response.write(error);
-                        $log.error(path, response._header);
-                    } else if (code < 400) {
-                        $log.info(path, response._header);
-                    } else if (code < 500) {
-                        $log.warn(path, response._header);
-                    } else {
-                        $log.error(path, response._header);
-                    }
-                    return true;
-                }).then(function() {
-
-                    // End the response
-                    response.end();
-                });
+                return;
             }
 
-            // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
-            // request.connection.end();
-            // request.connection.destroy();
+            //else {
+
+            angieResponse._route().then(function() {
+                let code = response.statusCode;
+                if (!code) {
+                    const error = $templateLoader('500.html');
+
+                    // TODO extrapolate this to responses
+                    response.writeHead(
+                        500,
+                        RESPONSE_HEADER_MESSAGES['500'],
+                        angieResponse.responseHeaders
+                    );
+                    response.write(error);
+                    $log.error(path, response._header);
+                } else if (code < 400) {
+                    $log.info(path, response._header);
+                } else if (code < 500) {
+                    $log.warn(path, response._header);
+                } else {
+                    $log.error(path, response._header);
+                }
+                return true;
+            }).then(function() {
+
+                // End the response
+                response.end();
+
+                // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
+                // request.connection.end();
+                // request.connection.destroy();
+            });
+
+            //}
+
         }).listen(port);
 
         // Attempt to restart the webserver on change
@@ -176,8 +187,6 @@ function restart(port) {
     prepApp().then(function() {
         $log.info(`Application files reloaded; Still serving on port ${port}`);
     });
-
-    // TODO live reload
 }
 
 export function prepApp() {

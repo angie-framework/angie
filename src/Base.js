@@ -9,7 +9,7 @@ import $log from './util/$LogProvider';
 import $injector, {$injectionBinder} from './services/$Injector';
 import {$templateCache, $resourceLoader} from './services/$TemplateCache';
 
-const fs =      require('fs');
+import fs from 'fs';
 
 let app;
 
@@ -59,9 +59,10 @@ global.app = app = new angular()
     .service('$Exceptions', $ExceptionsProvider)
     .service('$injector', $injector)
     .service('$injectionBinder', $injectionBinder)
-    .service('$scope', {
-        $id: 1
-    }).service('$templateCache', $templateCache)
+    .service('$scope', { $id: 1 })
+    .service('$window', {})
+    .service('$document', {})
+    .service('$templateCache', $templateCache)
     .service('$resourceLoader', $resourceLoader);
 
 export default app;

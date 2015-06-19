@@ -2,6 +2,8 @@
 
 import angular from '../Angular';
 import app from '../Base';
+import {$templateLoader} from './$TemplateCache';
+import util from '../util/util';
 import $log from '../util/$LogProvider';
 
 import jsdom from 'jsdom';
@@ -73,17 +75,27 @@ function $compile(t) {
         directiveKeys = {},
         directives = [];
 
-    for (let directive in app.directives) {
-        let underscoreName = directive.replace(/([A-Z])/g, '_$1').toLowerCase(),
-            dashName = directive.replace(/([A-Z])/g, '-$1').toLowerCase();
-
-        // Add references back to the original directive from the aliases
-        directiveKeys[ underscoreName ] = directiveKeys[ dashName ] =
-            directive;
+    // TODO Reference directive objects everywhere here, dir.name, and reference all
+    // containers from there
+    for (let _directive in app.directives) {
+        let directive = app.directives[ _directive ];
+        directive._names = [
+            _directive,
+            util.toUnderscore(_directive),
+            util.toDash(_directive)
+        ];
 
         // Add all parsed directve names to directives
-        directives = directives.concat([ directive, underscoreName, dashName ]);
+        directives.push(directive);
     }
+
+    // Sort our directives for priority
+    directives.sort(function(a, b) {
+        if (!a.priority && !b.priority) {
+            return 0;
+        }
+        return (a.priority && !b.priority) || (a.priority > b.priority) ? 1 : -1;
+    });
 
     /**
      * @desc Function returned by $compile
@@ -117,29 +129,135 @@ function $compile(t) {
 
         // Parse directives
         // TODO make sure every directive actually gets replaced
-        const dirs = app.directives;
-        $document = parser(tmpLet, {
-            FetchExternalResources: [],
-            ProcessExternalResources: false
-        });
-        $window = d.defaultView;
+        try {
+            $document = parser(tmpLet, {
+                FetchExternalResources: [],
+                ProcessExternalResources: false
+            });
+            $window = $document.defaultView;
+        } catch(e) {}
 
-        app.service('$window', $window);
-        app.service('$document', $document);
+        app.service.$window = $window;
+        app.service.$document = $document;
 
-        // d.querySelectorAll('*[]')
         const fn = function parseChildNodes(el) {
-            // Check to see if there is a directive in any of the types
 
-            // If there is a directive or many, parse it
-            // To parse many directives, call this function several times
-        };
+                // Check to see if there is a directive in any of the types
+                directives.forEach(function(directive) {
+                    let pass = false,
+                        type;
+
+                    if (
+                        el.nodeType === 8 && el.innerHTML &&
+                        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
+                    ) {
+                        type = 'M';
+                    } else if (
+                        el.className &&
+                        directive._names.some((v) => el.className.indexOf(v) > -1)
+                    ) {
+                        type = 'C';
+                    } else if (
+                        directive._names.some((v) => !!(el.attributes && el.attributes[ v ]))
+                    ) {
+                        type = 'A';
+                    } else if (directive._names.indexOf(el.tagName) > -1) {
+                        type = 'E';
+                    }
+
+                    if (
+                        type && directive.hasOwnProperty('restrict') &&
+                        directive.restrict.indexOf('type') === -1
+                    ) {
+
+                        // If children, we need to call them
+                    }
+
+                    if (type && !pass) {
+
+                        // Templating
+                        // TODO commonize
+                        // TODO is this related to replace?
+                        if (
+                            directive.hasOwnProperty('templatePath') &&
+                            directive.templatePath.indexOf('.html') > -1
+                        ) {
+                            el.innerHTML += $templateLoader(path);
+                        } else if (directive.hasOwnProperty('template')) {
+                            el.innerHTML += directive.template;
+                        }
+
+                        // Watch attrs
+                        let attrs = el.attributes || {},
+                            parsedAttrs = {};
+                        for (let attr in attrs) {
+                            let attrName = util.toCamel(attr);
+                            parsedAttrs[ attrName ] = attrs[ attr ];
+                        }
+
+                        Object.observe(parsedAttrs, function(changes) {
+                            changes.forEach(function(change) {
+                                if (
+                                    el.setAttribute && change.name &&
+                                    change.object && change.object[ change.name ]
+                                ) {
+
+                                    console.log(util.toDash(change.name));
+                                    console.log(change.object[ change.name ]);
+                                    el.setAttribute(
+                                        util.toDash(change.name),
+                                        change.object[ change.name ]
+                                    );
+                                    console.log(el.outerHTML);
+                                    el.innerHTML = 'BLAH BLAH BLAH';
+                                }
+                            });
+                        });
+
+                        // Link functionality
+                        if (
+                            directive.hasOwnProperty('link') &&
+                            typeof directive.link === 'function'
+                        ) {
+
+                            // TODO does this need to happen asynchronously?
+                            directive.link.call(
+                                app.services.$scope,
+                                app.services.$scope,
+                                type !== 'M' ? el : null,
+                                parsedAttrs
+                            );
+                        }
+
+                        // Replace
+                        // TODO revisit this: does it replace existing children or
+                        // does it replace the top level element
+                        if (directive.replace) {
+                            el.outerHTML = el.innerHTML;
+                        }
+                    }
+
+                    if (el.childNodes) {
+                        let els;
+                        for (let node in (els = el.childNodes)) {
+                            fn(els[ node ]);
+                        }
+                    }
+                    return;
+                });
+
+                // If there is a directive or many, parse it
+                // To parse many directives, call this function several times
+            };
+        if ($document.body) {
+            fn($document.body);
+        }
+
+        console.log('HTML', $document.querySelector('.footer').innerHTML)
 
         // We can now tear down our $document service
-        app._tearDown('$window');
-        app._tearDown('$document');
-
-        return tmpLet;
+        app.services.$window = app.services.$document = {};
+        return (tmpLet = $document.documentElement.innerHTML);
     };
 }
 
@@ -170,86 +288,5 @@ function _evalFn(str) {
 
     /* eslint-enable */
 }
-
-// // Reference to the directive in the scope of the app
-// const directiveObj = dirs[ directive ] || dirs[ directiveKeys[ directive] ];
-//
-// // Find the first index of the container
-// let index = tmpLet.indexOf(directive),
-//     firstIndex = _htmlCapstoneCheck(tmpLet, '<', index),
-//     lastIndex = _htmlCapstoneCheck(tmpLet, '>', index),
-//     el = tmpLet.substring(firstIndex, lastIndex + 1),
-//     parsedEl,
-//     attrs = {},
-//     type;
-//
-// // Get el node
-// if (el) {
-//     parsedEl = parse.parseFragment(el).childNodes[0];
-//     attrs = parsedEl.attrs;
-// }
-//
-// // Find out where we are trying to render this directive
-// if (parsedEl.nodeName === '#comment') {
-//     type = 'M';
-// } else if (parsedEl.nodeName === 'div') {
-//     attrs.forEach(function(v) {
-//         if (v.name === 'class' && v.value.indexOf(directive) > -1) {
-//             type = 'C';
-//         } else if (v.name === directive) {
-//             type = 'A';
-//         }
-//     });
-// } else {
-//     type = 'E';
-// }
-//
-// // Check to see if our directive is in a place we can handle it
-// // Restrict
-// if (
-//     directiveObj.hasOwnProperty('restrict') &&
-//     directiveObj.restrict.indexOf(type) === -1
-// ) {
-//     return;
-// }
-//
-// // Execute Link function
-// if (
-//     directiveObj.hasOwnProperty('link') &&
-//     typeof directiveObj === 'function'
-// ) {
-//
-//     // TODO does this need to happen asynchronously?
-//     directiveObj.link.call(
-//         app.services.$scope,
-//         app.services.$scope,
-//         type !== 'M' ? el : null,
-//         attrs
-//     );
-// }
-//
-//
-//
-// // Replace the entire element or add to it?
-// // Replace
-// if (directive.hasOwnProperty('replace')) {
-//     let pattern = new RegExp(`${el}.*${parsedEl.nodeName.index}`)
-//     tmpLet = tmpLet.replace(el, 'HI');
-// }
-//
-//
-// // Pass as element
-//
-// // Parse any attrs
-//
-// // Fire link function: scope, el, attrs
-
-
-// function _htmlCapstoneCheck(str, capstone, i) {
-//     if (str[ i ] === capstone) {
-//         return i;
-//     }
-//     return _htmlCapstoneCheck(str, capstone, i + (capstone === '<' ? -1 : 1));
-// }
 
 export default $compile;
