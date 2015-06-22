@@ -1,11 +1,16 @@
 'use strict'; 'use strong';
 
+import {expect} from 'chai';
+import {mock} from 'simple-mock';
+
 import angular from '../../../src/Angular';
 import $compile from '../../../src/services/$Compile';
 import $log from '../../../src/util/$LogProvider';
 
-let expect = global.expect,
-    mock = global.mock;
+// let expect = global.expect,
+//     mock = global.mock;
+
+console.log(expect, mock);
 
 describe('$compile', function() {
     it(
@@ -35,7 +40,6 @@ describe('$compile', function() {
             };
         });
         it('test no listeners', function() {
-            console.log($compile('test')(scope));
             expect($compile('test')(scope)).to.eq('test');
         });
 

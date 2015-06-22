@@ -1,14 +1,14 @@
 'use strict'; 'use strong';
 
-import util from './util/util';
-import $log from './util/$LogProvider';
-import $Exceptions from './util/$ExceptionsProvider';
-import {BaseModel} from './models/BaseModel';
-import {$injectionBinder} from './services/$Injector';
+// System Modules
+import fs from                  'fs';
 
-const fs =          require('fs');
-
-const p = process;
+// Angie Modules
+import util from                './util/util';
+import $log from                './util/$LogProvider';
+import $Exceptions from         './util/$ExceptionsProvider';
+import {BaseModel} from         './models/BaseModel';
+import {$injectionBinder} from  './services/$Injector';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -25,10 +25,6 @@ const p = process;
  * @example angular.noop() // = undefined
  */
 class Angular {
-
-    /**
-     * Constructor
-     */
     constructor() {
         this.constants = {};
         this.configs = [];
@@ -90,9 +86,9 @@ class Angular {
         return this._register('Models', name, instance);
     }
     _register(component, name, obj) {
-        if (this[component]) {
-            this._registry[name] = component;
-            this[component][name] = obj;
+        if (this[ component ]) {
+            this._registry[ name ] = component;
+            this[ component ][ name ] = obj;
         }
         return this;
     }
@@ -102,6 +98,7 @@ class Angular {
         if (!name) {
             return false;
         }
+
         let type = this._registry[ name ];
         delete this._registry[ name ];
         delete this[ type ][ name ];
@@ -146,7 +143,7 @@ class Angular {
         // TODO issue with this taking too long
         return Promise.all(proms);
     }
-    bootstrap(dir = p.cwd()) {
+    bootstrap(dir = process.cwd()) {
         let me = this,
             files;
 
@@ -194,19 +191,19 @@ class Angular {
             resolve();
         });
     }
-    __dropBootStrapMethods__() {
-        delete this._register;
-        delete this.constant;
-        delete this.service;
-        delete this.Controller;
-        delete this.directive;
-        delete this.config;
-        delete this.Model;
+    _dropBootstrapMethods() {
+
+        // TODO apparently I cannot do this...
+        // delete this._register;
+        // delete this.constant;
+        // delete this.service;
+        // delete this.Controller;
+        // delete this.directive;
+        // delete this.config;
+        // delete this.Model;
+        // delete this._dropBootstrapMethods;
         return this;
     }
-    static noop() {}
 }
 
-Angular = util.extend(Angular, util);
-const angular = global.angular = class angular extends Angular{};
-export default angular;
+export default class angular extends util.extend(Angular, util) {};

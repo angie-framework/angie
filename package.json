@@ -47,7 +47,7 @@
     "babel": "^5.1.13",
     "chalk": "^1.0.0",
     "firebase": "^2.2.4",
-    "jsdom": "4.x.x",
+    "jsdom": "3.x.x",
     "mysql": "^2.6.2",
     "node-gyp": "^1.0.3",
     "node-watch": "^0.3.4",

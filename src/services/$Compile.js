@@ -1,12 +1,14 @@
 'use strict'; 'use strong';
 
+import jsdom from 'jsdom';
+
 import angular from '../Angular';
 import app from '../Base';
 import {$templateLoader} from './$TemplateCache';
 import util from '../util/util';
 import $log from '../util/$LogProvider';
 
-import jsdom from 'jsdom';
+
 
 const parser = jsdom.jsdom;
 

@@ -1,12 +1,16 @@
 'use strict'; 'use strong';
 
-const gulp =        require('gulp'),
-      exec =        require('child_process').exec,
-      eslint =      require('gulp-eslint'),
-      istanbul =    require('gulp-istanbul'),
-      isparta =     require('isparta'),
-      mocha =       require('gulp-mocha'),
-      chalk =       require('chalk');
+import gulp from 'gulp';
+import child_process from 'child_process';
+import eslint from 'gulp-eslint';
+import istanbul from 'gulp-istanbul';
+import isparta from 'isparta';
+import mocha from 'gulp-mocha';
+import chalk from 'chalk';
+
+import $log from './src/util/$LogProvider';
+
+const exec = child_process.exec;
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',
@@ -22,29 +26,32 @@ gulp.task('eslint', function () {
     );
 });
 gulp.task('mocha', function(cb) {
-    gulp.src(src).pipe(
-        istanbul({
-            instrumenter: isparta.Instrumenter,
-            instrumenterOptions: {
-                isparta: {
-                    experimental: true
-                }
-            },
-
-            // TODO Once coverage is up, include untested files
-            includeUntested: false
-        })
-    ).pipe(
-        istanbul.hookRequire()
-    ).on('finish', function() {
+    $log.info('Running Coverage reporter');
+    // gulp.src(src).pipe(
+    //     istanbul({
+    //         instrumenter: isparta.Instrumenter,
+    //         instrumenterOptions: {
+    //             isparta: {
+    //                 experimental: true
+    //             }
+    //         },
+    //
+    //         // TODO Once coverage is up, include untested files
+    //         includeUntested: false
+    //     })
+    // ).pipe(
+    //     istanbul.hookRequire()
+    // ).on('finish', function() {
+        $log.info('Running Angie Mocha test suite');
         gulp.src(testSrc).pipe(mocha({
             reporter: 'spec'
-        })).pipe(
-            istanbul.writeReports()
-        ).on('end', cb);
-    });
+        })); //).pipe(
+        //    istanbul.writeReports()
+        //).on('end', cb);
+    //});
 });
 gulp.task('esdoc', function(cb) {
+    $log.info('Generating Angie documentation');
     exec('esdoc -c esdoc.json', cb);
 });
 gulp.task('watch', [ 'eslint', 'mocha', 'esdoc' ], function() {

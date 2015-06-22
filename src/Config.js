@@ -1,11 +1,9 @@
 'use strict'; 'use strong';
 
+import fs from 'fs';
+
 import util from './util/util';
 import $ExceptionsProvider from './util/$ExceptionsProvider';
-
-const fs =            require('fs');
-
-const p = process;
 
 let config = {};
 
@@ -31,7 +29,7 @@ export default class Config {
                 });
 
                 acceptedFileNames.forEach(function(name) {
-                    let tmpFile = util.findFile(p.cwd(), name);
+                    let tmpFile = util.findFile(process.cwd(), name);
                     if (tmpFile) {
                         file = tmpFile;
                     }

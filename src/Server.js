@@ -1,10 +1,12 @@
 'use strict'; 'use strong';
 
+// System Modules
 import http from 'http';
 import https from 'https';
 import url from 'url';
 import watch from 'node-watch';
 
+// Angie Modules
 import {config} from './Config';
 import app from './Base';
 import $cacheFactory from './services/$CacheFactory';
@@ -85,7 +87,7 @@ export default function server(args) {
 
                     response.writeHead(
                         200,
-                        RESPONSE_HEADER_MESSAGES['200'],
+                        RESPONSE_HEADER_MESSAGES[ '200' ],
                         angieResponse.responseHeaders
                     );
 
@@ -93,24 +95,6 @@ export default function server(args) {
                     $log.info(path, response._header);
                     response.write(asset);
                 }
-
-
-                // TODO I'm not sure we want this error statement, if there is
-                // not an asset, we should just try to route
-                // else {
-                //
-                //     // We have no asset and must render a response
-                //     const error = $templateLoader('404.html');
-                //
-                //     // TODO extrapolate this to responses
-                //     response.writeHead(
-                //         404,
-                //         RESPONSE_HEADER_MESSAGES['404'],
-                //         angieResponse.responseHeaders
-                //     );
-                //     $log.warn(path, response._header);
-                //     response.write(error);
-                // }
 
                 // End the response
                 response.end();
@@ -127,7 +111,7 @@ export default function server(args) {
                     // TODO extrapolate this to responses
                     response.writeHead(
                         500,
-                        RESPONSE_HEADER_MESSAGES['500'],
+                        RESPONSE_HEADER_MESSAGES[ '500' ],
                         angieResponse.responseHeaders
                     );
                     response.write(error);
@@ -193,7 +177,7 @@ export function prepApp() {
         // Bootstrap the angular application
         return new Promise(
             (resolve) => app.bootstrap().then(
-                app.__dropBootstrapMethods__
+                app._dropBootstrapMethods
             ).then(resolve)
         );
     });

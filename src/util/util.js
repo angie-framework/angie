@@ -113,6 +113,8 @@ class Util {
     static toFormat(str, del) {
         return str.replace(/([A-Z])/g, `${del}$1`).toLowerCase();
     }
+
+    static noop() {}
 }
 
 class fileUtil {}

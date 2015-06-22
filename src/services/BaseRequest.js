@@ -276,7 +276,7 @@ class BaseRequest {
         prom.then(function() {
             me.response.writeHead(
                 200,
-                RESPONSE_HEADER_MESSAGES['200'],
+                RESPONSE_HEADER_MESSAGES[ '200' ],
                 me.responseHeaders
             );
             me.response.write(me.responseContent);

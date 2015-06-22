@@ -1,5 +1,7 @@
 'use strict'; 'use strong';
 
+import child_process from 'child_process';
+
 import Config from './Config';
 import $log from './util/$LogProvider';
 import createProject from './util/scaffold/project';
@@ -7,8 +9,8 @@ import AngieDatabaseRouter from './models/AngieDatabaseRouter';
 import server from './Server';
 import shell from './util/shell';
 
-const exec =        require('child_process').exec;
-
+// Import garbage
+const exec = child_process.exec;
 const p = process;
 
 // Remove trivial arguments

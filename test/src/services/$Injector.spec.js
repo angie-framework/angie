@@ -1,12 +1,12 @@
 'use strict'; 'use strong';
 
+import {expect} from 'chai';
+import {mock} from 'simple-mock';
+
 import app from '../../../src/Base';
 import $injector, {$injectionBinder} from '../../../src/services/$Injector';
 import $log from '../../../src/util/$LogProvider';
 import $ExceptionsProvider from '../../../src/util/$ExceptionsProvider';
-
-let expect = global.expect,
-    mock = global.mock;
 
 describe('$Injector', function() {
     let get;
@@ -21,7 +21,7 @@ describe('$Injector', function() {
         });
         afterEach(function() {
             app.services = {};
-            app.__registry__ = {};
+            app._registry = {};
         });
         describe('get', function() {
             it('test get returns nothing if no arguments', function() {
