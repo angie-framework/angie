@@ -2,6 +2,8 @@
 
 import $cacheFactory from '../../../src/services/$CacheFactory';
 
+let expect = global.expect;
+
 describe('$CacheFactory', function() {
     let cache;
 

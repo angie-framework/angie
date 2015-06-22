@@ -5,6 +5,9 @@ import $injector, {$injectionBinder} from '../../../src/services/$Injector';
 import $log from '../../../src/util/$LogProvider';
 import $ExceptionsProvider from '../../../src/util/$ExceptionsProvider';
 
+let expect = global.expect,
+    mock = global.mock;
+
 describe('$Injector', function() {
     let get;
     describe('$injector', function() {
@@ -63,7 +66,7 @@ describe('$Injector', function() {
         afterEach(function() {
             args = undefined;
             called = false;
-        })
+        });
         it('test empty args produces no returns', function() {
             $injectionBinder(test);
             expect(args[0]).to.be.null;

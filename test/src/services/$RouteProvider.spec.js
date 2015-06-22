@@ -2,6 +2,8 @@
 
 import {$routeProvider} from '../../../src/services/$RouteProvider';
 
+let expect = global.expect;
+
 describe('$RequestProvider', function() {
     describe('_parseUrlParams', function() {
         let parse = $routeProvider._parseURLParams;

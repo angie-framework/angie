@@ -10,6 +10,8 @@ import jsdom from 'jsdom';
 
 const parser = jsdom.jsdom;
 
+let replace = (el, d) => d.replace ? el.innerHTML : el.outerHTML;
+
 /**
  * @desc $window is provided to any directive which has included it. It
  * is a NodeJS representation of a window object.
@@ -70,13 +72,9 @@ function $compile(t) {
     // We need to call template.toString() because we did not load with utf8
     let template = t.toString(),
         listeners = template.match(/\{{3}[^\}]+\}{3}/g) || [],
-
-        // Match on directives
-        directiveKeys = {},
         directives = [];
 
-    // TODO Reference directive objects everywhere here, dir.name, and reference all
-    // containers from there
+    // Direct reference by directive name to directive object
     for (let _directive in app.directives) {
         let directive = app.directives[ _directive ];
         directive._names = [
@@ -107,7 +105,6 @@ function $compile(t) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
-            type,
             proms = [];
 
         // Parse simple listeners/expressions
@@ -141,39 +138,63 @@ function $compile(t) {
         app.service.$window = $window;
         app.service.$document = $document;
 
-        const fn = function parseChildNodes(el) {
-
-            // Check to see if there is a directive in any of the types
-            return directives.forEach(function(directive) {
-
-                //console.log(directive._names);
-
-                proms.push(new Promise(
-                    _processDirective.bind(null, el, directive)
-                ));
-
-                // TODO To parse many directives, call this function several times
-                if (el.childNodes && el.childNodes.length) {
-                    let els = el.childNodes;
-                    for (let i = 0; i < els.length; ++i) {
-                        fn(els[ i ]);
-                    }
-                }
-            });
-        };
-
         if ($document.body) {
-            fn($document.body);
+            let els = $document.body.querySelectorAll('*');
+            for (let i = 0; i < els.length; ++i) {
+                let el = els[ i ],
+                    type,
+                    prom;
+                directives.forEach(function(directive) {
+                    if (
+                        el.nodeType === 8 && el.innerHTML &&
+                        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
+                    ) {
+                        type = 'M';
+                    } else if (
+                        el.className &&
+                        directive._names.some((v) => el.className.indexOf(v) > -1)
+                    ) {
+                        type = 'C';
+                    } else if (
+                        el.attributes &&
+                        directive._names.some((v) => !!(el.attributes[ v ]))
+                    ) {
+                        type = 'A';
+                    } else if (el.tagName && directive._names.indexOf(el.tagName) > -1) {
+                        type = 'E';
+                    }
+
+                    if (
+                        type && (
+                            !directive.hasOwnProperty('restrict') ||
+                            directive.hasOwnProperty('restrict') &&
+                            directive.restrict.indexOf(type) > -1
+                        )
+                    ) {
+                        prom = _processDirective(
+                            el,
+                            scope,
+                            directive,
+                            type
+                        );
+                        proms.push(prom);
+                    }
+                });
+            }
         }
 
-        console.log(proms.length);
-
         return Promise.all(proms).then(function() {
-            console.log('All proms returned');
-            if ($document.body) {
+
+            // Check for a document body in tmpLet
+            if (tmpLet.indexOf('<body') > -1 && tmpLet.indexOf('/body>') > -1) {
                 tmpLet = `<!DOCTYPE html>\n${$document.documentElement.outerHTML}`;
+            } else {
+                tmpLet = $document.body.innerHTML;
             }
+
             app.services.$window = app.services.$document = {};
+
+            // TODO we must only replace the document if we are parsing directives
             return tmpLet;
         });
     };
@@ -207,104 +228,54 @@ function _evalFn(str) {
     /* eslint-enable */
 }
 
-function _processDirective(el, directive, resolve, reject) {
-    let replace = (d) =>
-            el.outerHTML = d.replace ? el.innerHTML : el.outerHTML,
-        pass = false,
-        type;
+function _processDirective(el, scope, directive, type, resolve) {
 
-    //console.log(el.nodeType, el.tagName, el.innerHTML, el.className);
-
+    // Templating
     if (
-        el.nodeType === 8 && el.innerHTML &&
-        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
+        directive.hasOwnProperty('templatePath') &&
+        directive.templatePath.indexOf('.html') > -1
     ) {
-        type = 'M';
-    } else if (
-        el.className &&
-        directive._names.some((v) => el.className.indexOf(v) > -1)
-    ) {
-        type = 'C';
-    } else if (
-        el.attributes &&
-        directive._names.some((v) => !!(el.attributes[ v ]))
-    ) {
-        type = 'A';
-    } else if (el.tagName && directive._names.indexOf(el.tagName) > -1) {
-        type = 'E';
+        el.innerHTML += $templateLoader(directive.templatePath);
+    } else if (directive.hasOwnProperty('template')) {
+        el.innerHTML += $compile(directive.template)(scope);
     }
 
-    //console.log('here', type);
-
-    if (
-        type && directive.hasOwnProperty('restrict') &&
-        directive.restrict.indexOf(type) === -1
-    ) {
-        return resolve();
+    // Setup Attrs
+    let attrs = el.attributes || {},
+        parsedAttrs = {};
+    if (el.hasAttribute && el.getAttribute) {
+        for (let key in attrs) {
+            if (el.hasAttribute(key)) {
+                parsedAttrs[ util.toCamel(key) ] = el.getAttribute(key);
+            }
+        }
     }
 
-    //console.log('here2', type, pass);
+    // Link functionality
+    if (
+        directive.hasOwnProperty('link') &&
+        typeof directive.link === 'function'
+    ) {
+        return new Promise(directive.link.bind(
+            app.services.$scope,
+            app.services.$scope,
+            type !== 'M' ? el : null,
+            parsedAttrs
+        )).then(function() {
 
-    if (type && !pass) {
-
-        // Templating
-        if (
-            directive.hasOwnProperty('templatePath') &&
-            directive.templatePath.indexOf('.html') > -1
-        ) {
-            el.innerHTML += $templateLoader(path);
-        } else if (directive.hasOwnProperty('template')) {
-            el.innerHTML += directive.template;
-        }
-
-        // Watch attrs
-        let attrs = el.attributes || {},
-            parsedAttrs = {};
-        for (let attr in attrs) {
-            let attrName = util.toCamel(attr);
-            parsedAttrs[ attrName ] = attrs[ attr ];
-        }
-
-        Object.observe(parsedAttrs, function(changes) {
-            changes.forEach(function(change) {
-                if (
-                    el.setAttribute && change.name &&
-                    change.object && change.object[ change.name ]
-                ) {
-                    el.setAttribute(
-                        util.toDash(change.name),
-                        change.object[ change.name ]
-                    );
+            // TODO an Observance model would be way better
+            if (el.setAttribute) {
+                for (let key in parsedAttrs) {
+                    el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
                 }
-            });
+            }
+        }).then(function() {
+            return replace(el, directive);
         });
-
-        console.log('here 3', directive.link);
-
-        // Link functionality
-        if (
-            directive.hasOwnProperty('link') &&
-            typeof directive.link === 'function'
-        ) {
-            return new Promise(directive.link.bind(
-                app.services.$scope,
-                app.services.$scope,
-                type !== 'M' ? el : null,
-                parsedAttrs
-            )).then(function() {
-                console.log('IN THE THEN');
-                //console.log('here4');
-                replace(directive);
-                resolve();
-            });
-        } else {
-            //replace(directive);
-            resolve();
-        }
-    } else {
-        //console.log('here 5', resolve);
-        resolve();
     }
+    return new Promise(function() {
+        resolve(replace(el, directive));
+    });
 }
 
 export default $compile;

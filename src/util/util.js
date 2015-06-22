@@ -67,7 +67,9 @@ class Util {
                     } else if (file.indexOf(target) > -1) {
                         template = `${root}/${target}`;
                     }
-                    if (template) break;
+                    if (template) {
+                        break;
+                    }
                 }
             };
 

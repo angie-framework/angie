@@ -2,6 +2,9 @@
 
 import {BaseRequest} from '../../../src/services/BaseRequest';
 
+let expect = global.expect,
+    mock = global.mock;
+
 describe('BaseRequest', function() {
     let request;
 

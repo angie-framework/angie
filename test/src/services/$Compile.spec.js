@@ -1,8 +1,11 @@
 'use strict'; 'use strong';
 
-import app from '../../../src/Base';
+import angular from '../../../src/Angular';
 import $compile from '../../../src/services/$Compile';
 import $log from '../../../src/util/$LogProvider';
+
+let expect = global.expect,
+    mock = global.mock;
 
 describe('$compile', function() {
     it(
@@ -32,6 +35,7 @@ describe('$compile', function() {
             };
         });
         it('test no listeners', function() {
+            console.log($compile('test')(scope));
             expect($compile('test')(scope)).to.eq('test');
         });
 
@@ -67,7 +71,7 @@ describe('$compile', function() {
                 $compile('{{{test.toUpperCase()}}}')(scope)
             ).to.eq('TEST');
         });
-        it ('test _templateCompile evaluates binary expressions', function() {
+        it('test _templateCompile evaluates binary expressions', function() {
             expect($compile('{{{test5}}}')(scope)).to.eq('20');
             expect($compile('{{{test5 * test6}}}')(scope)).to.eq('100');
             expect($compile('{{{test5 / test6}}}')(scope)).to.eq('4');

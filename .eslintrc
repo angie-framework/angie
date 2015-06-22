@@ -28,6 +28,7 @@
         "no-shadow": false,
         "no-underscore-dangle": false,
         "no-use-before-define": false,
+        "no-unused-expressions": false,
         "quotes": [ 1, "single" ]
     },
     "emcaFeatures": {

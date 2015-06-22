@@ -13,7 +13,7 @@ const src = 'src/**/*.js',
       docSrc = 'doc';
 
 gulp.task('eslint', function () {
-    gulp.src(src).pipe(
+    gulp.src([ src, testSrc ]).pipe(
         eslint()
     ).pipe(
         eslint.format()

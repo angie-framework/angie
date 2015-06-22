@@ -13,7 +13,7 @@ import _mimeTypes from '../util/MimeTypes';
 import $compile from './$Compile';
 
 
-// TODO move these out to a constant
+// TODO move these out to an app constant
 const DEFAULT_CONTENT_TYPE = {
           'Content-Type': 'text/plain'
       },
@@ -273,7 +273,7 @@ class BaseRequest {
         //     }
         // });
 
-        prom.then(function(controllerName) {
+        prom.then(function() {
             me.response.writeHead(
                 200,
                 RESPONSE_HEADER_MESSAGES['200'],

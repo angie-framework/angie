@@ -1,5 +1,10 @@
 'use strict'; 'use strong';
 
+import http from 'http';
+import https from 'https';
+import url from 'url';
+import watch from 'node-watch';
+
 import {config} from './Config';
 import app from './Base';
 import $cacheFactory from './services/$CacheFactory';
@@ -13,15 +18,6 @@ import {
 import util from './util/util';
 import _mimeTypes from './util/MimeTypes';
 import $log from './util/$LogProvider';
-
-import http from 'http';
-import https from 'https';
-import url from 'url';
-import watch from 'node-watch';
-
-// const http =        require('http'),
-//       url =         require('url'),
-//       watch =       require('node-watch');
 
 const p = process;
 

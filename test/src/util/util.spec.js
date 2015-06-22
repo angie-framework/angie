@@ -2,6 +2,8 @@
 
 import util from '../../../src/util/util';
 
+let expect = global.expect;
+
 describe('Util', function() {
     describe('removeTrailingLeadingSlashes', function() {
         let slashes;

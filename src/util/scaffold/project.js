@@ -2,8 +2,8 @@
 
 import $log from '../$LogProvider';
 
-const fs =        require('fs'),
-      util =      require('util');
+import fs from 'fs';
+import util from 'util';
 
 const p = process;
 
@@ -48,7 +48,7 @@ export default function createProject(args) {
         p.exit(1);
     } finally {
         let template = fs.readFileSync(
-            `${__dirname}/../../templates/AngieFile.sample.json`,
+            `${__dirname}/../../templates/AngieFile.template.json`,
             'utf8'
         );
         template = util.format(template, name, name);

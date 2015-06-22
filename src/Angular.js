@@ -11,10 +11,18 @@ const fs =          require('fs');
 const p = process;
 
 /**
- * This is the default Angie Angular class. It is instantiated and given
+ * @desc This is the default Angie Angular class. It is instantiated and given
  * the namespace `global.app`. Static methods are available via this
  * instance.
- * @example
+ *
+ * It is ill advised to tray and redefine the native app as it is tightly coupled
+ * with the resource pipeline & webserver, instead, use the angular class to
+ * access commonly used static methods.
+ *
+ * @todo rename this class
+ * @since 0.0.1
+ * @access public
+ * @example angular.noop() // = undefined
  */
 class Angular {
 
@@ -91,10 +99,12 @@ class Angular {
 
     // Tear down a registered component
     _tearDown(name) {
-        if (!name) return false;
-        let type = app._registry[ name ];
-        delete app._registry[ name ];
-        delete app[ type ][ name ];
+        if (!name) {
+            return false;
+        }
+        let type = this._registry[ name ];
+        delete this._registry[ name ];
+        delete this[ type ][ name ];
     }
     loadDependencies(dependencies = []) {
         let me = this,
