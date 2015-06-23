@@ -24,7 +24,7 @@ p.argv.forEach(function(v) {
 });
 
 // Route the CLI request to a specific command
-switch (args[0].toLowerCase()) {
+switch ((args[0] || '').toLowerCase()) {
     case '':
         $log.help();
         break;
