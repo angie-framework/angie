@@ -4,6 +4,8 @@
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
+  "private": false,
+  "preferGlobal": true,
   "scripts": {
     "start": "angie",
     "test": "gulp mocha"
@@ -19,6 +21,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/benderTheCrime/angie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benderTheCrime/angie.git/issues"
   },
   "keywords": [
     "Angie",
