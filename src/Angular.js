@@ -119,36 +119,34 @@ class Angular extends util {
         // Add dependencies
         this._dependencies = this._dependencies.concat(dependencies);
 
-        if (dependencies) {
-            dependencies.forEach(function(v) {
+        dependencies.forEach(function(v) {
 
-                let dependency = util.removeTrailingSlashes(v),
+            let dependency = util.removeTrailingSlashes(v),
 
-                    // This should be the root folder of an Angie project
-                    config = fs.readFileSync(`${dependency}/AngieFile.json`) ||
-                        '{, }';
+                // This should be the root folder of an Angie project
+                config = fs.readFileSync(`${dependency}/AngieFile.json`) ||
+                    '{, }';
 
-                try {
-                    config = JSON.parse(config);
-                } catch(e) {
-                    $log.error(
-                        `Could not load ${dependency}, error parsing AngieFile`
-                    );
-                    return;
-                }
+            try {
+                config = JSON.parse(config);
+            } catch(e) {
+                $log.error(
+                    `Could not load ${dependency}, error parsing AngieFile`
+                );
+                return;
+            }
 
-                // This will load all of the modules, overwriting a module name
-                // will replace it
-                let prom = new Promise(function(resolve) {
-                    me.bootstrap(dependency).then(function() {
-                        resolve();
-                    }).then(function() {
-                        me.loadDependencies(config.dependencies);
-                    });
+            // This will load all of the modules, overwriting a module name
+            // will replace it
+            let prom = new Promise(function(resolve) {
+                me.bootstrap(dependency).then(function() {
+                    resolve();
+                }).then(function() {
+                    me.loadDependencies(config.dependencies);
                 });
-                proms.push(prom);
             });
-        }
+            proms.push(prom);
+        });
 
         // TODO issue with this taking too long
         return Promise.all(proms);
