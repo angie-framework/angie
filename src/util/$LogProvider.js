@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
-const chalk =           require('chalk'),
-      exec =            require('child_process').exec;
+import chalk from 'chalk';
+import {exec} from 'child_process';
 
 const p = process,
       bold = chalk.bold,
@@ -14,20 +14,17 @@ const p = process,
 let ENABLE_DEBUG = true;
 
 class $LogProvider {
-    constructor() {
-        // TODO configure logfile here from AngieFile
-    }
     log() {
-        p.stdout.write(null, arguments);
+        console.log.apply(null, arguments);
     }
     bold() {
-        return p.stdout.write(bold.apply(null, arguments));
+        return console.log(bold.apply(null, arguments));
     }
     info() {
-        let args = __carriage__.apply(null, arguments);
+        let args = _carriage.apply(null, arguments);
         args.unshift('ANGIE: [Info]');
-        args.push('\n');
-        p.stdout.write(chalk.green(bold.apply(null, args)));
+        args.push('\r');
+        console.log(chalk.green(bold.apply(null, args)));
     }
     debug() {
         if (ENABLE_DEBUG === LOG_LEVELS.debug) {
@@ -35,19 +32,19 @@ class $LogProvider {
         }
     }
     warn() {
-        let args = __carriage__.apply(null, arguments);
+        let args = _carriage.apply(null, arguments);
         args.unshift('ANGIE: [Warning]');
-        args.push('\n');
-        p.stdout.write(chalk.yellow(bold.apply(null, args)));
+        args.push('\r');
+        console.warn(chalk.yellow(bold.apply(null, args)));
     }
     error() {
-        let args = __carriage__.apply(null, arguments);
+        let args = _carriage.apply(null, arguments);
         if (args && args[0].stack) {
             args[0] = args[0].stack;
         }
         args.unshift('ANGIE: [Error]');
-        args.push('\n');
-        p.stdout.write(chalk.red(bold.apply(null, args)));
+        args.push('\r');
+        console.error(chalk.red(bold.apply(null, args)));
     }
     shell() {
         return chalk.cyan(bold('angie > '));
@@ -55,13 +52,12 @@ class $LogProvider {
     help() {
         let me = this;
         exec('clear', function() {
-            me.log('\n');
             me.bold('Angie');
             me.log('An AngularJS inspired NodeJS MVC');
-            me.log('\n');
+            me.log('\r');
             me.bold('Version:');
-            me.log(global.__VERSION__);
-            me.log('\n');
+            me.log(global._ANGIE_VERSION);
+            me.log('\r');
             me.bold('Commands:');
             me.log(
                 'server [port -- optional]       ' +
@@ -111,7 +107,7 @@ class $LogProvider {
     }
 }
 
-function __carriage__() {
+function _carriage() {
     let args = Array.prototype.slice.call(arguments);
     return args.map((v) => v.replace ? v.replace('\r\n', ' ') : v);
 }
@@ -119,5 +115,3 @@ function __carriage__() {
 const $log = new $LogProvider();
 export default $log;
 export {$LogProvider};
-
-// TODO this should handle terminal logging and log file output

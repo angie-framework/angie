@@ -13,6 +13,9 @@ import {$templateCache, $resourceLoader} from   './services/$TemplateCache';
 import $ExceptionsProvider from                 './util/$ExceptionsProvider';
 import $log from                                './util/$LogProvider';
 
+console.log(angular);
+console.log(new angular());
+
 let app = new angular()
     .config(function() {
         $templateCache.put(

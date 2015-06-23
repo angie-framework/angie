@@ -4,11 +4,12 @@
 import fs from                  'fs';
 
 // Angie Modules
-import util from                './util/util';
-import $log from                './util/$LogProvider';
-import $Exceptions from         './util/$ExceptionsProvider';
+
 import {BaseModel} from         './models/BaseModel';
 import {$injectionBinder} from  './services/$Injector';
+import util from                './util/util';
+import $Exceptions from         './util/$ExceptionsProvider';
+import $log from                './util/$LogProvider';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -206,4 +207,5 @@ class Angular {
     }
 }
 
-export default class angular extends util.extend(Angular, util) {};
+export default class angular{};
+//export default class angular extends util.extend(Angular, util) {};

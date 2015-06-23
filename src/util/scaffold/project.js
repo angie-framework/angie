@@ -63,4 +63,5 @@ export default function createProject(args) {
     p.exit(0);
 }
 
+// TODO export all exceptions to $ExceptionsProvider
 // TODO create with . for settings in the same directory

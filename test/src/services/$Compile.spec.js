@@ -1,16 +1,11 @@
 'use strict'; 'use strong';
 
-import {expect} from 'chai';
-import {mock} from 'simple-mock';
+import {expect} from    'chai';
+import {mock} from      'simple-mock';
 
-import angular from '../../../src/Angular';
-import $compile from '../../../src/services/$Compile';
-import $log from '../../../src/util/$LogProvider';
-
-// let expect = global.expect,
-//     mock = global.mock;
-
-console.log(expect, mock);
+import angular from     '../../../src/Angular';
+import $compile from    '../../../src/services/$Compile';
+import $log from        '../../../src/util/$LogProvider';
 
 describe('$compile', function() {
     it(

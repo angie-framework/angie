@@ -8,10 +8,7 @@ import {$templateLoader} from './$TemplateCache';
 import util from '../util/util';
 import $log from '../util/$LogProvider';
 
-
-
 const parser = jsdom.jsdom;
-
 let replace = (el, d) => d.replace ? el.innerHTML : el.outerHTML;
 
 /**

@@ -5,6 +5,7 @@
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
   "scripts": {
+    "start": "angie",
     "test": "gulp mocha"
   },
   "engines": {
@@ -29,28 +30,28 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^3.1.1",
-    "chai": "^2.3.0",
-    "connect": "^2.x.x",
-    "esdoc": "^0.1.2",
-    "gulp": "^3.9.0",
-    "gulp-cli": "*",
-    "gulp-eslint": "^0.12.0",
-    "gulp-istanbul": "^0.9.0",
-    "gulp-mocha": "^2.0.1",
-    "isparta": "^3.0.3",
-    "mocha": "^2.2.4",
-    "simple-mock": "^0.3.0",
-    "yargs": "^3.8.0"
+    "babel-eslint": "3.1.1",
+    "chai": "2.3.0",
+    "connect": "2.x.x",
+    "esdoc": "0.1.2",
+    "gulp": "3.9.0",
+    "gulp-cli": "0.2.0",
+    "gulp-eslint": "0.12.0",
+    "gulp-istanbul": "0.9.0",
+    "gulp-mocha": "2.0.1",
+    "isparta": "3.0.3",
+    "mocha": "2.2.4",
+    "simple-mock": "0.3.0",
+    "yargs": "3.8.0"
   },
   "dependencies": {
-    "babel": "^5.1.13",
-    "chalk": "^1.0.0",
-    "firebase": "^2.2.4",
+    "babel": "5.6.4",
+    "chalk": "1.0.0",
+    "firebase": "2.2.4",
     "jsdom": "3.x.x",
-    "mysql": "^2.6.2",
-    "node-gyp": "^1.0.3",
-    "node-watch": "^0.3.4",
+    "mysql": "2.6.2",
+    "node-gyp": "1.0.3",
+    "node-watch": "0.3.4",
     "sqlite3": "3.0.8"
   }
 }
