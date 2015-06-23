@@ -1,36 +1,30 @@
 'use strict'; 'use strong';
 
-import child_process from 'child_process';
+// System Modules
+import {exec} from                  'child_process';
 
-import Config from './Config';
-import $log from './util/$LogProvider';
-import createProject from './util/scaffold/project';
-import AngieDatabaseRouter from './models/AngieDatabaseRouter';
-import server from './Server';
-import shell from './util/shell';
+// Angie Modules
+import Config from                  './Config';
+import createProject from           './util/scaffold/project';
+import AngieDatabaseRouter from     './models/AngieDatabaseRouter';
+import server from                  './Server';
+import shell from                   './util/shell';
+import $log from                    './util/$LogProvider';
 
-// Import garbage
-const exec = child_process.exec;
 const p = process;
+let args = [],
+    _server = requiresConfig.bind(null, server),
+    _db = requiresConfig.bind(null, AngieDatabaseRouter);
 
 // Remove trivial arguments
-let args = [];
 p.argv.forEach(function(v) {
-    if (v.match(/^(?:(?!(node|iojs)).)*$/)) {
+    if (!v.match(/(node|iojs|index|angie)/)) {
         args.push(v);
     }
 });
 
-// Reassign config calls
-let _server = requiresConfig.bind(null, server),
-    _db = requiresConfig.bind(null, AngieDatabaseRouter);
-
-if (args.length === 1) {
-    args.push('');
-}
-
 // Route the CLI request to a specific command
-switch (args[1].toLowerCase()) {
+switch (args[0].toLowerCase()) {
     case '':
         $log.help();
         break;
@@ -46,7 +40,7 @@ switch (args[1].toLowerCase()) {
     case 'cluster':
         break;
     case 'createproject':
-        createProject({ name: args[2] });
+        createProject({ name: args[1] });
         break;
     case 'syncdb':
         _db().then((db) => db.sync());
@@ -79,7 +73,6 @@ function runTests() {
 }
 
 // Wrapper function for services which require configs to be loaded
-// TODO make config a service
 function requiresConfig(fn) {
 
     // Fetch configs
@@ -91,6 +84,4 @@ function requiresConfig(fn) {
 }
 
 // TODO make all commands here
-    // TODO create database
-    // TODO migrate database
     // TODO cluster

@@ -1,16 +1,16 @@
 'use strict'; 'use strong';
 
-import gulp from 'gulp';
-import child_process from 'child_process';
-import eslint from 'gulp-eslint';
-import istanbul from 'gulp-istanbul';
-import isparta from 'isparta';
-import mocha from 'gulp-mocha';
-import chalk from 'chalk';
+// System Modules
+import gulp from            'gulp';
+import {exec} from          'child_process';
+import eslint from          'gulp-eslint';
+import istanbul from        'gulp-istanbul';
+import isparta from         'isparta';
+import mocha from           'gulp-mocha';
+import chalk from           'chalk';
 
+// Angie Modules
 import $log from './src/util/$LogProvider';
-
-const exec = child_process.exec;
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',

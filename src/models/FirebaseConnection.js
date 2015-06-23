@@ -1,10 +1,10 @@
 'use strict'; 'use strong';
 
-import BaseDBConnection from './BaseDBConnection';
+// import BaseDBConnection from './BaseDBConnection';
 // import $log from '../util/$LogProvider';
 // import app from '../Angular';
 
-const Firebase =        require('firebase');
+//const Firebase =        require('firebase');
       // FirebaseTokenGenerator = require("firebase-token-generator.js");
       // mysql =           require('mysql'),
       // mkdirp =          require('mkdirp'),
@@ -18,7 +18,7 @@ export default class FirebaseConnection extends BaseDBConnection {
         if (checkConfig(this.config.databases[database])) {
             throw new Error();
         } else {
-            this.db = new Firebase(this.config.databases[database].url);
+            //this.db = new Firebase(this.config.databases[database].url);
         }
 
     }

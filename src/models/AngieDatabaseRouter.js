@@ -17,7 +17,7 @@ export default function AngieDatabaseRouter(args) {
     let name = 'default';
     if (typeof args === 'object' && args.length) {
         args.forEach(function(arg) {
-            if (Object.keys(config.databases || {}).indexOf(args[2]) > -1) {
+            if (Object.keys(config.databases || {}).indexOf(args[1]) > -1) {
                 name = arg;
             }
         });

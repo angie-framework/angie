@@ -69,7 +69,7 @@ export default class BaseDBConnection {
                 continue;
             }
             if (typeof args[ key ] !== 'object') {
-                filterQuery.push(`${key}='${args[key]}'`);
+                filterQuery.push(`${key}='${args[ key ]}'`);
             } else {
                 filterQuery.push(`${key} in ${this.queryInString(args, 'key')}`);
             }

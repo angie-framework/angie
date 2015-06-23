@@ -27,7 +27,7 @@ let firstrun = true;
 
 export default function server(args) {
     const useSSL = /\-+usessl/i.test(args),
-          port = useSSL ? 443 : !isNaN(args[2]) ? +args[2] : 3000;
+          port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
 
     if (firstrun) {
         $log.warn('"angie server" not suitable for production use.');

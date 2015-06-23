@@ -1,10 +1,12 @@
 'use strict'; 'use strong';
 
+// System Modules
+import mysql from 'mysql';
+
+// Angie Modules
 import BaseDBConnection from './BaseDBConnection';
 import $log from '../util/$LogProvider';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
-
-const mysql =           require('mysql');
 
 const p = process,
       DEFAULT_HOST = '127.0.0.1',

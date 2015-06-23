@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
-import $log from './$LogProvider';
+// System Modules
+import repl from 'repl';
 
-const repl =        require('repl');
+// Angie Modules
+import $log from './$LogProvider';
 
 const p = process;
 

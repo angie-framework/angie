@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
-import app from '../Base';
+// System Modules
+import url from 'url';
 
-const url = require('url');
+// Angie Modules
+import app from '../Base';
 
 export default class $Request {
     constructor(request) {

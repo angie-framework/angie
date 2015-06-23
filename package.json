@@ -25,12 +25,12 @@
     "Angular",
     "AngularJS",
     "REST",
+    "MVC",
     "Framework",
     "API"
   ],
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "3.1.1",
     "chai": "2.3.0",
     "connect": "2.x.x",
     "esdoc": "0.1.2",

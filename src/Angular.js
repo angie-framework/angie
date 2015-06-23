@@ -4,7 +4,6 @@
 import fs from                  'fs';
 
 // Angie Modules
-
 import {BaseModel} from         './models/BaseModel';
 import {$injectionBinder} from  './services/$Injector';
 import util from                './util/util';
@@ -25,8 +24,9 @@ import $log from                './util/$LogProvider';
  * @access public
  * @example angular.noop() // = undefined
  */
-class Angular {
+class Angular extends util {
     constructor() {
+        super();
         this.constants = {};
         this.configs = [];
         this.services = {};
@@ -38,10 +38,16 @@ class Angular {
     }
 
     /**
-     * Creates an Angie Angular constant provider
+     * @desc Creates an Angie Angular constant provider
+     *
+     * @since 0.0.1
+     * @access public
+     *
      * @param {string} name The name of the constant being created
      * @param {object|string|number|Array<>|boolean} obj The object value
      * @returns {object} this instanceof Angular
+     *
+     * @example angular.constant('foo', 'bar');
      */
     constant(name, obj = {}) {
         return this._register('constants', name, obj);
@@ -53,12 +59,14 @@ class Angular {
         return this._register('Controllers', name, obj);
     }
     directive(name, obj = {}) {
-        let dir = new $injectionBinder(obj)();
+        const dir = new $injectionBinder(obj)();
 
-        if (dir.hasOwnProperty('Controller') && typeof dir.Controller !== 'string') {
+        if (
+            dir.hasOwnProperty('Controller') &&
+            typeof dir.Controller !== 'string'
+        ) {
             delete dir.Controller;
-        }
-        if (dir.type === 'APIView' && !dir.hasOwnProperty('Controller')) {
+        } else if (dir.type === 'APIView') {
             $Exceptions.$$invalidDirectiveConfig(name);
         }
 
@@ -72,14 +80,14 @@ class Angular {
         return this;
     }
     Model(name, obj = {}) {
-        obj = obj.prototype ? new obj() : typeof obj === 'function' ? obj() : obj;
-        name = typeof name === 'string' ? name : obj.name;
+        const model = new $injectionBinder(obj)();
+        name = typeof name === 'string' ? name : model.name;
 
         let instance = new BaseModel(name);
 
         // Mock extend obj onto the instance
-        if (typeof obj === 'object') {
-            instance = this.extend(instance, obj);
+        if (typeof model === 'object') {
+            instance = this.extend(instance, model);
         } else {
             $Exceptions.$$invalidModelConfig(name);
         }
@@ -87,7 +95,7 @@ class Angular {
         return this._register('Models', name, instance);
     }
     _register(component, name, obj) {
-        if (this[ component ]) {
+        if (component && this[ component ]) {
             this._registry[ name ] = component;
             this[ component ][ name ] = obj;
         }
@@ -100,7 +108,7 @@ class Angular {
             return false;
         }
 
-        let type = this._registry[ name ];
+        const type = this._registry[ name ];
         delete this._registry[ name ];
         delete this[ type ][ name ];
     }
@@ -114,24 +122,25 @@ class Angular {
         if (dependencies) {
             dependencies.forEach(function(v) {
 
-                if (v.charAt(v.length - 1) === '/') {
-                    v = v.slice(v.length - 1, 1);
-                }
+                let dependency = util.removeTrailingSlashes(v),
 
-                // This should be the root folder of an Angie project
-                let config = fs.readFileSync(`${v}/AngieFile.json`) || '{, }';
+                    // This should be the root folder of an Angie project
+                    config = fs.readFileSync(`${dependency}/AngieFile.json`) ||
+                        '{, }';
 
                 try {
                     config = JSON.parse(config);
                 } catch(e) {
-                    $log.error(`Could not load ${v}, error parsing AngieFile`);
+                    $log.error(
+                        `Could not load ${dependency}, error parsing AngieFile`
+                    );
                     return;
                 }
 
                 // This will load all of the modules, overwriting a module name
                 // will replace it
                 let prom = new Promise(function(resolve) {
-                    me.bootstrap(v).then(function() {
+                    me.bootstrap(dependency).then(function() {
                         resolve();
                     }).then(function() {
                         me.loadDependencies(config.dependencies);
@@ -185,7 +194,7 @@ class Angular {
                 // Check to see if the config has already fired, if it has, we
                 // do not want to fire it again
                 if (!v.fired) {
-                    new me.services.$injectionBinder(v.fn)();
+                    new $injectionBinder(v.fn)();
                 }
             });
 
@@ -207,5 +216,4 @@ class Angular {
     }
 }
 
-export default class angular{};
-//export default class angular extends util.extend(Angular, util) {};
+export default class angular extends Angular {};

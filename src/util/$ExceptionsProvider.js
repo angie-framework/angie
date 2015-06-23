@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-const chalk =       require('chalk');
+import chalk from 'chalk';
 
 class $Exceptions {
     constructor() {}
@@ -66,5 +66,6 @@ function err() {
     return chalk.red(chalk.bold.apply(null, arguments));
 }
 
+// TODO use native node exception types where possible
 const $ExceptionsProvider = new $Exceptions();
 export default $ExceptionsProvider;
