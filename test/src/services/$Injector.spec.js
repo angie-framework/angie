@@ -3,7 +3,7 @@
 import {expect} from 'chai';
 import {mock} from 'simple-mock';
 
-import app from '../../../src/Base';
+import app from '../../../src/Angular';
 import $injector, {$injectionBinder} from '../../../src/services/$Injector';
 import $log from '../../../src/util/$LogProvider';
 import $ExceptionsProvider from '../../../src/util/$ExceptionsProvider';

@@ -2,8 +2,7 @@
 
 import jsdom from 'jsdom';
 
-import angular from '../Angular';
-import app from '../Base';
+import app, {angular} from '../Angular';
 import {$templateLoader} from './$TemplateCache';
 import util from '../util/util';
 import $log from '../util/$LogProvider';

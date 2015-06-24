@@ -3,11 +3,18 @@
 import {expect} from    'chai';
 import {mock} from      'simple-mock';
 
-import angular from     '../../../src/Angular';
+import {angular} from     '../../../src/Angular';
 import $compile from    '../../../src/services/$Compile';
 import $log from        '../../../src/util/$LogProvider';
 
 describe('$compile', function() {
+    beforeEach(function() {
+        mock(Promise, 'all', function() {
+            return {
+                then: (fn) => fn()
+            };
+        });
+    });
     it(
         'test compile called without a template returns an empty function',
         function() {
@@ -57,7 +64,7 @@ describe('$compile', function() {
             expect($compile('{{{       test       }}}')(scope)).to.eq('test');
             expect(
                 $compile('        {{{    test4.    test     }}}')(scope)
-            ).to.eq('        test4');
+            ).to.eq('test4');
         });
         it('test _templateCompile evaluates functional expressions', function() {
             expect(
@@ -65,7 +72,7 @@ describe('$compile', function() {
             ).to.eq('false');
             expect(
                 $compile('{{{[ test, test1 ].join(\' & \')}}}')(scope)
-            ).to.eq('test & test1');
+            ).to.eq('test &amp; test1');
             expect(
                 $compile('{{{test.toUpperCase()}}}')(scope)
             ).to.eq('TEST');

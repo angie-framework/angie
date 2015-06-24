@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-import app from '../Base';
+import app from '../Angular';
 import $log from '../util/$LogProvider';
 import $ExceptionsProvider from '../util/$ExceptionsProvider';
 

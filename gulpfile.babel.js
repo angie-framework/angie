@@ -2,6 +2,7 @@
 
 // System Modules
 import gulp from            'gulp';
+// import babel from           'babel';
 import {exec} from          'child_process';
 import eslint from          'gulp-eslint';
 import istanbul from        'gulp-istanbul';
@@ -44,10 +45,13 @@ gulp.task('mocha', function(cb) {
     // ).on('finish', function() {
         $log.info('Running Angie Mocha test suite');
         gulp.src(testSrc).pipe(mocha({
-            reporter: 'spec'
-        })); //).pipe(
+            reporter: 'spec' //,
+            // compilers: {
+            //     js: babel
+            // }
+        })//); //).pipe(
         //    istanbul.writeReports()
-        //).on('end', cb);
+        ).on('end', cb);
     //});
 });
 gulp.task('esdoc', function(cb) {

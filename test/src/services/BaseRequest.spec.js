@@ -1,9 +1,11 @@
 'use strict'; 'use strong';
 
-import {BaseRequest} from '../../../src/services/BaseRequest';
+// Test Modules
+import {expect} from        'chai';
+import {mock} from          'simple-mock';
 
-let expect = global.expect,
-    mock = global.mock;
+// Angie Modules
+import {BaseRequest} from   '../../../src/services/BaseRequest';
 
 describe('BaseRequest', function() {
     let request;

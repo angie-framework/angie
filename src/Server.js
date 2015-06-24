@@ -8,7 +8,7 @@ import watch from 'node-watch';
 
 // Angie Modules
 import {config} from './Config';
-import app from './Base';
+import app from './Angular';
 import $cacheFactory from './services/$CacheFactory';
 import {$templateLoader} from './services/$TemplateCache';
 import {
@@ -176,9 +176,7 @@ export function prepApp() {
 
         // Bootstrap the angular application
         return new Promise(
-            (resolve) => app.bootstrap().then(
-                app._dropBootstrapMethods
-            ).then(resolve)
+            (resolve) => app.bootstrap().then(resolve)
         );
     });
 }

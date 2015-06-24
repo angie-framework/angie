@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 import {prepApp} from '../Server';
-import app from '../Base';
+import app from '../Angular';
 import {AngieDBObject} from './BaseModel';
 import util from '../util/util';
 import $log from '../util/$LogProvider';

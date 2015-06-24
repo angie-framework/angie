@@ -1,17 +1,16 @@
 'use strict'; 'use strong';
 
-import app from '../Base';
-import {config} from '../Config';
-import util from '../util/util';
-import $log from '../util/$LogProvider';
-import $Request from './$Request';
-import {$Response} from './$Responses';
-import {$routeProvider} from './$RouteProvider';
-import {$templateCache, $templateLoader} from './$TemplateCache';
-import {$injectionBinder} from './$Injector';
-import _mimeTypes from '../util/MimeTypes';
-import $compile from './$Compile';
-
+import app from                                 '../Angular';
+import {config} from                            '../Config';
+import $Request from                            './$Request';
+import {$Response} from                         './$Responses';
+import {$routeProvider} from                    './$RouteProvider';
+import {$templateCache, $templateLoader} from   './$TemplateCache';
+import {$injectionBinder} from                  './$Injector';
+import _mimeTypes from                          '../util/MimeTypes';
+import $compile from                            './$Compile';
+import util from                                '../util/util';
+import $log from                                '../util/$LogProvider';
 
 // TODO move these out to an app constant
 const DEFAULT_CONTENT_TYPE = {

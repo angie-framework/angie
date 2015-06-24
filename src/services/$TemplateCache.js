@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 import {config} from '../Config';
-import app from '../Base';
+import app from '../Angular';
 import $cacheFactory from './$CacheFactory';
 import util from '../util/util';
 // import $log from '../util/$LogProvider';

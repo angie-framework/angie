@@ -102,7 +102,7 @@ class Util {
         return Util.removeTrailingSlashes(Util.removeLeadingSlashes(str));
     }
     static toCamel(str) {
-        return str.replace(/([-_][a-z])/i, '$1'.toUpperCase().replace(/-|_/, ''));
+        return str.replace(/([-_][a-z])/, '$1'.toUpperCase().replace(/-|_/, ''));
     }
     static toUnderscore(str) {
         return Util.toFormat(str, '_');

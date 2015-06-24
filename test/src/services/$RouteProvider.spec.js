@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
-import {$routeProvider} from '../../../src/services/$RouteProvider';
+// Test Modules
+import {expect} from            'chai';
 
-let expect = global.expect;
+// Angie Modules
+import {$routeProvider} from    '../../../src/services/$RouteProvider';
 
 describe('$RequestProvider', function() {
     describe('_parseUrlParams', function() {

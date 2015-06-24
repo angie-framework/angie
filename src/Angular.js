@@ -1,14 +1,18 @@
 'use strict'; 'use strong';
 
 // System Modules
-import fs from                  'fs';
+import fs from                                  'fs';
 
 // Angie Modules
-import {BaseModel} from         './models/BaseModel';
-import {$injectionBinder} from  './services/$Injector';
-import util from                './util/util';
-import $Exceptions from         './util/$ExceptionsProvider';
-import $log from                './util/$LogProvider';
+import {BaseModel} from                         './models/BaseModel';
+import * as AngieModelFields from               './models/Fields';
+import {$routeProvider} from                    './services/$RouteProvider';
+import $compile from                            './services/$Compile';
+import $injector, {$injectionBinder} from       './services/$Injector';
+import {$templateCache, $resourceLoader} from   './services/$TemplateCache';
+import util from                                './util/util';
+import $ExceptionsProvider from                 './util/$ExceptionsProvider';
+import $log from                                './util/$LogProvider';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -49,16 +53,16 @@ class Angular extends util {
      *
      * @example angular.constant('foo', 'bar');
      */
-    constant(name, obj = {}) {
+    constant(name, obj) {
         return this._register('constants', name, obj);
     }
-    service(name, obj = {}) {
+    service(name, obj) {
         return this._register('services', name, obj);
     }
-    Controller(name, obj = {}) {
+    Controller(name, obj) {
         return this._register('Controllers', name, obj);
     }
-    directive(name, obj = {}) {
+    directive(name, obj) {
         const dir = new $injectionBinder(obj)();
 
         if (
@@ -66,17 +70,23 @@ class Angular extends util {
             typeof dir.Controller !== 'string'
         ) {
             delete dir.Controller;
-        } else if (dir.type === 'APIView') {
+        }
+
+        if (dir.type === 'APIView') {
             $Exceptions.$$invalidDirectiveConfig(name);
         }
 
         return this._register('directives', name, dir);
     }
     config(fn) {
-        this.configs.push({
-            fn: fn,
-            fired: false
-        });
+        if (typeof fn === 'function') {
+            this.configs.push({
+                fn: fn,
+                fired: false
+            });
+        } else {
+            $log.warn('Invalid config type specified');
+        }
         return this;
     }
     Model(name, obj = {}) {
@@ -95,22 +105,25 @@ class Angular extends util {
         return this._register('Models', name, instance);
     }
     _register(component, name, obj) {
-        if (component && this[ component ]) {
+
+        // `component` and `app.component` should always be defined
+        if (name && obj) {
             this._registry[ name ] = component;
             this[ component ][ name ] = obj;
+        } else {
+            $log.warn('Invalid name or object called on app._register');
         }
         return this;
     }
 
     // Tear down a registered component
     _tearDown(name) {
-        if (!name) {
-            return false;
+        if (name && this._registry[ name ]) {
+            const type = this._registry[ name ];
+            delete this._registry[ name ];
+            delete this[ type ][ name ];
         }
-
-        const type = this._registry[ name ];
-        delete this._registry[ name ];
-        delete this[ type ][ name ];
+        return this;
     }
     loadDependencies(dependencies = []) {
         let me = this,
@@ -148,7 +161,6 @@ class Angular extends util {
             proms.push(prom);
         });
 
-        // TODO issue with this taking too long
         return Promise.all(proms);
     }
     bootstrap(dir = process.cwd()) {
@@ -199,19 +211,35 @@ class Angular extends util {
             resolve();
         });
     }
-    _dropBootstrapMethods() {
-
-        // TODO apparently I cannot do this...
-        // delete this._register;
-        // delete this.constant;
-        // delete this.service;
-        // delete this.Controller;
-        // delete this.directive;
-        // delete this.config;
-        // delete this.Model;
-        // delete this._dropBootstrapMethods;
-        return this;
-    }
 }
 
-export default class angular extends Angular {};
+global.app = new Angular()
+    .config(function() {
+        $templateCache.put(
+            'index.html',
+            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+        );
+        $templateCache.put(
+            '404.html',
+            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
+        );
+    })
+    .service('$routeProvider', $routeProvider)
+    .service('$compile', $compile)
+
+    // Model utilities
+    .service('$fields', AngieModelFields)
+
+    // Logging  utilities
+    .service('$Log', $log)
+    .service('$Exceptions', $ExceptionsProvider)
+    .service('$injector', $injector)
+    .service('$injectionBinder', $injectionBinder)
+    .service('$scope', { $id: 1 })
+    .service('$window', {})
+    .service('$document', {})
+    .service('$templateCache', $templateCache)
+    .service('$resourceLoader', $resourceLoader);
+
+export class angular extends Angular {}
+export default app;

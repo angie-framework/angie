@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
-import $cacheFactory from '../../../src/services/$CacheFactory';
+//System Modules
+import {expect} from    'chai';
 
-let expect = global.expect;
+// Angie Modules
+import $cacheFactory from '../../../src/services/$CacheFactory';
 
 describe('$CacheFactory', function() {
     let cache;
