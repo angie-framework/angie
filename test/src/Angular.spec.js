@@ -10,6 +10,7 @@ import fs from                      'fs';
 // Angie Modules
 import {angular} from               '../../src/Angular';
 import util from                    '../../src/util/util';
+import $ExceptionsProvider from     '../../src/util/$ExceptionsProvider';
 import $log from                    '../../src/util/$LogProvider';
 
 describe('Angular', function() {
@@ -58,29 +59,52 @@ describe('Angular', function() {
             expect(app.directives.test).to.deep.eq('test');
         });
     });
-    // describe('directive', function() {
-    //     let _$injectionBinder;
-    //
-    //     beforeEach(function() {
-    //         // _$injectionBinder = $injectionBinder;
-    //         // $injectionBinder = simple.stub().returnWith( //function() {
-    //         //     () => { Controller: 'test' }
-    //         // );//};
-    //         mock(app, '_register', angular.noop);
-    //     });
-    //     //afterEach(() => $injectionBinder = _$injectionBinder);
-    //     it('test Controller and string type', function() {
-    //         app.directive('test', function() {
-    //             return {
-    //                 Controller: 'test'
-    //             };
-    //         });
-    //         // TODO called with
-    //         //expect(app._register).to.have.been.called.with([ 'test' ]);
-    //         expect(app._register.calls.args[0]).to.deep.eq([ 'test' ]);
-    //         //expect($injectionBinder).to.have.been.called.with('test');
-    //     });
-    // });
+    describe('directive', function() {
+        let _$injectionBinder;
+
+        beforeEach(function() {
+            mock(app, '_register', angular.noop);
+        });
+        it('test Controller and string type', function() {
+            let obj = {
+                Controller: 'test'
+            };
+            app.directive('test', function() {
+                return obj;
+            });
+            expect(app._register.calls[0].args).to.deep.eq(
+                [ 'directives', 'test', obj ]
+            );
+        });
+        it('test Controller deleted if not string type', function() {
+            let obj = {
+                Controller: angular.noop()
+            };
+            app.directive('test', function() {
+                return obj;
+            });
+            expect(app._register.calls[0].args).to.deep.eq(
+                [ 'directives', 'test', obj ]
+            );
+            expect(obj.Controller).to.be.undefined;
+        });
+        it(
+            'text $ExceptionsProvider called when there is a not controller and ' +
+            'directive is an API View',
+            function() {
+                let obj = {
+                    type: 'APIView'
+                };
+                mock($ExceptionsProvider, '$$invalidDirectiveConfig', angular.noop);
+                app.directive('test', function() {
+                    return obj;
+                });
+                expect(
+                    $ExceptionsProvider.$$invalidDirectiveConfig
+                ).to.have.been.called;
+            }
+        );
+    });
     describe('constant, service, Controller', function() {
         beforeEach(function() {
             mock(app, '_register', angular.noop);

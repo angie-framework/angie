@@ -3,7 +3,7 @@
 import {expect} from    'chai';
 import {mock} from      'simple-mock';
 
-import {angular} from     '../../../src/Angular';
+import app, {angular} from     '../../../src/Angular';
 import $compile from    '../../../src/services/$Compile';
 import $log from        '../../../src/util/$LogProvider';
 
@@ -84,6 +84,13 @@ describe('$compile', function() {
             expect($compile('{{{test5 + test6}}}')(scope)).to.eq('25');
             expect($compile('{{{test5 - test6}}}')(scope)).to.eq('15');
             expect($compile('{{{(test5 + test6) * test6}}}')(scope)).to.eq('125');
+        });
+        it('test attribute matched directive', function() {
+            app.directive('testDir', function() {
+                return {
+                    Controller: 'test'
+                };
+            });
         });
     });
 });

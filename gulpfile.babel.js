@@ -2,7 +2,6 @@
 
 // System Modules
 import gulp from            'gulp';
-// import babel from           'babel';
 import {exec} from          'child_process';
 import eslint from          'gulp-eslint';
 import istanbul from        'gulp-istanbul';
@@ -38,19 +37,16 @@ gulp.task('mocha', function(cb) {
     //         },
     //
     //         // TODO Once coverage is up, include untested files
-    //         includeUntested: false
+    //         includeUntested: true
     //     })
     // ).pipe(
     //     istanbul.hookRequire()
     // ).on('finish', function() {
         $log.info('Running Angie Mocha test suite');
         gulp.src(testSrc).pipe(mocha({
-            reporter: 'spec' //,
-            // compilers: {
-            //     js: babel
-            // }
-        })//); //).pipe(
-        //    istanbul.writeReports()
+            reporter: 'spec'
+        })).pipe(
+            istanbul.writeReports()
         ).on('end', cb);
     //});
 });

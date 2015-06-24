@@ -94,6 +94,8 @@ class Util {
     /**
      * @desc Util helper to replace leading and trailing slashes
      * @since 0.2.3
+     * @todo Move methods out to StringUtil class
+     *
      * @param {string} str [param=''] String to process
      * @returns {string} The str param with stripped trailing and leading slashes
      * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
@@ -101,23 +103,78 @@ class Util {
     static removeTrailingLeadingSlashes(str = '') {
         return Util.removeTrailingSlashes(Util.removeLeadingSlashes(str));
     }
+
+    /**
+     * @desc Util helper to replace dash/slash separation with camelCase
+     * @since 0.2.3
+     * @todo Move methods out to StringUtil class
+     *
+     * @param {string} str String to process
+     * @returns {string} The str param converted to camelCase
+     * @example util.toCamel('test-test'); // = 'testTest'
+     */
     static toCamel(str) {
-        return str.replace(/([-_][a-z])/, '$1'.toUpperCase().replace(/-|_/, ''));
+        return str.toLowerCase().replace(
+            /[-_][a-z]/g,
+            function(m) {
+                return m.toUpperCase().replace(/[-_]/g, '');
+            }
+        );
     }
+
+    /**
+     * @desc Util helper to replace camelCase with underscore_separation
+     * @since 0.2.3
+     * @todo Move methods out to StringUtil class
+     *
+     * @param {string} str String to process
+     * @returns {string} The str param converted to underscore_separation
+     * @example util.toCamel('testTest'); // = 'test_test'
+     */
     static toUnderscore(str) {
         return Util.toFormat(str, '_');
     }
+
+    /**
+     * @desc Util helper to replace camelCase with dash-separation
+     * @since 0.2.3
+     * @todo Move methods out to StringUtil class
+     *
+     * @param {string} str String to process
+     * @returns {string} The str param converted to dash-separation
+     * @example util.toDash('testTest'); // = 'test-test'
+     */
     static toDash(str) {
         return Util.toFormat(str, '-');
     }
+
+    /**
+     * @desc Util helper to perform `toDash` or `toUnderscore` style string
+     * serilaization
+     * @since 0.2.3
+     * @todo Move methods out to StringUtil class
+     *
+     * @param {string} str String to process
+     * @param {string} del Character with which to replace camelCase capitals
+     * @returns {string} The str param converted to `del` separation
+     * @example util.toFormat('testTest', '-'); // = 'test-test'
+     * @example util.toFormat('testTest', '_'); // = 'test_test'
+     */
     static toFormat(str, del) {
-        return str.replace(/([A-Z])/g, `${del}$1`).toLowerCase();
+        return str.replace(/([A-Z]+)/g, `${del}$1`).toLowerCase();
     }
 
+    /**
+     * @desc Util empty function call helper
+     * @since 0.2.3
+     *
+     * @returns {undefined} undefined
+     * @example util.noop(); // = undefined
+     */
     static noop() {}
 }
 
-class fileUtil {}
-class stringUtil {}
+//class fileUtil {}
+//class stringUtil {}
 
 export default class util extends Util {}

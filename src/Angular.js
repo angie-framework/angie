@@ -65,17 +65,13 @@ class Angular extends util {
     directive(name, obj) {
         const dir = new $injectionBinder(obj)();
 
-        if (
-            dir.hasOwnProperty('Controller') &&
-            typeof dir.Controller !== 'string'
-        ) {
-            delete dir.Controller;
+        if (dir.hasOwnProperty('Controller')) {
+            if (typeof dir.Controller !== 'string') {
+                delete dir.Controller;
+            }
+        } else if (/api.?view/i.test(dir.type)) {
+            $ExceptionsProvider.$$invalidDirectiveConfig(name);
         }
-
-        if (dir.type === 'APIView') {
-            $Exceptions.$$invalidDirectiveConfig(name);
-        }
-
         return this._register('directives', name, dir);
     }
     config(fn) {
@@ -99,9 +95,8 @@ class Angular extends util {
         if (typeof model === 'object') {
             instance = this.extend(instance, model);
         } else {
-            $Exceptions.$$invalidModelConfig(name);
+            $ExceptionsProvider.$$invalidModelConfig(name);
         }
-
         return this._register('Models', name, instance);
     }
     _register(component, name, obj) {
@@ -160,7 +155,6 @@ class Angular extends util {
             });
             proms.push(prom);
         });
-
         return Promise.all(proms);
     }
     bootstrap(dir = process.cwd()) {
@@ -213,7 +207,7 @@ class Angular extends util {
     }
 }
 
-global.app = new Angular()
+let app = global.app = new Angular()
     .config(function() {
         $templateCache.put(
             'index.html',
