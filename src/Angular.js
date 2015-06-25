@@ -62,6 +62,38 @@ class Angular extends util {
     Controller(name, obj) {
         return this._register('Controllers', name, obj);
     }
+
+    /**
+     * @desc Creates an Angie Angular directive provider. The second parameter
+     * of the directive function must be an object, with properties defining the
+     * directive itself.
+     *
+     * @since 0.2.3
+     * @access public
+     *
+     * @param {string} name The name of the constant being created
+     * @param {function|object} obj The directive value, returns directive params
+     * @param {string} obj().Controller The associated directive controller
+     * @param {number} obj().priority A number representing the directive's
+     * priority, relative to the other declared directives
+     * @param {boolean} obj().replace Does the directive root get replaced by
+     * its inner HTML?
+     * @param {string} obj().restrict What HTML components can parse this directive:
+     *    'A': attribute
+     *    'E': element
+     *    'C': class
+     *    'M': comment
+     * @param {function} obj().link A function to fire after the directive is
+     * parsed
+     * @returns {object} this instanceof Angular
+     *
+     * @example angular.directive('foo', {
+     *     return {
+     *         Controller: 'test',
+     *         link: function() {}
+     *     };
+     * });
+     */
     directive(name, obj) {
         const dir = new $injectionBinder(obj)();
 

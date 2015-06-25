@@ -29,6 +29,7 @@ const DEFAULT_CONTENT_TYPE = {
  * can be required using a module import, but probably should not be unless it
  * it being subclassed for a dependency package.
  * @todo Make this class private
+ * @todo Move base request
  * @since 0.0.1
  */
 class BaseRequest {

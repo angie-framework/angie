@@ -1,20 +1,21 @@
 'use strict'; 'use strong';
 
 // System Modules
-import gulp from            'gulp';
-import {exec} from          'child_process';
-import eslint from          'gulp-eslint';
-import istanbul from        'gulp-istanbul';
-import isparta from         'isparta';
-import mocha from           'gulp-mocha';
-import chalk from           'chalk';
+import gulp from                'gulp';
+import {exec} from              'child_process';
+import eslint from              'gulp-eslint';
+import istanbul from            'gulp-istanbul';
+import {Instrumenter} from      'isparta';
+import mocha from               'gulp-mocha';
+import chalk from               'chalk';
 
 // Angie Modules
 import $log from './src/util/$LogProvider';
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',
-      docSrc = 'doc';
+      docSrc = 'doc',
+      coverageDir = 'coverage';
 
 gulp.task('eslint', function () {
     gulp.src([ src, testSrc ]).pipe(
@@ -26,29 +27,23 @@ gulp.task('eslint', function () {
     );
 });
 gulp.task('mocha', function(cb) {
-    $log.info('Running Coverage reporter');
-    // gulp.src(src).pipe(
-    //     istanbul({
-    //         instrumenter: isparta.Instrumenter,
-    //         instrumenterOptions: {
-    //             isparta: {
-    //                 experimental: true
-    //             }
-    //         },
-    //
-    //         // TODO Once coverage is up, include untested files
-    //         includeUntested: true
-    //     })
-    // ).pipe(
-    //     istanbul.hookRequire()
-    // ).on('finish', function() {
+    gulp.src(src).pipe(
+        istanbul({
+            instrumenter: Instrumenter,
+            includeUntested: true
+        })
+    ).pipe(
+        istanbul.hookRequire()
+    ).on('finish', function() {
         $log.info('Running Angie Mocha test suite');
-        gulp.src(testSrc).pipe(mocha({
+        gulp.src(testSrc, { read: false }).pipe(mocha({
             reporter: 'spec'
         })).pipe(
-            istanbul.writeReports()
+            istanbul.writeReports({
+                reporters: [ 'text', 'text-summary', 'cobertura', 'clover' ]
+            })
         ).on('end', cb);
-    //});
+    });
 });
 gulp.task('esdoc', function(cb) {
     $log.info('Generating Angie documentation');
