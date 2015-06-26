@@ -3,7 +3,7 @@
 import jsdom from 'jsdom';
 
 import app, {angular} from '../Angular';
-import {$templateLoader} from './$TemplateCache';
+import {_templateLoader} from './$TemplateCache';
 import util from '../util/util';
 import $log from '../util/$LogProvider';
 
@@ -99,11 +99,11 @@ function $compile(t) {
      * @desc Function returned by $compile
      * @since 0.2.2
      * @param {object} scope [param={}] Template string to be processed
+     * @param {boolean} assignDOMServices [param=true] Create a new
+     * $window/$document?
      * @returns {string} The compiled template
      */
-    return function _templateCompile (scope = {}) {
-
-        console.log(template);
+    return function _templateCompile (scope = {}, assignDOMServices = true) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
@@ -128,20 +128,23 @@ function $compile(t) {
         });
 
         // Parse directives
+        let $$document,
+            $$window;
         try {
-            $document = parser(tmpLet, {
+            $$document = parser(tmpLet, {
                 FetchExternalResources: [],
                 ProcessExternalResources: false
             });
-            $window = $document.defaultView;
+            $$window = $$document.defaultView;
         } catch(e) {}
 
         // Assign the window and document services
-        app.service.$window = $window;
-        app.service.$document = $document;
+        if (assignDOMServices === true) {
+            app.service('$window', $$window).service('$document', $$document);
+        }
 
-        if ($document.body) {
-            let els = $document.body.querySelectorAll('*');
+        if ($$document.body) {
+            let els = $$document.body.querySelectorAll('*');
             for (let i = 0; i < els.length; ++i) {
                 let el = els[ i ],
                     type,
@@ -177,6 +180,7 @@ function $compile(t) {
                         )
                     ) {
                         prom = _processDirective(
+                            $$document,
                             el,
                             scope,
                             directive,
@@ -190,18 +194,14 @@ function $compile(t) {
 
         return Promise.all(proms).then(function() {
 
-            console.log(tmpLet);
-
             // Check for a document.body in tmpLet
             if (tmpLet.indexOf('<body') > -1 && tmpLet.indexOf('/body>') > -1) {
-                tmpLet = `<!DOCTYPE html>\n${$document.documentElement.outerHTML}`;
+                tmpLet = `<!DOCTYPE html>\n${$$document.documentElement.outerHTML}`;
             } else {
 
                 // Or return just the string
-                tmpLet = $document.body.innerHTML;
+                tmpLet = $$document.body.innerHTML;
             }
-
-            console.log(tmpLet);
 
             app.services.$window = app.services.$document = {};
             return tmpLet;
@@ -229,7 +229,6 @@ function _evalFn(str) {
         keyStr += `var ${key}=${val};`;
     }
 
-    // TODO This can be improved if keyStr is evaluated beforehand
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
     return eval([ keyStr, str ].join(''));
@@ -237,7 +236,7 @@ function _evalFn(str) {
     /* eslint-enable */
 }
 
-function _processDirective(el, scope, directive, type) {
+function _processDirective($$document, el, scope, directive, type) {
     let template,
         prom;
 
@@ -246,9 +245,21 @@ function _processDirective(el, scope, directive, type) {
         directive.hasOwnProperty('templatePath') &&
         directive.templatePath.indexOf('.html') > -1
     ) {
-        template = $templateLoader(directive.templatePath);
+        template = _templateLoader(directive.templatePath, 'template', 'utf8');
     } else if (directive.hasOwnProperty('template')) {
         template = directive.template;
+    }
+
+    if (template) {
+
+        // Setup the template HTML observing the prepend/append properties
+        prom = $compile(template)(scope, false).then(function(t) {
+            el.innerHTML =
+                `${directive.prepend === true ? '' : el.innerHTML}${t}` +
+                `${directive.prepend !== true ? '' : el.innerHTML}`;
+        });
+    } else {
+        prom = new Promise((r) => r());
     }
 
     // Setup Attrs
@@ -260,16 +271,6 @@ function _processDirective(el, scope, directive, type) {
                 parsedAttrs[ util.toCamel(key) ] = el.getAttribute(key);
             }
         }
-    }
-
-    if (template) {
-        prom = $compile(directive.template)(scope).then(function(t) {
-            el.innerHTML =
-                `${directive.prepend ? el.innerHTML : ''}${t}` +
-                `${!directive.prepend ? el.innerHTML : ''}`;
-        });
-    } else {
-        prom = new Promise((r) => r());
     }
 
     // Link functionality
@@ -303,7 +304,7 @@ function _processDirective(el, scope, directive, type) {
     prom.then(function() {
         if (directive.replace === true) {
             el.setAttribute('ngie-id', ++iid);
-            $document.body.innerHTML = $document.body.innerHTML.replace(
+            $$document.body.innerHTML = $$document.body.innerHTML.replace(
                 el.outerHTML,
                 el.innerHTML
             );

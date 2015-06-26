@@ -9,7 +9,10 @@ import util from '../util/util';
 const fs =      require('fs');
 
 const p = process,
-      ANGIE_TEMPLATE_DIR = `${__dirname}/../templates/html`,
+      ANGIE_TEMPLATE_DIRS = [
+          `${__dirname}/../templates/html`,
+          `${__dirname}/../../test/src/templates`
+      ],
 
       // TODO do you want to replace this with another dir?
       ANGIE_STATIC_DIRS = [];
@@ -21,7 +24,7 @@ class $TemplateCache extends $cacheFactory {
     get(url) {
         let template = super.get(url);
         if (!template) {
-            template = $templateLoader(url);
+            template = _templateLoader(url);
         }
         if (template && config.cacheStaticAssets) {
             this.put(url, template);
@@ -30,7 +33,7 @@ class $TemplateCache extends $cacheFactory {
     }
 }
 
-function $templateLoader(url, type = 'template') {
+function _templateLoader(url, type = 'template', encoding) {
 
     // Clone them template dirs
     let templateDirs = (
@@ -39,21 +42,21 @@ function $templateLoader(url, type = 'template') {
     template;
 
     // Add the default Angie template dirs to the existing config template dirs
-    if (type === 'template') {
-        templateDirs.push(ANGIE_TEMPLATE_DIR);
-    } else if (type === 'static') {
-        templateDirs = templateDirs.concat(ANGIE_STATIC_DIRS);
-    }
+    templateDirs = templateDirs.concat(
+        type === 'template' ? ANGIE_TEMPLATE_DIRS :
+            type === 'static' ? ANGIE_STATIC_DIRS : []
+    );
 
     templateDirs = templateDirs.map(function(dir) {
         if (
-            ANGIE_TEMPLATE_DIR !== dir &&
-            ANGIE_STATIC_DIRS.indexOf(dir) === -1 &&
+            (
+                (type === 'template' && ANGIE_TEMPLATE_DIRS.indexOf(dir) === -1) ||
+                (type === 'static' && ANGIE_STATIC_DIRS.indexOf(dir) === -1)
+            ) &&
             dir.indexOf(p.cwd()) === -1
         ) {
             dir = util.removeLeadingSlashes(dir);
             dir = `${p.cwd()}/${dir}`;
-
         }
         dir = util.removeTrailingSlashes(dir);
         return dir;
@@ -65,7 +68,11 @@ function $templateLoader(url, type = 'template') {
             path = util.findFile(dir, url);
 
         if (typeof path === 'string') {
-            template = fs.readFileSync(path);
+            template = fs.readFileSync(path, encoding || undefined);
+        }
+
+        if (template) {
+            break;
         }
     }
 
@@ -74,7 +81,7 @@ function $templateLoader(url, type = 'template') {
     } else if (
         type === 'static' &&
         config.hasOwnProperty('cacheStaticAssets') &&
-        config.cacheStaticAssets
+        config.cacheStaticAssets === true
     ) {
         // TODO you may want to put this in the asset loading block
         new $cacheFactory('staticAssets').put(url, template);
@@ -129,7 +136,7 @@ function $resourceLoader() {
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
-                staticAsset = $templateLoader(assetPath, 'static');
+                staticAsset = _templateLoader(assetPath, 'static');
             }
 
             if (staticAsset.length) {
@@ -139,14 +146,14 @@ function $resourceLoader() {
 
         asset += '</script>';
 
-        let index = $response.__responseContent__.indexOf('</body>');
+        let index = $response._responseContent.indexOf('</body>');
         if (index > -1) {
-            $response.__responseContent__.splice(index, 0, asset);
+            $response._responseContent.splice(index, 0, asset);
         } else {
-            $response.__responseContent__ = $response.__responseContent__ + asset;
+            $response._responseContent = $response._responseContent + asset;
         }
     });
 }
 
 const $templateCache = new $TemplateCache();
-export {$templateCache, $templateLoader, $resourceLoader};
+export {$templateCache, _templateLoader, $resourceLoader};

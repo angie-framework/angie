@@ -1,11 +1,14 @@
 'use strict'; 'use strong';
 
-import {expect} from    'chai';
+// Test Modules
+import {expect} from            'chai';
 import simple, {mock} from      'simple-mock';
 
-import app, {angular} from     '../../../src/Angular';
-import $compile from    '../../../src/services/$Compile';
-import $log from        '../../../src/util/$LogProvider';
+// Angie Modules
+import {config} from            '../../../src/Config';
+import app, {angular} from      '../../../src/Angular';
+import $compile from            '../../../src/services/$Compile';
+import $log from                '../../../src/util/$LogProvider';
 
 describe('$compile', function() {
     it(
@@ -170,16 +173,56 @@ describe('$compile', function() {
                 expect(t).to.eq('<div class="testDir"></div>');
             });
         });
-        // it('test directive template', function() {
-        //     delete app.directives.testDir.link;
-        //     app.directives.testDir.template = 'blah';
-        //     $compile('<div class="testDir"></div>')({}).then(function(t) {
-        //         expect(t).to.eq('<div class="testDir">blah</div>');
-        //     });
-        // });
+        describe('directive template keyword', function() {
+            beforeEach(function() {
+                delete app.directives.testDir.link;
+                app.directives.testDir.template = 'blah';
+            });
+            it('test directive template', function() {
+                $compile('<div class="testDir"></div>')({}).then(function(t) {
+                    expect(t).to.eq('<div class="testDir">blah</div>');
+                });
+            });
+            it('test directive template with prepend', function() {
+                app.directives.testDir.prepend = true;
+                $compile('<div class="testDir">test</div>')({}).then(function(t) {
+                    expect(t).to.eq('<div class="testDir">blahtest</div>');
+                });
+            });
+            it('test directive template with parser', function() {
+                app.directives.testDir.template = '{{{test}}}';
+                $compile('<div class="testDir"></div>')({
+                    test: 'test'
+                }).then(function(t) {
+                    expect(t).to.eq('<div class="testDir">test</div>');
+                });
+            });
+        });
+        describe('directive templatePath keyword', function() {
+            beforeEach(function() {
+                config.templateDirs = [];
+                delete app.directives.testDir.link;
+            });
+            afterEach(function() {
+                delete config.templateDirs;
+            });
+            it('test directive templatePath no ".html"', function() {
+                app.directives.testDir.templatePath = 'test';
+                $compile('<div class="testDir"></div>')({}).then(function(t) {
+                    expect(t).to.eq('<div class="testDir"></div>');
+                });
+            });
+
+            // TODO this should be tested using a mocked service
+            it('test directive templatePath ".html"', function() {
+                app.directives.testDir.templatePath = 'html/testDirectiveTemplatePath.html';
+                $compile('<div class="testDir"></div>')({}).then(function(t) {
+                    expect(t).to.eq('<div class="testDir">test</div>');
+                });
+            });
+        });
     });
 });
 
-// Test all directive keywords  (template) (templatePath) (prepend) (nested parser property)
 // TODO test $window, $document
 // TODO test directive with attribute the same as name

@@ -10,7 +10,7 @@ import watch from 'node-watch';
 import {config} from './Config';
 import app from './Angular';
 import $cacheFactory from './services/$CacheFactory';
-import {$templateLoader} from './services/$TemplateCache';
+import {_templateLoader} from './services/$TemplateCache';
 import {
     BaseRequest,
     RESPONSE_HEADER_MESSAGES,
@@ -50,7 +50,7 @@ export default function server(args) {
                 if (assetCache.get(path)) {
                     asset = assetCache.get(path);
                 } else {
-                    asset = $templateLoader(path, 'static');
+                    asset = _templateLoader(path, 'static');
                 }
 
                 // We have an asset and must render a response
@@ -106,7 +106,7 @@ export default function server(args) {
             angieResponse._route().then(function() {
                 let code = response.statusCode;
                 if (!code) {
-                    const error = $templateLoader('500.html');
+                    const error = _templateLoader('500.html');
 
                     // TODO extrapolate this to responses
                     response.writeHead(

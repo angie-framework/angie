@@ -2,7 +2,7 @@
 
 //Test Modules
 import {expect} from                'chai';
-import {mock} from                  'simple-mock';
+import simple, {mock} from          'simple-mock';
 
 // System Modules
 import fs from                      'fs';
@@ -190,6 +190,7 @@ describe('Angular', function() {
             mock(app, 'bootstrap', angular.noop);
             mock(Promise, 'all', angular.noop);
         });
+        afterEach(() => simple.restore());
         it('test called with no dependencies', function() {
             app.loadDependencies();
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);

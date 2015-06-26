@@ -5,7 +5,7 @@ import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {$routeProvider} from                    './$RouteProvider';
-import {$templateCache, $templateLoader} from   './$TemplateCache';
+import {$templateCache, _templateLoader} from   './$TemplateCache';
 import {$injectionBinder} from                  './$Injector';
 import _mimeTypes from                          '../util/MimeTypes';
 import $compile from                            './$Compile';
@@ -312,7 +312,7 @@ class BaseRequest {
     defaultPath() {
 
         // Load default page
-        let index = $templateLoader('index.html');
+        let index = _templateLoader('index.html');
 
         // If the index page could not be found
         if (!index) {
@@ -334,7 +334,7 @@ class BaseRequest {
     unknownPath() {
 
         // Load page not found
-        let fourOhFour = $templateLoader('404.html');
+        let fourOhFour = _templateLoader('404.html');
 
 
         let me = this;
