@@ -51,11 +51,16 @@ describe('BaseRequest', function() {
                 request._route();
                 expect(request.controllerPath).to.have.been.called;
             });
-            it('test string path matches request path', function() {
+            it('test string path does not matche request path', function() {
                 request.path = '/test2.json';
                 request._route();
                 expect(request.otherPath).to.have.been.called;
             });
         });
+        // describe('test $Compile parsing', function() {
+        //     it('test templatePath associated with a controller', function() {
+        //
+        //     });
+        // });
     });
 });

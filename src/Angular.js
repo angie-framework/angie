@@ -82,7 +82,6 @@ class Angular extends util {
      *    'A': attribute
      *    'E': element
      *    'C': class
-     *    'M': comment
      * @param {function} obj().link A function to fire after the directive is
      * parsed
      * @returns {object} this instanceof Angular
@@ -95,7 +94,7 @@ class Angular extends util {
      * });
      */
     directive(name, obj) {
-        const dir = new $injectionBinder(obj)();
+        const dir = typeof obj !== 'function' ? obj : new $injectionBinder(obj)();
 
         if (dir.hasOwnProperty('Controller')) {
             if (typeof dir.Controller !== 'string') {

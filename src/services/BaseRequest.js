@@ -225,7 +225,11 @@ class BaseRequest {
 
                 // Render the template into the resoponse
                 return new Promise(function(resolve) {
+
+                    // $Compile to parse template strings and app.directives
                     return $compile(me.template)(
+
+                        // In the context of the scope
                         app.services.$scope
                     ).then(function(template) {
                         resolve(template);

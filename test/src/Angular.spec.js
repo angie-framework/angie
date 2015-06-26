@@ -60,8 +60,6 @@ describe('Angular', function() {
         });
     });
     describe('directive', function() {
-        let _$injectionBinder;
-
         beforeEach(function() {
             mock(app, '_register', angular.noop);
         });

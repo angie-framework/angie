@@ -8,7 +8,9 @@ import util from '../util/util';
 import $log from '../util/$LogProvider';
 
 const parser = jsdom.jsdom;
-let replace = (el, d) => d.replace ? el.innerHTML : el.outerHTML;
+
+// ngie Incrementer
+let iid = 0;
 
 /**
  * @desc $window is provided to any directive which has included it. It
@@ -101,6 +103,8 @@ function $compile(t) {
      */
     return function _templateCompile (scope = {}) {
 
+        console.log(template);
+
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
             proms = [];
@@ -124,7 +128,6 @@ function $compile(t) {
         });
 
         // Parse directives
-        // TODO make sure every directive actually gets replaced
         try {
             $document = parser(tmpLet, {
                 FetchExternalResources: [],
@@ -133,6 +136,7 @@ function $compile(t) {
             $window = $document.defaultView;
         } catch(e) {}
 
+        // Assign the window and document services
         app.service.$window = $window;
         app.service.$document = $document;
 
@@ -143,30 +147,33 @@ function $compile(t) {
                     type,
                     prom;
                 directives.forEach(function(directive) {
+
+                    // Try and match a directive based on type
                     if (
-                        el.nodeType === 8 && el.innerHTML &&
-                        directive._names.some((v) => el.innerHTML.indexOf(v) > -1)
-                    ) {
-                        type = 'M';
-                    } else if (
                         el.className &&
                         directive._names.some((v) => el.className.indexOf(v) > -1)
                     ) {
                         type = 'C';
                     } else if (
-                        el.attributes &&
-                        directive._names.some((v) => !!(el.attributes[ v ]))
+                        el.hasAttribute &&
+                        directive._names.some((v) => !!(el.hasAttribute(v)))
                     ) {
                         type = 'A';
-                    } else if (el.tagName && directive._names.indexOf(el.tagName) > -1) {
+                    } else if (
+                        el.tagName &&
+                        directive._names.indexOf(el.tagName.toLowerCase()) > -1
+                    ) {
                         type = 'E';
                     }
 
+                    // Check that the restriction is valid
                     if (
                         type && (
                             !directive.hasOwnProperty('restrict') ||
-                            directive.hasOwnProperty('restrict') &&
-                            directive.restrict.indexOf(type) > -1
+                            (
+                                directive.hasOwnProperty('restrict') &&
+                                directive.restrict.indexOf(type) > -1
+                            )
                         )
                     ) {
                         prom = _processDirective(
@@ -183,16 +190,20 @@ function $compile(t) {
 
         return Promise.all(proms).then(function() {
 
-            // Check for a document body in tmpLet
+            console.log(tmpLet);
+
+            // Check for a document.body in tmpLet
             if (tmpLet.indexOf('<body') > -1 && tmpLet.indexOf('/body>') > -1) {
                 tmpLet = `<!DOCTYPE html>\n${$document.documentElement.outerHTML}`;
             } else {
+
+                // Or return just the string
                 tmpLet = $document.body.innerHTML;
             }
 
-            app.services.$window = app.services.$document = {};
+            console.log(tmpLet);
 
-            // TODO we must only replace the document if we are parsing directives
+            app.services.$window = app.services.$document = {};
             return tmpLet;
         });
     };
@@ -226,16 +237,18 @@ function _evalFn(str) {
     /* eslint-enable */
 }
 
-function _processDirective(el, scope, directive, type, resolve) {
+function _processDirective(el, scope, directive, type) {
+    let template,
+        prom;
 
-    // Templating
+    // Template parsing
     if (
         directive.hasOwnProperty('templatePath') &&
         directive.templatePath.indexOf('.html') > -1
     ) {
-        el.innerHTML += $templateLoader(directive.templatePath);
+        template = $templateLoader(directive.templatePath);
     } else if (directive.hasOwnProperty('template')) {
-        el.innerHTML += $compile(directive.template)(scope);
+        template = directive.template;
     }
 
     // Setup Attrs
@@ -249,31 +262,55 @@ function _processDirective(el, scope, directive, type, resolve) {
         }
     }
 
+    if (template) {
+        prom = $compile(directive.template)(scope).then(function(t) {
+            el.innerHTML =
+                `${directive.prepend ? el.innerHTML : ''}${t}` +
+                `${!directive.prepend ? el.innerHTML : ''}`;
+        });
+    } else {
+        prom = new Promise((r) => r());
+    }
+
     // Link functionality
     if (
         directive.hasOwnProperty('link') &&
         typeof directive.link === 'function'
     ) {
-        return new Promise(directive.link.bind(
-            app.services.$scope,
-            app.services.$scope,
-            type !== 'M' ? el : null,
-            parsedAttrs
-        )).then(function() {
+        prom = prom.then(function() {
+            return new Promise(directive.link.bind(
+                app.services.$scope,
+                app.services.$scope,
+                type !== 'M' ? el : null,
+                parsedAttrs
+            ));
+        }).then(function() {
 
             // TODO an Observance model would be way better
             if (el.setAttribute) {
                 for (let key in parsedAttrs) {
-                    el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
+
+                    // Replace all of the element attrs with parsedAttrs
+                    if (directive._names.indexOf(key) === -1) {
+                        el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
+                    }
                 }
             }
-        }).then(function() {
-            return replace(el, directive);
         });
     }
-    return new Promise(function() {
-        resolve(replace(el, directive));
+
+    // Replace directive keyword
+    prom.then(function() {
+        if (directive.replace === true) {
+            el.setAttribute('ngie-id', ++iid);
+            $document.body.innerHTML = $document.body.innerHTML.replace(
+                el.outerHTML,
+                el.innerHTML
+            );
+        }
     });
+
+    return prom;
 }
 
 export default $compile;

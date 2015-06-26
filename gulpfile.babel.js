@@ -26,23 +26,34 @@ gulp.task('eslint', function () {
         eslint.failOnError()
     );
 });
-gulp.task('mocha', function(cb) {
-    gulp.src(src).pipe(
-        istanbul({
-            instrumenter: Instrumenter,
-            includeUntested: true
-        })
-    ).pipe(
-        istanbul.hookRequire()
-    ).on('finish', function() {
-        $log.info('Running Angie Mocha test suite');
-        gulp.src(testSrc, { read: false }).pipe(mocha({
-            reporter: 'spec'
-        })).pipe(
+gulp.task('mocha', function() {
+    let proc;
+
+    return new Promise(function(resolve, reject) {
+        proc = gulp.src(src).pipe(
+            istanbul({
+                instrumenter: Instrumenter,
+                includeUntested: true
+            })
+        ).pipe(
+            istanbul.hookRequire()
+        ).on('finish', function() {
+            $log.info('Running Angie Mocha test suite');
+            gulp.src(testSrc, { read: false }).pipe(mocha({
+                reporter: 'spec'
+            }).on('error', function(e) {
+                console.log(chalk.bold(e));
+                resolve();
+            }).on('end', function() {
+                resolve();
+            }));
+        });
+    }).then(function() {
+        return proc.pipe(
             istanbul.writeReports({
                 reporters: [ 'text', 'text-summary', 'cobertura', 'clover' ]
             })
-        ).on('end', cb);
+        );
     });
 });
 gulp.task('esdoc', function(cb) {
