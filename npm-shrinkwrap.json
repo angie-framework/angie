@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "dependencies": {
     "babel": {
       "version": "5.6.4",

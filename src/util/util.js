@@ -106,7 +106,7 @@ class Util {
 
     /**
      * @desc Util helper to replace dash/slash separation with camelCase
-     * @since 0.2.3
+     * @since 0.2.4
      * @todo Move methods out to StringUtil class
      *
      * @param {string} str String to process
@@ -124,7 +124,7 @@ class Util {
 
     /**
      * @desc Util helper to replace camelCase with underscore_separation
-     * @since 0.2.3
+     * @since 0.2.4
      * @todo Move methods out to StringUtil class
      *
      * @param {string} str String to process
@@ -137,7 +137,7 @@ class Util {
 
     /**
      * @desc Util helper to replace camelCase with dash-separation
-     * @since 0.2.3
+     * @since 0.2.4
      * @todo Move methods out to StringUtil class
      *
      * @param {string} str String to process
@@ -151,7 +151,7 @@ class Util {
     /**
      * @desc Util helper to perform `toDash` or `toUnderscore` style string
      * serilaization
-     * @since 0.2.3
+     * @since 0.2.4
      * @todo Move methods out to StringUtil class
      *
      * @param {string} str String to process

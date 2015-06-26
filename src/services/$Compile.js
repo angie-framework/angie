@@ -19,7 +19,7 @@ let iid = 0;
  * This should not be used to transform window properties as the window
  * provided by the browser and $window are not the same instance.
  *
- * @since 0.2.3
+ * @since 0.2.4
  * @access public
  * @example new $window.HTMLElement('div');
  */
@@ -32,7 +32,7 @@ class $window {}
  * This should not be used to transform document properties as the document
  * provided by the browser and $document are not the same instance.
  *
- * @since 0.2.3
+ * @since 0.2.4
  * @access public
  * @example new $window.HTMLElement('div');
  */
