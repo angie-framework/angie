@@ -2,9 +2,9 @@
 
 import chalk from 'chalk';
 
-class $Exceptions {
-    constructor() {}
-    $$databaseConnectivityError(database) {
+// TODO use native node exception types where possible
+class $ExceptionsProvider {
+    static $$databaseConnectivityError(database) {
         let message;
         switch (database.type) {
             case 'mysql':
@@ -14,58 +14,56 @@ class $Exceptions {
             default:
                 message = `Could not find ${database.name} in filesystem.`;
         }
-        throw new Error(err(message));
+        throw new Error($$err(message));
     }
-    $$databaseTableExists(e) {
-        throw new Error(err(e));
+    static $$databaseTableExists(e) {
+        throw new Error($$err(e));
     }
-    $$injectorError() {
+    static $$injectorError() {
         throw new Error(
-            err('Injector cannot be called without a provider name')
+            $$err('Injector cannot be called without a provider name')
         );
     }
-    $$invalidConfig(type = '') {
+    static $$invalidConfig(type = '') {
         throw new Error(
-            err(`Invalid ${type} configuration settings. Please check your AngieFile.`)
+            $$err(`Invalid ${type} configuration settings. Please check your AngieFile.`)
         );
     }
-    $$invalidDirectiveConfig(name = '') {
+    static $$invalidDirectiveConfig(name = '') {
         throw new Error(
-            err(`Invalid configuration for directive ${name}`)
+            $$err(`Invalid configuration for directive ${name}`)
         );
     }
-    $$invalidDatabaseConfig() {
+    static $$invalidDatabaseConfig() {
         return this.$$invalidConfig('database');
     }
-    $$invalidModelConfig(name) {
+    static $$invalidModelConfig(name) {
         throw new Error(
-            err(`Invalid Model configuration for model ${name} <-- ${name}Provider`)
+            $$err(`Invalid Model configuration for model ${name} <-- ${name}Provider`)
         );
     }
     $$invalidModelFieldReference(name = '', field) {
         throw new Error(
-            err(`Invalid param for Model ${name}@${field}`)
+            $$err(`Invalid param for Model ${name}@${field}`)
         );
     }
-    $$invalidModelReference() {
+    static $$invalidModelReference() {
         throw new Error(
-            err(`Invalid Model argument`)
+            $$err(`Invalid Model argument`)
         );
     }
-    $$providerError() {
+    static $$providerError() {
 
         // TODO should result in a 500
         let arg = Array.prototype.splice.call(arguments).join(', ');
         throw new Error(
-            err(`Cannot find ${arg} <-- ${arg}Provider`)
+            $$err(`Cannot find ${arg} <-- ${arg}Provider`)
         );
     }
 }
 
-function err() {
+function $$err() {
     return chalk.red(chalk.bold.apply(null, arguments));
 }
 
-// TODO use native node exception types where possible
-const $ExceptionsProvider = new $Exceptions();
 export default $ExceptionsProvider;

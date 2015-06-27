@@ -6,4 +6,4 @@ doc
 node_modules
 .editorconfig
 .travis.yml
-TODO.txt
+CHANGELOG.md

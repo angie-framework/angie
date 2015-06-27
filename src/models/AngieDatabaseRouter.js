@@ -1,17 +1,18 @@
 'use strict'; 'use strong';
 
-import {config} from '../Config';
-import $cacheFactory from '../services/$CacheFactory';
-import $ExceptionsProvider from '../util/$ExceptionsProvider';
-import SqliteConnection from './SqliteConnection';
-import MySqlConnection from './MySqlConnection';
+// Angie Modules
+import {config} from                    '../Config';
+import $cacheFactory from               '../services/$CacheFactory';
+import {default as $Exceptions} from    '../util/$ExceptionsProvider';
+import SqliteConnection from            './SqliteConnection';
+import MySqlConnection from             './MySqlConnection';
 
 export default function AngieDatabaseRouter(args) {
     let databases = new $cacheFactory('databases'),
         database;
 
     if (!config) {
-        $ExceptionsProvider.$$configError();
+        $Exceptions.$$configError();
     }
 
     let name = 'default';
@@ -54,7 +55,7 @@ export default function AngieDatabaseRouter(args) {
         }
     }
     if (!database) {
-        $ExceptionsProvider.$$invalidDatabaseConfig();
+        $Exceptions.$$invalidDatabaseConfig();
     }
 
     // Setup a cache of database connections in memory already

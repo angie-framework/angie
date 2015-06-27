@@ -1,13 +1,10 @@
 'use strict'; 'use strong';
 
-import util from '../util/util';
-import $ExceptionsProvider from '../util/$ExceptionsProvider';
-import AngieDatabaseRouter from './AngieDatabaseRouter';
+// Angie Modules
+import AngieDatabaseRouter from         './AngieDatabaseRouter';
+import util from                        '../util/util';
+import {default as $Exceptions} from    '../util/$ExceptionsProvider';
 
-// TODO this should define the default cruddy options that are extended on to the
-// existing models
-
-// TODO this should PASS queries through to the ORM based on params
 const IGNORE_KEYS = [
     'database',
     '__database__',
@@ -25,14 +22,14 @@ export class BaseModel {
     all() {
 
         // Returns all of the rows
-        return this.__prep__.apply(this, arguments).all(this.name);
+        return this._prep.apply(this, arguments).all(this.name);
     }
     fetch() {
         let args = arguments[0];
         args.model = this;
 
         // Returns a subset of rows specified with an int and a head/tail argument
-        return this.__prep__.apply(
+        return this._prep.apply(
             this,
             arguments
         ).fetch(args);
@@ -42,7 +39,7 @@ export class BaseModel {
         args.model = this;
 
         // Returns a filtered subset of rows
-        return this.__prep__.apply(
+        return this._prep.apply(
             this,
             arguments
         ).filter(args);
@@ -56,13 +53,13 @@ export class BaseModel {
         let args = arguments[0];
         args.model = this;
 
-        this.database = this.__prep__.apply(this, arguments);
+        this.database = this._prep.apply(this, arguments);
 
         // Make sure all of our fields are resolved
         let createObj = {},
             me = this;
 
-        this.__fields__().forEach(function(field) {
+        this._fields().forEach(function(field) {
             const val = args[ field ] || null;
             if (
                 me[ field ] &&
@@ -71,12 +68,11 @@ export class BaseModel {
             ) {
                 createObj[field] = val;
             } else {
-                $ExceptionsProvider.$$invalidModelFieldReference(me.name, field);
+                $Exceptions.$$invalidModelFieldReference(me.name, field);
             }
         });
 
         // Once that is settled, we can call our create
-
         return this.database.create(args);
     }
     delete() {
@@ -84,7 +80,7 @@ export class BaseModel {
         args.model = this;
 
         // Delete a record/set of records
-        return this.__prep__.apply(
+        return this._prep.apply(
             this,
             arguments
         ).delete(args);
@@ -95,9 +91,9 @@ export class BaseModel {
                 arguments[1](new Error('Invalid Query String'));
             });
         }
-        return this.__prep__.apply(this, args).raw(query, this);
+        return this._prep.apply(this, args).raw(query, this);
     }
-    __prep__() {
+    _prep() {
         const args = arguments[0],
               database = typeof args === 'object' && args.hasOwnProperty('database') ?
                 args.database : null;
@@ -109,7 +105,7 @@ export class BaseModel {
         );
         return this.__database__;
     }
-    __fields__() {
+    _fields() {
         this.fields = [];
         for (let key in this) {
             if (
@@ -126,7 +122,6 @@ export class BaseModel {
 
 // "DO YOU WANT TO CHAIN!? BECAUSE THIS IS HOW YOU CHAIN!"
 // TODO this can be made much better once Promise is subclassable
-// TODO object prototypes are not extendable with BabelJS
 let AngieDBObject = function(database, model, query = '') {
     if (!database || !model) {
         return;
@@ -158,7 +153,7 @@ AngieDBObject.prototype.update = function() {
         ) {
             updateObj[ key ] = val;
         } else {
-            $ExceptionsProvider.$$invalidModelFieldReference(this.name, key);
+            $Exceptions.$$invalidModelFieldReference(this.name, key);
         }
     }
 

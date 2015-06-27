@@ -73,7 +73,6 @@ describe('$Injector', function() {
             expect(args[1]).to.deep.eq([]);
             expect(called).to.be.true;
         });
-
         function test() {}
         test.bind = function() {
             args = arguments;

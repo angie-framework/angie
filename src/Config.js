@@ -1,9 +1,11 @@
 'use strict'; 'use strong';
 
-import fs from 'fs';
+// System Modules
+import fs from                          'fs';
 
-import util from './util/util';
-import $ExceptionsProvider from './util/$ExceptionsProvider';
+// Angie Modules
+import util from                        './util/util';
+import {default as $Exceptions} from    './util/$ExceptionsProvider';
 
 let config = {};
 
@@ -44,10 +46,10 @@ export default class Config {
                 try {
                     config = JSON.parse(stdout);
                 } catch(e) {
-                    $ExceptionsProvider.$$invalidConfig();
+                    $Exceptions.$$invalidConfig();
                 }
             }, function() {
-                $ExceptionsProvider.$$invalidConfig();
+                $Exceptions.$$invalidConfig();
             });
         } else {
             return new Promise(() => arguments[0]());

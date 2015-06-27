@@ -1,15 +1,14 @@
 'use strict'; 'use strong';
 
 // System Modules
-import mysql from 'mysql';
+import mysql from                       'mysql';
 
 // Angie Modules
-import BaseDBConnection from './BaseDBConnection';
-import $log from '../util/$LogProvider';
-import $ExceptionsProvider from '../util/$ExceptionsProvider';
+import BaseDBConnection from            './BaseDBConnection';
+import {default as $Exceptions} from    '../util/$ExceptionsProvider';
+import $log from                        '../util/$LogProvider';
 
-const p = process,
-      DEFAULT_HOST = '127.0.0.1',
+const DEFAULT_HOST = '127.0.0.1',
       DEFAULT_PORT = 3306;
 
 export default class MySqlConnection extends BaseDBConnection {
@@ -19,7 +18,7 @@ export default class MySqlConnection extends BaseDBConnection {
         let db = this.database;
 
         if (!db.username) {
-            $ExceptionsProvider.$$invalidDatabaseConfig();
+            $Exceptions.$$invalidDatabaseConfig();
         } else if (!this.connection) {
             this.connection = mysql.createConnection({
                 host: db.host || DEFAULT_HOST,
@@ -30,9 +29,8 @@ export default class MySqlConnection extends BaseDBConnection {
             });
 
             this.connection.on('error', function() {
-                $ExceptionsProvider.$$databaseConnectivityError(db);
                 if (db.options && db.options.hardErrors) {
-                    p.exit(1);
+                    $Exceptions.$$databaseConnectivityError(db);
                 }
             });
         }
@@ -63,7 +61,7 @@ export default class MySqlConnection extends BaseDBConnection {
         }).then(
             () => $log.info('Connection successful'),
             () =>
-                $ExceptionsProvider.$$databaseConnectivityError(me.database)
+                $Exceptions.$$databaseConnectivityError(me.database)
         );
     }
     disconnect() {
@@ -90,7 +88,7 @@ export default class MySqlConnection extends BaseDBConnection {
                 });
             });
         }).then(function(args) {
-            return me.__querySet__(model, query, args[0], args[1]);
+            return me._querySet(model, query, args[0], args[1]);
         });
     }
     all() {
@@ -156,7 +154,7 @@ export default class MySqlConnection extends BaseDBConnection {
                     let instance = models[ model ],
                         modelName = instance.name || instance.alias ||
                             me.name(instance);
-                    instance.__fields__().forEach(function(field) {
+                    instance._fields().forEach(function(field) {
                         let nullable = instance[ field ].nullable ? ' NOT NULL' : '',
                             unique = instance[ field ].unique ? ' UNIQUE' : '';
                         instance[ field ].fieldname = field;

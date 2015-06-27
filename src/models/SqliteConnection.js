@@ -1,11 +1,15 @@
 'use strict'; 'use strong';
 
-import BaseDBConnection from './BaseDBConnection';
-import $log from '../util/$LogProvider';
-import $ExceptionsProvider from '../util/$ExceptionsProvider';
+// System Modules
+import fs from                          'fs';
+import {verbose} from                   'sqlite3';
 
-const sqlite3 =       require('sqlite3').verbose(),
-      fs =            require('fs');
+// Angie Modules
+import BaseDBConnection from            './BaseDBConnection';
+import $log from                        '../util/$LogProvider';
+import {default as $Exceptions} from    '../util/$ExceptionsProvider';
+
+const sqlite3 = verbose();
 
 export default class SqliteConnection extends BaseDBConnection {
     constructor(database, destructive) {
@@ -13,7 +17,7 @@ export default class SqliteConnection extends BaseDBConnection {
 
         let db = this.database;
         if (!db.name) {
-            $ExceptionsProvider.$$invalidDatabaseConfig();
+            $Exceptions.$$invalidDatabaseConfig();
         }
     }
     types(field) {
@@ -41,7 +45,7 @@ export default class SqliteConnection extends BaseDBConnection {
                 this.connection = new sqlite3.Database(db.name);
                 $log.info('Connection successful');
             } catch(err) {
-                $ExceptionsProvider.$$databaseConnectivityError(db);
+                $Exceptions.$$databaseConnectivityError(db);
             }
         }
         return this.connection;
@@ -70,7 +74,7 @@ export default class SqliteConnection extends BaseDBConnection {
                 });
             });
         }).then(function(args) {
-            return me.__querySet__(model, query, args[0], args[1]);
+            return me._querySet(model, query, args[0], args[1]);
         });
     }
     run(query, model) {
@@ -141,7 +145,7 @@ export default class SqliteConnection extends BaseDBConnection {
                 let instance = models[ model ],
                     modelName = instance.name || instance.alias ||
                         me.name(instance);
-                instance.__fields__().forEach(function(field) {
+                instance._fields().forEach(function(field) {
                     let nullable = instance[ field ].nullable ? ' NOT NULL' : '',
                         unique = instance[ field ].unique ? ' UNIQUE' : '';
                     instance[ field ].fieldname = field;

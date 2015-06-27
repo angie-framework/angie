@@ -1,16 +1,18 @@
 'use strict'; 'use strong';
 
-import app from '../Angular';
-import $log from '../util/$LogProvider';
-import $ExceptionsProvider from '../util/$ExceptionsProvider';
+// Angie Modules
+import {default as $Exceptions} from                '../util/$ExceptionsProvider';
+import $log from                                    '../util/$LogProvider';
 
 class $Injector {
     get() {
         if (!arguments.length) {
-            $ExceptionsProvider.$$providerError();
+            $Exceptions.$$providerError();
         }
 
         let providers = [];
+
+        // TODO improve spacing
         for (let i = 0; i < arguments.length; ++i) {
             let arg = arguments[i].trim(),
                 provision;
@@ -26,18 +28,18 @@ class $Injector {
             }
 
             try {
-                provision = app[ app._registry[ arg ] ][ arg ];
+                provision = global.app[ global.app._registry[ arg ] ][ arg ];
             } catch (e) {
 
                 // TODO should result in a 500
-                $ExceptionsProvider.$$providerError(arg);
+                $Exceptions.$$providerError(arg);
             }
             if (provision && $injector[ `${typeof provision}Check` ](provision)) {
                 providers.push(provision);
             } else {
 
                 // TODO should result in a 500
-                $ExceptionsProvider.$$providerError(arg);
+                $Exceptions.$$providerError(arg);
             }
         }
         return providers.length > 1 ? providers : providers[0] ? providers[0] : [];
@@ -64,18 +66,13 @@ function $injectionBinder(fn) {
         args = str.match(/(function.*\(.*\))/g),
         providers = [];
 
-    try {
+    args.forEach((v) => v.replace(/\s/g, ''));
 
-        args.forEach((v) => v.replace(/\s+/g, ''));
-
-        if (args && args.length) {
-            args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
-            providers = $injector.get.apply(app, args);
-        }
-        return providers.length ? fn.bind(null, ...providers) : fn.bind(null, providers);
-    } catch(e) {
-        $ExceptionsProvider.$$providerErr(...args);
+    if (args && args.length) {
+        args = args[0].replace(/(function\s+\(|\))/g, '').split(',');
+        providers = $injector.get.apply(global.app, args);
     }
+    return providers.length ? fn.bind(null, ...providers) : fn.bind(null, providers);
 }
 
 const $injector = new $Injector();

@@ -1,7 +1,9 @@
 #!/usr/local/bin/node
 
 // TODO check to see that the most up to date version is installed
-global._ANGIE_VERSION = '0.2.4';
+global._ANGIE_VERSION = '0.2.5';
 
 require('babel/register');
+require('babel').transform('code', { stage: 0 });
+
 require('../src/index');
