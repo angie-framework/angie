@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: An AngularJS inspired NodeJS MVC",
   "main": "src/index.js",
