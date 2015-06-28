@@ -1,14 +1,188 @@
 'use strict'; 'use strong';
 
 // Test Modules
-import {expect} from            'chai';
+import {expect} from                'chai';
+import simple, {mock} from          'simple-mock';
 
 // Angie Modules
-import {$routeProvider} from    '../../../src/services/$RouteProvider';
+import {default as $Routes} from    '../../../src/services/$RouteProvider';
+import $log from                    '../../../src/util/$LogProvider';
 
 describe('$RequestProvider', function() {
-    describe('_parseUrlParams', function() {
-        let parse = $routeProvider._parseURLParams;
+    describe('when', function() {
+        before(() => $Routes.$$clear());
+        afterEach(() => $Routes.$$clear());
+        describe('string paths', function() {
+            it('test string-based url path', function() {
+                $Routes.when('/test', {
+                    template: 'test'
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        '/test': {
+                            template: 'test'
+                        }
+                    }
+                });
+            });
+            it('test string-based child url path', function() {
+                $Routes.when('/test', {
+                    template: 'test',
+                    test: {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        '/test': {
+                            template: 'test'
+                        },
+                        '/test/test': {
+                            template: 'test'
+                        }
+                    }
+                });
+            });
+            it('test string-based child url path inherits Controller', function() {
+                $Routes.when('/test', {
+                    template: 'test',
+                    Controller: 'test',
+                    test: {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        '/test': {
+                            template: 'test',
+                            Controller: 'test'
+                        },
+                        '/test/test': {
+                            template: 'test',
+                            Controller: 'test'
+                        }
+                    }
+                });
+            });
+        });
+        describe('RegExp paths', function() {
+            it('test RegExp-based url path', function() {
+                $Routes.when(/[A-z]+.?/, {
+                    template: 'test'
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        regExp: {
+                            '/[A-z]+.?/': {
+                                template: 'test'
+                            }
+                        }
+                    }
+                });
+            });
+            it('test regex-based regex child url path', function() {
+                $Routes.when(/test/, {
+                    template: 'test',
+                    '/test/': {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        regExp: {
+                            '/test/': {
+                                template: 'test'
+                            },
+                            '/test\\/test/': {
+                                template: 'test'
+                            }
+                        }
+                    }
+                });
+            });
+            it('test string-based regex child url path', function() {
+                $Routes.when('test', {
+                    template: 'test',
+                    '/test/': {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        regExp: {
+                            '/test\\/test/': {
+                                template: 'test'
+                            }
+                        },
+                        'test': {
+                            template: 'test'
+                        }
+                    }
+                });
+            });
+            it('test regex-based string child url path', function() {
+                $Routes.when(/test/, {
+                    template: 'test',
+                    'test': {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        regExp: {
+                            '/test/': {
+                                template: 'test'
+                            },
+                            '/test\\/test/': {
+                                template: 'test'
+                            }
+                        }
+                    }
+                });
+            });
+            it('test regex-based regex child url path inherits Controller', function() {
+                $Routes.when(/test/, {
+                    template: 'test',
+                    Controller: 'test',
+                    '/test/': {
+                        template: 'test'
+                    }
+                });
+                expect($Routes.fetch()).to.deep.eq({
+                    routes: {
+                        regExp: {
+                            '/test/': {
+                                template: 'test',
+                                Controller: 'test'
+                            },
+                            '/test\\/test/': {
+                                template: 'test',
+                                Controller: 'test'
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    });
+    describe('$stringsToRegExp', function() {
+        let regExp = $Routes.$stringsToRegExp;
+        it('test convert strings to RegExp', function() {
+            expect(regExp('test')).to.deep.eq(/test/);
+            expect(regExp('test', 'test')).to.deep.eq(/test\/test/);
+            expect(regExp('test', 'test', 'test')).to.deep.eq(/test\/test\/test/);
+        });
+        it('test convert RegExp to RegExp', function() {
+            expect(regExp(/test/)).to.deep.eq(/test/);
+            expect(regExp(/test/, /test/)).to.deep.eq(/test\/test/);
+            expect(regExp(/test/, /test/, /test/)).to.deep.eq(/test\/test\/test/);
+        });
+        it('test convert strings/RegExp to RegExp', function() {
+            expect(regExp('test', /test/, 'test')).to.deep.eq(/test\/test\/test/);
+        });
+    });
+    describe('$$parseUrlParams', function() {
+        let parse = $Routes.$$parseURLParams;
 
         it('test no pattern', function() {
             expect(parse(undefined, '/test.json')).to.deep.eq({});
@@ -55,6 +229,23 @@ describe('$RequestProvider', function() {
             ).to.deep.eq({
                 '0': 'test/A.json'
             });
+        });
+    });
+    describe('otherwise', function() {
+        beforeEach(() => mock($log, 'warn', function() {}));
+        afterEach(function() {
+            simple.restore();
+            $Routes.$$clear();
+        });
+        it('test non-string otherwise is not set', function() {
+            $Routes.otherwise({});
+            expect($log.warn).to.have.been.called;
+            expect($Routes.fetch().otherwise).to.be.undefined;
+        });
+        it('test string otherwise is set', function() {
+            $Routes.otherwise('/test');
+            expect($log.warn).to.not.have.been.called;
+            expect($Routes.fetch().otherwise).to.eq('/test');
         });
     });
 });

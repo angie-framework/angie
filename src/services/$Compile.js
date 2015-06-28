@@ -103,7 +103,7 @@ function $compile(t) {
      * $window/$document?
      * @returns {string} The compiled template
      */
-    return function _templateCompile (scope = {}, assignDOMServices = true) {
+    return function $templateCompile (scope = {}, assignDOMServices = true) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
@@ -118,7 +118,7 @@ function $compile(t) {
 
             // Evaluate the expression
             try {
-                val = _evalFn.call(scope, parsedListener);
+                val = $$evalFn.call(scope, parsedListener);
             } catch(e) {
                 $log.warn(e);
             }
@@ -179,7 +179,7 @@ function $compile(t) {
                             )
                         )
                     ) {
-                        prom = _processDirective(
+                        prom = $$processDirective(
                             $$document,
                             el,
                             scope,
@@ -211,7 +211,7 @@ function $compile(t) {
 
 // A private function to evaluate the parsed template string in the context of
 // `scope`
-function _evalFn(str) {
+function $$evalFn(str) {
     let keyStr = '';
 
     // Perform any parsing that needs to be performed on the scope value
@@ -236,7 +236,8 @@ function _evalFn(str) {
     /* eslint-enable */
 }
 
-function _processDirective($$document, el, scope, directive, type) {
+// Private function responsible for parsing directives
+function $$processDirective($$document, el, scope, directive, type) {
     let template,
         prom;
 

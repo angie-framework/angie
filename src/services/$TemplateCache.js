@@ -1,20 +1,19 @@
 'use strict'; 'use strong';
 
-import {config} from '../Config';
-import app from '../Angular';
-import $cacheFactory from './$CacheFactory';
-import util from '../util/util';
-// import $log from '../util/$LogProvider';
+// System Modules
+import fs from              'fs';
 
-const fs =      require('fs');
+// Angie Modules
+import {config} from        '../Config';
+import app from             '../Angular';
+import $cacheFactory from   './$CacheFactory';
+import util from            '../util/util';
 
 const p = process,
       ANGIE_TEMPLATE_DIRS = [
           `${__dirname}/../templates/html`,
           `${__dirname}/../../test/src/templates`
       ],
-
-      // TODO do you want to replace this with another dir?
       ANGIE_STATIC_DIRS = [];
 
 class $TemplateCache extends $cacheFactory {

@@ -6,7 +6,7 @@ import fs from                                  'fs';
 // Angie Modules
 import {BaseModel} from                         './models/BaseModel';
 import * as $$FieldProvider from                './models/Fields';
-import {$routeProvider} from                    './services/$RouteProvider';
+import $RouteProvider from                      './services/$RouteProvider';
 import $compile from                            './services/$Compile';
 import $injector, {$injectionBinder} from       './services/$Injector';
 import {$templateCache, $resourceLoader} from   './services/$TemplateCache';
@@ -249,7 +249,7 @@ app.config(function() {
         fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
     );
 })
-.service('$routeProvider', $routeProvider)
+.service('$Routes', $RouteProvider)
 .service('$compile', $compile)
 
 // Model utilities

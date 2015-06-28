@@ -4,7 +4,7 @@ import app from                                 '../Angular';
 import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
-import {$routeProvider} from                    './$RouteProvider';
+import {default as $Routes} from                './$RouteProvider';
 import {$templateCache, _templateLoader} from   './$TemplateCache';
 import {$injectionBinder} from                  './$Injector';
 import _mimeTypes from                          '../util/MimeTypes';
@@ -79,8 +79,8 @@ class BaseRequest {
         };
 
         // Grab the routes and the otherwise
-        this.routes = $routeProvider.fetch().routes;
-        this.otherwise = $routeProvider.fetch().otherwise;
+        this.routes = $Routes.fetch().routes;
+        this.otherwise = $Routes.fetch().otherwise;
     }
 
     /**
@@ -98,26 +98,31 @@ class BaseRequest {
         // content type if the content type of the request has not already been
         // set
 
-        // Check against all of the RegExp routes
-        if (Object.keys(this.routes.regExp).length) {
-            for (let route in this.routes.regExp) {
+        // Check against all of the RegExp routes in Reverse
+        let regExpRoutes = [];
+        if (this.routes.regExp) {
+            regExpRoutes = Object.keys(this.routes.regExp).reverse();
+        }
+        for (let i = 0; i < regExpRoutes.length; ++i) {
 
-                // Slice characters we do not need to instantiate a new RegExp
-                let regExpRoute = util.removeTrailingLeadingSlashes(route),
+            // Slice characters we do not need to instantiate a new RegExp
+            let regExpRoute = util.removeTrailingLeadingSlashes(regExpRoutes[ i ]),
 
-                    // Cast the string key of the routes.regExp object as a
-                    // RegExp obj
-                    pattern = new RegExp(regExpRoute);
-                if (pattern.test(this.path)) {
-                    this.route = this.routes.regExp[ route ];
+                // Cast the string key of the routes.regExp object as a
+                // RegExp obj
+                pattern = new RegExp(regExpRoute);
 
-                    // Hooray, we've set our route, now we need to do some additional
-                    // param parsing
-                    util.extend(
-                        this.request.query,
-                        $routeProvider._parseURLParams(pattern, this.path)
-                    );
-                }
+            if (pattern.test(this.path)) {
+                this.route = this.routes.regExp[ regExpRoutes[ i ] ];
+
+                // Hooray, we've set our route, now we need to do some additional
+                // param parsing
+                util.extend(
+                    this.request.query,
+                    $Routes.$$parseURLParams(pattern, this.path)
+                );
+
+                break;
             }
         }
 
