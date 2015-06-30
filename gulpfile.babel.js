@@ -9,6 +9,8 @@ import {Instrumenter} from      'isparta';
 import mocha from               'gulp-mocha';
 import chalk from               'chalk';
 
+import documentation from 'gulp-documentation';
+
 // Angie Modules
 import $log from './src/util/$LogProvider';
 
@@ -50,6 +52,8 @@ gulp.task('mocha', function() {
         });
     }).then(function() {
         return proc.pipe(
+
+            // TODO fail if under accepted limit
             istanbul.writeReports({
                 reporters: [ 'text', 'text-summary', 'cobertura', 'clover' ]
             })
@@ -59,6 +63,15 @@ gulp.task('mocha', function() {
 gulp.task('esdoc', function(cb) {
     $log.info('Generating Angie documentation');
     exec('esdoc -c esdoc.json', cb);
+});
+gulp.task('documentation', function() {
+    $log.info('Generating Angie documentation');
+    gulp.src(src)
+        .pipe(documentation({
+            format: 'html',
+            sourceType: 'module'
+        }))
+        .pipe(gulp.dest('md-documentation'));
 });
 gulp.task('watch', [ 'eslint', 'mocha', 'esdoc' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);

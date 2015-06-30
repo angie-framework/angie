@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Setup:
+# in application root:
+
+# rm -rf .git/hooks/pre-push
+# cp script/hooks/pre-push .git/hooks/pre-push
+# chmod +x .git/hooks/pre-push
+
+# Once set up this script will run each time a git push is performed. JavaScript
+# tests run as a byproduct of every push.
+
+# Setup test command
+test_cmd="gulp"
+
+$test_cmd
+
+# If the tests fail, force exit the push
+if [ $? -ne 0 ]; then
+  echo "JavaScript tests failed"
+  exit 1
+fi
+
+exit
