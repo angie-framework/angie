@@ -10,7 +10,10 @@ import {Instrumenter} from      'isparta';
 import mocha from               'gulp-mocha';
 import chalk from               'chalk';
 
-//import documentation from 'gulp-documentation';
+// import babel from 'gulp-babel';
+import documentation from 'gulp-documentation';
+// import gulpDoxx from 'gulp-doxx';
+// import jsdoc from 'gulp-jsdoc';
 
 // Angie Modules
 import $log from './src/util/$LogProvider';
@@ -73,15 +76,33 @@ gulp.task('esdoc', function(cb) {
     $log.info('Generating Angie documentation');
     exec('esdoc -c esdoc.json', cb);
 });
-// gulp.task('documentation', function() {
-//     $log.info('Generating Angie documentation');
-//     gulp.src(src)
-//         .pipe(documentation({
-//             format: 'html',
-//             sourceType: 'module'
-//         }))
-//         .pipe(gulp.dest('md-documentation'));
+gulp.task('documentation', function() {
+    $log.info('Generating Angie documentation');
+    // gulp.src(src)
+    //     .pipe(documentation({
+    //         format: 'html',
+    //         polyglot: true
+    //     }))
+    //     .pipe(gulp.dest('md-documentation'));
+    exec('documentation -c esdoc.json', cb);
+});
+// gulp.task('docs', function() {
+//
+//   gulp.src(src)
+//     .pipe(gulpDoxx({
+//       title: 'Angie',
+//       urlPrefix: '/docs',
+//       debug: true,
+//       raw: true
+//     }))
+//     .pipe(gulp.dest('docs'));
+//
 // });
+gulp.task('jsdoc', function() {
+    return gulp.src('src/Angular.js')
+        .pipe(jsdoc.parser({plugins: ['plugins/commentsOnly']}))
+        .pipe(jsdoc.generator('doc'));
+});
 gulp.task('watch', [ 'jscs', 'mocha', 'esdoc' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
 });

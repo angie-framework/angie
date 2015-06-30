@@ -43,6 +43,7 @@
     "connect": "2.x.x",
     "esdoc": "0.1.2",
     "gulp": "3.9.0",
+    "gulp-babel": "^5.1.0",
     "gulp-cli": "0.2.0",
     "gulp-eslint": "0.12.0",
     "gulp-istanbul": "0.9.0",

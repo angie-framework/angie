@@ -1,28 +1,27 @@
 'use strict'; 'use strong';
 
 // System Modules
-import http from 'http';
-import https from 'https';
-import url from 'url';
-import watch from 'node-watch';
+import http from                    'http';
+import https from                   'https';
+import url from                     'url';
+import watch from                   'node-watch';
 
 // Angie Modules
-import {config} from './Config';
-import app from './Angular';
-import $cacheFactory from './services/$CacheFactory';
-import {_templateLoader} from './services/$TemplateCache';
+import {config} from                './Config';
+import app from                     './Angular';
+import $cacheFactory from           './services/$CacheFactory';
+import {_templateLoader} from       './services/$TemplateCache';
 import {
     BaseRequest,
     RESPONSE_HEADER_MESSAGES,
     PRAGMA_HEADER,
     NO_CACHE_HEADER
-} from './services/BaseRequest';
-import util from './util/util';
-import _mimeTypes from './util/MimeTypes';
-import $log from './util/$LogProvider';
+} from                              './services/BaseRequest';
+import util from                    './util/util';
+import {default as $MimeType} from  './util/$MimeTypeProvider';
+import $log from                    './util/$LogProvider';
 
 const p = process;
-
 let firstrun = true;
 
 export default function server(args) {
@@ -56,19 +55,9 @@ export default function server(args) {
                 // We have an asset and must render a response
                 if (asset) {
 
-                    let contentType;
-
-                    // TODO mimetypes should never return undefined
-                    if (_mimeTypes[ path.split('.').pop() ]) {
-                        contentType = _mimeTypes[
-                            path.split('.').pop()
-                        ];
-                    } else {
-                        contentType = 'text/plain';
-                    }
-
                     // Set the content type
-                    angieResponse.responseHeaders[ 'Content-Type' ] = contentType;
+                    angieResponse.responseHeaders[ 'Content-Type' ] =
+                        $MimeType.fromPath(path);
 
                     // We do not want to cache responses
                     if (

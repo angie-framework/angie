@@ -95,7 +95,6 @@ class Util {
      * @desc Util helper to replace leading and trailing slashes
      * @since 0.2.3
      * @todo Move methods out to StringUtil class
-     *
      * @param {string} str [param=''] String to process
      * @returns {string} The str param with stripped trailing and leading slashes
      * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
@@ -108,7 +107,6 @@ class Util {
      * @desc Util helper to replace dash/slash separation with camelCase
      * @since 0.2.4
      * @todo Move methods out to StringUtil class
-     *
      * @param {string} str String to process
      * @returns {string} The str param converted to camelCase
      * @example util.toCamel('test-test'); // = 'testTest'
@@ -126,7 +124,6 @@ class Util {
      * @desc Util helper to replace camelCase with underscore_separation
      * @since 0.2.4
      * @todo Move methods out to StringUtil class
-     *
      * @param {string} str String to process
      * @returns {string} The str param converted to underscore_separation
      * @example util.toCamel('testTest'); // = 'test_test'
@@ -139,7 +136,6 @@ class Util {
      * @desc Util helper to replace camelCase with dash-separation
      * @since 0.2.4
      * @todo Move methods out to StringUtil class
-     *
      * @param {string} str String to process
      * @returns {string} The str param converted to dash-separation
      * @example util.toDash('testTest'); // = 'test-test'
@@ -153,7 +149,6 @@ class Util {
      * serilaization
      * @since 0.2.4
      * @todo Move methods out to StringUtil class
-     *
      * @param {string} str String to process
      * @param {string} del Character with which to replace camelCase capitals
      * @returns {string} The str param converted to `del` separation
@@ -167,7 +162,6 @@ class Util {
     /**
      * @desc Util empty function call helper
      * @since 0.2.3
-     *
      * @returns {undefined} undefined
      * @example util.noop(); // = undefined
      */

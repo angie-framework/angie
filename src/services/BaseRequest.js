@@ -7,16 +7,13 @@ import {$Response} from                         './$Responses';
 import {default as $Routes} from                './$RouteProvider';
 import {$templateCache, _templateLoader} from   './$TemplateCache';
 import {$injectionBinder} from                  './$Injector';
-import _mimeTypes from                          '../util/MimeTypes';
+import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
 import util from                                '../util/util';
 import $log from                                '../util/$LogProvider';
 
 // TODO move these out to an app constant
-const DEFAULT_CONTENT_TYPE = {
-          'Content-Type': 'text/plain'
-      },
-      RESPONSE_HEADER_MESSAGES = {
+const RESPONSE_HEADER_MESSAGES = {
           200: 'OK',
           404: 'File Not Found',
           500: 'Invalid Request'
@@ -62,15 +59,8 @@ class BaseRequest {
 
         if (contentType && contentType.indexOf(',') > -1) {
             contentType = contentType.split(',')[0];
-        } else if (
-            path.indexOf('.') > -1  &&
-
-            // TODO mimetypes should never return undefined
-            _mimeTypes[ path.split('.').pop() ]
-        ) {
-            contentType = _mimeTypes[ path.split('.').pop() ];
         } else {
-            contentType = 'text/plain';
+            contentType = $MimeType.fromPath(path);
         }
 
         this.responseContentType = contentType;
@@ -93,10 +83,6 @@ class BaseRequest {
      * BaseRequest.prototype.otherPath
      */
     _route() {
-
-        //  TODO Also, we can add a check to see what the extension passed is for
-        // content type if the content type of the request has not already been
-        // set
 
         // Check against all of the RegExp routes in Reverse
         let regExpRoutes = [];
@@ -189,18 +175,9 @@ class BaseRequest {
 
                 // Check to see if we can associate the template path with a
                 // mime type
-                if (
-                    me.route.templatePath.indexOf('.') > -1 &&
-
-                    // TODO mimetypes should never return undefined
-                    _mimeTypes[
-                        me.route.templatePath.split('.').pop()
-                    ]
-                ) {
-                    me.responseHeaders[ 'Content-Type' ] = _mimeTypes[
-                        me.route.templatePath.split('.').pop()
-                    ];
-                }
+                me.responseHeaders[ 'Content-Type' ] = $MimeType.fromPath(
+                    me.route.templatePath
+                );
                 me.template = $templateCache.get(me.route.templatePath);
             }
 
@@ -251,6 +228,7 @@ class BaseRequest {
         });
 
         // TODO See if any views have this Controller associated
+        // TODO if no response type associated, use extension (already set)
         // prom = prom.then(function(controllerName) {
         //     for (let key in app._registry) {
         //         if (app._registry[ key ] === 'directive') {
@@ -363,7 +341,6 @@ class BaseRequest {
 
 export {
     BaseRequest,
-    DEFAULT_CONTENT_TYPE,
     RESPONSE_HEADER_MESSAGES,
     PRAGMA_HEADER,
     NO_CACHE_HEADER
