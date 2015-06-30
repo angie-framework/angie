@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-//System Modules
+// System Modules
 import {expect} from    'chai';
 
 // Angie Modules
@@ -24,7 +24,7 @@ describe('$CacheFactory', function() {
             new $cacheFactory('test').put('test', 'test');
 
             let cache = new $cacheFactory('test');
-            expect(cache.cache).to.deep.eq({ 'test': 'test' });
+            expect(cache.cache).to.deep.eq({ test: 'test' });
         });
     });
     describe('put', function() {

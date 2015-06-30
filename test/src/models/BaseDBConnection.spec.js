@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-//Test Modules
+// Test Modules
 import {expect} from            'chai';
 
 // Angie Modules
@@ -79,8 +79,3 @@ describe('BaseDBConnection', function() {
         });
     });
 });
-
-
-
-// Test in query
-// Test in compound query

@@ -7,7 +7,6 @@ import simple, {mock} from      'simple-mock';
 // Angie Modules
 import util from                '../../../src/util/util';
 
-
 describe('Util', function() {
     describe('removeTrailingLeadingSlashes', function() {
         let slashes;

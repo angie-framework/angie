@@ -4,7 +4,7 @@
 // import $log from '../util/$LogProvider';
 // import app from '../Angular';
 
-//const Firebase =        require('firebase');
+// const Firebase =        require('firebase');
       // FirebaseTokenGenerator = require("firebase-token-generator.js");
       // mysql =           require('mysql'),
       // mkdirp =          require('mkdirp'),
@@ -49,7 +49,6 @@
 // }
 
 // TODO security around this connection
-
 
 // Firebase is a little different
     // The data is basically just kvps

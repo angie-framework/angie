@@ -81,7 +81,6 @@ class $RouteProvider {
             let childPath,
                 childObj = obj[ v ];
 
-
             // We're talking about a template or a Controller and we don't want
             // that
             // It's worth noting that return based "if"s in Coffee are pretty

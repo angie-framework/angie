@@ -78,8 +78,8 @@ export default function server(args) {
                         angieResponse.responseHeaders = util.extend(
                             angieResponse.responseHeaders,
                             {
-                                'Expires': -1,
-                                'Pragma': PRAGMA_HEADER,
+                                Expires: -1,
+                                Pragma: PRAGMA_HEADER,
                                 'Cache-Control': NO_CACHE_HEADER
                             }
                         );
@@ -101,7 +101,7 @@ export default function server(args) {
                 return;
             }
 
-            //else {
+            // else {
 
             angieResponse._route().then(function() {
                 let code = response.statusCode;
@@ -134,7 +134,7 @@ export default function server(args) {
                 // request.connection.destroy();
             });
 
-            //}
+            // }
 
         }).listen(port);
 

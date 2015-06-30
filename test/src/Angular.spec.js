@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-//Test Modules
+// Test Modules
 import {expect} from                'chai';
 import simple, {mock} from          'simple-mock';
 
@@ -17,7 +17,10 @@ describe('Angular', function() {
     let app;
 
     beforeEach(function() {
+
+        // jscs:disable
         app = new angular();
+        // jscs:enable
     });
     it('test extension of static angular methods from util', function() {
         expect(angular.extend).to.be.a('function');

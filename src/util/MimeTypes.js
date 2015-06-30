@@ -1,6 +1,5 @@
 'use strict'; 'use strong';
 
-
 // TODO if you duplicate, pull the type out
 // TODO undefined mimetype
 const _mimeTypes = {

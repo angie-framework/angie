@@ -119,7 +119,6 @@ export class BaseModel {
     }
 }
 
-
 // "DO YOU WANT TO CHAIN!? BECAUSE THIS IS HOW YOU CHAIN!"
 // TODO this can be made much better once Promise is subclassable
 let AngieDBObject = function(database, model, query = '') {
@@ -145,8 +144,7 @@ AngieDBObject.prototype.update = function() {
         const val = args[ key ] || null;
         if (IGNORE_KEYS.indexOf(key) > -1) {
             continue;
-        }
-        else if (
+        } else if (
             this[ key ] &&
             this[ key ].validate &&
             this[ key ].validate(val)

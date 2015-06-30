@@ -88,7 +88,6 @@ function _templateLoader(url, type = 'template', encoding) {
     return template;
 }
 
-
 // TODO this is really more of a directive functionality
 // TODO make this work with .css, .less, .scss, .haml
 // TODO move this to $resource
@@ -105,8 +104,8 @@ function $resourceLoader() {
 
     // TODO accepts a string or an array
     // Options for loading files are:
-        // Inline: loads the script into script tags
-        // Script: attaches the url to the response resource
+    // Inline: loads the script into script tags
+    // Script: attaches the url to the response resource
     let files = arguments[0];
 
     const loadStyle = arguments[1] || 'src';

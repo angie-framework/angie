@@ -17,9 +17,9 @@ const DEFAULT_CONTENT_TYPE = {
           'Content-Type': 'text/plain'
       },
       RESPONSE_HEADER_MESSAGES = {
-          '200': 'OK',
-          '404': 'File Not Found',
-          '500': 'Invalid Request'
+          200: 'OK',
+          404: 'File Not Found',
+          500: 'Invalid Request'
       },
       PRAGMA_HEADER = 'no-cache',
       NO_CACHE_HEADER = 'private, no-cache, no-store, must-revalidate';
@@ -217,8 +217,8 @@ class BaseRequest {
 
                 // If there is a template, check to see if caching is set
                 me.responseHeaders = util.extend(me.responseHeaders, {
-                    'Expires': -1,
-                    'Pragma': PRAGMA_HEADER,
+                    Expires: -1,
+                    Pragma: PRAGMA_HEADER,
                     'Cache-Control': NO_CACHE_HEADER
                 });
             }
@@ -339,10 +339,9 @@ class BaseRequest {
     unknownPath() {
 
         // Load page not found
-        let fourOhFour = _templateLoader('404.html');
+        let fourOhFour = _templateLoader('404.html'),
+            me = this;
 
-
-        let me = this;
         return new Promise(function() {
             me.response.writeHead(
                 404,

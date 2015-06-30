@@ -114,7 +114,7 @@ describe('$RequestProvider', function() {
                                 template: 'test'
                             }
                         },
-                        'test': {
+                        test: {
                             template: 'test'
                         }
                     }
@@ -123,7 +123,7 @@ describe('$RequestProvider', function() {
             it('test regex-based string child url path', function() {
                 $Routes.when(/test/, {
                     template: 'test',
-                    'test': {
+                    test: {
                         template: 'test'
                     }
                 });
@@ -191,17 +191,17 @@ describe('$RequestProvider', function() {
             expect(parse(/test/, '/test.json')).to.deep.eq({});
         });
         it('test single param', function() {
-            expect(parse(/(test).json/, '/test.json')).to.deep.eq({ '0': 'test' });
+            expect(parse(/(test).json/, '/test.json')).to.deep.eq({ 0: 'test' });
         });
         it('test numeric param', function() {
-            expect(parse(/([0-9]).json/, '/5.json')).to.deep.eq({ '0': '5' });
+            expect(parse(/([0-9]).json/, '/5.json')).to.deep.eq({ 0: '5' });
         });
         it('test double param', function() {
             expect(
                 parse(/(test)\/(test).json/, '/test/test.json')
             ).to.deep.eq({
-                '0': 'test',
-                '1': 'test'
+                0: 'test',
+                1: 'test'
             });
         });
         it('test five params', function() {
@@ -211,11 +211,11 @@ describe('$RequestProvider', function() {
                     'test/1/TEST/m/blah.json'
                 )
             ).to.deep.eq({
-                '0': 'test',
-                '1': '1',
-                '2': 'TEST',
-                '3': 'm',
-                '4': 'blah'
+                0: 'test',
+                1: '1',
+                2: 'TEST',
+                3: 'm',
+                4: 'blah'
             });
         });
 
@@ -227,7 +227,7 @@ describe('$RequestProvider', function() {
                     'test/A.json'
                 )
             ).to.deep.eq({
-                '0': 'test/A.json'
+                0: 'test/A.json'
             });
         });
     });

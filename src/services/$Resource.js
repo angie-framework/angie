@@ -11,6 +11,5 @@ class $Resource {
     delete() {}
 }
 
-
 // TODO BaseResource
 // TODO resource function returns base resource with formatting
