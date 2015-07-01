@@ -1,6 +1,7 @@
 'use strict'; 'use strong';
 
 const MIME_TYPE = {
+          html: 'text/html',
           css: 'text/css',
           jpg: 'image/jpeg',
           js: 'application/javascript',

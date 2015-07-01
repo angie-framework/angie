@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+#### [0.2.8] - 2015-06-30
+##### Fixed
+- Fixed HTML mime type in the $MimeTypeProvider
+
 #### [0.2.7] - 2015-06-30
 ##### Changed
 - Improved the way $MimeType works to never return an empty value.

@@ -133,8 +133,14 @@ class BaseRequest {
 
             // Get controller and compile scope
             if (controllerName) {
-                if(app.Controllers[ controllerName ]) {
-                    let controller = app.Controllers[ controllerName ];
+                if (
+                    app.Controllers[ controllerName ] ||
+                    typeof controllerName === 'function'
+                ) {
+
+                    // Check to see if the Controller in the Route is a function
+                    let controller = typeof me.route.Controller !== 'function' ?
+                        app.Controllers[ controllerName ] : controllerName;
 
                     app.Controller = app.services.$response.Controller = {
                         done: resolve
@@ -235,6 +241,7 @@ class BaseRequest {
         //             let directive = app.directives[ key ];
         //             if (
         //                 directive.Controller &&
+        //                 typeof directive.Controller !== 'function'
         //                 directive.Controller === controllerName &&
         //                 directive.type === 'APIView'
         //             ) {
