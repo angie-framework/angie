@@ -1,5 +1,9 @@
 'use strict'; 'use strong';
 
+// Global Modules
+import 'es6-module-loader';
+import {transform} from             'babel';
+
 // System Modules
 import {exec} from                  'child_process';
 
@@ -10,6 +14,9 @@ import AngieDatabaseRouter from     './models/AngieDatabaseRouter';
 import server from                  './Server';
 import shell from                   './util/shell';
 import $log from                    './util/$LogProvider';
+
+// Tranform BabelJS options
+transform('code', { stage: 0 });
 
 const p = process;
 let args = [],
@@ -84,4 +91,4 @@ function requiresConfig(fn) {
 }
 
 // TODO make all commands here
-    // TODO cluster
+// TODO cluster

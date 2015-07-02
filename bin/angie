@@ -4,6 +4,4 @@
 global._ANGIE_VERSION = '0.2.8';
 
 require('babel/register');
-require('babel').transform('code', { stage: 0 });
-
 require('../src/index');

@@ -1,7 +1,6 @@
 {
     "disallowCommaBeforeLineBreak": null,
     "disallowEmptyBlocks": true,
-    "disallowImplicitTypeConversion": [ "string" ],
     "disallowKeywordsOnNewLine": [ "else" ],
     "disallowKeywords": [ "with" ],
     "disallowMixedSpacesAndTabs": true,

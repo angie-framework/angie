@@ -1,13 +1,13 @@
 'use strict'; 'use strong';
 
 // System Modules
-import fs from              'fs';
+import fs from                      'fs';
 
 // Angie Modules
-import {config} from        '../Config';
-import app from             '../Angular';
-import $cacheFactory from   './$CacheFactory';
-import util from            '../util/util';
+import {config} from                '../Config';
+import $cacheFactory from           './$CacheFactory';
+import {default as $Injector} from  './$InjectorProvider';
+import util from                    '../util/util';
 
 const p = process,
       ANGIE_TEMPLATE_DIRS = [
@@ -93,10 +93,7 @@ function _templateLoader(url, type = 'template', encoding) {
 // TODO move this to $resource
 // TODO auto load angular, jquery, underscore, etc.
 function $resourceLoader() {
-
-    // TODO I'm not sure why or how you could call this without a response object
-    const $injector = app.services.$injector,
-          $response = $injector.get('$response');
+    const $response = $Injector.get('$response');
 
     if (!$response) {
         return false;

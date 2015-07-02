@@ -6,7 +6,7 @@ import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {default as $Routes} from                './$RouteProvider';
 import {$templateCache, _templateLoader} from   './$TemplateCache';
-import {$injectionBinder} from                  './$Injector';
+import {$injectionBinder} from                  './$InjectorProvider';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
 import util from                                '../util/util';
@@ -89,6 +89,7 @@ class BaseRequest {
         if (this.routes.regExp) {
             regExpRoutes = Object.keys(this.routes.regExp).reverse();
         }
+
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
             // Slice characters we do not need to instantiate a new RegExp

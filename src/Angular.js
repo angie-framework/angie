@@ -1,18 +1,19 @@
 'use strict'; 'use strong';
 
 // System Modules
-import fs from                                  'fs';
+import {exec} from                                      'child_process';
+import fs from                                          'fs';
 
 // Angie Modules
-import {BaseModel} from                         './models/BaseModel';
-import * as $$FieldProvider from                './models/Fields';
-import $RouteProvider from                      './services/$RouteProvider';
-import $compile from                            './services/$Compile';
-import $injector, {$injectionBinder} from       './services/$Injector';
-import {$templateCache, $resourceLoader} from   './services/$TemplateCache';
-import util from                                './util/util';
-import $ExceptionsProvider from                 './util/$ExceptionsProvider';
-import $log from                                './util/$LogProvider';
+import {BaseModel} from                                 './models/BaseModel';
+import * as $$FieldProvider from                        './models/Fields';
+import $RouteProvider from                              './services/$RouteProvider';
+import $compile from                                    './services/$Compile';
+import {default as $Injector, $injectionBinder} from    './services/$InjectorProvider';
+import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
+import util from                                        './util/util';
+import $ExceptionsProvider from                         './util/$ExceptionsProvider';
+import $log from                                        './util/$LogProvider';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -189,39 +190,22 @@ class Angular extends util {
         return Promise.all(proms);
     }
     bootstrap(dir = process.cwd()) {
-        let me = this,
-            files;
+        let me = this;
 
-        // Load all of the files from the project
-        // TODO also look for ".config." files
-        [
-            'constants',
-            'configs',
-            'services',
-            'controllers',
-            'models',
-            'directives'
-        ].forEach(function(v) {
-            try {
-                files = fs.readdirSync(`${dir}/${v}`);
-                files.forEach(function(w) {
-
-                    // TODO do this with System
-                    require(`${dir}/src/${v}/${w}`);
-                });
-            } catch(e) {} // Moot error, I don't really care if you muss with things
-            try {
-                files = fs.readdirSync(`${dir}/src/${v}`);
-                files.forEach(function(w) {
-
-                    // TODO do this with System
-                    require(`${dir}/src/${v}/${w}`);
-                });
-            } catch(e) {} // Moot error, I don't really care if you muss with things
-        });
-
-        // Import the app
+        // TODO files outside src?
         return new Promise(function(resolve) {
+            return fs.readdirSync(dir).concat(fs.readdirSync(`${dir}/src`));
+        }).then(function(files) {
+            let proms = [];
+            files.forEach(function(v) {
+
+                // Only load the file if it is a js type
+                if (/.(js|es6)/.test(v)) {
+                    proms.push(System.import(v));
+                }
+            });
+            return Promise.all(proms);
+        }).then(function() {
 
             // Once all of the modules are loaded, run the configs
             me.configs.forEach(function(v) {
@@ -230,10 +214,11 @@ class Angular extends util {
                 // do not want to fire it again
                 if (!v.fired) {
                     new $injectionBinder(v.fn)();
+
+                    // Mark as fired
+                    v.fired = true;
                 }
             });
-
-            resolve();
         });
     }
 }
@@ -260,7 +245,7 @@ app.config(function() {
 .service('$Exceptions', $ExceptionsProvider)
 
 // Injection utilities
-.service('$injector', $injector)
+.service('$Injector', $Injector)
 
 // TODO we shouldn't have to expose this?
 // .service('$injectionBinder', $injectionBinder)

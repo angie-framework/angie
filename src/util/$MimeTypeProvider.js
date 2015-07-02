@@ -28,7 +28,7 @@ class $MimeTypeProvider {
      * @returns {string} An approximated Content-Type
      * @example $MimeTypeProvider._('json'); // = 'application/json'
      */
-    static _(ext = 'html') {
+    static _(ext = '') {
         return MIME_TYPE[ ext ] || DEFAULT_TYPE;
     }
 
