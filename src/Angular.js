@@ -193,7 +193,7 @@ class Angular extends util {
 
         // TODO files outside src?
         return new Promise(function(resolve) {
-            return fs.readdirSync(dir).concat(fs.readdirSync(`${dir}/src`));
+            resolve(fs.readdirSync(dir).concat(fs.readdirSync(`${dir}/src`)));
         }).then(function(files) {
             let proms = [];
             files.forEach(function(v) {
