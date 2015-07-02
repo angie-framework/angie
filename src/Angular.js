@@ -1,7 +1,6 @@
 'use strict'; 'use strong';
 
 // System Modules
-import {exec} from                                      'child_process';
 import fs from                                          'fs';
 
 // Angie Modules
