@@ -1,5 +1,9 @@
 'use strict'; 'use strong';
 
+// Global Modules
+// TODO if this is used in other places, we do not need to redefine it
+import 'es6-module-loader';
+
 // Test Modules
 import {expect} from                'chai';
 import simple, {mock} from          'simple-mock';
@@ -14,13 +18,16 @@ import $ExceptionsProvider from     '../../src/util/$ExceptionsProvider';
 import $log from                    '../../src/util/$LogProvider';
 
 describe('Angular', function() {
-    let app;
+    let app,
+        noop;
 
     beforeEach(function() {
 
         // jscs:disable
         app = new angular();
         // jscs:enable
+
+        noop = angular.noop;
     });
     it('test extension of static angular methods from util', function() {
         expect(angular.extend).to.be.a('function');
@@ -39,7 +46,7 @@ describe('Angular', function() {
     });
     describe('_register', function() {
         beforeEach(function() {
-            mock($log, 'warn', angular.noop);
+            mock($log, 'warn', noop);
         });
         it('test register returns the app object', function() {
             expect(app._register()).to.deep.eq(app);
@@ -64,7 +71,7 @@ describe('Angular', function() {
     });
     describe('directive', function() {
         beforeEach(function() {
-            mock(app, '_register', angular.noop);
+            mock(app, '_register', noop);
         });
         it('test Controller and string type', function() {
             let obj = {
@@ -79,7 +86,7 @@ describe('Angular', function() {
         });
         it('test Controller deleted if not string type', function() {
             let obj = {
-                Controller: angular.noop()
+                Controller: noop()
             };
             app.directive('test', function() {
                 return obj;
@@ -96,7 +103,7 @@ describe('Angular', function() {
                 let obj = {
                     type: 'APIView'
                 };
-                mock($ExceptionsProvider, '$$invalidDirectiveConfig', angular.noop);
+                mock($ExceptionsProvider, '$$invalidDirectiveConfig', noop);
                 app.directive('test', function() {
                     return obj;
                 });
@@ -108,7 +115,7 @@ describe('Angular', function() {
     });
     describe('constant, service, Controller', function() {
         beforeEach(function() {
-            mock(app, '_register', angular.noop);
+            mock(app, '_register', noop);
         });
         it('test constant makes a call to _register', function() {
             app.constant('test', 'test');
@@ -137,7 +144,7 @@ describe('Angular', function() {
     });
     describe('config', function() {
         beforeEach(function() {
-            mock($log, 'warn', angular.noop);
+            mock($log, 'warn', noop);
         });
         it('test config returns app', function() {
             expect(app.config()).to.deep.eq(app);
@@ -148,9 +155,9 @@ describe('Angular', function() {
             expect($log.warn).to.have.been.called;
         });
         it('test config added when called with function', function() {
-            app.config(angular.noop);
+            app.config(noop);
             expect(app.configs[0]).to.deep.eq({
-                fn: angular.noop,
+                fn: noop,
                 fired: false
             });
             expect($log.warn).to.not.have.been.called;
@@ -183,15 +190,9 @@ describe('Angular', function() {
         beforeEach(function() {
             mock(util, 'removeTrailingSlashes', (v) => v);
             mock(fs, 'readFileSync', () => '{ "test": "test" }');
-            mock(Promise.constructor, function(fn) {
-                fn();
-                return {
-                    then: angular.noop
-                };
-            });
-            mock($log, 'error', angular.noop);
-            mock(app, 'bootstrap', angular.noop);
-            mock(Promise, 'all', angular.noop);
+            mock($log, 'error', noop);
+            mock(app, 'bootstrap', () => new global.Promise());
+            mock(Promise, 'all', noop);
         });
         afterEach(() => simple.restore());
         it('test called with no dependencies', function() {
@@ -212,6 +213,11 @@ describe('Angular', function() {
             expect($log.error).to.have.been.called;
             expect(app.bootstrap).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
+        });
+    });
+    describe('bootstrap', function() {
+        beforeEach(function() {
+
         });
     });
 });

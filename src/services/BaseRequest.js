@@ -130,6 +130,9 @@ class BaseRequest {
 
         // TODO move all of this out to responses
         prom = new Promise(function(resolve, reject) {
+
+            // TODO despite the fact that controllerName is kind of a misnomer,
+            // because this can be a function, it is ok for now
             let controllerName = me.route.Controller;
 
             // Get controller and compile scope

@@ -89,29 +89,7 @@ describe('$compile', function() {
         });
     });
     describe('directive compilation', function() {
-        let _Promise;
         beforeEach(function() {
-            _Promise = global.Promise;
-            global.Promise = class Promise {
-                constructor(fn) {
-                    if (typeof fn === 'function') {
-                        fn(angular.noop);
-                    }
-                }
-                then(fn) {
-                    let val = fn(this.val);
-                    this.val = val;
-                    return this;
-                }
-                static all(proms) {
-                    proms.forEach(function(prom) {
-                        if (typeof prom === 'function') {
-                            prom();
-                        }
-                    });
-                    return new Promise();
-                }
-            };
             app.directive('testDir', {
                 restrict: 'C',
                 Controller: 'test',
@@ -122,7 +100,6 @@ describe('$compile', function() {
             });
         });
         afterEach(function() {
-            global.Promise = _Promise;
             app._tearDown('testDir');
         });
         it('test attribute unmatched directive', function() {
