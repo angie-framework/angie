@@ -7,6 +7,8 @@
 ![code coverage](https://rawgit.com/benderTheCrime/angie/master/svg/coverage.svg "code coverage")
 ![npm downloads](https://img.shields.io/npm/dm/angie.svg "npm downloads")
 
+[![NPM](https://nodei.co/npm/angie.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/angie/)
+
 ### Usage
 ```bash
 npm i -g angie
