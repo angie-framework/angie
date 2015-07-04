@@ -74,13 +74,10 @@ gulp.task('esdoc', function(cb) {
     $log.info('Generating Angie documentation');
     exec('esdoc -c esdoc.json', cb);
 });
-gulp.task('watch', [ 'jscs', 'mocha', 'esdoc' ], function() {
-    gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha', 'esdoc' ]);
+gulp.task('watch', [ 'jscs', 'mocha' ], function() {
+    gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
 gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
-gulp.task('watch:esdoc', [ 'esdoc' ], function() {
-    gulp.watch([ src, '../gh-pages-angie/**' ], [ 'esdoc' ]);
-});
-gulp.task('default', [ 'jscs', 'mocha', 'esdoc' ]);
+gulp.task('default', [ 'jscs', 'mocha' ]);
