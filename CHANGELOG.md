@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] - 2015-07-04
+### Fixed/Added
+- Fixed some issues with deep routing and RegExp
+- Added support for routed Controllers as functions
+
 #### [0.2.8] - 2015-06-30
 ##### Fixed
 - Fixed HTML mime type in the $MimeTypeProvider

@@ -8,6 +8,7 @@ import jscs from                'gulp-jscs';
 import istanbul from            'gulp-istanbul';
 import {Instrumenter} from      'isparta';
 import mocha from               'gulp-mocha';
+import cobertura from           'istanbul-cobertura-badger';
 import chalk from               'chalk';
 
 // Angie Modules
@@ -35,10 +36,10 @@ gulp.task('jscs', [ 'eslint' ], function () {
             esnext: true
         }));
 });
-gulp.task('mocha', function() {
+gulp.task('mocha', function(cb) {
     let proc;
 
-    return new Promise(function(resolve, reject) {
+    new Promise(function(resolve, reject) {
         proc = gulp.src(src).pipe(
             istanbul({
                 instrumenter: Instrumenter,
@@ -68,6 +69,8 @@ gulp.task('mocha', function() {
                 reporters: [ 'text', 'text-summary', 'cobertura', 'clover' ]
             })
         );
+    }).then(function() {
+        return cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
     });
 });
 gulp.task('esdoc', function(cb) {
