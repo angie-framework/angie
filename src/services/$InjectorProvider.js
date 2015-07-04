@@ -3,7 +3,26 @@
 // Angie Modules
 import {default as $Exceptions} from    '../util/$ExceptionsProvider';
 
+/**
+ * @desc Handles dependency injection, will return one or many arguments passed
+ * as a string or an array
+ * @since 0.2.6
+ * @access public
+ * @example $Injector.get('test');
+ */
 class $InjectorProvider {
+
+    /**
+     * @desc Responsible for routing of dependencies
+     *
+     * @since 0.2.6
+     * @access public
+     *
+     * @param {object|string} The name or array of names of providers to fetch
+     * @returns {object|string|number|Array<>|boolean} The provider value
+     *
+     * @example $Injector.get('$scope') // = { $id: 1 }
+     */
     static get() {
         let providers = [],
             args = arguments[0] instanceof Array ?
@@ -56,6 +75,15 @@ class $InjectorProvider {
     }
 }
 
+/**
+ * @desc Responsible for binding of dependencies to functions
+ *
+ * @since 0.2.7
+ * @access private
+ *
+ * @param {function} The function to which values are being provided
+ * @returns {function} Bound function
+ */
 function $injectionBinder(fn) {
     let str = fn.toString(),
         args = str.match(/(function.*\(.*\))/g),

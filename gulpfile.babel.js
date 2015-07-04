@@ -48,7 +48,10 @@ gulp.task('mocha', function() {
             istanbul.hookRequire()
         ).on('finish', function() {
             $log.info('Running Angie Mocha test suite');
-            gulp.src(testSrc, { read: false }).pipe(mocha({
+            gulp.src(
+                [ 'test/src/testUtil.spec.js', 'test/**/!(*testUtil).spec.js' ],
+                { read: false }
+            ).pipe(mocha({
                 reporter: 'spec'
             }).on('error', function(e) {
                 console.log(chalk.bold(e));

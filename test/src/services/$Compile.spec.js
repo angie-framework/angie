@@ -25,11 +25,6 @@ describe('$compile', function() {
         let scope;
 
         beforeEach(function() {
-            mock(Promise, 'all', function() {
-                return {
-                    then: (fn) => fn()
-                };
-            });
             mock($log, 'warn', function() {});
             scope = {
                 test: 'test',
@@ -44,48 +39,75 @@ describe('$compile', function() {
         });
         afterEach(() => simple.restore());
         it('test no listeners', function() {
-            expect($compile('test')(scope)).to.eq('test');
+            $compile('test')(scope).then(function(t) {
+                expect(t).to.eq('test');
+            });
         });
-
         it('test listener with no matches', function() {
-            expect($compile('{{{test3}}}')(scope)).to.eq('');
-            expect($log.warn).to.have.been.called;
+            $compile('{{{test3}}}')(scope).then(function(t) {
+                expect(t).to.eq('');
+                expect($log.warn).to.have.been.called;
+            });
         });
         it('test _templateCompile evaluates a single matched listener', function() {
-            expect($compile('{{{test}}}')(scope)).to.eq('test');
+            $compile('{{{test}}}')(scope).then(function(t) {
+                expect(t).to.eq('test');
+            });
         });
         it('test _templateCompile evaluates multiple matched listeners', function() {
-            expect($compile('{{{test}}} {{{test1}}} {{{test2}}}')(scope)).to.eq(
-                'test test1 test2'
-            );
+            $compile('{{{test}}} {{{test1}}} {{{test2}}}')(scope).then(function(t) {
+                expect(t).to.eq('test test1 test2');
+            });
         });
         it('test _templateCompile evaluates deep listeners', function() {
-            expect($compile('{{{test4.test}}}')(scope)).to.eq('test4');
+            $compile('{{{test4.test}}}')(scope).then(function(t) {
+                expect(t).to.eq('test4');
+            });
         });
         it('test listener with abnormal spacing', function() {
-            expect($compile('{{{       test       }}}')(scope)).to.eq('test');
-            expect(
-                $compile('        {{{    test4.    test     }}}')(scope)
-            ).to.eq('test4');
+            $compile('{{{       test       }}}')(scope).then(function(t) {
+                expect(t).to.eq('test');
+            });
+            $compile('        {{{    test4.    test     }}}')(scope).then(
+                function(t) {
+                    expect(t).to.eq('test4');
+                }
+            );
         });
         it('test _templateCompile evaluates functional expressions', function() {
-            expect(
-                $compile('{{{test4.test.indexOf(\'test1\') > -1}}}')(scope)
-            ).to.eq('false');
-            expect(
-                $compile('{{{[ test, test1 ].join(\' & \')}}}')(scope)
-            ).to.eq('test &amp; test1');
-            expect(
-                $compile('{{{test.toUpperCase()}}}')(scope)
-            ).to.eq('TEST');
+            $compile('{{{test4.test.indexOf(\'test1\') > -1}}}')(scope).then(
+                function(t) {
+                    expect(t).to.eq('false');
+                }
+            );
+            $compile('{{{[ test, test1 ].join(\' & \')}}}')(scope).then(
+                function(t) {
+                    expect(t).to.eq('test &amp; test1');
+                }
+            );
+            $compile('{{{test.toUpperCase()}}}')(scope).then(function(t) {
+                expect(t).to.eq('TEST');
+            });
         });
         it('test _templateCompile evaluates binary expressions', function() {
-            expect($compile('{{{test5}}}')(scope)).to.eq('20');
-            expect($compile('{{{test5 * test6}}}')(scope)).to.eq('100');
-            expect($compile('{{{test5 / test6}}}')(scope)).to.eq('4');
-            expect($compile('{{{test5 + test6}}}')(scope)).to.eq('25');
-            expect($compile('{{{test5 - test6}}}')(scope)).to.eq('15');
-            expect($compile('{{{(test5 + test6) * test6}}}')(scope)).to.eq('125');
+            $compile('{{{test5}}}')(scope).then(function(t) {
+                expect(t).to.eq('20');
+            });
+            $compile('{{{test5 * test6}}}')(scope).then(function(t) {
+                expect(t).to.eq('100');
+            });
+            $compile('{{{test5 / test6}}}')(scope).then(function(t) {
+                expect(t).to.eq('4');
+            });
+            $compile('{{{test5 + test6}}}')(scope).then(function(t) {
+                expect(t).to.eq('25');
+            });
+            $compile('{{{test5 - test6}}}')(scope).then(function(t) {
+                expect(t).to.eq('15');
+            });
+            $compile('{{{(test5 + test6) * test6}}}')(scope).then(function(t) {
+                expect(t).to.eq('125');
+            });
         });
     });
     describe('directive compilation', function() {
@@ -200,6 +222,3 @@ describe('$compile', function() {
         });
     });
 });
-
-// TODO test $window, $document
-// TODO test directive with attribute the same as name

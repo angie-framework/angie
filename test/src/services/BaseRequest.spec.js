@@ -24,7 +24,7 @@ describe('BaseRequest', function() {
     });
     describe('_route', function() {
         beforeEach(function() {
-            mock(request, 'controllerPath', function() {});
+            mock(request, '$controllerPath', function() {});
             mock(request, 'otherPath', function() {});
         });
         describe('test RegExp path', function() {
@@ -42,14 +42,14 @@ describe('BaseRequest', function() {
                 };
                 request._route();
                 expect(request.request.query[0]).to.eq('Blah');
-                expect(request.controllerPath).to.have.been.called;
+                expect(request.$controllerPath).to.have.been.called;
                 expect(request.otherPath).to.not.have.been.called;
             });
         });
         describe('test string path', function() {
             it('test string path matches request path', function() {
                 request._route();
-                expect(request.controllerPath).to.have.been.called;
+                expect(request.$controllerPath).to.have.been.called;
             });
             it('test string path does not matche request path', function() {
                 request.path = '/test2.json';
@@ -57,10 +57,8 @@ describe('BaseRequest', function() {
                 expect(request.otherPath).to.have.been.called;
             });
         });
-        // describe('test $Compile parsing', function() {
-        //     it('test templatePath associated with a controller', function() {
-        //
-        //     });
-        // });
+    });
+    describe('$controllerPath', function() {
+
     });
 });

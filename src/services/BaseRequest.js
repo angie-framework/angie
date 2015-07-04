@@ -25,24 +25,12 @@ const RESPONSE_HEADER_MESSAGES = {
  * @desc The BaseRequest class processes all of the incoming Angie requests. It
  * can be required using a module import, but probably should not be unless it
  * it being subclassed for a dependency package.
- * @todo Make this class private
+ * @todo Make this class private ($$)
  * @todo Move base request
  * @since 0.0.1
  */
 class BaseRequest {
     constructor(path, request, response) {
-
-        // TODO convert this to docs
-        // Cases:
-        // Controller & templatePath (default) --> compiles template in scope
-        // --> view
-        // Controler & template --> compiles template in scope
-        // --> view
-        // Controller --> fires Controller, expects response
-        // --> view
-        // templatePath (default) --> serves template, expects compilation on frontend
-        // template --> serves template, expects compilation on frontend
-        // --> no views
 
         // Define URI
         this.path = path;
@@ -79,7 +67,7 @@ class BaseRequest {
      * existing matched params will be parsed out of the path. If not, a standard
      * router will be used.
      * @since 0.2.3
-     * @returns {function} BaseRequest.prototype.controllerPath or
+     * @returns {function} BaseRequest.prototype.$controllerPath or
      * BaseRequest.prototype.otherPath
      */
     _route() {
@@ -120,11 +108,27 @@ class BaseRequest {
 
         // Route the request based on whether the route exists
         if (this.route) {
-            return this.controllerPath();
+            return this.$controllerPath();
         }
         return this.otherPath();
     }
-    controllerPath() {
+
+    /**
+     * @desc $controllerPath is fired once a request has been routed. It fires
+     * the controller once dependencies have been injected.
+     *
+     * Cases:
+     *     Controller & templatePath (default): Compiles template in scope
+     *     Controler & template: Compiles template in scope
+     *     Controller: fires Controller, expects response
+     *     TemplatePath (default): Serves template, expects compilation on
+     * frontend
+     *     Template: Serves template, expects compilation on frontend
+     * @todo add documentation on views
+     * @since 0.2.3
+     * @access private
+     */
+    $controllerPath() {
         let me = this,
             prom;
 

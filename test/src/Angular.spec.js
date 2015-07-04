@@ -191,20 +191,17 @@ describe('Angular', function() {
             mock(util, 'removeTrailingSlashes', (v) => v);
             mock(fs, 'readFileSync', () => '{ "test": "test" }');
             mock($log, 'error', noop);
-            mock(app, 'bootstrap', () => new global.Promise());
-            mock(Promise, 'all', noop);
+            mock(app, 'bootstrap', () => new Promise());
         });
         afterEach(() => simple.restore());
         it('test called with no dependencies', function() {
-            app.loadDependencies();
-            expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
+            expect(app.loadDependencies().val).to.deep.eq([]);
         });
         it('test called with dependencies', function() {
-            app.loadDependencies([ 'test' ]);
+            expect(app.loadDependencies([ 'test' ]).val.length).to.eq(1);
             expect(util.removeTrailingSlashes.calls[0].args[0]).to.eq('test');
             expect(fs.readFileSync.calls[0].args[0]).to.eq('test/AngieFile.json');
             expect(app.bootstrap).to.have.been.called;
-            expect(Promise.all.calls[0].args[0].length).to.eq(1);
         });
         it('test invalid JSON in AngieFile', function() {
             fs.readFileSync = () => '{,}';
@@ -212,12 +209,45 @@ describe('Angular', function() {
             expect(util.removeTrailingSlashes.calls[0].args[0]).to.eq('test');
             expect($log.error).to.have.been.called;
             expect(app.bootstrap).to.not.have.been.called;
-            expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
         });
     });
     describe('bootstrap', function() {
-        beforeEach(function() {
+        let spy;
 
+        beforeEach(function() {
+            mock(fs, 'readdirSync', () => [ 'test' ]);
+            mock(System, 'import', (v) => v);
+            simple.mock(Promise, 'all');
+            app.configs = [
+                {
+                    fn: (spy = simple.spy())
+                }
+            ];
+        });
+        afterEach(() => simple.restore());
+        it('test bootstrap with non-js files', function() {
+            app.bootstrap();
+            expect(System.import).to.not.have.been.called;
+            expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
+            expect(spy).to.have.been.called;
+            expect(app.configs[0].fired).to.be.true;
+        });
+        it('test bootstrap', function() {
+            fs.readdirSync.returnWith([ 'test.js' ]);
+            app.bootstrap();
+            expect(System.import).to.have.been.called;
+            expect(Promise.all.calls[0].args[0]).to.deep.eq(
+                [ 'test.js', 'test.js' ]
+            );
+            expect(spy).to.have.been.called;
+            expect(app.configs[0].fired).to.be.true;
+        });
+        it('test configs not called more than once', function() {
+            app.configs[0].fired = true;
+            app.bootstrap();
+            expect(spy).to.not.have.been.called;
         });
     });
 });
+
+

@@ -1,6 +1,6 @@
 {
-  "source": "./src",
-  "destination": "./doc",
+  "source": "src",
+  "destination": "doc",
   "autoPrivate": true,
   "coverage": true
 }

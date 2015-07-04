@@ -157,7 +157,6 @@ class Angular extends util {
 
         // Add dependencies
         this._dependencies = this._dependencies.concat(dependencies);
-
         dependencies.forEach(function(v) {
 
             let dependency = util.removeTrailingSlashes(v),
@@ -198,7 +197,7 @@ class Angular extends util {
             let proms = [];
             files.forEach(function(v) {
 
-                // Only load the file if it is a js type
+                // Only load the file if it is a js/es6 type
                 if (/.(js|es6)/.test(v)) {
                     proms.push(System.import(v));
                 }
