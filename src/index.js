@@ -9,8 +9,7 @@ import {exec} from                  'child_process';
 
 // Angie Modules
 import Config from                  './Config';
-import createProject from           './util/scaffold/project';
-import AngieDatabaseRouter from     './models/AngieDatabaseRouter';
+import $$createProject from         './util/scaffold/project';
 import server from                  './Server';
 import shell from                   './util/shell';
 import $log from                    './util/$LogProvider';
@@ -21,7 +20,7 @@ transform('code', { stage: 0 });
 const p = process;
 let args = [],
     _server = requiresConfig.bind(null, server),
-    _db = requiresConfig.bind(null, AngieDatabaseRouter);
+    _db = requiresConfig.bind(null);
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
@@ -47,13 +46,20 @@ switch ((args[0] || '').toLowerCase()) {
     case 'cluster':
         break;
     case 'createproject':
-        createProject({ name: args[1] });
+        $$createProject({
+            name: args[1],
+            location: args[2]
+        });
         break;
     case 'syncdb':
-        _db().then((db) => db.sync());
+        _db().then(System.import('angie-orm/src/index')).then(
+            p.exit.bind(0), p.exit.bind(1)
+        );
         break;
     case 'migrate':
-        _db().then((db) => db.migrate());
+        _db().then(System.import('angie-orm/src/index')).then(
+            p.exit.bind(0), p.exit.bind(1)
+        );
         break;
     case 'test':
         runTests();
@@ -61,11 +67,11 @@ switch ((args[0] || '').toLowerCase()) {
     case 'shell':
         shell();
         break;
-    default:
-        $log.help();
+    default: $log.help();
 }
 
 function runTests() {
+
     // TODO is there any way to carry the stream output from gulp instead
     // of capturing stdout?
     exec(`cd ${__dirname} && gulp`, function(e, std, err) {
@@ -84,7 +90,7 @@ function requiresConfig(fn) {
 
     // Fetch configs
     return new Config().then(function() {
-        return fn(args);
+        return typeof fn === 'function' ? fn(args) : args;
     }, function() {
         p.exit(1);
     });

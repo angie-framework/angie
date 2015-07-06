@@ -12,6 +12,8 @@
     "staticDirs": [
         "static/"
     ],
-    "dependencies": [],
+    "dependencies": [
+        "./node_modules/angie-orm"
+    ],
     "cacheStaticAssets": false
 }

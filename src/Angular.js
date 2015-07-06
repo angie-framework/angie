@@ -4,8 +4,6 @@
 import fs from                                          'fs';
 
 // Angie Modules
-import {BaseModel} from                                 './models/BaseModel';
-import * as $$FieldProvider from                        './models/Fields';
 import $RouteProvider from                              './services/$RouteProvider';
 import $compile from                                    './services/$Compile';
 import {default as $Injector, $injectionBinder} from    './services/$InjectorProvider';
@@ -116,20 +114,6 @@ class Angular extends util {
         }
         return this;
     }
-    Model(name, obj = {}) {
-        const model = new $injectionBinder(obj)();
-        name = typeof name === 'string' ? name : model.name;
-
-        let instance = new BaseModel(name);
-
-        // Mock extend obj onto the instance
-        if (typeof model === 'object') {
-            instance = util.extend(instance, model);
-        } else {
-            $ExceptionsProvider.$$invalidModelConfig(name);
-        }
-        return this._register('Models', name, instance);
-    }
     _register(component, name, obj) {
 
         // `component` and `app.component` should always be defined
@@ -234,9 +218,6 @@ app.config(function() {
 })
 .service('$Routes', $RouteProvider)
 .service('$compile', $compile)
-
-// Model utilities
-.service('$fields', $$FieldProvider)
 
 // Logging  utilities
 .service('$Log', $log)

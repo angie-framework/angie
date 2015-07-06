@@ -38,7 +38,6 @@ describe('Angular', function() {
             expect(app.configs).to.deep.eq([]);
             expect(app.services).to.deep.eq({});
             expect(app.Controllers).to.deep.eq({});
-            expect(app.Models).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect(app._registry).to.deep.eq({});
             expect(app._dependencies).to.deep.eq([]);

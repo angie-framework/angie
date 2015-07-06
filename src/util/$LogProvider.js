@@ -61,39 +61,39 @@ class $LogProvider {
             me.log('\r');
             me.bold('Commands:');
             me.log(
-                'server [port -- optional]       ' +
+                'server [ port -- optional ]                        ' +
                 chalk.gray(
                     'Start the Angie Webserver (shortcut with s). Default port ' +
                     'is 3000.'
                 )
             );
             me.log(
-                'cluster [port -- optional]      ' +
+                'cluster [ port -- optional ]                       ' +
                 chalk.gray('Start the Angie Webserver as a Cluster.')
             );
             me.log(
-                'createProject [name]            ' +
+                'createProject [ name ] [ location -- optional ]    ' +
                 chalk.gray(
                     'Create a new Angie project with the specified name in the ' +
                     'current directory.'
                 )
             );
             me.log(
-                'syncdb [database]               ' +
+                'syncdb [ database ]                                ' +
                 chalk.gray(
                     'Sync the current specified databases in the AngieFile. ' +
                     'Defaults to the default created database'
                 )
             );
             me.log(
-                'migrations                      ' +
+                'migrations                                         ' +
                 chalk.gray(
                     'Checks to see if the database and the specified ' +
                     'models are out of sync. Generates NO files.'
                 )
             );
             me.log(
-                'test                            ' +
+                'test                                               ' +
                 chalk.gray(
                     'Runs the Angie test suite and prints the results in the ' +
                     'console'
