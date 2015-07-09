@@ -10,12 +10,12 @@ import simple, {mock} from          'simple-mock';
 
 // System Modules
 import fs from                      'fs';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
 import {angular} from               '../../src/Angular';
 import util from                    '../../src/util/util';
 import $ExceptionsProvider from     '../../src/util/$ExceptionsProvider';
-import $log from                    '../../src/util/$LogProvider';
 
 describe('Angular', function() {
     let app,
@@ -45,7 +45,7 @@ describe('Angular', function() {
     });
     describe('_register', function() {
         beforeEach(function() {
-            mock($log, 'warn', noop);
+            mock($LogProvider, 'warn', noop);
         });
         it('test register returns the app object', function() {
             expect(app._register()).to.deep.eq(app);
@@ -54,13 +54,13 @@ describe('Angular', function() {
             app._register('directives', null, {});
             expect(app._registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
-            expect($log.warn).to.have.been.called;
+            expect($LogProvider.warn).to.have.been.called;
         });
         it('test register called without an obj fails', function() {
             app._register('directives', 'test', null);
             expect(app._registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
-            expect($log.warn).to.have.been.called;
+            expect($LogProvider.warn).to.have.been.called;
         });
         it('test register properly registers a provider', function() {
             app._register('directives', 'test', 'test');
@@ -143,7 +143,7 @@ describe('Angular', function() {
     });
     describe('config', function() {
         beforeEach(function() {
-            mock($log, 'warn', noop);
+            mock($LogProvider, 'warn', noop);
         });
         it('test config returns app', function() {
             expect(app.config()).to.deep.eq(app);
@@ -151,7 +151,7 @@ describe('Angular', function() {
         it('test config not added as string', function() {
             app.config('test');
             expect(app.configs).to.deep.eq([]);
-            expect($log.warn).to.have.been.called;
+            expect($LogProvider.warn).to.have.been.called;
         });
         it('test config added when called with function', function() {
             app.config(noop);
@@ -159,7 +159,7 @@ describe('Angular', function() {
                 fn: noop,
                 fired: false
             });
-            expect($log.warn).to.not.have.been.called;
+            expect($LogProvider.warn).to.not.have.been.called;
         });
     });
     describe('_tearDown', function() {
@@ -189,7 +189,7 @@ describe('Angular', function() {
         beforeEach(function() {
             mock(util, 'removeTrailingSlashes', (v) => v);
             mock(fs, 'readFileSync', () => '{ "test": "test" }');
-            mock($log, 'error', noop);
+            mock($LogProvider, 'error', noop);
             mock(app, 'bootstrap', () => new Promise());
         });
         afterEach(() => simple.restore());
@@ -206,7 +206,7 @@ describe('Angular', function() {
             fs.readFileSync = () => '{,}';
             app.loadDependencies([ 'test' ]);
             expect(util.removeTrailingSlashes.calls[0].args[0]).to.eq('test');
-            expect($log.error).to.have.been.called;
+            expect($LogProvider.error).to.have.been.called;
             expect(app.bootstrap).to.not.have.been.called;
         });
     });

@@ -4,11 +4,13 @@
 import {expect} from            'chai';
 import simple, {mock} from      'simple-mock';
 
+// System Modules
+import $LogProvider from        'angie-log';
+
 // Angie Modules
 import {config} from            '../../../src/Config';
 import app, {angular} from      '../../../src/Angular';
 import $compile from            '../../../src/services/$Compile';
-import $log from                '../../../src/util/$LogProvider';
 
 describe('$compile', function() {
     it(
@@ -25,7 +27,7 @@ describe('$compile', function() {
         let scope;
 
         beforeEach(function() {
-            mock($log, 'warn', function() {});
+            mock($LogProvider, 'warn', function() {});
             scope = {
                 test: 'test',
                 test1: 'test1',
@@ -46,7 +48,7 @@ describe('$compile', function() {
         it('test listener with no matches', function() {
             $compile('{{{test3}}}')(scope).then(function(t) {
                 expect(t).to.eq('');
-                expect($log.warn).to.have.been.called;
+                expect($LogProvider.warn).to.have.been.called;
             });
         });
         it('test _templateCompile evaluates a single matched listener', function() {

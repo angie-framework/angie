@@ -7,11 +7,11 @@ import simple, {mock} from              'simple-mock';
 // System Modules
 import fs from                          'fs';
 import util from                        'util';
+import $LogProvider from                'angie-log';
 
 // Angie Modules
 import $$createProject from             '../../../../src/util/scaffold/project';
 import {$$ProjectCreationError} from    '../../../../src/util/$ExceptionsProvider';
-import $log from                        '../../../../src/util/$LogProvider';
 
 const p = process;
 
@@ -25,7 +25,7 @@ describe('$$createProject', function() {
         mock(fs, 'readFileSync', noop);
         mock(util, 'format', () => 'test');
         mock(fs, 'writeFileSync', noop);
-        mock($log, 'info', noop);
+        mock($LogProvider, 'info', noop);
         mock(p, 'exit', noop);
     });
     afterEach(() => simple.restore());
@@ -62,7 +62,7 @@ describe('$$createProject', function() {
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             'test/AngieFile.json', 'test', 'utf8'
         ]);
-        expect($log.info.calls[0].args[0]).to.eq('Project successfully created');
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
     it('test successful project creation with "." location', function() {
@@ -82,7 +82,7 @@ describe('$$createProject', function() {
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             'AngieFile.json', 'test', 'utf8'
         ]);
-        expect($log.info.calls[0].args[0]).to.eq('Project successfully created');
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
     it('test successful project creation with no location', function() {
@@ -112,7 +112,7 @@ describe('$$createProject', function() {
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             '/Users/jg/angie/AngieFile.json', 'test', 'utf8'
         ]);
-        expect($log.info.calls[0].args[0]).to.eq('Project successfully created');
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
 });

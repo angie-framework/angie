@@ -33,7 +33,6 @@ class Angular extends util {
         this.configs = [];
         this.services = {};
         this.Controllers = {};
-        this.Models = {};
         this.directives = {};
         this._registry = {};
         this._dependencies = [];

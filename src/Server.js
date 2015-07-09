@@ -84,7 +84,7 @@ export default function server(args) {
                     );
 
                     // Check if you have an image type asset
-                    $log.info(path, response._header);
+                    $LogProvider.info(path, response._header);
                     response.write(asset);
                 }
 
@@ -107,13 +107,13 @@ export default function server(args) {
                         angieResponse.responseHeaders
                     );
                     response.write(error);
-                    $log.error(path, response._header);
+                    $LogProvider.error(path, response._header);
                 } else if (code < 400) {
-                    $log.info(path, response._header);
+                    $LogProvider.info(path, response._header);
                 } else if (code < 500) {
-                    $log.warn(path, response._header);
+                    $LogProvider.warn(path, response._header);
                 } else {
-                    $log.error(path, response._header);
+                    $LogProvider.error(path, response._header);
                 }
                 return true;
             }).then(function() {
@@ -141,12 +141,12 @@ export default function server(args) {
                     };
                 watch(watchDirs, (() => restart(port)), restartObj);
             } catch(e) {
-                $log.error(e);
+                $LogProvider.error(e);
             }
         }
 
         // Info
-        $log.info(`Serving on port ${port}`);
+        $LogProvider.info(`Serving on port ${port}`);
 
         // Set firstrun to false
         firstrun = false;
@@ -157,7 +157,9 @@ function restart(port) {
 
     // TODO this doesn't reload like you think it does
     prepApp().then(function() {
-        $log.info(`Application files reloaded; Still serving on port ${port}`);
+        $LogProvider.info(
+            `Application files reloaded; Still serving on port ${port}`
+        );
     });
 }
 
