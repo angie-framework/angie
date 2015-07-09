@@ -3,11 +3,11 @@
 // System Modules
 import fs from                          'fs';
 import {default as sysUtil} from        'util';
+import $LogProvider from                 'angie-log';
 
 // Angie Modules
 import util from                        '../util';
 import {$$ProjectCreationError} from    '../$ExceptionsProvider';
-import $log from                        '../$LogProvider';
 
 const p = process;
 
@@ -98,7 +98,7 @@ export default function $$createProject(args = {}) {
         );
     }
 
-    $log.info('Project successfully created');
+    $LogProvider.info('Project successfully created');
     p.exit(0);
 }
 

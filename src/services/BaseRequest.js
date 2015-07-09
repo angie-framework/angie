@@ -1,5 +1,9 @@
 'use strict'; 'use strong';
 
+// System Modules
+import $LogProvider from                        'angie-log';
+
+// Angie Modules
 import app from                                 '../Angular';
 import {config} from                            '../Config';
 import $Request from                            './$Request';
@@ -10,7 +14,6 @@ import {$injectionBinder} from                  './$InjectorProvider';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
 import util from                                '../util/util';
-import $log from                                '../util/$LogProvider';
 
 // TODO move these out to an app constant
 const RESPONSE_HEADER_MESSAGES = {
@@ -285,7 +288,7 @@ class BaseRequest {
         });
 
         prom.catch(function(e) {
-            $log.error(e);
+            $LogProvider.error(e);
             return me.errorPath();
         });
 

@@ -4,7 +4,9 @@
 import http from                    'http';
 import https from                   'https';
 import url from                     'url';
+import chalk from                   'chalk';
 import watch from                   'node-watch';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
 import {config} from                './Config';
@@ -19,7 +21,6 @@ import {
 } from                              './services/BaseRequest';
 import util from                    './util/util';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
-import $log from                    './util/$LogProvider';
 
 const p = process;
 let firstrun = true;
@@ -29,7 +30,9 @@ export default function server(args) {
           port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
 
     if (firstrun) {
-        $log.warn('"angie server" not suitable for production use.');
+        $LogProvider.warn(
+            `${chalk.cyan('angie server')} not suitable for production use.`
+        );
     }
 
     prepApp().then(function() {

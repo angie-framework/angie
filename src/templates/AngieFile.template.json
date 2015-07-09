@@ -13,6 +13,7 @@
         "static/"
     ],
     "dependencies": [
+        "./node_modules/angie-log",
         "./node_modules/angie-orm"
     ],
     "cacheStaticAssets": false

@@ -1,13 +1,13 @@
 'use strict'; 'use strong';
 
-import jsdom from 'jsdom';
+// System Modules
+import {jsdom} from             'jsdom';
+import $LogProvider from        'angie-log';
 
-import app, {angular} from '../Angular';
-import {_templateLoader} from './$TemplateCache';
-import util from '../util/util';
-import $log from '../util/$LogProvider';
-
-const parser = jsdom.jsdom;
+// Angie Modules
+import app, {angular} from      '../Angular';
+import {_templateLoader} from   './$TemplateCache';
+import util from                '../util/util';
 
 // ngie Incrementer
 let iid = 0;
@@ -120,7 +120,7 @@ function $compile(t) {
             try {
                 val = $$evalFn.call(scope, parsedListener);
             } catch(e) {
-                $log.warn(e);
+                $LogProvider.warn(e);
             }
 
             // Change the scope of the template
@@ -131,7 +131,7 @@ function $compile(t) {
         let $$document,
             $$window;
         try {
-            $$document = parser(tmpLet, {
+            $$document = jsdom(tmpLet, {
                 FetchExternalResources: [],
                 ProcessExternalResources: false
             });

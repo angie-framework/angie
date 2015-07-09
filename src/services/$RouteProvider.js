@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
+// System Modules
+import $LogProvider from    'angie-log';
+
 // Angie Modules
-import util from    '../util/util';
-import $log from    '../util/$LogProvider';
+import util from            '../util/util';
 
 const IGNORE_KEYS = [
     'Controller',
@@ -133,7 +135,7 @@ class $RouteProvider {
         } else {
 
             // Redirection can only occur based on this path if path is a string
-            $log.warn(
+            $LogProvider.warn(
                 'Cannot set "otherwise" route to anything other than a string'
             );
         }

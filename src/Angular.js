@@ -2,6 +2,7 @@
 
 // System Modules
 import fs from                                          'fs';
+import $LogProvider from                                'angie-log';
 
 // Angie Modules
 import $RouteProvider from                              './services/$RouteProvider';
@@ -10,7 +11,6 @@ import {default as $Injector, $injectionBinder} from    './services/$InjectorPro
 import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
 import util from                                        './util/util';
 import $ExceptionsProvider from                         './util/$ExceptionsProvider';
-import $log from                                        './util/$LogProvider';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -110,7 +110,7 @@ class Angular extends util {
                 fired: false
             });
         } else {
-            $log.warn('Invalid config type specified');
+            $LogProvider.warn('Invalid config type specified');
         }
         return this;
     }
@@ -121,7 +121,9 @@ class Angular extends util {
             this._registry[ name ] = component;
             this[ component ][ name ] = obj;
         } else {
-            $log.warn('Invalid name or object called on app._register');
+            $LogProvider.warn(
+                `Invalid name or object ${name} called on app.${component}`
+            );
         }
         return this;
     }
@@ -152,7 +154,7 @@ class Angular extends util {
             try {
                 config = JSON.parse(config);
             } catch(e) {
-                $log.error(
+                $LogProvider.error(
                     `Could not load ${dependency}, error parsing AngieFile`
                 );
                 return;
@@ -220,7 +222,6 @@ app.config(function() {
 .service('$compile', $compile)
 
 // Logging  utilities
-.service('$Log', $log)
 .service('$Exceptions', $ExceptionsProvider)
 
 // Injection utilities

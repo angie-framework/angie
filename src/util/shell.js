@@ -1,17 +1,15 @@
 'use strict'; 'use strong';
 
 // System Modules
-import repl from 'repl';
-
-// Angie Modules
-import $log from './$LogProvider';
+import repl from            'repl';
+import $LogProvider from    'angie-log';
 
 const p = process;
 
 export default function shell() {
     p.stdin.setEncoding('utf8');
     repl.start({
-        prompt: $log.shell(),
+        prompt: $LogProvider.shell(),
         input: p.stdin,
         output: p.stdout
     });
