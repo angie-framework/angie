@@ -3,6 +3,7 @@
 // System Modules
 import fs from                                          'fs';
 import $LogProvider from                                'angie-log';
+import chalk from                                       'chalk';
 
 // Angie Modules
 import $RouteProvider from                              './services/$RouteProvider';
@@ -140,18 +141,27 @@ class Angular extends util {
         let me = this,
             proms = [];
 
+        dependencies = dependencies.filter(
+            (v) => me._dependencies.indexOf(v) === -1
+        );
+
         // Add dependencies
         this._dependencies = this._dependencies.concat(dependencies);
+
+
+        console.log('HERE', dependencies);
         dependencies.forEach(function(v) {
 
             let dependency = util.removeTrailingSlashes(v),
 
                 // This should be the root folder of an Angie project
-                config = fs.readFileSync(`${dependency}/AngieFile.json`) ||
-                    '{, }';
+                config;
 
             try {
-                config = JSON.parse(config);
+                config = JSON.parse(
+                    fs.readFileSync(`${dependency}/AngieFile.json`)
+                );
+                console.log(config);
             } catch(e) {
                 $LogProvider.error(
                     `Could not load ${dependency}, error parsing AngieFile`
@@ -173,20 +183,48 @@ class Angular extends util {
         return Promise.all(proms);
     }
     bootstrap(dir = process.cwd()) {
+        console.log('bootstrapper');
+
         let me = this;
 
         // TODO files outside src?
         return new Promise(function(resolve) {
-            resolve(fs.readdirSync(dir).concat(fs.readdirSync(`${dir}/src`)));
+            resolve(fs.readdirSync(dir).concat(
+                fs.readdirSync(`${dir}/src`).map((v) => `src/${v}`)
+            ).map((v) => `${dir}/${v}`));
         }).then(function(files) {
-            let proms = [];
-            files.forEach(function(v) {
+            console.log(files);
+            let proms = [],
+                fn = function loadFiles(files) {
+                    files.forEach(function(v) {
+                        if (
+                            /node_modules|bower_components|templates|static/i
+                            .test(v)
+                        ) {
+                            return;
+                        }
 
-                // Only load the file if it is a js/es6 type
-                if (/.(js|es6)/.test(v)) {
-                    proms.push(System.import(v));
-                }
-            });
+                        try {
+                            fn(fs.readdirSync(v).map(($v) => `${v}/${$v}`));
+                        } catch($e) {
+
+                            // Only load the file if it is a js/es6 type
+                            if (
+                                [ 'js', 'es6' ].indexOf(v.split('.').pop()) > -1
+                            ) {
+                                proms.push(System.import(v).then(function() {
+                                    $LogProvider.info(
+                                        `loaded application file ${chalk.blue(v)}`
+                                    );
+                                }, function(e) {
+                                    $LogProvider.error(e);
+                                }));
+                            }
+                            return;
+                        }
+                    });
+                };
+            fn(files);
             return Promise.all(proms);
         }).then(function() {
 
