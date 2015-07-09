@@ -10,7 +10,7 @@ import $compile from                                    './services/$Compile';
 import {default as $Injector, $injectionBinder} from    './services/$InjectorProvider';
 import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
 import util from                                        './util/util';
-import $ExceptionsProvider from                         './util/$ExceptionsProvider';
+import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 /**
  * @desc This is the default Angie Angular class. It is instantiated and given
@@ -98,7 +98,7 @@ class Angular extends util {
                 delete dir.Controller;
             }
         } else if (/api.?view/i.test(dir.type)) {
-            $ExceptionsProvider.$$invalidDirectiveConfig(name);
+            throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
         return this._register('directives', name, dir);
     }

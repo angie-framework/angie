@@ -5,7 +5,7 @@ import fs from                          'fs';
 
 // Angie Modules
 import util from                        './util/util';
-import {default as $Exceptions} from    './util/$ExceptionsProvider';
+import {$$InvalidConfigError} from      './util/$ExceptionsProvider';
 
 let config = {};
 
@@ -46,10 +46,10 @@ export default class Config {
                 try {
                     config = JSON.parse(stdout);
                 } catch(e) {
-                    $Exceptions.$$invalidConfig();
+                    throw new $$InvalidConfigError();
                 }
             }, function() {
-                $Exceptions.$$invalidConfig();
+                throw new $$InvalidConfigError();
             });
         } else {
             return new Promise(() => arguments[0]());

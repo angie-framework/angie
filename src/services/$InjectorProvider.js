@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 // Angie Modules
-import {default as $Exceptions} from    '../util/$ExceptionsProvider';
+import {$$ProviderNotFoundError} from    '../util/$ExceptionsProvider';
 
 /**
  * @desc Handles dependency injection, will return one or many arguments passed
@@ -51,7 +51,7 @@ class $InjectorProvider {
             ) {
                 providers.push(provision);
             } else {
-                $Exceptions.$$providerError(arg);
+                throw new $$ProviderNotFoundError(arg);
             }
         }
         return providers.length > 1 ? providers : providers[0] ? providers[0] : [];
