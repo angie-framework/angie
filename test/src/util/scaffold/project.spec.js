@@ -17,7 +17,7 @@ const p = process;
 
 describe('$$createProject', function() {
     let project,
-        noop = (() => null);
+        noop = () => null;
 
     beforeEach(function() {
         project = $$createProject;

@@ -3,14 +3,14 @@
 // System Modules
 import {bold, red, blue} from    'chalk';
 
-const bread = (a) => bold(red(a));
+const bread = () => red(bold.apply(null, arguments));
 
 // TODO use native node exception types where possible
 export class $$InvalidConfigError extends Error {
-    constructor(name) {
+    constructor() {
         super(bread(
             'Invalid application configuration. Check your ' +
-            chalk.blue('Angiefile.json')
+            blue('Angiefile.json')
         ));
     }
 }

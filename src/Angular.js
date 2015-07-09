@@ -137,19 +137,29 @@ class Angular extends util {
         }
         return this;
     }
+
+    /**
+     * @desc Load all project dependencies from an Array of dependencies
+     * specified in the AngieFile.json. This will load packages in the order
+     * they are specified, exposing any application Modules to the application
+     * and prepping any application configuration in the nested modules. It will
+     * not load duplicate modules.
+     * @since 0.1.0
+     * @access private
+     * @param {object}  [param=[]] dependencies The Array of dependencies
+     * specified in the parent or localized AngieFile.json
+     */
     loadDependencies(dependencies = []) {
         let me = this,
             proms = [];
 
+        // Make sure we do not load duplicate dependencies
         dependencies = dependencies.filter(
             (v) => me._dependencies.indexOf(v) === -1
         );
 
         // Add dependencies
         this._dependencies = this._dependencies.concat(dependencies);
-
-
-        console.log('HERE', dependencies);
         dependencies.forEach(function(v) {
 
             let dependency = util.removeTrailingSlashes(v),
@@ -161,7 +171,6 @@ class Angular extends util {
                 config = JSON.parse(
                     fs.readFileSync(`${dependency}/AngieFile.json`)
                 );
-                console.log(config);
             } catch(e) {
                 $LogProvider.error(
                     `Could not load ${dependency}, error parsing AngieFile`
@@ -182,9 +191,16 @@ class Angular extends util {
         });
         return Promise.all(proms);
     }
-    bootstrap(dir = process.cwd()) {
-        console.log('bootstrapper');
 
+    /**
+     * @desc Load all of the files associated with the parent and child Angie
+     * applications. This will transpile and deliver all modules associated with
+     * both the parent and child applications
+     * @since 0.1.0
+     * @access private
+     * @param {string}  [param=process.cwd()] dir The dir to scan for modules
+     */
+    bootstrap(dir = process.cwd()) {
         let me = this;
 
         // TODO files outside src?
@@ -193,34 +209,38 @@ class Angular extends util {
                 fs.readdirSync(`${dir}/src`).map((v) => `src/${v}`)
             ).map((v) => `${dir}/${v}`));
         }).then(function(files) {
-            console.log(files);
             let proms = [],
                 fn = function loadFiles(files) {
+
+                    // We don't want to load any of these files
                     files.forEach(function(v) {
                         if (
                             /node_modules|bower_components|templates|static/i
                             .test(v)
                         ) {
-                            return;
-                        }
 
-                        try {
-                            fn(fs.readdirSync(v).map(($v) => `${v}/${$v}`));
-                        } catch($e) {
+                            // If any part of our url contains these return
+                            return;
+                        } else if (
+                            [ 'js', 'es6' ].indexOf(v.split('.').pop() || '') > -1
+                        ) {
 
                             // Only load the file if it is a js/es6 type
-                            if (
-                                [ 'js', 'es6' ].indexOf(v.split('.').pop()) > -1
-                            ) {
-                                proms.push(System.import(v).then(function() {
-                                    $LogProvider.info(
-                                        `loaded application file ${chalk.blue(v)}`
-                                    );
-                                }, function(e) {
-                                    $LogProvider.error(e);
-                                }));
+                            proms.push(System.import(v).then(function() {
+                                $LogProvider.info(
+                                    `loaded application file ${chalk.blue(v)}`
+                                );
+                            }, function(e) {
+                                $LogProvider.error(e);
+                            }));
+                        } else {
+                            try {
+                                fn(fs.readdirSync(v).map(($v) => `${v}/${$v}`));
+                            } catch(e) {
+                                $LogProvider.warn(
+                                    `Treating ${chalk.blue(v)} as a directory, but it is a file`
+                                );
                             }
-                            return;
                         }
                     });
                 };

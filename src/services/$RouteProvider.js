@@ -179,11 +179,9 @@ class $RouteProvider {
      *     regExp.test('test/test') === true;
      */
     static $stringsToRegExp() {
-        let regExp = [];
-        Array.prototype.slice.call(arguments).forEach(function(v) {
-            regExp.push(util.removeTrailingLeadingSlashes(v.toString()));
-        });
-        return new RegExp(regExp.join('/'));
+        return new RegExp(Array.prototype.slice.call(arguments).map((v) =>
+            util.removeTrailingLeadingSlashes(v.toString())
+        ).join('\\/'));
     }
 
     /**
