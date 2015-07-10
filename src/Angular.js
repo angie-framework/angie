@@ -6,6 +6,7 @@ import $LogProvider from                                'angie-log';
 import chalk from                                       'chalk';
 
 // Angie Modules
+import {config} from                                    './Config';
 import $RouteProvider from                              './services/$RouteProvider';
 import $compile from                                    './services/$Compile';
 import {default as $Injector, $injectionBinder} from    './services/$InjectorProvider';
@@ -143,13 +144,14 @@ class Angular extends util {
      * specified in the AngieFile.json. This will load packages in the order
      * they are specified, exposing any application Modules to the application
      * and prepping any application configuration in the nested modules. It will
-     * not load duplicate modules.
+     * not load duplicate modules. Dependencies are typically declared as a
+     * node_module path, but can also be declared as a singular (main) file.
      * @since 0.1.0
      * @access private
      * @param {object}  [param=[]] dependencies The Array of dependencies
      * specified in the parent or localized AngieFile.json
      */
-    loadDependencies(dependencies = []) {
+    $$loadDependencies(dependencies = []) {
         let me = this,
             proms = [];
 
@@ -161,32 +163,38 @@ class Angular extends util {
         // Add dependencies
         this._dependencies = this._dependencies.concat(dependencies);
         dependencies.forEach(function(v) {
+            let dependency = util.removeTrailingLeadingSlashes(v),
 
-            let dependency = util.removeTrailingSlashes(v),
+                // This will load all of the modules, overwriting a module name
+                // will replace it
+                prom = new Promise(function(resolve) {
+                    let config,
+                        name,
+                        subDependencies;
 
-                // This should be the root folder of an Angie project
-                config;
+                    try {
+                        config = JSON.parse(
+                            fs.readFileSync(
+                                `./node_modules/${dependency}/AngieFile.json`,
+                                'utf8'
+                            )
+                        );
+                    } catch(e) {
+                        $LogProvider.error(e);
+                    }
 
-            try {
-                config = JSON.parse(
-                    fs.readFileSync(`${dependency}/AngieFile.json`)
-                );
-            } catch(e) {
-                $LogProvider.error(
-                    `Could not load ${dependency}, error parsing AngieFile`
-                );
-                return;
-            }
-
-            // This will load all of the modules, overwriting a module name
-            // will replace it
-            let prom = new Promise(function(resolve) {
-                me.bootstrap(dependency).then(function() {
-                    resolve();
-                }).then(function() {
-                    me.loadDependencies(config.dependencies);
+                    if (typeof config === 'object') {
+                        name = config.projectName;
+                        subDependencies = config.dependencies;
+                    }
+                    me.service(
+                        name || util.toCamel(dependency),
+                        require(dependency)
+                    );
+                    return app.$$loadDependencies(
+                        subDependencies || []
+                    ).then(resolve);
                 });
-            });
             proms.push(prom);
         });
         return Promise.all(proms);
@@ -195,20 +203,22 @@ class Angular extends util {
     /**
      * @desc Load all of the files associated with the parent and child Angie
      * applications. This will transpile and deliver all modules associated with
-     * both the parent and child applications
+     * both the parent and child applications.
      * @since 0.1.0
      * @access private
      * @param {string}  [param=process.cwd()] dir The dir to scan for modules
      */
-    bootstrap(dir = process.cwd()) {
-        let me = this;
+    $$bootstrap(dir = process.cwd()) {
+        let me = this,
+            src = typeof config.projectRoot === 'string' ?
+                util.removeTrailingLeadingSlashes(config.projectRoot) : 'src';
 
-        // TODO files outside src?
         return new Promise(function(resolve) {
-            resolve(fs.readdirSync(dir).concat(
-                fs.readdirSync(`${dir}/src`).map((v) => `src/${v}`)
-            ).map((v) => `${dir}/${v}`));
+            resolve(
+                fs.readdirSync(`${dir}/${src}`).map((v) => `${dir}/src/${v}`)
+            );
         }).then(function(files) {
+            console.log(files);
             let proms = [],
                 fn = function loadFiles(files) {
 
@@ -224,15 +234,11 @@ class Angular extends util {
                         } else if (
                             [ 'js', 'es6' ].indexOf(v.split('.').pop() || '') > -1
                         ) {
-
-                            // Only load the file if it is a js/es6 type
-                            proms.push(System.import(v).then(function() {
-                                $LogProvider.info(
-                                    `loaded application file ${chalk.blue(v)}`
-                                );
-                            }, function(e) {
-                                $LogProvider.error(e);
-                            }));
+                            try {
+                                require(v);
+                            } catch(e) {
+                                console.log(e);
+                            }
                         } else {
                             try {
                                 fn(fs.readdirSync(v).map(($v) => `${v}/${$v}`));
@@ -260,6 +266,17 @@ class Angular extends util {
                     v.fired = true;
                 }
             });
+        });
+    }
+
+    $$load(fn) {
+        let me = this;
+
+        // Load any app dependencies
+        return this.$$loadDependencies(config.dependencies).then(function() {
+
+            // Bootstrap the application
+            me.$$bootstrap();
         });
     }
 }

@@ -35,7 +35,7 @@ export default function server(args) {
         );
     }
 
-    prepApp().then(function() {
+    app.$$load().then(function() {
 
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
@@ -156,21 +156,9 @@ export default function server(args) {
 function restart(port) {
 
     // TODO this doesn't reload like you think it does
-    prepApp().then(function() {
+    app.$$load().then(function() {
         $LogProvider.info(
             `Application files reloaded; Still serving on port ${port}`
-        );
-    });
-}
-
-export function prepApp() {
-
-    // Load any app dependencies
-    return app.loadDependencies(config.dependencies).then(function() {
-
-        // Bootstrap the angular application
-        return new Promise(
-            (resolve) => app.bootstrap().then(resolve)
         );
     });
 }

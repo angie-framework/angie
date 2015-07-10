@@ -6,7 +6,7 @@ import {transform} from             'babel';
 
 // System Modules
 import {exec} from                  'child_process';
-import chalk from                   'chalk';
+import {gray} from                  'chalk';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
@@ -22,6 +22,7 @@ System.transpiler = 'babel';
 const p = process;
 let args = [],
     _server = requiresConfig.bind(null, server),
+    _shell = requiresConfig.bind(null, shell),
     _db = requiresConfig.bind(null);
 
 // Remove trivial arguments
@@ -67,7 +68,7 @@ switch ((args[0] || '').toLowerCase()) {
         runTests();
         break;
     case 'shell':
-        shell();
+        _shell();
         break;
     default: help();
 }
@@ -108,43 +109,45 @@ function help() {
     $LogProvider.bold('Commands:');
     console.log(
         'server [ port -- optional ]                        ' +
-        chalk.gray(
+        gray(
             'Start the Angie Webserver (shortcut with s). Default port ' +
             'is 3000.'
         )
     );
     console.log(
         'cluster [ port -- optional ]                       ' +
-        chalk.gray('Start the Angie Webserver as a Cluster.')
+        gray('Start the Angie Webserver as a Cluster.')
     );
     console.log(
         'createProject [ name ] [ location -- optional ]    ' +
-        chalk.gray(
+        gray(
             'Create a new Angie project with the specified name in the ' +
             'current directory.'
         )
     );
-    console.log(
-        'syncdb [ database ]                                ' +
-        chalk.gray(
-            'Sync the current specified databases in the AngieFile. ' +
-            'Defaults to the default created database'
-        )
-    );
-    console.log(
-        'migrations [ --destructive -- optional ]           ' +
-        chalk.gray(
-            'Checks to see if the database and the specified ' +
-            'models are out of sync. Generates NO files.'
-        )
-    );
-    console.log(
-        'test                                               ' +
-        chalk.gray(
-            'Runs the Angie test suite and prints the results in the ' +
-            'console'
-        )
-    );
+
+    // TODO do we still want this here?
+    // console.log(
+    //     'syncdb [ database ]                                ' +
+    //     gray(
+    //         'Sync the current specified databases in the AngieFile. ' +
+    //         'Defaults to the default created database'
+    //     )
+    // );
+    // console.log(
+    //     'migrations [ --destructive -- optional ]           ' +
+    //     gray(
+    //         'Checks to see if the database and the specified ' +
+    //         'models are out of sync. Generates NO files.'
+    //     )
+    // );
+    // console.log(
+    //     'test                                               ' +
+    //     gray(
+    //         'Runs the Angie test suite and prints the results in the ' +
+    //         'console'
+    //     )
+    // );
 }
 
 // TODO make all commands here

@@ -6,7 +6,7 @@ import {bold, red, blue} from    'chalk';
 const bread = () => red(bold.apply(null, arguments));
 
 // TODO use native node exception types where possible
-export class $$InvalidConfigError extends Error {
+class $$InvalidConfigError extends Error {
     constructor() {
         super(bread(
             'Invalid application configuration. Check your ' +
@@ -14,14 +14,24 @@ export class $$InvalidConfigError extends Error {
         ));
     }
 }
-export class $$InvalidDirectiveConfigError extends Error {
+
+class $$InvalidDirectiveConfigError extends Error {
     constructor(name) {
         super(bread(`Invalid configuration for directive ${name}`));
     }
 }
-export class $$ProjectCreationError extends Error {}
-export class $$ProviderNotFoundError extends Error {
+
+class $$ProjectCreationError extends Error {}
+
+class $$ProviderNotFoundError extends Error {
     constructor(name) {
         super(bread(`Cannot find ${name} <-- ${name}Provider`));
     }
 }
+
+export {
+    $$InvalidConfigError,
+    $$InvalidDirectiveConfigError,
+    $$ProjectCreationError,
+    $$ProviderNotFoundError
+};

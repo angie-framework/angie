@@ -8,7 +8,7 @@
   "private": false,
   "preferGlobal": true,
   "scripts": {
-    "start": "angie",
+    "start": "node src/index.js",
     "test": "gulp",
     "publish": "gulp"
   },
