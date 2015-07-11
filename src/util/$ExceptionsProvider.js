@@ -23,15 +23,8 @@ class $$InvalidDirectiveConfigError extends Error {
 
 class $$ProjectCreationError extends Error {}
 
-class $$ProviderNotFoundError extends Error {
-    constructor(name) {
-        super(bread(`Cannot find ${name} <-- ${name}Provider`));
-    }
-}
-
 export {
     $$InvalidConfigError,
     $$InvalidDirectiveConfigError,
-    $$ProjectCreationError,
-    $$ProviderNotFoundError
+    $$ProjectCreationError
 };
