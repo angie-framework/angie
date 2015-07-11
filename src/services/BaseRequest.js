@@ -247,8 +247,8 @@ class BaseRequest {
         // TODO See if any views have this Controller associated
         // TODO if no response type associated, use extension (already set)
         // prom = prom.then(function(controllerName) {
-        //     for (let key in app._registry) {
-        //         if (app._registry[ key ] === 'directive') {
+        //     for (let key in app.$registry) {
+        //         if (app.$registry[ key ] === 'directive') {
         //             let directive = app.directives[ key ];
         //             if (
         //                 directive.Controller &&

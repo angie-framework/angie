@@ -3,7 +3,7 @@
 // System Modules
 import fs from                                          'fs';
 import $LogProvider from                                'angie-log';
-import {blue, magenta} from                             'chalk';
+import {magenta, blue} from                             'chalk';
 
 // Angie Modules
 import {config} from                                    './Config';
@@ -36,7 +36,7 @@ class Angular extends util {
         this.services = {};
         this.Controllers = {};
         this.directives = {};
-        this._registry = {};
+        this.$registry = {};
         this.$dependencies = [];
     }
 
@@ -53,13 +53,13 @@ class Angular extends util {
      * @example angular.constant('foo', 'bar');
      */
     constant(name, obj) {
-        return this._register('constants', name, obj);
+        return this.$register('constants', name, obj);
     }
     service(name, obj) {
-        return this._register('services', name, obj);
+        return this.$register('services', name, obj);
     }
     Controller(name, obj) {
-        return this._register('Controllers', name, obj);
+        return this.$register('Controllers', name, obj);
     }
 
     /**
@@ -102,7 +102,7 @@ class Angular extends util {
         } else if (/api.?view/i.test(dir.type)) {
             throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
-        return this._register('directives', name, dir);
+        return this.$register('directives', name, dir);
     }
     config(fn) {
         if (typeof fn === 'function') {
@@ -115,11 +115,11 @@ class Angular extends util {
         }
         return this;
     }
-    _register(component, name, obj) {
+    $register(component, name, obj) {
 
         // `component` and `app.component` should always be defined
         if (name && obj) {
-            this._registry[ name ] = component;
+            this.$registry[ name ] = component;
             this[ component ][ name ] = obj;
         } else {
             $LogProvider.warn(
@@ -131,9 +131,9 @@ class Angular extends util {
 
     // Tear down a registered component
     $$tearDown(name) {
-        if (name && this._registry[ name ]) {
-            const type = this._registry[ name ];
-            delete this._registry[ name ];
+        if (name && this.$registry[ name ]) {
+            const type = this.$registry[ name ];
+            delete this.$registry[ name ];
             delete this[ type ][ name ];
         }
         return this;
@@ -164,58 +164,64 @@ class Angular extends util {
         this.$dependencies = this.$dependencies.concat(dependencies);
         dependencies.forEach(function(v) {
             let dependency = util.removeTrailingLeadingSlashes(v),
-                $config,
-                name,
-                subDependencies;
 
-            try {
-                $config = JSON.parse(
-                    fs.readFileSync(
-                        `./node_modules/${dependency}/AngieFile.json`,
-                        'utf8'
-                    )
-                );
-            } catch(e) {
-                $LogProvider.error(e);
-            }
+                // This will load all of the modules, overwriting a module name
+                // will replace it
+                prom = new Promise(function(resolve) {
+                    let $config,
+                        name,
+                        subDependencies;
 
-            if (typeof $config === 'object') {
-
-                // Grab the dependency name fo' reals
-                name = $config.projectName;
-
-                // Find any sub dependencies for recursive module
-                // loading
-                subDependencies = config.dependencies;
-
-                // Set the config in dependency configs (just in case)
-                if (!app.$dependencyConfig) {
-                    app.$dependencyConfig = {};
-                }
-                app.$dependencyConfig[ dependency ] = $config;
-            }
-
-            try {
-
-                let service = require(dependency);
-
-                // TODO make this try to load not an npm project config
-                if (service) {
-                    proms.push(System.import(dependency).then((service) => {
-                        me.service(name || util.toCamel(dependency), service);
-                        $LogProvider.info(
-                            `Successfully loaded dependency ${magenta(v)}`
+                    try {
+                        $config = JSON.parse(
+                            fs.readFileSync(
+                                `./node_modules/${dependency}/AngieFile.json`,
+                                'utf8'
+                            )
                         );
-                        console.log(me);
-                    }).catch((e) => $LogProvider.error(e)));
-                }
-            } catch(e) {
-                $LogProvider.error(e);
-            }
+                    } catch(e) {
+                        $LogProvider.error(e);
+                    }
 
-            return app.$$loadDependencies(
-                subDependencies || []
-            ).then(resolve);
+                    if (typeof $config === 'object') {
+
+                        // Grab the dependency name fo' reals
+                        name = $config.projectName;
+
+                        // Find any sub dependencies for recursive module
+                        // loading
+                        subDependencies = config.dependencies;
+
+                        // Set the config in dependency configs (just in case)
+                        if (!app.$dependencyConfig) {
+                            app.$dependencyConfig = {};
+                        }
+                        app.$dependencyConfig[ dependency ] = $config;
+                    }
+
+                    try {
+
+                        let service = require(dependency);
+
+                        // TODO make this try to load not an npm project config
+                        if (service) {
+                            me.service(
+                                name || util.toCamel(dependency),
+                                require(dependency)
+                            );
+                            $LogProvider.info(
+                                `Successfully loaded dependency ${magenta(v)}`
+                            );
+                        }
+                    } catch(e) {
+                        $LogProvider.error(e);
+                    }
+
+                    return app.$$loadDependencies(
+                        subDependencies || []
+                    ).then(resolve);
+                });
+            proms.push(prom);
         });
         return Promise.all(proms);
     }
@@ -254,11 +260,10 @@ class Angular extends util {
                             [ 'js', 'es6' ].indexOf(v.split('.').pop() || '') > -1
                         ) {
                             try {
-                                proms.push(System.import(v).then(() => {
-                                    $LogProvider.info(
-                                        `Successfully loaded file ${blue(v)}`
-                                    );
-                                }).catch((e) => $LogProvider.error(e)));
+                                require(v);
+                                $LogProvider.info(
+                                    `Successfully loaded file ${blue(v)}`
+                                );
                             } catch(e) {
                                 $LogProvider.error(e);
                             }

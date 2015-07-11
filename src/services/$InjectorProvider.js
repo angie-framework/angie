@@ -41,7 +41,7 @@ class $InjectorProvider {
             }
 
             let registrar;
-            if ((registrar = global.app[ global.app._registry[ arg ] ])) {
+            if ((registrar = global.app[ global.app.$registry[ arg ] ])) {
                 provision = registrar[ arg ];
             }
 

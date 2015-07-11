@@ -20,7 +20,7 @@ describe('$Injector', function() {
         afterEach(function() {
             app.constants = {};
             app.services = {};
-            app._registry = {};
+            app.$registry = {};
         });
         describe('get', function() {
             it('test get returns nothing if no arguments', function() {

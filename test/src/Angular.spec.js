@@ -41,38 +41,38 @@ describe('Angular', function() {
             expect(app.services).to.deep.eq({});
             expect(app.Controllers).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
-            expect(app._registry).to.deep.eq({});
+            expect(app.$registry).to.deep.eq({});
             expect(app.$dependencies).to.deep.eq([]);
         });
     });
-    describe('_register', function() {
+    describe('$register', function() {
         beforeEach(function() {
             mock($LogProvider, 'warn', noop);
         });
         it('test register returns the app object', function() {
-            expect(app._register()).to.deep.eq(app);
+            expect(app.$register()).to.deep.eq(app);
         });
         it('test register called without a name fails', function() {
-            app._register('directives', null, {});
-            expect(app._registry).to.deep.eq({});
+            app.$register('directives', null, {});
+            expect(app.$registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect($LogProvider.warn).to.have.been.called;
         });
         it('test register called without an obj fails', function() {
-            app._register('directives', 'test', null);
-            expect(app._registry).to.deep.eq({});
+            app.$register('directives', 'test', null);
+            expect(app.$registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect($LogProvider.warn).to.have.been.called;
         });
         it('test register properly registers a provider', function() {
-            app._register('directives', 'test', 'test');
-            expect(app._registry.test).to.eq('directives');
+            app.$register('directives', 'test', 'test');
+            expect(app.$registry.test).to.eq('directives');
             expect(app.directives.test).to.deep.eq('test');
         });
     });
     describe('directive', function() {
         beforeEach(function() {
-            mock(app, '_register', noop);
+            mock(app, '$register', noop);
         });
         it('test Controller and string type', function() {
             let obj = {
@@ -81,7 +81,7 @@ describe('Angular', function() {
             app.directive('test', function() {
                 return obj;
             });
-            expect(app._register.calls[0].args).to.deep.eq(
+            expect(app.$register.calls[0].args).to.deep.eq(
                 [ 'directives', 'test', obj ]
             );
         });
@@ -92,7 +92,7 @@ describe('Angular', function() {
             app.directive('test', function() {
                 return obj;
             });
-            expect(app._register.calls[0].args).to.deep.eq(
+            expect(app.$register.calls[0].args).to.deep.eq(
                 [ 'directives', 'test', obj ]
             );
             expect(obj.Controller).to.be.undefined;
@@ -111,27 +111,27 @@ describe('Angular', function() {
     });
     describe('constant, service, Controller', function() {
         beforeEach(function() {
-            mock(app, '_register', noop);
+            mock(app, '$register', noop);
         });
-        it('test constant makes a call to _register', function() {
+        it('test constant makes a call to $register', function() {
             app.constant('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
+            expect(app.$register.calls[0].args).to.deep.eq([
                 'constants',
                 'test',
                 'test'
             ]);
         });
-        it('test service makes a call to _register', function() {
+        it('test service makes a call to $register', function() {
             app.service('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
+            expect(app.$register.calls[0].args).to.deep.eq([
                 'services',
                 'test',
                 'test'
             ]);
         });
-        it('test Controller makes a call to _register', function() {
+        it('test Controller makes a call to $register', function() {
             app.Controller('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
+            expect(app.$register.calls[0].args).to.deep.eq([
                 'Controllers',
                 'test',
                 'test'
@@ -168,17 +168,17 @@ describe('Angular', function() {
         });
         it('test _tearDown called with no name does nothing', function() {
             app._tearDown();
-            expect(app._registry.test).to.eq('services');
+            expect(app.$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
         it('test _tearDown called with an improper service name', function() {
             app._tearDown('test1');
-            expect(app._registry.test).to.eq('services');
+            expect(app.$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
         it('test _tearDown called with a proper service name', function() {
             app._tearDown('test');
-            expect(app._registry.test).to.be.undefined;
+            expect(app.$registry.test).to.be.undefined;
             expect(app.service.test).to.be.undefined;
         });
     });
