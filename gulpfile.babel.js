@@ -67,7 +67,7 @@ gulp.task('mocha', function(cb) {
             })
         );
     }).then(function() {
-        //return cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
+        return cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
     });
 });
 gulp.task('esdoc', function(cb) {
