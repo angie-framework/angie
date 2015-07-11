@@ -3,7 +3,7 @@
 // System Modules
 import fs from                                          'fs';
 import $LogProvider from                                'angie-log';
-import chalk from                                       'chalk';
+import {blue, magenta} from                             'chalk';
 
 // Angie Modules
 import {config} from                                    './Config';
@@ -37,7 +37,7 @@ class Angular extends util {
         this.Controllers = {};
         this.directives = {};
         this._registry = {};
-        this._dependencies = [];
+        this.$dependencies = [];
     }
 
     /**
@@ -130,7 +130,7 @@ class Angular extends util {
     }
 
     // Tear down a registered component
-    _tearDown(name) {
+    $$tearDown(name) {
         if (name && this._registry[ name ]) {
             const type = this._registry[ name ];
             delete this._registry[ name ];
@@ -157,45 +157,65 @@ class Angular extends util {
 
         // Make sure we do not load duplicate dependencies
         dependencies = dependencies.filter(
-            (v) => me._dependencies.indexOf(v) === -1
+            (v) => me.$dependencies.indexOf(v) === -1
         );
 
         // Add dependencies
-        this._dependencies = this._dependencies.concat(dependencies);
+        this.$dependencies = this.$dependencies.concat(dependencies);
         dependencies.forEach(function(v) {
             let dependency = util.removeTrailingLeadingSlashes(v),
+                $config,
+                name,
+                subDependencies;
 
-                // This will load all of the modules, overwriting a module name
-                // will replace it
-                prom = new Promise(function(resolve) {
-                    let config,
-                        name,
-                        subDependencies;
+            try {
+                $config = JSON.parse(
+                    fs.readFileSync(
+                        `./node_modules/${dependency}/AngieFile.json`,
+                        'utf8'
+                    )
+                );
+            } catch(e) {
+                $LogProvider.error(e);
+            }
 
-                    try {
-                        config = JSON.parse(
-                            fs.readFileSync(
-                                `./node_modules/${dependency}/AngieFile.json`,
-                                'utf8'
-                            )
+            if (typeof $config === 'object') {
+
+                // Grab the dependency name fo' reals
+                name = $config.projectName;
+
+                // Find any sub dependencies for recursive module
+                // loading
+                subDependencies = config.dependencies;
+
+                // Set the config in dependency configs (just in case)
+                if (!app.$dependencyConfig) {
+                    app.$dependencyConfig = {};
+                }
+                app.$dependencyConfig[ dependency ] = $config;
+            }
+
+            try {
+
+                let service = require(dependency);
+
+                // TODO make this try to load not an npm project config
+                if (service) {
+                    proms.push(System.import(dependency).then((service) => {
+                        me.service(name || util.toCamel(dependency), service);
+                        $LogProvider.info(
+                            `Successfully loaded dependency ${magenta(v)}`
                         );
-                    } catch(e) {
-                        $LogProvider.error(e);
-                    }
+                        console.log(me);
+                    }).catch((e) => $LogProvider.error(e)));
+                }
+            } catch(e) {
+                $LogProvider.error(e);
+            }
 
-                    if (typeof config === 'object') {
-                        name = config.projectName;
-                        subDependencies = config.dependencies;
-                    }
-                    me.service(
-                        name || util.toCamel(dependency),
-                        require(dependency)
-                    );
-                    return app.$$loadDependencies(
-                        subDependencies || []
-                    ).then(resolve);
-                });
-            proms.push(prom);
+            return app.$$loadDependencies(
+                subDependencies || []
+            ).then(resolve);
         });
         return Promise.all(proms);
     }
@@ -218,7 +238,6 @@ class Angular extends util {
                 fs.readdirSync(`${dir}/${src}`).map((v) => `${dir}/src/${v}`)
             );
         }).then(function(files) {
-            console.log(files);
             let proms = [],
                 fn = function loadFiles(files) {
 
@@ -235,9 +254,13 @@ class Angular extends util {
                             [ 'js', 'es6' ].indexOf(v.split('.').pop() || '') > -1
                         ) {
                             try {
-                                require(v);
+                                proms.push(System.import(v).then(() => {
+                                    $LogProvider.info(
+                                        `Successfully loaded file ${blue(v)}`
+                                    );
+                                }).catch((e) => $LogProvider.error(e)));
                             } catch(e) {
-                                console.log(e);
+                                $LogProvider.error(e);
                             }
                         } else {
                             try {
@@ -309,6 +332,7 @@ app.config(function() {
 .service('$templateCache', $templateCache)
 .service('$resourceLoader', $resourceLoader);
 
+
 // TODO open this back up when you have an admin model
 // .Model('AngieUserModel', function($fields) {
 //     let obj = {};
@@ -333,6 +357,10 @@ app.config(function() {
 //         this.name = 'angie_migrations';
 //     }
 // });
+
+// Setup up our configs on the app for external fetches
+app.$$config = config;
+Object.freeze(app.$$config);
 
 export class angular extends Angular {}
 export default app;

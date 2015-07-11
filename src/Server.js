@@ -132,7 +132,7 @@ export default function server(args) {
 
         // Attempt to restart the webserver on change
         if (firstrun) {
-            let watchDirs = [ p.cwd(), __dirname ].concat(app.__dependencies__);
+            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
 
             try {
                 let restartObj = {

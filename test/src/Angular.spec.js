@@ -42,7 +42,7 @@ describe('Angular', function() {
             expect(app.Controllers).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect(app._registry).to.deep.eq({});
-            expect(app._dependencies).to.deep.eq([]);
+            expect(app.$dependencies).to.deep.eq([]);
         });
     });
     describe('_register', function() {

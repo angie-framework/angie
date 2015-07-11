@@ -141,13 +141,13 @@ function help() {
     //         'models are out of sync. Generates NO files.'
     //     )
     // );
-    // console.log(
-    //     'test                                               ' +
-    //     gray(
-    //         'Runs the Angie test suite and prints the results in the ' +
-    //         'console'
-    //     )
-    // );
+    console.log(
+        'test                                               ' +
+        gray(
+            'Runs the Angie test suite and prints the results in the ' +
+            'console'
+        )
+    );
 }
 
 // TODO make all commands here

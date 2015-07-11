@@ -9,10 +9,10 @@ import {$$InvalidConfigError} from      './util/$ExceptionsProvider';
 
 let config = {};
 
-export default class Config {
+class Config {
     constructor() {
         if (Object.keys(config).length === 0) {
-            return new Promise(function() {
+            return new Promise(function(resolve, reject) {
 
                 // Use the file finder to check against filetype
                 let fileNames = [
@@ -38,23 +38,18 @@ export default class Config {
                 });
 
                 try {
-                    arguments[0](fs.readFileSync(file, 'utf8'));
+                    resolve(fs.readFileSync(file, 'utf8'));
                 } catch(e) {
-                    arguments[1](e);
+                    reject(e);
                 }
             }).then(function(stdout) {
-                try {
-                    config = JSON.parse(stdout);
-                } catch(e) {
-                    throw new $$InvalidConfigError();
-                }
-            }, function() {
-                throw new $$InvalidConfigError();
-            });
+                config = JSON.parse(stdout);
+            }).catch(() => { throw new $$InvalidConfigError() });
         } else {
             return new Promise(() => arguments[0]());
         }
     }
 }
 
+export default Config;
 export {config};

@@ -136,7 +136,9 @@ function $compile(t) {
                 ProcessExternalResources: false
             });
             $$window = $$document.defaultView;
-        } catch(e) {}
+        } catch(e) {
+            $LogProvider.error(e);
+        }
 
         // Assign the window and document services
         if (assignDOMServices === true) {
