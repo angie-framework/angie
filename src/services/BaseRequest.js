@@ -2,6 +2,7 @@
 
 // System Modules
 import $LogProvider from                        'angie-log';
+import {$injectionBinder} from                  'angie-injector';
 
 // Angie Modules
 import app from                                 '../Angular';
@@ -10,7 +11,6 @@ import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {default as $Routes} from                './$RouteProvider';
 import {$templateCache, _templateLoader} from   './$TemplateCache';
-import {$injectionBinder} from                  './$InjectorProvider';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
 import util from                                '../util/util';

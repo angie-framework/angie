@@ -2,14 +2,14 @@
 
 // System Modules
 import fs from                                          'fs';
-import $LogProvider from                                'angie-log';
 import {magenta, blue} from                             'chalk';
+import $LogProvider from                                'angie-log';
+import {default as $Injector, $injectionBinder} from    'angie-injector';
 
 // Angie Modules
 import {config} from                                    './Config';
 import $RouteProvider from                              './services/$RouteProvider';
 import $compile from                                    './services/$Compile';
-import {default as $Injector, $injectionBinder} from    './services/$InjectorProvider';
 import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
 import util from                                        './util/util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
@@ -323,14 +323,10 @@ app.config(function() {
 .service('$Routes', $RouteProvider)
 .service('$compile', $compile)
 
-// Logging  utilities
+// Error  utilities
 .service('$Exceptions', $ExceptionsProvider)
 
-// Injection utilities
-.service('$Injector', $Injector)
-
 // TODO we shouldn't have to expose this?
-// .service('$injectionBinder', $injectionBinder)
 .service('$scope', { $id: 1 })
 .service('$window', {})
 .service('$document', {})

@@ -2,11 +2,11 @@
 
 // System Modules
 import fs from                      'fs';
+import {default as $Injector} from  'angie-injector';
 
 // Angie Modules
 import {config} from                '../Config';
 import $cacheFactory from           './$CacheFactory';
-import {default as $Injector} from  './$InjectorProvider';
 import util from                    '../util/util';
 
 const p = process,
