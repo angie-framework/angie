@@ -36,8 +36,9 @@ class Angular extends util {
         this.services = {};
         this.Controllers = {};
         this.directives = {};
-        this.$registry = {};
         this.$dependencies = [];
+        this.$$registry = {};
+        this.$$loaded = false;
     }
 
     /**
@@ -53,13 +54,13 @@ class Angular extends util {
      * @example angular.constant('foo', 'bar');
      */
     constant(name, obj) {
-        return this.$register('constants', name, obj);
+        return this.$$register('constants', name, obj);
     }
     service(name, obj) {
-        return this.$register('services', name, obj);
+        return this.$$register('services', name, obj);
     }
     Controller(name, obj) {
-        return this.$register('Controllers', name, obj);
+        return this.$$register('Controllers', name, obj);
     }
 
     /**
@@ -102,7 +103,7 @@ class Angular extends util {
         } else if (/api.?view/i.test(dir.type)) {
             throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
-        return this.$register('directives', name, dir);
+        return this.$$register('directives', name, dir);
     }
     config(fn) {
         if (typeof fn === 'function') {
@@ -115,11 +116,11 @@ class Angular extends util {
         }
         return this;
     }
-    $register(component, name, obj) {
+    $$register(component, name, obj) {
 
         // `component` and `app.component` should always be defined
         if (name && obj) {
-            this.$registry[ name ] = component;
+            this.$$registry[ name ] = component;
             this[ component ][ name ] = obj;
         } else {
             $LogProvider.warn(
@@ -131,9 +132,9 @@ class Angular extends util {
 
     // Tear down a registered component
     $$tearDown(name) {
-        if (name && this.$registry[ name ]) {
-            const type = this.$registry[ name ];
-            delete this.$registry[ name ];
+        if (name && this.$$registry[ name ]) {
+            const type = this.$$registry[ name ];
+            delete this.$$registry[ name ];
             delete this[ type ][ name ];
         }
         return this;
@@ -297,11 +298,19 @@ class Angular extends util {
         });
     }
 
-    $$load(fn) {
+    $$load() {
         let me = this;
+
+        // Do not call load twice
+        if (this.$$loaded === true) {
+            return new Promise((r) => { r(); });
+        }
 
         // Load any app dependencies
         return this.$$loadDependencies(config.dependencies).then(function() {
+
+            // Set the app in a loaded state
+            me.$$loaded = true;
 
             // Bootstrap the application
             me.$$bootstrap();
@@ -358,10 +367,6 @@ app.config(function() {
 //         this.name = 'angie_migrations';
 //     }
 // });
-
-// Setup up our configs on the app for external fetches
-app.$$config = config;
-Object.freeze(app.$$config);
 
 export class angular extends Angular {}
 export default app;

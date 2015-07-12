@@ -19,13 +19,11 @@ import shell from                   './util/shell';
 transform('code', { stage: 0 });
 System.transpiler = 'babel';
 
-console.log('here');
-
 const p = process;
 let args = [],
-    _server = requiresConfig.bind(null, server),
-    _shell = requiresConfig.bind(null, shell),
-    _db = requiresConfig.bind(null);
+    $$server = requiresConfig.bind(null, server),
+    $$db = requiresConfig.bind(null, require.bind(null, 'angie-orm')),
+    $$shell = requiresConfig.bind(null, shell);
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
@@ -43,10 +41,10 @@ switch ((args[0] || '').toLowerCase()) {
         help();
         break;
     case 'server':
-        _server();
+        $$server();
         break;
     case 's':
-        _server();
+        $$server();
         break;
     case 'cluster':
         break;
@@ -57,20 +55,16 @@ switch ((args[0] || '').toLowerCase()) {
         });
         break;
     case 'syncdb':
-        _db().then(System.import('angie-orm/src/index')).then(
-            p.exit.bind(0), p.exit.bind(1)
-        );
+        $$db();
         break;
     case 'migrate':
-        _db().then(System.import('angie-orm/src/index')).then(
-            p.exit.bind(0), p.exit.bind(1)
-        );
+        $$db();
         break;
     case 'test':
         runTests();
         break;
     case 'shell':
-        _shell();
+        $$shell();
         break;
     default: help();
 }

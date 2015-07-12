@@ -44,6 +44,9 @@ class Config {
                 }
             }).then(function(stdout) {
                 config = JSON.parse(stdout);
+                if (global.app) {
+                    global.app.$$config = Object.freeze(config);
+                }
             }).catch(() => { throw new $$InvalidConfigError() });
         } else {
             return new Promise(() => arguments[0]());

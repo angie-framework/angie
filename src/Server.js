@@ -25,8 +25,6 @@ import {default as $MimeType} from  './util/$MimeTypeProvider';
 const p = process;
 let firstrun = true;
 
-console.log('test');
-
 function server(args) {
     const useSSL = /\-+usessl/i.test(args),
           port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
