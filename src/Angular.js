@@ -4,7 +4,7 @@
 import fs from                                          'fs';
 import {magenta, blue} from                             'chalk';
 import $LogProvider from                                'angie-log';
-import {default as $Injector, $injectionBinder} from    'angie-injector';
+import {$injectionBinder} from                          'angie-injector';
 
 // Angie Modules
 import {config} from                                    './Config';

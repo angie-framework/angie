@@ -19,6 +19,8 @@ import shell from                   './util/shell';
 transform('code', { stage: 0 });
 System.transpiler = 'babel';
 
+console.log('here');
+
 const p = process;
 let args = [],
     _server = requiresConfig.bind(null, server),
@@ -125,22 +127,6 @@ function help() {
             'current directory.'
         )
     );
-
-    // TODO do we still want this here?
-    // console.log(
-    //     'syncdb [ database ]                                ' +
-    //     gray(
-    //         'Sync the current specified databases in the AngieFile. ' +
-    //         'Defaults to the default created database'
-    //     )
-    // );
-    // console.log(
-    //     'migrations [ --destructive -- optional ]           ' +
-    //     gray(
-    //         'Checks to see if the database and the specified ' +
-    //         'models are out of sync. Generates NO files.'
-    //     )
-    // );
     console.log(
         'test                                               ' +
         gray(

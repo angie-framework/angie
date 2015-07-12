@@ -3,5 +3,7 @@
 // TODO check to see that the most up to date version is installed
 global.ANGIE_VERSION = '0.3.0';
 
+console.log('here');
+
 require('babel/register')({ ignore: false });
 require('../src/index');
