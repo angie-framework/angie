@@ -9,6 +9,7 @@ import {$injectionBinder} from                          'angie-injector';
 // Angie Modules
 import {config} from                                    './Config';
 import $RouteProvider from                              './services/$RouteProvider';
+import $CacheFactory from                               './services/$CacheFactory';
 import $compile from                                    './services/$Compile';
 import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
 import util from                                        './util/util';
@@ -340,6 +341,7 @@ app.config(function() {
 .service('$window', {})
 .service('$document', {})
 .service('$templateCache', $templateCache)
+.service('$Cache', $CacheFactory)
 .service('$resourceLoader', $resourceLoader);
 
 

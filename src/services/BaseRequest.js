@@ -10,7 +10,7 @@ import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {default as $Routes} from                './$RouteProvider';
-import {$templateCache, _templateLoader} from   './$TemplateCache';
+import {$templateCache, $$templateLoader} from  './$TemplateCache';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
 import util from                                '../util/util';
@@ -43,7 +43,7 @@ class BaseRequest {
 
         // Make the response object available to the API
         this.response = new $Response(response).response;
-        this.response._responseContent = '';
+        this.response.$responseContent = '';
 
         // Parse out the response content type
         let contentType = this.request.headers.accept;
@@ -73,7 +73,7 @@ class BaseRequest {
      * @returns {function} BaseRequest.prototype.$controllerPath or
      * BaseRequest.prototype.otherPath
      */
-    _route() {
+    $$route() {
 
         // Check against all of the RegExp routes in Reverse
         let regExpRoutes = [];
@@ -218,7 +218,7 @@ class BaseRequest {
             }
 
             // Pull the response back in from wherever it was before
-            me.responseContent = me.response._responseContent;
+            me.responseContent = me.response.$responseContent;
 
             if (me.template) {
 
@@ -235,7 +235,7 @@ class BaseRequest {
                     });
                 }).then(function(template) {
                     me.responseContent += template;
-                    me.response._responseContent = me.responseContent;
+                    me.response.$responseContent = me.responseContent;
 
                     return controllerName;
                 });
@@ -260,7 +260,7 @@ class BaseRequest {
         //                 // APIViews cannot have templates, all templates are trashed
         //                 if (me.template) {
         //                     delete me.template;
-        //                     delete me._responseContent;
+        //                     delete me.$responseContent;
         //
         //                     //me.responseHeaders = {};
         //                     $log.warn(
@@ -313,7 +313,7 @@ class BaseRequest {
     defaultPath() {
 
         // Load default page
-        let index = _templateLoader('index.html');
+        let index = $$templateLoader('index.html');
 
         // If the index page could not be found
         if (!index) {
@@ -335,7 +335,7 @@ class BaseRequest {
     unknownPath() {
 
         // Load page not found
-        let fourOhFour = _templateLoader('404.html'),
+        let fourOhFour = $$templateLoader('404.html'),
             me = this;
 
         return new Promise(function() {

@@ -12,27 +12,6 @@ import fs from 'fs';
  * @since 0.2.3
  */
 class Util {
-    static extend(target) {
-        let _target;
-
-        if (typeof target === 'function') {
-            _target = target;
-            target = target.prototype;
-        } else if (typeof target !== 'object') {
-            return target;
-        }
-
-        let args = Array.prototype.slice.call(arguments, 1, arguments.length);
-        args.forEach(function(src) {
-            if (typeof src === 'object') {
-                for (let key in src) {
-                    target[key] = src[key];
-                }
-            }
-        });
-
-        return _target || target;
-    }
     static findFile(root, target) {
 
         // Handle slashes

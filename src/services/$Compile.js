@@ -6,7 +6,7 @@ import $LogProvider from        'angie-log';
 
 // Angie Modules
 import app, {angular} from      '../Angular';
-import {_templateLoader} from   './$TemplateCache';
+import {$$templateLoader} from  './$TemplateCache';
 import util from                '../util/util';
 
 // ngie Incrementer
@@ -75,12 +75,12 @@ function $compile(t) {
         directives = [];
 
     // Direct reference by directive name to directive object
-    for (let _directive in app.directives) {
-        let directive = app.directives[ _directive ];
-        directive._names = [
-            _directive,
-            util.toUnderscore(_directive),
-            util.toDash(_directive)
+    for (let $directive in app.directives) {
+        let directive = app.directives[ $directive ];
+        directive.$names = [
+            $directive,
+            util.toUnderscore($directive),
+            util.toDash($directive)
         ];
 
         // Add all parsed directve names to directives
@@ -156,17 +156,17 @@ function $compile(t) {
                     // Try and match a directive based on type
                     if (
                         el.className &&
-                        directive._names.some((v) => el.className.indexOf(v) > -1)
+                        directive.$names.some((v) => el.className.indexOf(v) > -1)
                     ) {
                         type = 'C';
                     } else if (
                         el.hasAttribute &&
-                        directive._names.some((v) => !!(el.hasAttribute(v)))
+                        directive.$names.some((v) => !!(el.hasAttribute(v)))
                     ) {
                         type = 'A';
                     } else if (
                         el.tagName &&
-                        directive._names.indexOf(el.tagName.toLowerCase()) > -1
+                        directive.$names.indexOf(el.tagName.toLowerCase()) > -1
                     ) {
                         type = 'E';
                     }
@@ -248,7 +248,7 @@ function $$processDirective($$document, el, scope, directive, type) {
         directive.hasOwnProperty('templatePath') &&
         directive.templatePath.indexOf('.html') > -1
     ) {
-        template = _templateLoader(directive.templatePath, 'template', 'utf8');
+        template = $$templateLoader(directive.templatePath, 'template', 'utf8');
     } else if (directive.hasOwnProperty('template')) {
         template = directive.template;
     }
@@ -295,7 +295,7 @@ function $$processDirective($$document, el, scope, directive, type) {
                 for (let key in parsedAttrs) {
 
                     // Replace all of the element attrs with parsedAttrs
-                    if (directive._names.indexOf(key) === -1) {
+                    if (directive.$names.indexOf(key) === -1) {
                         el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
                     }
                 }

@@ -7,7 +7,7 @@
 
 class $ScopeProvider {
     contructor() {
-
+        this.id = 1;
     }
 }
 

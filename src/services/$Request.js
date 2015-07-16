@@ -6,7 +6,7 @@ import url from 'url';
 // Angie Modules
 import app from '../Angular';
 
-export default class $Request {
+class $Request {
     constructor(request) {
         this.request = request;
         this.request.query = url.parse(request.url, true).query;
@@ -14,3 +14,5 @@ export default class $Request {
         app.service('$request', this.request);
     }
 }
+
+export default $Request;

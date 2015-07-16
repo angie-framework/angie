@@ -10,12 +10,12 @@ class $Response {
 }
 
 // TODO use these classes to format responses instead of BaseRequest
-class $APIResponse extends $Response {
+// class $APIResponse extends $Response {
+//
+// }
 
-}
-
-class $TemplateResponse extends $Response {
-
-}
+// class $TemplateResponse extends $Response {
+//
+// }
 
 export {$Response};

@@ -34,9 +34,6 @@ p.argv.forEach(function(v) {
 
 // Route the CLI request to a specific command
 switch ((args[0] || '').toLowerCase()) {
-    case '':
-        help();
-        break;
     case 'help':
         help();
         break;
@@ -66,7 +63,8 @@ switch ((args[0] || '').toLowerCase()) {
     case 'shell':
         $$shell();
         break;
-    default: help();
+    default:
+        $LogProvider.error('Unrecognized CLI Argument');
 }
 
 // Wrapper function for services which require configs to be loaded
