@@ -274,7 +274,7 @@ class Angular extends util {
                                 fn(fs.readdirSync(v).map(($v) => `${v}/${$v}`));
                             } catch(e) {
                                 $LogProvider.warn(
-                                    `Treating ${chalk.blue(v)} as a directory, but it is a file`
+                                    `Treating ${blue(v)} as a directory, but it is a file`
                                 );
                             }
                         }
@@ -298,7 +298,6 @@ class Angular extends util {
             });
         });
     }
-
     $$load() {
         let me = this;
 

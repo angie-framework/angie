@@ -151,3 +151,4 @@ class Util {
 // class stringUtil {}
 
 export default class util extends Util {}
+export {Util};

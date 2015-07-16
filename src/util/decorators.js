@@ -1,4 +1,13 @@
 'use strict'; 'use strong';
 
+function Base(name) {
+    return (obj) => { global.app[ name ](obj.name, obj); };
+}
 
-global.Controller = (name, obj) => { console.log(arguments); };//global.app.Controller(obj.constructor.name, obj); };
+const Controller = Base('Controller'),
+      directive = Base('directive');
+
+export {
+    Controller,
+    directive
+};

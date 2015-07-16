@@ -124,7 +124,7 @@ describe('$compile', function() {
             });
         });
         afterEach(function() {
-            app._tearDown('testDir');
+            app.$$tearDown('testDir');
         });
         it('test attribute unmatched directive', function() {
             $compile('<div test-dir></div>')({}).then(function(t) {

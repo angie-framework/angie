@@ -1,6 +1,7 @@
 'use strict'; 'use strong';
 
 // System Modules
+import util from                                'util';
 import $LogProvider from                        'angie-log';
 import {$injectionBinder} from                  'angie-injector';
 
@@ -13,7 +14,7 @@ import {default as $Routes} from                './$RouteProvider';
 import {$templateCache, $$templateLoader} from  './$TemplateCache';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 import $compile from                            './$Compile';
-import util from                                '../util/util';
+import {Util} from                                '../util/util';
 
 // TODO move these out to an app constant
 const RESPONSE_HEADER_MESSAGES = {
@@ -84,7 +85,7 @@ class BaseRequest {
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
             // Slice characters we do not need to instantiate a new RegExp
-            let regExpRoute = util.removeTrailingLeadingSlashes(regExpRoutes[ i ]),
+            let regExpRoute = Util.removeTrailingLeadingSlashes(regExpRoutes[ i ]),
 
                 // Cast the string key of the routes.regExp object as a
                 // RegExp obj
@@ -95,7 +96,7 @@ class BaseRequest {
 
                 // Hooray, we've set our route, now we need to do some additional
                 // param parsing
-                util.extend(
+                util._extend(
                     this.request.query,
                     $Routes.$$parseURLParams(pattern, this.path)
                 );
@@ -210,7 +211,7 @@ class BaseRequest {
             ) {
 
                 // If there is a template, check to see if caching is set
-                me.responseHeaders = util.extend(me.responseHeaders, {
+                me.responseHeaders = util._extend(me.responseHeaders, {
                     Expires: -1,
                     Pragma: PRAGMA_HEADER,
                     'Cache-Control': NO_CACHE_HEADER

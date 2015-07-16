@@ -4,6 +4,7 @@
 import http from                    'http';
 import https from                   'https';
 import url from                     'url';
+import util from                    'util';
 import chalk from                   'chalk';
 import watch from                   'node-watch';
 import $LogProvider from            'angie-log';
@@ -19,7 +20,6 @@ import {
     PRAGMA_HEADER,
     NO_CACHE_HEADER
 } from                              './services/BaseRequest';
-import util from                    './util/util';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
 const p = process;
@@ -67,7 +67,7 @@ function server(args) {
                         config.hasOwnProperty('cacheStaticAssets') &&
                         !config.cacheStaticAssets
                     ) {
-                        angieResponse.responseHeaders = util.extend(
+                        angieResponse.responseHeaders = util._extend(
                             angieResponse.responseHeaders,
                             {
                                 Expires: -1,

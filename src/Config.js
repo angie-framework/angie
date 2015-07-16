@@ -47,7 +47,7 @@ class Config {
                 if (global.app) {
                     global.app.$$config = Object.freeze(config);
                 }
-            }).catch(() => { throw new $$InvalidConfigError() });
+            }).catch(() => { throw new $$InvalidConfigError(); });
         } else {
             return new Promise(() => arguments[0]());
         }

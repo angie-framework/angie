@@ -1,5 +1,9 @@
 'use strict'; 'use strong';
 
+// Global Modules
+import {default as register} from 'babel/register';
+register({ stage: 1 });
+
 // System Modules
 import gulp from                'gulp';
 import {exec} from              'child_process';
@@ -26,7 +30,7 @@ gulp.task('eslint', function () {
     );
 });
 gulp.task('jscs', [ 'eslint' ], function () {
-    return gulp.src([ src, testSrc ])
+    return gulp.src([ src, 'test/**/!(decorators)*.spec.js' ])
         .pipe(jscs({
             fix: true,
             configPath: '.jscsrc',
