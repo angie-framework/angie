@@ -8,6 +8,7 @@ import {$injectionBinder} from                          'angie-injector';
 
 // Angie Modules
 import {config} from                                    './Config';
+import {$scope} from                                    '../controllers/$ScopeProvider';
 import $RouteProvider from                              './services/$RouteProvider';
 import $CacheFactory from                               './services/$CacheFactory';
 import $compile from                                    './services/$Compile';
@@ -336,7 +337,7 @@ app.config(function() {
 .service('$Exceptions', $ExceptionsProvider)
 
 // TODO we shouldn't have to expose this?
-.service('$scope', { $id: 1 })
+.service('$scope', $scope)
 .service('$window', {})
 .service('$document', {})
 .service('$templateCache', $templateCache)

@@ -2,7 +2,6 @@
 
 // Global Modules
 import {default as register} from 'babel/register';
-register({ stage: 1 });
 
 // System Modules
 import gulp from                'gulp';
@@ -14,6 +13,8 @@ import {Instrumenter} from      'isparta';
 import mocha from               'gulp-mocha';
 import cobertura from           'istanbul-cobertura-badger';
 import $LogProvider from        'angie-log';
+
+register({ stage: 1 });
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',

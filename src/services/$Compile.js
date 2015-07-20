@@ -155,8 +155,8 @@ function $compile(t) {
 
                     // Try and match a directive based on type
                     if (
-                        el.className &&
-                        directive.$names.some((v) => el.className.indexOf(v) > -1)
+                        el.classList &&
+                        directive.$names.some((v) => el.classList.contains(v))
                     ) {
                         type = 'C';
                     } else if (
