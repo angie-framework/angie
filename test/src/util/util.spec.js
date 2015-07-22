@@ -5,13 +5,22 @@ import {expect} from            'chai';
 import simple, {mock} from      'simple-mock';
 
 // Angie Modules
-import util from                '../../../src/util/util';
+import $Util, {
+    $StringUtil,
+    $FileUtil
+} from                          '../../../src/util/Util';
 
-describe('Util', function() {
+describe('$Util', function() {
+    it('noop', function() {
+        expect(util.noop()).to.be.undefined;
+    });
+});
+
+describe('$StringUtil', function() {
     describe('removeTrailingLeadingSlashes', function() {
         let slashes;
         beforeEach(function() {
-            slashes = util.removeTrailingLeadingSlashes;
+            slashes = $StringUtil.removeTrailingLeadingSlashes;
         });
         it('test called without any arguments', function() {
             expect(slashes()).to.eq('');
@@ -37,47 +46,48 @@ describe('Util', function() {
     });
     describe('toCamel', function() {
         it('test a non-camel string', function() {
-            expect(util.toCamel('test-test')).to.eq('testTest');
-            expect(util.toCamel('test_test')).to.eq('testTest');
+            expect($StringUtil.toCamel('test-test')).to.eq('testTest');
+            expect($StringUtil.toCamel('test_test')).to.eq('testTest');
         });
         it('test an uppercase string', function() {
-            expect(util.toCamel('TEST-TEST')).to.eq('testTest');
+            expect($StringUtil.toCamel('TEST-TEST')).to.eq('testTest');
         });
         it('test no special chars', function() {
-            expect(util.toCamel('testtest')).to.eq('testtest');
+            expect($StringUtil.toCamel('testtest')).to.eq('testtest');
         });
     });
     describe('toUnderscore, toDash', function() {
         beforeEach(function() {
-            mock(util, 'toFormat', function() {});
+            mock($StringUtil, 'toFormat', function() {});
         });
         afterEach(function() {
             simple.restore();
         });
         it('test toUnderscore calls to format', function() {
-            util.toUnderscore('test');
-            expect(util.toFormat).to.have.been.called;
+            $StringUtil.toUnderscore('test');
+            expect($StringUtil.toFormat).to.have.been.called;
         });
         it('test toDash calls to format', function() {
-            util.toDash('test');
-            expect(util.toFormat).to.have.been.called;
+            $StringUtil.toDash('test');
+            expect($StringUtil.toFormat).to.have.been.called;
         });
     });
     describe('toFormat', function() {
         it(
             'test toFormat properly formats camelCase to underscore_separation',
             function() {
-                expect(util.toFormat('testTest', '_')).to.eq('test_test');
+                expect($StringUtil.toFormat('testTest', '_')).to.eq('test_test');
             }
         );
         it(
             'test toFormat properly formats camelCase to dash-separation',
             function() {
-                expect(util.toFormat('testTest', '-')).to.eq('test-test');
+                expect($StringUtil.toFormat('testTest', '-')).to.eq('test-test');
             }
         );
     });
-    it('noop', function() {
-        expect(util.noop()).to.be.undefined;
-    });
+});
+
+describe('$FileUtil', function() {
+
 });

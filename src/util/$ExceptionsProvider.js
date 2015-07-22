@@ -1,23 +1,41 @@
 'use strict'; 'use strong';
 
 // System Modules
-import {bold, red, blue} from    'chalk';
+import $LogProvider from    'angie-log';
+import {cyan, blue} from    'chalk';
 
-const bread = () => red(bold.apply(null, arguments));
-
-// TODO use native node exception types where possible
 class $$InvalidConfigError extends Error {
     constructor() {
-        super(bread(
+        $LogProvider.error(
             'Invalid application configuration. Check your ' +
             blue('Angiefile.json')
-        ));
+        );
+        super();
     }
 }
 
-class $$InvalidDirectiveConfigError extends Error {
+class $$InvalidComponentConfigError extends SyntaxError {
+    constructor(type = 'directive', name) {
+        $LogProvider.error(`Invalid configuration for ${type} ${cyan(name)}`);
+        super();
+    }
+}
+
+class $$InvalidServiceConfigError extends $$InvalidComponentConfigError {
     constructor(name) {
-        super(bread(`Invalid configuration for directive ${name}`));
+        super('service', name);
+    }
+}
+
+class $$InvalidDirectiveConfigError extends $$InvalidComponentConfigError {
+    constructor(name) {
+        super('factory', name);
+    }
+}
+
+class $$InvalidDirectiveConfigError extends $$InvalidComponentConfigError {
+    constructor(name) {
+        super('directive', name);
     }
 }
 
@@ -25,6 +43,8 @@ class $$ProjectCreationError extends Error {}
 
 export {
     $$InvalidConfigError,
+    $$InvalidServiceConfigError,
+    $$InvalidFactoryConfigError,
     $$InvalidDirectiveConfigError,
     $$ProjectCreationError
 };

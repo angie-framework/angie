@@ -2,11 +2,10 @@
 
 // System Modules
 import fs from                          'fs';
-import {default as sysUtil} from        'util';
 import $LogProvider from                 'angie-log';
 
 // Angie Modules
-import util from                        '../util';
+import {$StringUtil} from               '../Util';
 import {$$ProjectCreationError} from    '../$ExceptionsProvider';
 
 const p = process;
@@ -31,7 +30,7 @@ export default function $$createProject(args = {}) {
 
     // Parse the passed arguments object
     const name = args.name,
-          location = util.removeTrailingLeadingSlashes(args.location);
+          location = $StringUtil.removeTrailingLeadingSlashes(args.location);
     let mkDir,
         mkDirFiles,
         mkSub;
@@ -90,7 +89,7 @@ export default function $$createProject(args = {}) {
             `${__dirname}/../../templates/AngieFile.template.json`,
             'utf8'
         );
-        template = sysUtil.format(template, name, name);
+        template = $StringUtil.format(template, name, name);
         fs.writeFileSync(
             `${mkDirFiles}AngieFile.json`,
             template,

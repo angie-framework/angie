@@ -7,7 +7,7 @@ import $LogProvider from        'angie-log';
 // Angie Modules
 import app, {Angie} from        '../Angie';
 import {$$templateLoader} from  './$TemplateCache';
-import util from                '../util/util';
+import {$StringUtil} from       '../util/Util';
 
 // ngie Incrementer
 let iid = 0;
@@ -79,8 +79,8 @@ function $compile(t) {
         let directive = app.directives[ $directive ];
         directive.$names = [
             $directive,
-            util.toUnderscore($directive),
-            util.toDash($directive)
+            $StringUtil.toUnderscore($directive),
+            StringUtil.toDash($directive)
         ];
 
         // Add all parsed directve names to directives
@@ -271,7 +271,7 @@ function $$processDirective($$document, el, scope, directive, type) {
     if (el.hasAttribute && el.getAttribute) {
         for (let key in attrs) {
             if (el.hasAttribute(key)) {
-                parsedAttrs[ util.toCamel(key) ] = el.getAttribute(key);
+                parsedAttrs[ $StringUtil.toCamel(key) ] = el.getAttribute(key);
             }
         }
     }
@@ -296,7 +296,7 @@ function $$processDirective($$document, el, scope, directive, type) {
 
                     // Replace all of the element attrs with parsedAttrs
                     if (directive.$names.indexOf(key) === -1) {
-                        el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
+                        el.setAttribute($StringUtil.toDash(key), parsedAttrs[ key ]);
                     }
                 }
             }

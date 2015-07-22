@@ -7,7 +7,10 @@ import {default as $Injector} from  'angie-injector';
 // Angie Modules
 import {config} from                '../Config';
 import $CacheFactory from           './$CacheFactory';
-import util from                    '../util/util';
+import {
+    $StringUtil,
+    $FileUtil
+} from                              '../util/Util';
 
 const p = process,
       ANGIE_TEMPLATE_DIRS = [
@@ -54,17 +57,17 @@ function $$templateLoader(url, type = 'template', encoding) {
             ) &&
             dir.indexOf(p.cwd()) === -1
         ) {
-            dir = util.removeLeadingSlashes(dir);
+            dir = $StringUtil.removeLeadingSlashes(dir);
             dir = `${p.cwd()}/${dir}`;
         }
-        dir = util.removeTrailingSlashes(dir);
+        dir = $StringUtil.removeTrailingSlashes(dir);
         return dir;
     });
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = templateDirs.length - 1; i >= 0; --i) {
         let dir = templateDirs[i],
-            path = util.findFile(dir, url);
+            path = $FileUtil.find(dir, url);
 
         if (typeof path === 'string') {
             template = fs.readFileSync(path, encoding || undefined);

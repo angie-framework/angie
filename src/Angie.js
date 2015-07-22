@@ -13,7 +13,9 @@ import $RouteProvider from                              './services/$RouteProvid
 import $CacheFactory from                               './services/$CacheFactory';
 import $compile from                                    './services/$Compile';
 import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
-import util from                                        './util/util';
+import $Util, {
+    $StringUtil
+} from                                                  './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 /**
@@ -28,14 +30,16 @@ import * as $ExceptionsProvider from                    './util/$ExceptionsProvi
  * @todo rename this class
  * @since 0.0.1
  * @access public
+ * @extends $Util
  * @example Angie.noop() // = undefined
  */
-class Angie extends util {
+class Angie extends $Util {
     constructor() {
         super();
         this.constants = {};
         this.configs = [];
         this.services = {};
+        this.factories = {};
         this.Controllers = {};
         this.directives = {};
         this.$dependencies = [];
@@ -61,7 +65,17 @@ class Angie extends util {
     service(name, obj) {
 
         // Verify that the service is an object
+        if (typeof obj !== 'object') {
+            throw new $ExceptionsProvider.$$InvalidServiceConfigError(name);
+        }
         return this.$$register('services', name, obj);
+    }
+    factory(name, obj) {
+        // Verify that the service is an object
+        if (typeof obj !== 'function' || !obj.prototype) {
+            throw new $ExceptionsProvider.$$InvalidFactoryConfigError(name);
+        }
+        return this.$$register('factories', name, obj);
     }
     Controller(name, obj) {
         return this.$$register('Controllers', name, obj);
@@ -168,7 +182,7 @@ class Angie extends util {
         // Add dependencies
         this.$dependencies = this.$dependencies.concat(dependencies);
         dependencies.forEach(function(v) {
-            let dependency = util.removeTrailingLeadingSlashes(v),
+            let dependency = $StringUtil.removeTrailingLeadingSlashes(v),
 
                 // This will load all of the modules, overwriting a module name
                 // will replace it
@@ -211,7 +225,7 @@ class Angie extends util {
                         // TODO make this try to load not an npm project config
                         if (service) {
                             me.service(
-                                name || util.toCamel(dependency),
+                                name || $StringUtil.toCamel(dependency),
                                 require(dependency)
                             );
                             $LogProvider.info(
@@ -242,7 +256,8 @@ class Angie extends util {
     $$bootstrap(dir = process.cwd()) {
         let me = this,
             src = typeof config.projectRoot === 'string' ?
-                util.removeTrailingLeadingSlashes(config.projectRoot) : 'src';
+                $StringUtil.removeTrailingLeadingSlashes(config.projectRoot) :
+                'src';
 
         return new Promise(function(resolve) {
             resolve(
@@ -335,7 +350,7 @@ app.config(function() {
 .service('$Routes', $RouteProvider)
 .service('$compile', $compile)
 
-// Error  utilities
+// Error utilities
 .service('$Exceptions', $ExceptionsProvider)
 
 // TODO we shouldn't have to expose this?

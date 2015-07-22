@@ -4,7 +4,7 @@
 import fs from                          'fs';
 
 // Angie Modules
-import util from                        './util/util';
+import {$FileUtil} from                 './util/Util';
 import {$$InvalidConfigError} from      './util/$ExceptionsProvider';
 
 let config = {};
@@ -31,7 +31,7 @@ class Config {
                 });
 
                 acceptedFileNames.forEach(function(name) {
-                    let tmpFile = util.findFile(process.cwd(), name);
+                    let tmpFile = $FileUtil.find(process.cwd(), name);
                     if (tmpFile) {
                         file = tmpFile;
                     }
