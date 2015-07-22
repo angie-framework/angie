@@ -17,20 +17,20 @@ import util from                                        './util/util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 /**
- * @desc This is the default Angie Angular class. It is instantiated and given
+ * @desc This is the default Angie class. It is instantiated and given
  * the namespace `global.app`. Static methods are available via this
  * instance.
  *
  * It is ill advised to tray and redefine the native app as it is tightly coupled
- * with the resource pipeline & webserver, instead, use the angular class to
+ * with the resource pipeline & webserver, instead, use the Angie class to
  * access commonly used static methods.
  *
  * @todo rename this class
  * @since 0.0.1
  * @access public
- * @example angular.noop() // = undefined
+ * @example Angie.noop() // = undefined
  */
-class Angular extends util {
+class Angie extends util {
     constructor() {
         super();
         this.constants = {};
@@ -44,21 +44,23 @@ class Angular extends util {
     }
 
     /**
-     * @desc Creates an Angie Angular constant provider
+     * @desc Creates an Angie constant provider
      *
      * @since 0.0.1
      * @access public
      *
      * @param {string} name The name of the constant being created
      * @param {object|string|number|Array<>|boolean} obj The object value
-     * @returns {object} this instanceof Angular
+     * @returns {object} this instanceof Angie
      *
-     * @example angular.constant('foo', 'bar');
+     * @example Angie.constant('foo', 'bar');
      */
     constant(name, obj) {
         return this.$$register('constants', name, obj);
     }
     service(name, obj) {
+
+        // Verify that the service is an object
         return this.$$register('services', name, obj);
     }
     Controller(name, obj) {
@@ -66,7 +68,7 @@ class Angular extends util {
     }
 
     /**
-     * @desc Creates an Angie Angular directive provider. The second parameter
+     * @desc Creates an Angie directive provider. The second parameter
      * of the directive function must be an object, with properties defining the
      * directive itself.
      *
@@ -86,9 +88,9 @@ class Angular extends util {
      *    'C': class
      * @param {function} obj().link A function to fire after the directive is
      * parsed
-     * @returns {object} this instanceof Angular
+     * @returns {object} this instanceof Angie
      *
-     * @example angular.directive('foo', {
+     * @example Angie.directive('foo', {
      *     return {
      *         Controller: 'test',
      *         link: function() {}
@@ -319,7 +321,7 @@ class Angular extends util {
     }
 }
 
-let app = global.app = new Angular();
+let app = global.app = new Angie();
 app.config(function() {
     $templateCache.put(
         'index.html',
@@ -370,5 +372,6 @@ app.config(function() {
 //     }
 // });
 
-export class angular extends Angular {}
 export default app;
+export {Angie};
+

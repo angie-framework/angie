@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Added/Changed
 - Changed the naming conventions around many providers
 - Added support for declaring Angular providers via decorators
+- Added $on/$broadcast/$watch methods to $scope
+- Removed "Angular" references
 
 ## [0.3.0] - 2015-07-04
 ### Fixed/Added

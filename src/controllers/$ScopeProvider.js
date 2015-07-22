@@ -27,7 +27,7 @@ class $ScopeProvider {
 
     // Apply object.observe
     static $watch(obj, fn) {
-        return Object.observe(obj, fn);
+        return Object.observe(this[ obj ], fn);
     }
 
     // Call object.observe for each property
@@ -44,9 +44,10 @@ class $ScopeProvider {
             }
         }
     }
-    static $$removeWatch() {
+    static $$removeWatch(obj) {
 
         // Look up how to remove a watch
+        Object.unwatch(this[ obj ]);
     }
 }
 

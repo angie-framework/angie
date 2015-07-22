@@ -5,7 +5,7 @@ import {jsdom} from             'jsdom';
 import $LogProvider from        'angie-log';
 
 // Angie Modules
-import app, {angular} from      '../Angular';
+import app, {Angie} from        '../Angie';
 import {$$templateLoader} from  './$TemplateCache';
 import util from                '../util/util';
 
@@ -66,7 +66,7 @@ class $document{}
 function $compile(t) {
 
     if (!t) {
-        return angular.noop;
+        return Angie.noop;
     }
 
     // We need to call template.toString() because we did not load with utf8

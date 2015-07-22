@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-import app from '../Angular';
+import app from '../Angie';
 
 class $Response {
     constructor(response) {

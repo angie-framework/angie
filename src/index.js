@@ -95,7 +95,7 @@ function runTests() {
 
 function help() {
     $LogProvider.bold('Angie');
-    console.log('An AngularJS inspired NodeJS MVC');
+    console.log('A Component-based NodeJS MVC');
     console.log('\r');
     $LogProvider.bold('Version:');
     console.log(global.ANGIE_VERSION);

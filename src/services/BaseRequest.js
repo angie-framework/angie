@@ -6,7 +6,7 @@ import $LogProvider from                        'angie-log';
 import {$injectionBinder} from                  'angie-injector';
 
 // Angie Modules
-import app from                                 '../Angular';
+import app from                                 '../Angie';
 import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';

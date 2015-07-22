@@ -4,7 +4,7 @@
 import url from 'url';
 
 // Angie Modules
-import app from '../Angular';
+import app from '../Angie';
 
 class $Request {
     constructor(request) {

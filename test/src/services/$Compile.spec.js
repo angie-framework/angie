@@ -9,15 +9,15 @@ import $LogProvider from        'angie-log';
 
 // Angie Modules
 import {config} from            '../../../src/Config';
-import app, {angular} from      '../../../src/Angular';
+import app, {Angie} from        '../../../src/Angie';
 import $compile from            '../../../src/services/$Compile';
 
 describe('$compile', function() {
     it(
         'test compile called without a template returns an empty function',
         function() {
-            expect($compile()).to.eq(angular.noop);
-            expect($compile('')).to.eq(angular.noop);
+            expect($compile()).to.eq(Angie.noop);
+            expect($compile('')).to.eq(Angie.noop);
         }
     );
     it('test compile returns a function', function() {

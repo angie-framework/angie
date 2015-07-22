@@ -13,25 +13,25 @@ import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {angular} from               '../../src/Angular';
+import {Angie} from               '../../src/Angie';
 import {
     $$InvalidDirectiveConfigError
 } from                              '../../src/util/$ExceptionsProvider';
 
-describe('Angular', function() {
+describe('Angie', function() {
     let app,
         noop;
 
     beforeEach(function() {
 
         // jscs:disable
-        app = new angular();
+        app = new Angie();
         // jscs:enable
 
-        noop = angular.noop;
+        noop = Angie.noop;
     });
-    it('test extension of static angular methods from util', function() {
-        expect(angular.noop).to.be.a('function');
+    it('test extension of static Angie methods from util', function() {
+        expect(Angie.noop).to.be.a('function');
     });
     describe('constructor', function() {
         it('test constructor properly instantiates app properties', function() {

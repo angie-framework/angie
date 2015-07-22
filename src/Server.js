@@ -11,7 +11,7 @@ import $LogProvider from            'angie-log';
 
 // Angie Modules
 import {config} from                './Config';
-import app from                     './Angular';
+import app from                     './Angie';
 import $CacheFactory from           './services/$CacheFactory';
 import {$$templateLoader} from      './services/$TemplateCache';
 import {
