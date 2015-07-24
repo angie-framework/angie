@@ -9,10 +9,11 @@ import app from                                 '../Angie';
 import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
-import {default as $Routes} from                './$RouteProvider';
-import {$templateCache, $$templateLoader} from  './$TemplateCache';
+import {default as $Routes} from                '../factories/$RouteProvider';
+import {$templateCache, $$templateLoader} from  '../factories/$TemplateCache';
+import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
-import $compile from                            './$Compile';
+
 import $Util, {
     $StringUtil
 } from                                          '../util/Util';

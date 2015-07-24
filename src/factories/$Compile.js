@@ -80,7 +80,7 @@ function $compile(t) {
         directive.$names = [
             $directive,
             $StringUtil.toUnderscore($directive),
-            StringUtil.toDash($directive)
+            $StringUtil.toDash($directive)
         ];
 
         // Add all parsed directve names to directives

@@ -8,7 +8,7 @@ import simple, {mock} from          'simple-mock';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {default as $Routes} from    '../../../src/services/$RouteProvider';
+import {default as $Routes} from    '../../../src/factories/$RouteProvider';
 
 describe('$RequestProvider', function() {
     describe('when', function() {

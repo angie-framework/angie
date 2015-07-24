@@ -4,7 +4,7 @@
 import {expect} from    'chai';
 
 // Angie Modules
-import $cacheFactory from '../../../src/services/$CacheFactory';
+import $cacheFactory from '../../../src/factories/$CacheFactory';
 
 describe('$CacheFactory', function() {
     let cache;

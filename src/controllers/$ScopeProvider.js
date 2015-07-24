@@ -1,12 +1,7 @@
 'use strict'; 'use strong';
 
-// TODO needs to dynamically know when to provide scope
-// There is no such thing as $rootScope
 
-// TODO is this still a thing?
-
-let $scope = new $ScopeProvider(),
-    handlers = [];
+let handlers = [];
 
 class $ScopeProvider {
     contructor() {
@@ -16,10 +11,11 @@ class $ScopeProvider {
         handlers.push({ [ name ]: obj });
         return true;
     }
-    static $broadcast(name, args...) {
-        for (handler of handlers) {
+    static $broadcast(name) {
+        let args = Array.from(arguments).splice(0, 1);
+        for (let handler of handlers) {
             if (handler.hasOwnProperty(name)) {
-                handler[ name ](...args);
+                handler[ name ](args);
             }
         }
         return true;
@@ -38,9 +34,9 @@ class $ScopeProvider {
         return true;
     }
     static $$off(name) {
-        for (handler, i of handlers) {
+        for (let handler of handlers) {
             if (handler.hasOwnProperty(name)) {
-                handlers.splice(i, 1);
+                handlers.splice(handlers.indexOf(handler), 1);
             }
         }
     }
@@ -51,5 +47,6 @@ class $ScopeProvider {
     }
 }
 
+const $scope = new $ScopeProvider();
 export default $ScopeProvider;
 export {$scope};

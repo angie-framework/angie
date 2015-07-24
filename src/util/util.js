@@ -12,19 +12,20 @@ import util from    'util';
  * @access private
  * @since 0.2.3
  */
-class $Util extends util {
+class $Util {
 
     /**
-     * @desc Util empty function call helper
+     * @desc $Util empty function call helper
      * @since 0.2.3
      * @returns {undefined} undefined
-     * @example util.noop(); // = undefined
+     * @example $Util.noop(); // = undefined
      */
     static noop() {}
 }
+$Util = util._extend($Util, util);
 
 /**
- * @desc StringUtil is a silent utility class which is not available via any provider
+ * @desc Util is a silent utility class which is not available via any provider
  * on the app object. The only way to access the methods on this class is to
  * import the module. It holds methods quintessential to string manipulation.
  * @since 0.3.1
@@ -36,7 +37,7 @@ class $StringUtil {
      * @since 0.2.3
      * @param {string} str [param=''] String to process
      * @returns {string} The str param with stripped leading slashes
-     * @example 'test' === StringUtil.removeTrailingLeadingSlashes('/test'); // true
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test'); // true
      */
     static removeLeadingSlashes(str) {
         return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
@@ -47,7 +48,7 @@ class $StringUtil {
      * @since 0.2.3
      * @param {string} str [param=''] String to process
      * @returns {string} The str param with stripped trailing slashes
-     * @example 'test' === StringUtil.removeTrailingLeadingSlashes('test/'); // true
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('test/'); // true
      */
     static removeTrailingSlashes(str) {
         return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
@@ -58,10 +59,10 @@ class $StringUtil {
      * @since 0.2.3
      * @param {string} str [param=''] String to process
      * @returns {string} The str param with stripped trailing and leading slashes
-     * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test/'); // true
      */
     static removeTrailingLeadingSlashes(str = '') {
-        return this.removeTrailingSlashes(Util.removeLeadingSlashes(str));
+        return this.removeTrailingSlashes(this.removeLeadingSlashes(str));
     }
 
     /**
@@ -69,7 +70,7 @@ class $StringUtil {
      * @since 0.2.4
      * @param {string} str String to process
      * @returns {string} The str param converted to camelCase
-     * @example util.toCamel('test-test'); // = 'testTest'
+     * @example $StringUtil.toCamel('test-test'); // = 'testTest'
      */
     static toCamel(str) {
         return str.toLowerCase().replace(
@@ -85,7 +86,7 @@ class $StringUtil {
      * @since 0.2.4
      * @param {string} str String to process
      * @returns {string} The str param converted to underscore_separation
-     * @example StringUtil.toCamel('testTest'); // = 'test_test'
+     * @example $StringUtil.toCamel('testTest'); // = 'test_test'
      */
     static toUnderscore(str) {
         return this.toFormat(str, '_');
@@ -96,7 +97,7 @@ class $StringUtil {
      * @since 0.2.4
      * @param {string} str String to process
      * @returns {string} The str param converted to dash-separation
-     * @example StringUtil.toDash('testTest'); // = 'test-test'
+     * @example $StringUtil.toDash('testTest'); // = 'test-test'
      */
     static toDash(str) {
         return this.toFormat(str, '-');
@@ -109,8 +110,8 @@ class $StringUtil {
      * @param {string} str String to process
      * @param {string} del Character with which to replace camelCase capitals
      * @returns {string} The str param converted to `del` separation
-     * @example StringUtil.toFormat('testTest', '-'); // = 'test-test'
-     * @example StringUtil.toFormat('testTest', '_'); // = 'test_test'
+     * @example $StringUtil.toFormat('testTest', '-'); // = 'test-test'
+     * @example $StringUtil.toFormat('testTest', '_'); // = 'test_test'
      */
     static toFormat(str, del) {
         return str.replace(/([A-Z]+)/g, `${del}$1`).toLowerCase();
@@ -118,7 +119,7 @@ class $StringUtil {
 }
 
 /**
- * @desc FileUtil is a silent utility class which is not available via any provider
+ * @desc $FileUtil is a silent utility class which is not available via any provider
  * on the app object. The only way to access the methods on this class is to
  * import the module. It holds methods quintessential to file management.
  * @since 0.3.1
@@ -131,12 +132,12 @@ class $FileUtil {
      * @param {string} root The root directory in which to find files
      * @param {string} target The desired file name
      * @returns {string} The content of the file
-     * @example FileUtil.find(process.cwd(), 'test');
+     * @example $FileUtil.find(process.cwd(), 'test');
      */
     static find(root, target) {
 
         // Handle slashes
-        target = StringUtil.removeTrailingLeadingSlashes(target);
+        target = $StringUtil.removeTrailingLeadingSlashes(target);
 
         // Pull this out because it is used several times
         const fileDirectoryExists = function fileDirectoryExists(n, t) {

@@ -8,14 +8,12 @@ import {$injectionBinder} from                          'angie-injector';
 
 // Angie Modules
 import {config} from                                    './Config';
-import {$scope} from                                    '../controllers/$ScopeProvider';
-import $RouteProvider from                              './services/$RouteProvider';
-import $CacheFactory from                               './services/$CacheFactory';
-import $compile from                                    './services/$Compile';
-import {$templateCache, $resourceLoader} from           './services/$TemplateCache';
-import $Util, {
-    $StringUtil
-} from                                                  './util/Util';
+import {$scope} from                                    './controllers/$ScopeProvider';
+import $RouteProvider from                              './factories/$RouteProvider';
+import $CacheFactory from                               './factories/$CacheFactory';
+import $compile from                                    './factories/$Compile';
+import {$templateCache, $resourceLoader} from           './factories/$TemplateCache';
+import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 /**
@@ -33,9 +31,8 @@ import * as $ExceptionsProvider from                    './util/$ExceptionsProvi
  * @extends $Util
  * @example Angie.noop() // = undefined
  */
-class Angie extends $Util {
+class Angie {
     constructor() {
-        super();
         this.constants = {};
         this.configs = [];
         this.services = {};
@@ -71,8 +68,9 @@ class Angie extends $Util {
         return this.$$register('services', name, obj);
     }
     factory(name, obj) {
+
         // Verify that the service is an object
-        if (typeof obj !== 'function' || !obj.prototype) {
+        if (typeof obj !== 'function' || !obj.prototype.constructor) {
             throw new $ExceptionsProvider.$$InvalidFactoryConfigError(name);
         }
         return this.$$register('factories', name, obj);
@@ -347,8 +345,10 @@ app.config(function() {
         fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
     );
 })
-.service('$Routes', $RouteProvider)
-.service('$compile', $compile)
+.factory('$Routes', $RouteProvider)
+.factory('$Cache', $CacheFactory)
+.factory('$compile', $compile)
+.factory('$resourceLoader', $resourceLoader)
 
 // Error utilities
 .service('$Exceptions', $ExceptionsProvider)
@@ -357,9 +357,7 @@ app.config(function() {
 .service('$scope', $scope)
 .service('$window', {})
 .service('$document', {})
-.service('$templateCache', $templateCache)
-.service('$Cache', $CacheFactory)
-.service('$resourceLoader', $resourceLoader);
+.service('$templateCache', $templateCache);
 
 
 // TODO open this back up when you have an admin model

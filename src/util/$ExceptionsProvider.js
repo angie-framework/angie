@@ -27,7 +27,7 @@ class $$InvalidServiceConfigError extends $$InvalidComponentConfigError {
     }
 }
 
-class $$InvalidDirectiveConfigError extends $$InvalidComponentConfigError {
+class $$InvalidFactoryConfigError extends $$InvalidComponentConfigError {
     constructor(name) {
         super('factory', name);
     }
