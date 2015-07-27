@@ -1,13 +1,13 @@
 'use strict'; 'use strong';
 
 // System Modules
-import {jsdom} from             'jsdom';
-import $LogProvider from        'angie-log';
+import {jsdom} from                 'jsdom';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
-import app, {Angie} from        '../Angie';
-import {$$templateLoader} from  './$TemplateCache';
-import {$StringUtil} from       '../util/Util';
+import app, {Angie} from            '../Angie';
+import {$$templateLoader} from      './$TemplateCache';
+import $Util, {$StringUtil} from    '../util/Util';
 
 // ngie Incrementer
 let iid = 0;
@@ -66,7 +66,7 @@ class $document{}
 function $compile(t) {
 
     if (!t) {
-        return Angie.noop;
+        return $Util.noop;
     }
 
     // We need to call template.toString() because we did not load with utf8
@@ -128,8 +128,7 @@ function $compile(t) {
         });
 
         // Parse directives
-        let $$document,
-            $$window;
+        let $$document, $$window;
         try {
             $$document = jsdom(tmpLet, {
                 FetchExternalResources: [],
@@ -154,9 +153,10 @@ function $compile(t) {
                 directives.forEach(function(directive) {
 
                     // Try and match a directive based on type
+                    // TODO classList is undefined in jsDOM, polyfill or find a better way
                     if (
-                        el.classList &&
-                        directive.$names.some((v) => el.classList.contains(v))
+                        el.className &&
+                        directive.$names.some((v) => el.className.indexOf(v) > -1)
                     ) {
                         type = 'C';
                     } else if (

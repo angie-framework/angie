@@ -15,7 +15,9 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 import {Angie} from               '../../src/Angie';
 import {
-    $$InvalidDirectiveConfigError
+    $$InvalidDirectiveConfigError,
+    $$InvalidServiceConfigError,
+    $$InvalidFactoryConfigError
 } from                              '../../src/util/$ExceptionsProvider';
 
 describe('Angie', function() {
@@ -108,7 +110,7 @@ describe('Angie', function() {
             }
         );
     });
-    describe('constant, service, Controller', function() {
+    describe('constant, service, factory, Controller', function() {
         beforeEach(function() {
             mock(app, '$$register', noop);
         });
@@ -120,13 +122,46 @@ describe('Angie', function() {
                 'test'
             ]);
         });
-        it('test service makes a call to $$register', function() {
-            app.service('test', 'test');
-            expect(app.$$register.calls[0].args).to.deep.eq([
-                'services',
-                'test',
-                'test'
-            ]);
+        describe('test service makes a call to $$register', function() {
+            it('test object', function() {
+                app.service('test', { test: 'test' });
+                expect(app.$$register.calls[0].args).to.deep.eq([
+                    'services',
+                    'test',
+                    { test: 'test' }
+                ]);
+            });
+            it('test function', function() {
+                expect(
+                    app.service.bind(null, 'test', function test() {})
+                ).to.throw($$InvalidServiceConfigError);
+            });
+            it('test string', function() {
+                expect(
+                    app.service.bind(null, 'test', 'test')
+                ).to.throw($$InvalidServiceConfigError);
+            });
+        });
+        describe('test factory makes a call to $$register', function() {
+            it('test object', function() {
+                expect(
+                    app.factory.bind(null, 'test', { test: 'test' })
+                ).to.throw($$InvalidFactoryConfigError);
+            });
+            it('test function', function() {
+                let test = function() {};
+                app.factory('test', test);
+                expect(app.$$register.calls[0].args).to.deep.eq([
+                    'factories',
+                    'test',
+                    test
+                ]);
+            });
+            it('test string', function() {
+                expect(
+                    app.factory.bind(null, 'test', 'test')
+                ).to.throw($$InvalidFactoryConfigError);
+            });
         });
         it('test Controller makes a call to $$register', function() {
             app.Controller('test', 'test');

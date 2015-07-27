@@ -3,12 +3,13 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### [0.3.1] - 2015-07-15
-##### Added/Changed
+##### Added/Changed/Fixed
 - Changed the naming conventions around many providers
 - Added support for declaring Angular providers via decorators
 - Added $on/$broadcast/$watch methods to $scope
 - Removed "Angular" references
 - Audited $Util classes
+- Fixed/Added Tests and docstrings
 
 ## [0.3.0] - 2015-07-04
 ### Fixed/Added

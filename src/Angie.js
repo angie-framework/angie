@@ -59,6 +59,19 @@ class Angie {
     constant(name, obj) {
         return this.$$register('constants', name, obj);
     }
+
+    /**
+     * @desc Creates an Angie service provider. This must be an object.
+     *
+     * @since 0.0.1
+     * @access public
+     *
+     * @param {string} name The name of the service being created
+     * @param {object} obj The object value
+     * @returns {object} this instanceof Angie
+     *
+     * @example Angie.service('foo', {});
+     */
     service(name, obj) {
 
         // Verify that the service is an object
@@ -67,14 +80,45 @@ class Angie {
         }
         return this.$$register('services', name, obj);
     }
-    factory(name, obj) {
 
-        // Verify that the service is an object
-        if (typeof obj !== 'function' || !obj.prototype.constructor) {
+    /**
+     * @desc Creates an Angie service provider. This must be a function.
+     *
+     * @since 0.3.1
+     * @access public
+     *
+     * @param {string} name The name of the factory being created
+     * @param {function} fn The function value
+     * @returns {object} this instanceof Angie
+     *
+     * @example Angie.factory('foo', () => undefined);
+     */
+    factory(name, fn) {
+
+        // Verify that the factory is a function
+        if (typeof fn !== 'function' || !fn.prototype.constructor) {
             throw new $ExceptionsProvider.$$InvalidFactoryConfigError(name);
         }
-        return this.$$register('factories', name, obj);
+        return this.$$register('factories', name, fn);
     }
+
+    /**
+     * @desc Creates an Angie Controller provider. This must be a function that
+     * returns an object or an object.
+     *
+     * @since 0.0.1
+     * @access public
+     *
+     * @param {string} name The name of the factory being created
+     * @param {function|object} obj The Controller value
+     * @param {string} obj.template An actual HTML template to be added as a
+     * byproduct of the Controller
+     * @param {string} obj.templatePath The path to an HTML template to be
+     * added as a byproduct of the Controller
+     * @returns {object} this instanceof Angie
+     *
+     * @example Angie.Controller('foo', () => {});
+     */
     Controller(name, obj) {
         return this.$$register('Controllers', name, obj);
     }
@@ -100,6 +144,10 @@ class Angie {
      *    'C': class
      * @param {function} obj().link A function to fire after the directive is
      * parsed
+     * @param {string} obj().template An actual HTML template to be added as a
+     * byproduct of the directive
+     * @param {string} obj().templatePath The path to an HTML template to be
+     * added as a byproduct of the directive
      * @returns {object} this instanceof Angie
      *
      * @example Angie.directive('foo', {

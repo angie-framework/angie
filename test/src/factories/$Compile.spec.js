@@ -11,15 +11,15 @@ import $LogProvider from        'angie-log';
 import {config} from            '../../../src/Config';
 import app, {Angie} from        '../../../src/Angie';
 import $compile from            '../../../src/factories/$Compile';
+import $Util from               '../../../src/util/Util';
 
 describe('$compile', function() {
-    const noop = () => undefined;
 
     it(
         'test compile called without a template returns an empty function',
         function() {
-            expect($compile()).to.eq(noop);
-            expect($compile('')).to.eq(noop);
+            expect($compile()).to.deep.eq($Util.noop);
+            expect($compile('')).to.deep.eq($Util.noop);
         }
     );
     it('test compile returns a function', function() {
