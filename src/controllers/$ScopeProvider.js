@@ -5,17 +5,21 @@ let handlers = [];
 
 class $ScopeProvider {
     contructor() {
-        this.id = 1;
+        this.$$id = 1;
     }
     static $on(name, obj) {
         handlers.push({ [ name ]: obj });
         return true;
     }
-    static $broadcast(name) {
+    static $broadcast(name, async) {
         let args = Array.from(arguments).splice(0, 1);
         for (let handler of handlers) {
             if (handler.hasOwnProperty(name)) {
-                handler[ name ](args);
+                if (async) {
+                    setImmediate(handler[ name ].bind(null, args));
+                } else {
+                    handler[ name ](args);
+                }
             }
         }
         return true;

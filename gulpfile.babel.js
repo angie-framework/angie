@@ -89,4 +89,5 @@ gulp.task('watch', [ 'jscs', 'mocha' ], function() {
 gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
+gulp.task('test', [ 'jscs', 'mocha' ]);
 gulp.task('default', [ 'jscs', 'mocha' ]);

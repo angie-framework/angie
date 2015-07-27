@@ -5,7 +5,7 @@ import {jsdom} from                 'jsdom';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import app, {Angie} from            '../Angie';
+import app from                     '../Angie';
 import {$$templateLoader} from      './$TemplateCache';
 import $Util, {$StringUtil} from    '../util/Util';
 

@@ -87,7 +87,3 @@ describe('$StringUtil', function() {
         );
     });
 });
-
-describe('$FileUtil', function() {
-
-});
