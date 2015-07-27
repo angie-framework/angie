@@ -13,11 +13,13 @@ import app, {Angie} from        '../../../src/Angie';
 import $compile from            '../../../src/factories/$Compile';
 
 describe('$compile', function() {
+    const noop = () => undefined;
+
     it(
         'test compile called without a template returns an empty function',
         function() {
-            expect($compile()).to.eq(Angie.noop);
-            expect($compile('')).to.eq(Angie.noop);
+            expect($compile()).to.eq(noop);
+            expect($compile('')).to.eq(noop);
         }
     );
     it('test compile returns a function', function() {

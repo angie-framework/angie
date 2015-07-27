@@ -10,17 +10,17 @@ import util from                        'util';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
-import $$createProject from             '../../../../src/util/scaffold/project';
+import {
+    default as project
+} from                                  '../../../../src/util/scaffold/project';
 import {$$ProjectCreationError} from    '../../../../src/util/$ExceptionsProvider';
 
 const p = process;
 
 describe('$$createProject', function() {
-    let project,
-        noop = () => null;
+    let noop = () => null;
 
     beforeEach(function() {
-        project = $$createProject;
         mock(fs, 'mkdirSync', noop);
         mock(fs, 'readFileSync', noop);
         mock(util, 'format', () => 'test');

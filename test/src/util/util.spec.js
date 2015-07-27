@@ -12,7 +12,7 @@ import $Util, {
 
 describe('$Util', function() {
     it('noop', function() {
-        expect(util.noop()).to.be.undefined;
+        expect($Util.noop()).to.be.undefined;
     });
 });
 

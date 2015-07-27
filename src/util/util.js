@@ -62,7 +62,7 @@ class $StringUtil {
      * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test/'); // true
      */
     static removeTrailingLeadingSlashes(str = '') {
-        return this.removeTrailingSlashes(this.removeLeadingSlashes(str));
+        return $StringUtil.removeTrailingSlashes($StringUtil.removeLeadingSlashes(str));
     }
 
     /**
