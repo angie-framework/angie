@@ -1,13 +1,5 @@
 'use strict'; 'use strong';
 
-// Global Modules
-// import {default as register} from 'babel/register';
-// register({
-//     only: [ '**/node_modules/angie*/**', '**/src/**' ],
-//     stage: 1
-// });
-
-
 // System Modules
 import gulp from                'gulp';
 import {exec} from              'child_process';

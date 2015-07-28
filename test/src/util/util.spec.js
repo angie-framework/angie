@@ -1,14 +1,11 @@
 'use strict'; 'use strong';
 
 // Test Modules
-import {expect} from            'chai';
-import simple, {mock} from      'simple-mock';
+import {expect} from                'chai';
+import simple, {mock} from          'simple-mock';
 
 // Angie Modules
-import $Util, {
-    $StringUtil,
-    $FileUtil
-} from                          '../../../src/util/Util';
+import $Util, {$StringUtil} from    '../../../src/util/Util';
 
 describe('$Util', function() {
     it('noop', function() {

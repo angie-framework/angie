@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 // Test Modules
-import {expect} from        'chai';
+// import {expect} from        'chai';
 import {mock} from          'simple-mock';
 
 // Angie Modules

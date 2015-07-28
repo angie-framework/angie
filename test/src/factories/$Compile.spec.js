@@ -9,7 +9,7 @@ import $LogProvider from        'angie-log';
 
 // Angie Modules
 import {config} from            '../../../src/Config';
-import app, {Angie} from        '../../../src/Angie';
+import app from                 '../../../src/Angie';
 import $compile from            '../../../src/factories/$Compile';
 import $Util from               '../../../src/util/Util';
 
