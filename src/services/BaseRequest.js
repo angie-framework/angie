@@ -161,7 +161,10 @@ class BaseRequest {
                         done: resolve
                     };
 
-                    me.controller = new $injectionBinder(controller).call(
+                    me.controller = new $injectionBinder(
+                        controller,
+                        'controller'
+                    ).call(
                         app.services.$scope,
                         resolve
                     );

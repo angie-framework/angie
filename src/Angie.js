@@ -158,7 +158,8 @@ class Angie {
      * });
      */
     directive(name, obj) {
-        const dir = typeof obj !== 'function' ? obj : new $injectionBinder(obj)();
+        const dir = typeof obj !== 'function' ?
+            obj : new $injectionBinder(obj, 'directive')();
 
         if (dir.hasOwnProperty('Controller')) {
             if (typeof dir.Controller !== 'string') {
@@ -354,7 +355,7 @@ class Angie {
                 // Check to see if the config has already fired, if it has, we
                 // do not want to fire it again
                 if (!v.fired) {
-                    new $injectionBinder(v.fn)();
+                    new $injectionBinder(v.fn, 'config')();
 
                     // Mark as fired
                     v.fired = true;
