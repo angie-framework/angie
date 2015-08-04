@@ -271,7 +271,11 @@ class Angie {
 
                         // TODO make this try to load not an npm project config
                         if (service) {
-                            me.service(
+                            me[
+                                typeof service === 'function' ? 'factory' :
+                                    typeof service === 'object' ? 'service' :
+                                        'constant'
+                            ](
                                 name || $StringUtil.toCamel(dependency),
                                 require(dependency)
                             );
@@ -407,32 +411,6 @@ app.config(function() {
 .service('$window', {})
 .service('$document', {})
 .service('$templateCache', $templateCache);
-
-
-// TODO open this back up when you have an admin model
-// .Model('AngieUserModel', function($fields) {
-//     let obj = {};
-//
-//     obj.name = 'angie_user';
-//     obj.username = new $fields.CharField({
-//         minLength: 1,
-//         maxLength: 50,
-//         unique: true
-//     });
-//     // obj.migration = new $fields.ForeignKeyField('angie_migrations', {
-//     //     nullable: true,
-//     //     nested: true
-//     // });
-//     obj.save = function() {
-//         // TODO this would override the base, but using an es6 class will not
-//     };
-//     return obj;
-// });
-// .Model('AngieMigrationsModel', class MigrationsModel {
-//     constructor() {
-//         this.name = 'angie_migrations';
-//     }
-// });
 
 export default app;
 export {Angie};

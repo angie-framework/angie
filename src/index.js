@@ -2,7 +2,6 @@
 
 // Global Modules
 import 'es6-module-loader';
-import {transform} from             'babel';
 
 // System Modules
 import {exec} from                  'child_process';
@@ -16,7 +15,6 @@ import server from                  './Server';
 import shell from                   './util/shell';
 
 // System/Tranform BabelJS options
-transform('code', { stage: 0 });
 System.transpiler = 'babel';
 
 const p = process;
