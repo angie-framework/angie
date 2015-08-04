@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+'use strict';
 
 // TODO check to see that the most up to date version is installed
 global.ANGIE_VERSION = '0.3.0';

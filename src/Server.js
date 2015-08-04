@@ -12,8 +12,8 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 import {config} from                './Config';
 import app from                     './Angie';
-import $CacheFactory from           './services/$CacheFactory';
-import {$$templateLoader} from      './services/$TemplateCache';
+import $CacheFactory from           './factories/$CacheFactory';
+import {$$templateLoader} from      './factories/$TemplateCache';
 import {
     BaseRequest,
     RESPONSE_HEADER_MESSAGES,

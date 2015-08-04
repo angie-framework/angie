@@ -7,7 +7,6 @@ import $LogProvider from                'angie-log';
 
 // Angie Modules
 import {$StringUtil} from                '../Util';
-import {$$ProjectCreationError} from    '../$ExceptionsProvider';
 
 const p = process;
 
@@ -51,9 +50,11 @@ export default function $$createProject(args = {}) {
     }
 
     // Make sure that we're creating the project in the right spot
-    mkDir = location ? (location === '.' ? '' : location) : p.cwd();
+    mkDir = location ? (location === '.' ? '' : location) : `${p.cwd()}/${name}`;
     mkDirFiles = mkDir ? `${mkDir}/` : '';
     mkSub = `${mkDirFiles}src`.replace(/\/{2}/g, '/');
+
+    console.log('MKDIR', mkDir);
 
     try {
 
@@ -100,6 +101,14 @@ export default function $$createProject(args = {}) {
 
     $LogProvider.info('Project successfully created');
     p.exit(0);
+}
+
+class $$ProjectCreationError extends Error {
+    constructor(e) {
+        $LogProvider.error(e);
+        super(e);
+        p.exit(1);
+    }
 }
 
 // TODO add test folder, src folder inside

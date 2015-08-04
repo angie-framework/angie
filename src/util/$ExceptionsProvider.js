@@ -39,12 +39,9 @@ class $$InvalidDirectiveConfigError extends $$InvalidComponentConfigError {
     }
 }
 
-class $$ProjectCreationError extends Error {}
-
 export {
     $$InvalidConfigError,
     $$InvalidServiceConfigError,
     $$InvalidFactoryConfigError,
-    $$InvalidDirectiveConfigError,
-    $$ProjectCreationError
+    $$InvalidDirectiveConfigError
 };
