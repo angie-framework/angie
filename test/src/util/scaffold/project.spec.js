@@ -89,28 +89,32 @@ describe('$$createProject', function() {
         project({
             name: 'test'
         });
-        expect(fs.mkdirSync.calls[0].args[0]).to.eq('/Users/jg/angie');
-        expect(fs.mkdirSync.calls[1].args[0]).to.eq('/Users/jg/angie/src');
+        expect(fs.mkdirSync.calls[0].args[0]).to.eq('/Users/jg/angie/test');
+        expect(fs.mkdirSync.calls[1].args[0]).to.eq('/Users/jg/angie/test/src');
         expect(fs.mkdirSync.calls[2].args[0]).to.eq(
-            '/Users/jg/angie/src/constants'
+            '/Users/jg/angie/test/src/constants'
         );
         expect(fs.mkdirSync.calls[3].args[0]).to.eq(
-            '/Users/jg/angie/src/configs'
+            '/Users/jg/angie/test/src/configs'
         );
         expect(fs.mkdirSync.calls[4].args[0]).to.eq(
-            '/Users/jg/angie/src/services'
+            '/Users/jg/angie/test/src/services'
         );
         expect(fs.mkdirSync.calls[5].args[0]).to.eq(
-            '/Users/jg/angie/src/controllers'
+            '/Users/jg/angie/test/src/controllers'
         );
         expect(fs.mkdirSync.calls[6].args[0]).to.eq(
-            '/Users/jg/angie/src/directives'
+            '/Users/jg/angie/test/src/directives'
         );
-        expect(fs.mkdirSync.calls[7].args[0]).to.eq('/Users/jg/angie/static');
-        expect(fs.mkdirSync.calls[8].args[0]).to.eq('/Users/jg/angie/templates');
+        expect(
+            fs.mkdirSync.calls[7].args[0]
+        ).to.eq('/Users/jg/angie/test/static');
+        expect(
+            fs.mkdirSync.calls[8].args[0]
+        ).to.eq('/Users/jg/angie/test/templates');
         assert(util.format.called);
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
-            '/Users/jg/angie/AngieFile.json', 'test', 'utf8'
+            '/Users/jg/angie/test/AngieFile.json', 'test', 'utf8'
         ]);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);

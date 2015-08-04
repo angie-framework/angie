@@ -44,10 +44,10 @@ describe('$ScopeProvider', function() {
             mock(global, 'setImmediate', (fn) => fn());
             $scope.$$handlers([
                 {
-                    'test': (testSpy = simple.spy())
+                    test: (testSpy = simple.spy())
                 },
                 {
-                    'not': (notSpy = simple.spy())
+                    not: (notSpy = simple.spy())
                 }
             ]);
         });
@@ -87,10 +87,10 @@ describe('$ScopeProvider', function() {
             mock(global, 'setImmediate', (fn) => fn());
             $scope.$$handlers([
                 {
-                    'test': () => undefined
+                    test: () => undefined
                 },
                 {
-                    'not': () => undefined
+                    not: () => undefined
                 }
             ]);
         });
