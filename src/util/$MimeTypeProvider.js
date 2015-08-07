@@ -28,7 +28,7 @@ class $MimeTypeProvider {
      * @returns {string} An approximated Content-Type
      * @example $MimeTypeProvider._('json'); // = 'application/json'
      */
-    static _(ext = '') {
+    static $$(ext = '') {
         return MIME_TYPE[ ext ] || DEFAULT_TYPE;
     }
 
@@ -41,7 +41,7 @@ class $MimeTypeProvider {
      * @example $MimeTypeProvider._fromPath('test.json'); // = 'application/json'
      */
     static fromPath(path) {
-        return this._(path.indexOf('.') > -1 ? path.split('.').pop() : undefined);
+        return this.$$(path.indexOf('.') > -1 ? path.split('.').pop() : undefined);
     }
 }
 

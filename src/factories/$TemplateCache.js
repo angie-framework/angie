@@ -2,12 +2,15 @@
 
 // System Modules
 import fs from                      'fs';
+import {default as $Injector} from  'angie-injector';
 
 // Angie Modules
 import {config} from                '../Config';
-import $cacheFactory from           './$CacheFactory';
-import {default as $Injector} from  './$InjectorProvider';
-import util from                    '../util/util';
+import $CacheFactory from           './$CacheFactory';
+import {
+    $StringUtil,
+    $FileUtil
+} from                              '../util/Util';
 
 const p = process,
       ANGIE_TEMPLATE_DIRS = [
@@ -16,14 +19,14 @@ const p = process,
       ],
       ANGIE_STATIC_DIRS = [];
 
-class $TemplateCache extends $cacheFactory {
+class $TemplateCache extends $CacheFactory {
     constructor() {
         super('templateCache');
     }
     get(url) {
         let template = super.get(url);
         if (!template) {
-            template = _templateLoader(url);
+            template = $$templateLoader(url);
         }
         if (template && config.cacheStaticAssets) {
             this.put(url, template);
@@ -32,7 +35,7 @@ class $TemplateCache extends $cacheFactory {
     }
 }
 
-function _templateLoader(url, type = 'template', encoding) {
+function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone them template dirs
     let templateDirs = (
@@ -54,17 +57,17 @@ function _templateLoader(url, type = 'template', encoding) {
             ) &&
             dir.indexOf(p.cwd()) === -1
         ) {
-            dir = util.removeLeadingSlashes(dir);
+            dir = $StringUtil.removeLeadingSlashes(dir);
             dir = `${p.cwd()}/${dir}`;
         }
-        dir = util.removeTrailingSlashes(dir);
+        dir = $StringUtil.removeTrailingSlashes(dir);
         return dir;
     });
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = templateDirs.length - 1; i >= 0; --i) {
         let dir = templateDirs[i],
-            path = util.findFile(dir, url);
+            path = $FileUtil.find(dir, url);
 
         if (typeof path === 'string') {
             template = fs.readFileSync(path, encoding || undefined);
@@ -83,7 +86,7 @@ function _templateLoader(url, type = 'template', encoding) {
         config.cacheStaticAssets === true
     ) {
         // TODO you may want to put this in the asset loading block
-        new $cacheFactory('staticAssets').put(url, template);
+        new $CacheFactory('staticAssets').put(url, template);
     }
     return template;
 }
@@ -123,7 +126,7 @@ function $resourceLoader() {
         if (loadStyle === 'src') {
             asset += ` src='${resource}'>`;
         } else {
-            let assetCache = new $cacheFactory('staticAssets'),
+            let assetCache = new $CacheFactory('staticAssets'),
                 assetPath = resource.split('/').pop(),
                 staticAsset;
 
@@ -131,7 +134,7 @@ function $resourceLoader() {
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
-                staticAsset = _templateLoader(assetPath, 'static');
+                staticAsset = $$templateLoader(assetPath, 'static');
             }
 
             if (staticAsset.length) {
@@ -141,14 +144,14 @@ function $resourceLoader() {
 
         asset += '</script>';
 
-        let index = $response._responseContent.indexOf('</body>');
+        let index = $response.$responseContent.indexOf('</body>');
         if (index > -1) {
-            $response._responseContent.splice(index, 0, asset);
+            $response.$responseContent.splice(index, 0, asset);
         } else {
-            $response._responseContent = $response._responseContent + asset;
+            $response.$responseContent = $response.$responseContent + asset;
         }
     });
 }
 
 const $templateCache = new $TemplateCache();
-export {$templateCache, _templateLoader, $resourceLoader};
+export {$templateCache, $$templateLoader, $resourceLoader};

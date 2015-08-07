@@ -4,28 +4,28 @@
 import http from                    'http';
 import https from                   'https';
 import url from                     'url';
+import util from                    'util';
 import chalk from                   'chalk';
 import watch from                   'node-watch';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
 import {config} from                './Config';
-import app from                     './Angular';
-import $cacheFactory from           './services/$CacheFactory';
-import {_templateLoader} from       './services/$TemplateCache';
+import app from                     './Angie';
+import $CacheFactory from           './factories/$CacheFactory';
+import {$$templateLoader} from      './factories/$TemplateCache';
 import {
     BaseRequest,
     RESPONSE_HEADER_MESSAGES,
     PRAGMA_HEADER,
     NO_CACHE_HEADER
 } from                              './services/BaseRequest';
-import util from                    './util/util';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
 const p = process;
 let firstrun = true;
 
-export default function server(args) {
+function server(args) {
     const useSSL = /\-+usessl/i.test(args),
           port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
 
@@ -47,12 +47,12 @@ export default function server(args) {
             // A file cannot be in the static path if it doesn't have an extension, shortcut
             // TODO you may want to move the asset loading block out of here
             if (path.indexOf('.') > -1) {
-                let assetCache = new $cacheFactory('staticAssets');
+                let assetCache = new $CacheFactory('staticAssets');
 
                 if (assetCache.get(path)) {
                     asset = assetCache.get(path);
                 } else {
-                    asset = _templateLoader(path, 'static');
+                    asset = $$templateLoader(path, 'static');
                 }
 
                 // We have an asset and must render a response
@@ -67,7 +67,7 @@ export default function server(args) {
                         config.hasOwnProperty('cacheStaticAssets') &&
                         !config.cacheStaticAssets
                     ) {
-                        angieResponse.responseHeaders = util.extend(
+                        angieResponse.responseHeaders = util._extend(
                             angieResponse.responseHeaders,
                             {
                                 Expires: -1,
@@ -95,10 +95,10 @@ export default function server(args) {
 
             // else {
 
-            angieResponse._route().then(function() {
+            angieResponse.$$route().then(function() {
                 let code = response.statusCode;
                 if (!code) {
-                    const error = _templateLoader('500.html');
+                    const error = $$templateLoader('500.html');
 
                     // TODO extrapolate this to responses
                     response.writeHead(
@@ -132,7 +132,7 @@ export default function server(args) {
 
         // Attempt to restart the webserver on change
         if (firstrun) {
-            let watchDirs = [ p.cwd(), __dirname ].concat(app.__dependencies__);
+            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
 
             try {
                 let restartObj = {
@@ -162,3 +162,5 @@ function restart(port) {
         );
     });
 }
+
+export default server;

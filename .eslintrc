@@ -26,6 +26,7 @@
         "no-loop-func": false,
         "no-mixed-requires": false,
         "no-multi-spaces": false,
+        "no-return-assign": false,
         "no-shadow": false,
         "no-underscore-dangle": false,
         "no-use-before-define": false,

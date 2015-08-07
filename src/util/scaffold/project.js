@@ -2,12 +2,11 @@
 
 // System Modules
 import fs from                          'fs';
-import {default as sysUtil} from        'util';
-import $LogProvider from                 'angie-log';
+import util from                        'util';
+import $LogProvider from                'angie-log';
 
 // Angie Modules
-import util from                        '../util';
-import {$$ProjectCreationError} from    '../$ExceptionsProvider';
+import {$StringUtil} from                '../Util';
 
 const p = process;
 
@@ -31,7 +30,7 @@ export default function $$createProject(args = {}) {
 
     // Parse the passed arguments object
     const name = args.name,
-          location = util.removeTrailingLeadingSlashes(args.location);
+          location = $StringUtil.removeTrailingLeadingSlashes(args.location);
     let mkDir,
         mkDirFiles,
         mkSub;
@@ -51,9 +50,11 @@ export default function $$createProject(args = {}) {
     }
 
     // Make sure that we're creating the project in the right spot
-    mkDir = location ? (location === '.' ? '' : location) : p.cwd();
+    mkDir = location ? (location === '.' ? '' : location) : `${p.cwd()}/${name}`;
     mkDirFiles = mkDir ? `${mkDir}/` : '';
     mkSub = `${mkDirFiles}src`.replace(/\/{2}/g, '/');
+
+    console.log('MKDIR', mkDir);
 
     try {
 
@@ -90,7 +91,7 @@ export default function $$createProject(args = {}) {
             `${__dirname}/../../templates/AngieFile.template.json`,
             'utf8'
         );
-        template = sysUtil.format(template, name, name);
+        template = util.format(template, name, name);
         fs.writeFileSync(
             `${mkDirFiles}AngieFile.json`,
             template,
@@ -100,6 +101,14 @@ export default function $$createProject(args = {}) {
 
     $LogProvider.info('Project successfully created');
     p.exit(0);
+}
+
+class $$ProjectCreationError extends Error {
+    constructor(e) {
+        $LogProvider.error(e);
+        super(e);
+        p.exit(1);
+    }
 }
 
 // TODO add test folder, src folder inside

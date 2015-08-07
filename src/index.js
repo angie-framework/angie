@@ -2,7 +2,6 @@
 
 // Global Modules
 import 'es6-module-loader';
-import {transform} from             'babel';
 
 // System Modules
 import {exec} from                  'child_process';
@@ -16,14 +15,13 @@ import server from                  './Server';
 import shell from                   './util/shell';
 
 // System/Tranform BabelJS options
-transform('code', { stage: 0 });
 System.transpiler = 'babel';
 
 const p = process;
 let args = [],
-    _server = requiresConfig.bind(null, server),
-    _shell = requiresConfig.bind(null, shell),
-    _db = requiresConfig.bind(null);
+    $$server = requiresConfig.bind(null, server),
+    $$db = requiresConfig.bind(null, require.bind(null, 'angie-orm')),
+    $$shell = requiresConfig.bind(null, shell);
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
@@ -34,17 +32,14 @@ p.argv.forEach(function(v) {
 
 // Route the CLI request to a specific command
 switch ((args[0] || '').toLowerCase()) {
-    case '':
-        help();
-        break;
     case 'help':
         help();
         break;
     case 'server':
-        _server();
+        $$server();
         break;
     case 's':
-        _server();
+        $$server();
         break;
     case 'cluster':
         break;
@@ -55,22 +50,19 @@ switch ((args[0] || '').toLowerCase()) {
         });
         break;
     case 'syncdb':
-        _db().then(System.import('angie-orm/src/index')).then(
-            p.exit.bind(0), p.exit.bind(1)
-        );
+        $$db();
         break;
     case 'migrate':
-        _db().then(System.import('angie-orm/src/index')).then(
-            p.exit.bind(0), p.exit.bind(1)
-        );
+        $$db();
         break;
     case 'test':
         runTests();
         break;
     case 'shell':
-        _shell();
+        $$shell();
         break;
-    default: help();
+    default:
+        $LogProvider.error('Unrecognized CLI Argument');
 }
 
 // Wrapper function for services which require configs to be loaded
@@ -101,7 +93,7 @@ function runTests() {
 
 function help() {
     $LogProvider.bold('Angie');
-    console.log('An AngularJS inspired NodeJS MVC');
+    console.log('A Component-based NodeJS MVC');
     console.log('\r');
     $LogProvider.bold('Version:');
     console.log(global.ANGIE_VERSION);
@@ -125,29 +117,13 @@ function help() {
             'current directory.'
         )
     );
-
-    // TODO do we still want this here?
-    // console.log(
-    //     'syncdb [ database ]                                ' +
-    //     gray(
-    //         'Sync the current specified databases in the AngieFile. ' +
-    //         'Defaults to the default created database'
-    //     )
-    // );
-    // console.log(
-    //     'migrations [ --destructive -- optional ]           ' +
-    //     gray(
-    //         'Checks to see if the database and the specified ' +
-    //         'models are out of sync. Generates NO files.'
-    //     )
-    // );
-    // console.log(
-    //     'test                                               ' +
-    //     gray(
-    //         'Runs the Angie test suite and prints the results in the ' +
-    //         'console'
-    //     )
-    // );
+    console.log(
+        'test                                               ' +
+        gray(
+            'Runs the Angie test suite and prints the results in the ' +
+            'console'
+        )
+    );
 }
 
 // TODO make all commands here

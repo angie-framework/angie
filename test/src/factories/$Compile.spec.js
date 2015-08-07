@@ -9,15 +9,17 @@ import $LogProvider from        'angie-log';
 
 // Angie Modules
 import {config} from            '../../../src/Config';
-import app, {angular} from      '../../../src/Angular';
-import $compile from            '../../../src/services/$Compile';
+import app from                 '../../../src/Angie';
+import $compile from            '../../../src/factories/$Compile';
+import $Util from               '../../../src/util/Util';
 
 describe('$compile', function() {
+
     it(
         'test compile called without a template returns an empty function',
         function() {
-            expect($compile()).to.eq(angular.noop);
-            expect($compile('')).to.eq(angular.noop);
+            expect($compile()).to.deep.eq($Util.noop);
+            expect($compile('')).to.deep.eq($Util.noop);
         }
     );
     it('test compile returns a function', function() {
@@ -124,7 +126,7 @@ describe('$compile', function() {
             });
         });
         afterEach(function() {
-            app._tearDown('testDir');
+            app.$$tearDown('testDir');
         });
         it('test attribute unmatched directive', function() {
             $compile('<div test-dir></div>')({}).then(function(t) {

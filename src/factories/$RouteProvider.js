@@ -4,7 +4,7 @@
 import $LogProvider from    'angie-log';
 
 // Angie Modules
-import util from            '../util/util';
+import {$StringUtil} from   '../util/Util';
 
 const IGNORE_KEYS = [
     'Controller',
@@ -95,7 +95,7 @@ class $RouteProvider {
                 // RegExp
                 childPath = $RouteProvider.$stringsToRegExp(
                     path,
-                    util.removeTrailingLeadingSlashes(v)
+                    $StringUtil.removeTrailingLeadingSlashes(v)
                 );
             } else {
 
@@ -180,7 +180,7 @@ class $RouteProvider {
      */
     static $stringsToRegExp() {
         return new RegExp(Array.prototype.slice.call(arguments).map((v) =>
-            util.removeTrailingLeadingSlashes(v.toString())
+            $StringUtil.removeTrailingLeadingSlashes(v.toString())
         ).join('\\/'));
     }
 
@@ -202,7 +202,7 @@ class $RouteProvider {
         if (pattern && path) {
 
             // Strip slashes
-            util.removeTrailingLeadingSlashes(
+            $StringUtil.removeTrailingLeadingSlashes(
                 path.replace(pattern, '$1|$2|$3|$4|$5')
             ).split('|').forEach(
 

@@ -7,7 +7,7 @@ import $LogProvider from    'angie-log';
 const p = process;
 
 function shell() {
-    app.$$load().then(function() {
+    global.app.$$load().then(function() {
         p.stdin.setEncoding('utf8');
         repl.start({
             prompt: $LogProvider.$shell(),

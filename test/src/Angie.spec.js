@@ -13,26 +13,27 @@ import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {angular} from               '../../src/Angular';
-import util from                    '../../src/util/util';
+import {Angie} from               '../../src/Angie';
 import {
-    $$InvalidDirectiveConfigError
+    $$InvalidDirectiveConfigError,
+    $$InvalidServiceConfigError,
+    $$InvalidFactoryConfigError
 } from                              '../../src/util/$ExceptionsProvider';
 
-describe('Angular', function() {
+describe('Angie', function() {
     let app,
         noop;
 
     beforeEach(function() {
 
         // jscs:disable
-        app = new angular();
+        app = new Angie();
         // jscs:enable
 
-        noop = angular.noop;
+        noop = () => undefined;
     });
-    it('test extension of static angular methods from util', function() {
-        expect(angular.extend).to.be.a('function');
+    xit('test extension of static Angie methods from util', function() {
+        expect(Angie.noop).to.be.a('function');
     });
     describe('constructor', function() {
         it('test constructor properly instantiates app properties', function() {
@@ -41,38 +42,38 @@ describe('Angular', function() {
             expect(app.services).to.deep.eq({});
             expect(app.Controllers).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
-            expect(app._registry).to.deep.eq({});
-            expect(app._dependencies).to.deep.eq([]);
+            expect(app.$$registry).to.deep.eq({});
+            expect(app.$dependencies).to.deep.eq([]);
         });
     });
-    describe('_register', function() {
+    describe('$$register', function() {
         beforeEach(function() {
             mock($LogProvider, 'warn', noop);
         });
-        it('test register returns the app object', function() {
-            expect(app._register()).to.deep.eq(app);
+        it('test $register returns the app object', function() {
+            expect(app.$$register()).to.deep.eq(app);
         });
-        it('test register called without a name fails', function() {
-            app._register('directives', null, {});
-            expect(app._registry).to.deep.eq({});
+        it('test $register called without a name fails', function() {
+            app.$$register('directives', null, {});
+            expect(app.$$registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect($LogProvider.warn).to.have.been.called;
         });
-        it('test register called without an obj fails', function() {
-            app._register('directives', 'test', null);
-            expect(app._registry).to.deep.eq({});
+        it('test $register called without an obj fails', function() {
+            app.$$register('directives', 'test', null);
+            expect(app.$$registry).to.deep.eq({});
             expect(app.directives).to.deep.eq({});
             expect($LogProvider.warn).to.have.been.called;
         });
-        it('test register properly registers a provider', function() {
-            app._register('directives', 'test', 'test');
-            expect(app._registry.test).to.eq('directives');
+        it('test $register properly $registers a provider', function() {
+            app.$$register('directives', 'test', 'test');
+            expect(app.$$registry.test).to.eq('directives');
             expect(app.directives.test).to.deep.eq('test');
         });
     });
     describe('directive', function() {
         beforeEach(function() {
-            mock(app, '_register', noop);
+            mock(app, '$$register', noop);
         });
         it('test Controller and string type', function() {
             let obj = {
@@ -81,7 +82,7 @@ describe('Angular', function() {
             app.directive('test', function() {
                 return obj;
             });
-            expect(app._register.calls[0].args).to.deep.eq(
+            expect(app.$$register.calls[0].args).to.deep.eq(
                 [ 'directives', 'test', obj ]
             );
         });
@@ -92,7 +93,7 @@ describe('Angular', function() {
             app.directive('test', function() {
                 return obj;
             });
-            expect(app._register.calls[0].args).to.deep.eq(
+            expect(app.$$register.calls[0].args).to.deep.eq(
                 [ 'directives', 'test', obj ]
             );
             expect(obj.Controller).to.be.undefined;
@@ -109,29 +110,62 @@ describe('Angular', function() {
             }
         );
     });
-    describe('constant, service, Controller', function() {
+    describe('constant, service, factory, Controller', function() {
         beforeEach(function() {
-            mock(app, '_register', noop);
+            mock(app, '$$register', noop);
         });
-        it('test constant makes a call to _register', function() {
+        it('test constant makes a call to $$register', function() {
             app.constant('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
+            expect(app.$$register.calls[0].args).to.deep.eq([
                 'constants',
                 'test',
                 'test'
             ]);
         });
-        it('test service makes a call to _register', function() {
-            app.service('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
-                'services',
-                'test',
-                'test'
-            ]);
+        describe('test service makes a call to $$register', function() {
+            it('test object', function() {
+                app.service('test', { test: 'test' });
+                expect(app.$$register.calls[0].args).to.deep.eq([
+                    'services',
+                    'test',
+                    { test: 'test' }
+                ]);
+            });
+            it('test function', function() {
+                expect(
+                    app.service.bind(null, 'test', function test() {})
+                ).to.throw($$InvalidServiceConfigError);
+            });
+            it('test string', function() {
+                expect(
+                    app.service.bind(null, 'test', 'test')
+                ).to.throw($$InvalidServiceConfigError);
+            });
         });
-        it('test Controller makes a call to _register', function() {
+        describe('test factory makes a call to $$register', function() {
+            it('test object', function() {
+                expect(
+                    app.factory.bind(null, 'test', { test: 'test' })
+                ).to.throw($$InvalidFactoryConfigError);
+            });
+            it('test function', function() {
+                let test = function() {};
+                app.factory('test', test);
+                expect(app.$$register.calls[0].args).to.deep.eq([
+                    'factories',
+                    'test',
+                    test
+                ]);
+            });
+            it('test string', function() {
+                expect(
+                    app.factory.bind(null, 'test', 'test')
+                ).to.throw($$InvalidFactoryConfigError);
+            });
+        });
+        it('test Controller makes a call to $$register', function() {
             app.Controller('test', 'test');
-            expect(app._register.calls[0].args).to.deep.eq([
+            expect(app.$$register.calls[0].args).to.deep.eq([
                 'Controllers',
                 'test',
                 'test'
@@ -159,55 +193,52 @@ describe('Angular', function() {
             expect($LogProvider.warn).to.not.have.been.called;
         });
     });
-    describe('_tearDown', function() {
+    describe('$$tearDown', function() {
         beforeEach(function() {
             app.service('test', {});
         });
-        it('test _tearDown returns app', function() {
-            expect(app._tearDown()).to.deep.eq(app);
+        it('test $$tearDown returns app', function() {
+            expect(app.$$tearDown()).to.deep.eq(app);
         });
-        it('test _tearDown called with no name does nothing', function() {
-            app._tearDown();
-            expect(app._registry.test).to.eq('services');
+        it('test $$tearDown called with no name does nothing', function() {
+            app.$$tearDown();
+            expect(app.$$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
-        it('test _tearDown called with an improper service name', function() {
-            app._tearDown('test1');
-            expect(app._registry.test).to.eq('services');
+        it('test $$tearDown called with an improper service name', function() {
+            app.$$tearDown('test1');
+            expect(app.$$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
-        it('test _tearDown called with a proper service name', function() {
-            app._tearDown('test');
-            expect(app._registry.test).to.be.undefined;
+        it('test $$tearDown called with a proper service name', function() {
+            app.$$tearDown('test');
+            expect(app.$$registry.test).to.be.undefined;
             expect(app.service.test).to.be.undefined;
         });
     });
-    describe('loadDependencies', function() {
+    describe('$$loadDependencies', function() {
         beforeEach(function() {
-            mock(util, 'removeTrailingSlashes', (v) => v);
             mock(fs, 'readFileSync', () => '{ "test": "test" }');
             mock($LogProvider, 'error', noop);
-            mock(app, 'bootstrap', () => new Promise());
+            mock(app, '$$bootstrap', () => new Promise());
         });
         afterEach(() => simple.restore());
         it('test called with no dependencies', function() {
-            expect(app.loadDependencies().val).to.deep.eq([]);
+            expect(app.$$loadDependencies().val).to.deep.eq([]);
         });
         it('test called with dependencies', function() {
-            expect(app.loadDependencies([ 'test' ]).val.length).to.eq(1);
-            expect(util.removeTrailingSlashes.calls[0].args[0]).to.eq('test');
-            expect(fs.readFileSync.calls[0].args[0]).to.eq('test/AngieFile.json');
-            expect(app.bootstrap).to.have.been.called;
+            expect(app.$$loadDependencies([ 'test' ]).val.length).to.eq(1);
+            expect(fs.readFileSync.calls[0].args[0]).to.eq('./node_modules/test/AngieFile.json');
+            expect(app.$$bootstrap).to.have.been.called;
         });
         it('test invalid JSON in AngieFile', function() {
             fs.readFileSync = () => '{,}';
-            app.loadDependencies([ 'test' ]);
-            expect(util.removeTrailingSlashes.calls[0].args[0]).to.eq('test');
+            app.$$loadDependencies([ 'test' ]);
             expect($LogProvider.error).to.have.been.called;
-            expect(app.bootstrap).to.not.have.been.called;
+            expect(app.$$bootstrap).to.not.have.been.called;
         });
     });
-    describe('bootstrap', function() {
+    describe('$$bootstrap', function() {
         let spy;
 
         beforeEach(function() {
@@ -222,24 +253,24 @@ describe('Angular', function() {
             ];
         });
         afterEach(() => simple.restore());
-        it('test bootstrap with node_modules', function() {
+        it('test $$bootstrap with node_modules', function() {
             fs.readdirSync.returnWith([ 'node_modules' ]);
-            app.bootstrap();
+            app.$$bootstrap();
             expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
             expect(app.configs[0].fired).to.be.true;
         });
-        xit('test bootstrap with non-js files', function() {
-            app.bootstrap();
+        xit('test $$bootstrap with non-js files', function() {
+            app.$$bootstrap();
             expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
             expect(app.configs[0].fired).to.be.true;
         });
-        xit('test bootstrap', function() {
+        xit('test $$bootstrap', function() {
             fs.readdirSync.returnWith([ 'test.js' ]);
-            expect(app.bootstrap()).to.deep.eq(
+            expect(app.$$bootstrap()).to.deep.eq(
                 [ 'test.js', 'test.js' ]
             );
             expect(System.import).to.have.been.called;
@@ -248,7 +279,7 @@ describe('Angular', function() {
         });
         xit('test configs not called more than once', function() {
             app.configs[0].fired = true;
-            app.bootstrap();
+            app.$$bootstrap();
             expect(spy).to.not.have.been.called;
         });
     });
