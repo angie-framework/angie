@@ -13,8 +13,6 @@
     "publish": "gulp"
   },
   "engines": {
-    "iojs": "2.2.x",
-    "babel-node": "*",
     "node": "*"
   },
   "bin": {
