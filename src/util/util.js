@@ -1,42 +1,143 @@
 'use strict'; 'use strong';
 
-import fs from 'fs';
+// System Modules
+import fs from      'fs';
+import util from    'util';
 
 /**
- * @desc util is a slient utility file which is not available via any provider
+ * @desc Util is a slient utility class which is not available via any provider
  * on the app object. The only way to access the methods on this class is to
  * import the module.
- * @todo Make this class private
- * @todo Subclass
- * @todo Make the helper class util resolve to Util everywhere, rename Util
+ * @extends util
+ * @access private
  * @since 0.2.3
  */
-class Util {
-    static extend(target) {
-        let _target;
+class $Util {
 
-        if (typeof target === 'function') {
-            _target = target;
-            target = target.prototype;
-        } else if (typeof target !== 'object') {
-            return target;
-        }
+    /**
+     * @desc $Util empty function call helper
+     * @since 0.2.3
+     * @returns {undefined} undefined
+     * @example $Util.noop(); // = undefined
+     */
+    static noop() {}
+}
+$Util = util._extend($Util, util);
 
-        let args = Array.prototype.slice.call(arguments, 1, arguments.length);
-        args.forEach(function(src) {
-            if (typeof src === 'object') {
-                for (let key in src) {
-                    target[key] = src[key];
-                }
-            }
-        });
+/**
+ * @desc Util is a silent utility class which is not available via any provider
+ * on the app object. The only way to access the methods on this class is to
+ * import the module. It holds methods quintessential to string manipulation.
+ * @since 0.3.1
+ */
+class $StringUtil {
 
-        return _target || target;
+    /**
+     * @desc Util helper to replace leading slashes
+     * @since 0.2.3
+     * @param {string} str [param=''] String to process
+     * @returns {string} The str param with stripped leading slashes
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test'); // true
+     */
+    static removeLeadingSlashes(str) {
+        return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
     }
-    static findFile(root, target) {
+
+    /**
+     * @desc Util helper to replace trailing slashes
+     * @since 0.2.3
+     * @param {string} str [param=''] String to process
+     * @returns {string} The str param with stripped trailing slashes
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('test/'); // true
+     */
+    static removeTrailingSlashes(str) {
+        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
+    }
+
+    /**
+     * @desc Util helper to replace leading and trailing slashes
+     * @since 0.2.3
+     * @param {string} str [param=''] String to process
+     * @returns {string} The str param with stripped trailing and leading slashes
+     * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test/'); // true
+     */
+    static removeTrailingLeadingSlashes(str = '') {
+        return $StringUtil.removeTrailingSlashes($StringUtil.removeLeadingSlashes(str));
+    }
+
+    /**
+     * @desc Util helper to replace dash/slash separation with camelCase
+     * @since 0.2.4
+     * @param {string} str String to process
+     * @returns {string} The str param converted to camelCase
+     * @example $StringUtil.toCamel('test-test'); // = 'testTest'
+     */
+    static toCamel(str) {
+        return str.toLowerCase().replace(
+            /[-_][a-z]/g,
+            function(m) {
+                return m.toUpperCase().replace(/[-_]/g, '');
+            }
+        );
+    }
+
+    /**
+     * @desc Util helper to replace camelCase with underscore_separation
+     * @since 0.2.4
+     * @param {string} str String to process
+     * @returns {string} The str param converted to underscore_separation
+     * @example $StringUtil.toCamel('testTest'); // = 'test_test'
+     */
+    static toUnderscore(str) {
+        return this.toFormat(str, '_');
+    }
+
+    /**
+     * @desc Util helper to replace camelCase with dash-separation
+     * @since 0.2.4
+     * @param {string} str String to process
+     * @returns {string} The str param converted to dash-separation
+     * @example $StringUtil.toDash('testTest'); // = 'test-test'
+     */
+    static toDash(str) {
+        return this.toFormat(str, '-');
+    }
+
+    /**
+     * @desc Util helper to perform `toDash` or `toUnderscore` style string
+     * serilaization
+     * @since 0.2.4
+     * @param {string} str String to process
+     * @param {string} del Character with which to replace camelCase capitals
+     * @returns {string} The str param converted to `del` separation
+     * @example $StringUtil.toFormat('testTest', '-'); // = 'test-test'
+     * @example $StringUtil.toFormat('testTest', '_'); // = 'test_test'
+     */
+    static toFormat(str, del) {
+        return str.replace(/([A-Z]+)/g, `${del}$1`).toLowerCase();
+    }
+}
+
+/**
+ * @desc $FileUtil is a silent utility class which is not available via any provider
+ * on the app object. The only way to access the methods on this class is to
+ * import the module. It holds methods quintessential to file management.
+ * @since 0.3.1
+ */
+class $FileUtil {
+
+    /**
+     * @desc Util helper to help find files in the specified root
+     * @since 0.2.4
+     * @param {string} root The root directory in which to find files
+     * @param {string} target The desired file name
+     * @returns {string} The content of the file
+     * @example $FileUtil.find(process.cwd(), 'test');
+     */
+    static find(root, target) {
 
         // Handle slashes
-        target = Util.removeTrailingLeadingSlashes(target);
+        target = $StringUtil.removeTrailingLeadingSlashes(target);
 
         // Pull this out because it is used several times
         const fileDirectoryExists = function fileDirectoryExists(n, t) {
@@ -83,92 +184,10 @@ class Util {
         }
         return undefined;
     }
-
-    static removeLeadingSlashes(str) {
-        return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
-    }
-    static removeTrailingSlashes(str) {
-        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
-    }
-
-    /**
-     * @desc Util helper to replace leading and trailing slashes
-     * @since 0.2.3
-     * @todo Move methods out to StringUtil class
-     * @param {string} str [param=''] String to process
-     * @returns {string} The str param with stripped trailing and leading slashes
-     * @example 'test' === util.removeTrailingLeadingSlashes('/test/'); // true
-     */
-    static removeTrailingLeadingSlashes(str = '') {
-        return Util.removeTrailingSlashes(Util.removeLeadingSlashes(str));
-    }
-
-    /**
-     * @desc Util helper to replace dash/slash separation with camelCase
-     * @since 0.2.4
-     * @todo Move methods out to StringUtil class
-     * @param {string} str String to process
-     * @returns {string} The str param converted to camelCase
-     * @example util.toCamel('test-test'); // = 'testTest'
-     */
-    static toCamel(str) {
-        return str.toLowerCase().replace(
-            /[-_][a-z]/g,
-            function(m) {
-                return m.toUpperCase().replace(/[-_]/g, '');
-            }
-        );
-    }
-
-    /**
-     * @desc Util helper to replace camelCase with underscore_separation
-     * @since 0.2.4
-     * @todo Move methods out to StringUtil class
-     * @param {string} str String to process
-     * @returns {string} The str param converted to underscore_separation
-     * @example util.toCamel('testTest'); // = 'test_test'
-     */
-    static toUnderscore(str) {
-        return Util.toFormat(str, '_');
-    }
-
-    /**
-     * @desc Util helper to replace camelCase with dash-separation
-     * @since 0.2.4
-     * @todo Move methods out to StringUtil class
-     * @param {string} str String to process
-     * @returns {string} The str param converted to dash-separation
-     * @example util.toDash('testTest'); // = 'test-test'
-     */
-    static toDash(str) {
-        return Util.toFormat(str, '-');
-    }
-
-    /**
-     * @desc Util helper to perform `toDash` or `toUnderscore` style string
-     * serilaization
-     * @since 0.2.4
-     * @todo Move methods out to StringUtil class
-     * @param {string} str String to process
-     * @param {string} del Character with which to replace camelCase capitals
-     * @returns {string} The str param converted to `del` separation
-     * @example util.toFormat('testTest', '-'); // = 'test-test'
-     * @example util.toFormat('testTest', '_'); // = 'test_test'
-     */
-    static toFormat(str, del) {
-        return str.replace(/([A-Z]+)/g, `${del}$1`).toLowerCase();
-    }
-
-    /**
-     * @desc Util empty function call helper
-     * @since 0.2.3
-     * @returns {undefined} undefined
-     * @example util.noop(); // = undefined
-     */
-    static noop() {}
 }
 
-// class fileUtil {}
-// class stringUtil {}
-
-export default class util extends Util {}
+export default $Util;
+export {
+    $StringUtil,
+    $FileUtil
+};

@@ -4,18 +4,22 @@
 import {expect} from            'chai';
 import simple, {mock} from      'simple-mock';
 
+// System Modules
+import $LogProvider from        'angie-log';
+
 // Angie Modules
 import {config} from            '../../../src/Config';
-import app, {angular} from      '../../../src/Angular';
-import $compile from            '../../../src/services/$Compile';
-import $log from                '../../../src/util/$LogProvider';
+import app from                 '../../../src/Angie';
+import $compile from            '../../../src/factories/$Compile';
+import $Util from               '../../../src/util/Util';
 
 describe('$compile', function() {
+
     it(
         'test compile called without a template returns an empty function',
         function() {
-            expect($compile()).to.eq(angular.noop);
-            expect($compile('')).to.eq(angular.noop);
+            expect($compile()).to.deep.eq($Util.noop);
+            expect($compile('')).to.deep.eq($Util.noop);
         }
     );
     it('test compile returns a function', function() {
@@ -25,7 +29,7 @@ describe('$compile', function() {
         let scope;
 
         beforeEach(function() {
-            mock($log, 'warn', function() {});
+            mock($LogProvider, 'warn', function() {});
             scope = {
                 test: 'test',
                 test1: 'test1',
@@ -46,7 +50,7 @@ describe('$compile', function() {
         it('test listener with no matches', function() {
             $compile('{{{test3}}}')(scope).then(function(t) {
                 expect(t).to.eq('');
-                expect($log.warn).to.have.been.called;
+                expect($LogProvider.warn).to.have.been.called;
             });
         });
         it('test _templateCompile evaluates a single matched listener', function() {
@@ -122,7 +126,7 @@ describe('$compile', function() {
             });
         });
         afterEach(function() {
-            app._tearDown('testDir');
+            app.$$tearDown('testDir');
         });
         it('test attribute unmatched directive', function() {
             $compile('<div test-dir></div>')({}).then(function(t) {

@@ -4,35 +4,38 @@
 import http from                    'http';
 import https from                   'https';
 import url from                     'url';
+import util from                    'util';
+import chalk from                   'chalk';
 import watch from                   'node-watch';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
 import {config} from                './Config';
-import app from                     './Angular';
-import $cacheFactory from           './services/$CacheFactory';
-import {_templateLoader} from       './services/$TemplateCache';
+import app from                     './Angie';
+import $CacheFactory from           './factories/$CacheFactory';
+import {$$templateLoader} from      './factories/$TemplateCache';
 import {
     BaseRequest,
     RESPONSE_HEADER_MESSAGES,
     PRAGMA_HEADER,
     NO_CACHE_HEADER
 } from                              './services/BaseRequest';
-import util from                    './util/util';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
-import $log from                    './util/$LogProvider';
 
 const p = process;
 let firstrun = true;
 
-export default function server(args) {
+function server(args) {
     const useSSL = /\-+usessl/i.test(args),
           port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
 
     if (firstrun) {
-        $log.warn('"angie server" not suitable for production use.');
+        $LogProvider.warn(
+            `${chalk.cyan('angie server')} not suitable for production use.`
+        );
     }
 
-    prepApp().then(function() {
+    app.$$load().then(function() {
 
         // Start a webserver
         // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
@@ -44,12 +47,12 @@ export default function server(args) {
             // A file cannot be in the static path if it doesn't have an extension, shortcut
             // TODO you may want to move the asset loading block out of here
             if (path.indexOf('.') > -1) {
-                let assetCache = new $cacheFactory('staticAssets');
+                let assetCache = new $CacheFactory('staticAssets');
 
                 if (assetCache.get(path)) {
                     asset = assetCache.get(path);
                 } else {
-                    asset = _templateLoader(path, 'static');
+                    asset = $$templateLoader(path, 'static');
                 }
 
                 // We have an asset and must render a response
@@ -64,7 +67,7 @@ export default function server(args) {
                         config.hasOwnProperty('cacheStaticAssets') &&
                         !config.cacheStaticAssets
                     ) {
-                        angieResponse.responseHeaders = util.extend(
+                        angieResponse.responseHeaders = util._extend(
                             angieResponse.responseHeaders,
                             {
                                 Expires: -1,
@@ -81,7 +84,7 @@ export default function server(args) {
                     );
 
                     // Check if you have an image type asset
-                    $log.info(path, response._header);
+                    $LogProvider.info(path, response._header);
                     response.write(asset);
                 }
 
@@ -92,10 +95,10 @@ export default function server(args) {
 
             // else {
 
-            angieResponse._route().then(function() {
+            angieResponse.$$route().then(function() {
                 let code = response.statusCode;
                 if (!code) {
-                    const error = _templateLoader('500.html');
+                    const error = $$templateLoader('500.html');
 
                     // TODO extrapolate this to responses
                     response.writeHead(
@@ -104,13 +107,13 @@ export default function server(args) {
                         angieResponse.responseHeaders
                     );
                     response.write(error);
-                    $log.error(path, response._header);
+                    $LogProvider.error(path, response._header);
                 } else if (code < 400) {
-                    $log.info(path, response._header);
+                    $LogProvider.info(path, response._header);
                 } else if (code < 500) {
-                    $log.warn(path, response._header);
+                    $LogProvider.warn(path, response._header);
                 } else {
-                    $log.error(path, response._header);
+                    $LogProvider.error(path, response._header);
                 }
                 return true;
             }).then(function() {
@@ -129,7 +132,7 @@ export default function server(args) {
 
         // Attempt to restart the webserver on change
         if (firstrun) {
-            let watchDirs = [ p.cwd(), __dirname ].concat(app.__dependencies__);
+            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
 
             try {
                 let restartObj = {
@@ -138,12 +141,12 @@ export default function server(args) {
                     };
                 watch(watchDirs, (() => restart(port)), restartObj);
             } catch(e) {
-                $log.error(e);
+                $LogProvider.error(e);
             }
         }
 
         // Info
-        $log.info(`Serving on port ${port}`);
+        $LogProvider.info(`Serving on port ${port}`);
 
         // Set firstrun to false
         firstrun = false;
@@ -153,19 +156,11 @@ export default function server(args) {
 function restart(port) {
 
     // TODO this doesn't reload like you think it does
-    prepApp().then(function() {
-        $log.info(`Application files reloaded; Still serving on port ${port}`);
-    });
-}
-
-export function prepApp() {
-
-    // Load any app dependencies
-    return app.loadDependencies(config.dependencies).then(function() {
-
-        // Bootstrap the angular application
-        return new Promise(
-            (resolve) => app.bootstrap().then(resolve)
+    app.$$load().then(function() {
+        $LogProvider.info(
+            `Application files reloaded; Still serving on port ${port}`
         );
     });
 }
+
+export default server;

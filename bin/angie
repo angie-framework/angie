@@ -1,7 +1,12 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
+
+'use strict';
 
 // TODO check to see that the most up to date version is installed
 global.ANGIE_VERSION = '0.3.0';
 
-require('babel/register');
+require('babel/register')({
+    only: [ '**/node_modules/angie*/**', '**/src/**' ],
+    stage: 0
+});
 require('../src/index');

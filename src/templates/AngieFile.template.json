@@ -1,5 +1,6 @@
 {
     "projectName": "%s",
+    "projectRoot": "./src",
     "databases": {
         "default": {
             "type": "sqlite3",
@@ -12,6 +13,10 @@
     "staticDirs": [
         "static/"
     ],
-    "dependencies": [],
+    "dependencies": [
+        "angie-log",
+        "angie-injector",
+        "angie-orm"
+    ],
     "cacheStaticAssets": false
 }

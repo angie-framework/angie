@@ -1,16 +1,22 @@
 'use strict'; 'use strong';
 
-import app from                                 '../Angular';
+// System Modules
+import $LogProvider from                        'angie-log';
+import {$injectionBinder} from                  'angie-injector';
+
+// Angie Modules
+import app from                                 '../Angie';
 import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
-import {default as $Routes} from                './$RouteProvider';
-import {$templateCache, _templateLoader} from   './$TemplateCache';
-import {$injectionBinder} from                  './$InjectorProvider';
+import {default as $Routes} from                '../factories/$RouteProvider';
+import {$templateCache, $$templateLoader} from  '../factories/$TemplateCache';
+import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
-import $compile from                            './$Compile';
-import util from                                '../util/util';
-import $log from                                '../util/$LogProvider';
+
+import $Util, {
+    $StringUtil
+} from                                          '../util/Util';
 
 // TODO move these out to an app constant
 const RESPONSE_HEADER_MESSAGES = {
@@ -40,7 +46,7 @@ class BaseRequest {
 
         // Make the response object available to the API
         this.response = new $Response(response).response;
-        this.response._responseContent = '';
+        this.response.$responseContent = '';
 
         // Parse out the response content type
         let contentType = this.request.headers.accept;
@@ -70,7 +76,7 @@ class BaseRequest {
      * @returns {function} BaseRequest.prototype.$controllerPath or
      * BaseRequest.prototype.otherPath
      */
-    _route() {
+    $$route() {
 
         // Check against all of the RegExp routes in Reverse
         let regExpRoutes = [];
@@ -81,7 +87,8 @@ class BaseRequest {
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
             // Slice characters we do not need to instantiate a new RegExp
-            let regExpRoute = util.removeTrailingLeadingSlashes(regExpRoutes[ i ]),
+            let regExpRoute =
+                $StringUtil.removeTrailingLeadingSlashes(regExpRoutes[ i ]),
 
                 // Cast the string key of the routes.regExp object as a
                 // RegExp obj
@@ -92,7 +99,7 @@ class BaseRequest {
 
                 // Hooray, we've set our route, now we need to do some additional
                 // param parsing
-                util.extend(
+                $Util._extend(
                     this.request.query,
                     $Routes.$$parseURLParams(pattern, this.path)
                 );
@@ -154,7 +161,10 @@ class BaseRequest {
                         done: resolve
                     };
 
-                    me.controller = new $injectionBinder(controller).call(
+                    me.controller = new $injectionBinder(
+                        controller,
+                        'controller'
+                    ).call(
                         app.services.$scope,
                         resolve
                     );
@@ -207,7 +217,7 @@ class BaseRequest {
             ) {
 
                 // If there is a template, check to see if caching is set
-                me.responseHeaders = util.extend(me.responseHeaders, {
+                me.responseHeaders = $Util._extend(me.responseHeaders, {
                     Expires: -1,
                     Pragma: PRAGMA_HEADER,
                     'Cache-Control': NO_CACHE_HEADER
@@ -215,7 +225,7 @@ class BaseRequest {
             }
 
             // Pull the response back in from wherever it was before
-            me.responseContent = me.response._responseContent;
+            me.responseContent = me.response.$responseContent;
 
             if (me.template) {
 
@@ -232,7 +242,7 @@ class BaseRequest {
                     });
                 }).then(function(template) {
                     me.responseContent += template;
-                    me.response._responseContent = me.responseContent;
+                    me.response.$responseContent = me.responseContent;
 
                     return controllerName;
                 });
@@ -244,8 +254,8 @@ class BaseRequest {
         // TODO See if any views have this Controller associated
         // TODO if no response type associated, use extension (already set)
         // prom = prom.then(function(controllerName) {
-        //     for (let key in app._registry) {
-        //         if (app._registry[ key ] === 'directive') {
+        //     for (let key in app.$registry) {
+        //         if (app.$registry[ key ] === 'directive') {
         //             let directive = app.directives[ key ];
         //             if (
         //                 directive.Controller &&
@@ -257,7 +267,7 @@ class BaseRequest {
         //                 // APIViews cannot have templates, all templates are trashed
         //                 if (me.template) {
         //                     delete me.template;
-        //                     delete me._responseContent;
+        //                     delete me.$responseContent;
         //
         //                     //me.responseHeaders = {};
         //                     $log.warn(
@@ -285,7 +295,7 @@ class BaseRequest {
         });
 
         prom.catch(function(e) {
-            $log.error(e);
+            $LogProvider.error(e);
             return me.errorPath();
         });
 
@@ -310,7 +320,7 @@ class BaseRequest {
     defaultPath() {
 
         // Load default page
-        let index = _templateLoader('index.html');
+        let index = $$templateLoader('index.html');
 
         // If the index page could not be found
         if (!index) {
@@ -332,7 +342,7 @@ class BaseRequest {
     unknownPath() {
 
         // Load page not found
-        let fourOhFour = _templateLoader('404.html'),
+        let fourOhFour = $$templateLoader('404.html'),
             me = this;
 
         return new Promise(function() {

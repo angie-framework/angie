@@ -1,8 +1,10 @@
 'use strict'; 'use strong';
 
+// System Modules
+import $LogProvider from    'angie-log';
+
 // Angie Modules
-import util from    '../util/util';
-import $log from    '../util/$LogProvider';
+import {$StringUtil} from   '../util/Util';
 
 const IGNORE_KEYS = [
     'Controller',
@@ -93,7 +95,7 @@ class $RouteProvider {
                 // RegExp
                 childPath = $RouteProvider.$stringsToRegExp(
                     path,
-                    util.removeTrailingLeadingSlashes(v)
+                    $StringUtil.removeTrailingLeadingSlashes(v)
                 );
             } else {
 
@@ -133,7 +135,7 @@ class $RouteProvider {
         } else {
 
             // Redirection can only occur based on this path if path is a string
-            $log.warn(
+            $LogProvider.warn(
                 'Cannot set "otherwise" route to anything other than a string'
             );
         }
@@ -177,11 +179,9 @@ class $RouteProvider {
      *     regExp.test('test/test') === true;
      */
     static $stringsToRegExp() {
-        let regExp = [];
-        Array.prototype.slice.call(arguments).forEach(function(v) {
-            regExp.push(util.removeTrailingLeadingSlashes(v.toString()));
-        });
-        return new RegExp(regExp.join('/'));
+        return new RegExp(Array.prototype.slice.call(arguments).map((v) =>
+            $StringUtil.removeTrailingLeadingSlashes(v.toString())
+        ).join('\\/'));
     }
 
     /**
@@ -202,7 +202,7 @@ class $RouteProvider {
         if (pattern && path) {
 
             // Strip slashes
-            util.removeTrailingLeadingSlashes(
+            $StringUtil.removeTrailingLeadingSlashes(
                 path.replace(pattern, '$1|$2|$3|$4|$5')
             ).split('|').forEach(
 

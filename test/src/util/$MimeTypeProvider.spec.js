@@ -7,21 +7,21 @@ import {expect} from                'chai';
 import {default as $MimeType} from  '../../../src/util/$MimeTypeProvider';
 
 describe('$MimeTypeProvider', function() {
-    describe('_', function() {
+    describe('$$', function() {
         it(
-            'test _ called without any arguments returns the default Content-Type',
+            'test $$ called without any arguments returns the default Content-Type',
             function() {
-                expect($MimeType._()).to.eq('text/plain');
+                expect($MimeType.$$()).to.eq('text/plain');
             }
         );
         it(
-            'test _ called with a type not in MIME_TYPES returns default Content-Type',
+            'test $$ called with a type not in MIME$$TYPES returns default Content-Type',
             function() {
-                expect($MimeType._('test')).to.eq('text/plain');
+                expect($MimeType.$$('test')).to.eq('text/plain');
             }
         );
         it('test known mime type', function() {
-            expect($MimeType._('svg')).to.eq('image/svg+xml');
+            expect($MimeType.$$('svg')).to.eq('image/svg+xml');
         });
     });
     describe('fromPath', function() {

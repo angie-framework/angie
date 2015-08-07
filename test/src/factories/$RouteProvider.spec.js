@@ -4,9 +4,11 @@
 import {expect} from                'chai';
 import simple, {mock} from          'simple-mock';
 
+// System Modules
+import $LogProvider from            'angie-log';
+
 // Angie Modules
-import {default as $Routes} from    '../../../src/services/$RouteProvider';
-import $log from                    '../../../src/util/$LogProvider';
+import {default as $Routes} from    '../../../src/factories/$RouteProvider';
 
 describe('$RequestProvider', function() {
     describe('when', function() {
@@ -232,19 +234,19 @@ describe('$RequestProvider', function() {
         });
     });
     describe('otherwise', function() {
-        beforeEach(() => mock($log, 'warn', function() {}));
+        beforeEach(() => mock($LogProvider, 'warn', function() {}));
         afterEach(function() {
             simple.restore();
             $Routes.$$clear();
         });
         it('test non-string otherwise is not set', function() {
             $Routes.otherwise({});
-            expect($log.warn).to.have.been.called;
+            expect($LogProvider.warn).to.have.been.called;
             expect($Routes.fetch().otherwise).to.be.undefined;
         });
         it('test string otherwise is set', function() {
             $Routes.otherwise('/test');
-            expect($log.warn).to.not.have.been.called;
+            expect($LogProvider.warn).to.not.have.been.called;
             expect($Routes.fetch().otherwise).to.eq('/test');
         });
     });

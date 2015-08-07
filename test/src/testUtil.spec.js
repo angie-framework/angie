@@ -16,6 +16,9 @@ class _Promise {
         this.val = val;
         return this;
     }
+    catch(fn) {
+        fn();
+    }
     static all(proms) {
         return {
             then: new _Promise().then,

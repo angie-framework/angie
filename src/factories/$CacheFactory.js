@@ -38,4 +38,4 @@ class $CacheFactory {
     }
 }
 
-export default class $cacheFactory extends $CacheFactory {}
+export default $CacheFactory;

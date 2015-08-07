@@ -1,6 +1,6 @@
 'use strict'; 'use strong';
 
-import app from '../Angular';
+import app from '../Angie';
 
 class $Response {
     constructor(response) {
@@ -10,12 +10,12 @@ class $Response {
 }
 
 // TODO use these classes to format responses instead of BaseRequest
-class $APIResponse extends $Response {
+// class $APIResponse extends $Response {
+//
+// }
 
-}
-
-class $TemplateResponse extends $Response {
-
-}
+// class $TemplateResponse extends $Response {
+//
+// }
 
 export {$Response};

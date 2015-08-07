@@ -9,10 +9,6 @@ import istanbul from            'gulp-istanbul';
 import {Instrumenter} from      'isparta';
 import mocha from               'gulp-mocha';
 import cobertura from           'istanbul-cobertura-badger';
-import chalk from               'chalk';
-
-// Angie Modules
-import $log from './src/util/$LogProvider';
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',
@@ -29,7 +25,7 @@ gulp.task('eslint', function () {
     );
 });
 gulp.task('jscs', [ 'eslint' ], function () {
-    return gulp.src([ src, testSrc ])
+    return gulp.src([ src, 'test/**/!(decorators)*.spec.js' ])
         .pipe(jscs({
             fix: true,
             configPath: '.jscsrc',
@@ -38,7 +34,6 @@ gulp.task('jscs', [ 'eslint' ], function () {
 });
 gulp.task('mocha', function(cb) {
     let proc;
-
     new Promise(function(resolve, reject) {
         proc = gulp.src(src).pipe(
             istanbul({
@@ -48,14 +43,12 @@ gulp.task('mocha', function(cb) {
         ).pipe(
             istanbul.hookRequire()
         ).on('finish', function() {
-            $log.info('Running Angie Mocha test suite');
             gulp.src(
                 [ 'test/src/testUtil.spec.js', 'test/**/!(*testUtil).spec.js' ],
                 { read: false }
             ).pipe(mocha({
                 reporter: 'spec'
             }).on('error', function(e) {
-                console.log(chalk.bold(e));
                 resolve();
             }).on('end', function() {
                 resolve();
@@ -74,7 +67,6 @@ gulp.task('mocha', function(cb) {
     });
 });
 gulp.task('esdoc', function(cb) {
-    $log.info('Generating Angie documentation');
     exec('esdoc -c esdoc.json', cb);
 });
 gulp.task('watch', [ 'jscs', 'mocha' ], function() {
@@ -83,4 +75,5 @@ gulp.task('watch', [ 'jscs', 'mocha' ], function() {
 gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
+gulp.task('test', [ 'jscs', 'mocha' ]);
 gulp.task('default', [ 'jscs', 'mocha' ]);

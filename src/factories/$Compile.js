@@ -1,13 +1,13 @@
 'use strict'; 'use strong';
 
-import jsdom from 'jsdom';
+// System Modules
+import {jsdom} from                 'jsdom';
+import $LogProvider from            'angie-log';
 
-import app, {angular} from '../Angular';
-import {_templateLoader} from './$TemplateCache';
-import util from '../util/util';
-import $log from '../util/$LogProvider';
-
-const parser = jsdom.jsdom;
+// Angie Modules
+import app from                     '../Angie';
+import {$$templateLoader} from      './$TemplateCache';
+import $Util, {$StringUtil} from    '../util/Util';
 
 // ngie Incrementer
 let iid = 0;
@@ -66,7 +66,7 @@ class $document{}
 function $compile(t) {
 
     if (!t) {
-        return angular.noop;
+        return $Util.noop;
     }
 
     // We need to call template.toString() because we did not load with utf8
@@ -75,12 +75,12 @@ function $compile(t) {
         directives = [];
 
     // Direct reference by directive name to directive object
-    for (let _directive in app.directives) {
-        let directive = app.directives[ _directive ];
-        directive._names = [
-            _directive,
-            util.toUnderscore(_directive),
-            util.toDash(_directive)
+    for (let $directive in app.directives) {
+        let directive = app.directives[ $directive ];
+        directive.$names = [
+            $directive,
+            $StringUtil.toUnderscore($directive),
+            $StringUtil.toDash($directive)
         ];
 
         // Add all parsed directve names to directives
@@ -120,7 +120,7 @@ function $compile(t) {
             try {
                 val = $$evalFn.call(scope, parsedListener);
             } catch(e) {
-                $log.warn(e);
+                $LogProvider.warn(e);
             }
 
             // Change the scope of the template
@@ -128,15 +128,16 @@ function $compile(t) {
         });
 
         // Parse directives
-        let $$document,
-            $$window;
+        let $$document, $$window;
         try {
-            $$document = parser(tmpLet, {
+            $$document = jsdom(tmpLet, {
                 FetchExternalResources: [],
                 ProcessExternalResources: false
             });
             $$window = $$document.defaultView;
-        } catch(e) {}
+        } catch(e) {
+            $LogProvider.error(e);
+        }
 
         // Assign the window and document services
         if (assignDOMServices === true) {
@@ -152,19 +153,20 @@ function $compile(t) {
                 directives.forEach(function(directive) {
 
                     // Try and match a directive based on type
+                    // TODO classList is undefined in jsDOM, polyfill or find a better way
                     if (
                         el.className &&
-                        directive._names.some((v) => el.className.indexOf(v) > -1)
+                        directive.$names.some((v) => el.className.indexOf(v) > -1)
                     ) {
                         type = 'C';
                     } else if (
                         el.hasAttribute &&
-                        directive._names.some((v) => !!(el.hasAttribute(v)))
+                        directive.$names.some((v) => !!(el.hasAttribute(v)))
                     ) {
                         type = 'A';
                     } else if (
                         el.tagName &&
-                        directive._names.indexOf(el.tagName.toLowerCase()) > -1
+                        directive.$names.indexOf(el.tagName.toLowerCase()) > -1
                     ) {
                         type = 'E';
                     }
@@ -246,7 +248,7 @@ function $$processDirective($$document, el, scope, directive, type) {
         directive.hasOwnProperty('templatePath') &&
         directive.templatePath.indexOf('.html') > -1
     ) {
-        template = _templateLoader(directive.templatePath, 'template', 'utf8');
+        template = $$templateLoader(directive.templatePath, 'template', 'utf8');
     } else if (directive.hasOwnProperty('template')) {
         template = directive.template;
     }
@@ -269,7 +271,7 @@ function $$processDirective($$document, el, scope, directive, type) {
     if (el.hasAttribute && el.getAttribute) {
         for (let key in attrs) {
             if (el.hasAttribute(key)) {
-                parsedAttrs[ util.toCamel(key) ] = el.getAttribute(key);
+                parsedAttrs[ $StringUtil.toCamel(key) ] = el.getAttribute(key);
             }
         }
     }
@@ -293,8 +295,8 @@ function $$processDirective($$document, el, scope, directive, type) {
                 for (let key in parsedAttrs) {
 
                     // Replace all of the element attrs with parsedAttrs
-                    if (directive._names.indexOf(key) === -1) {
-                        el.setAttribute(util.toDash(key), parsedAttrs[ key ]);
+                    if (directive.$names.indexOf(key) === -1) {
+                        el.setAttribute($StringUtil.toDash(key), parsedAttrs[ key ]);
                     }
                 }
             }
