@@ -119,8 +119,6 @@ export default function $$createProject(args = {}) {
 
             $LogProvider.info('Project successfully created');
             p.exit(0);
-        }).catch(function(e) {
-            console.log(e);
         });
     }
 }
