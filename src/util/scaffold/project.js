@@ -1,14 +1,17 @@
 'use strict'; 'use strong';
 
 // System Modules
+import {default as promptly} from        'promptly';
 import fs from                          'fs';
 import util from                        'util';
+import {bold, green} from               'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
 import {$StringUtil} from                '../Util';
 
-const p = process;
+const p = process,
+      breen = (v) => bold(green(v));
 
 /**
  * @desc $$createProject is the function called when the CLI attempts to create
@@ -54,8 +57,6 @@ export default function $$createProject(args = {}) {
     mkDirFiles = mkDir ? `${mkDir}/` : '';
     mkSub = `${mkDirFiles}src`.replace(/\/{2}/g, '/');
 
-    console.log('MKDIR', mkDir);
-
     try {
 
         // We cannot create a dir if the argument is empty
@@ -77,6 +78,7 @@ export default function $$createProject(args = {}) {
 
         // Create static folders
         [
+            'test',
             'static',
             'templates'
         ].forEach(function(v) {
@@ -86,29 +88,46 @@ export default function $$createProject(args = {}) {
         throw new $$ProjectCreationError(e);
     } finally {
 
-        // Read our AngieFile template and reproduce in the target directory
-        let template = fs.readFileSync(
-            `${__dirname}/../../templates/AngieFile.template.json`,
-            'utf8'
-        );
-        template = util.format(template, name, name);
-        fs.writeFileSync(
-            `${mkDirFiles}AngieFile.json`,
-            template,
-            'utf8'
-        );
-    }
+        // This is where we create our AngieFile, we can pick certain values with
+        // which we can populate our config:
 
-    $LogProvider.info('Project successfully created');
-    p.exit(0);
+        // cacheStaticAssets
+        let staticCache = false;
+        new Promise(function(resolve) {
+            promptly.confirm(
+                `${breen('Do you want Angie to cache static assets?')} :`,
+                function (e, value) {
+                    if (!e) {
+                        staticCache = value;
+                        resolve();
+                    }
+                }
+            );
+        }).then(function() {
+
+            // Read our AngieFile template and reproduce in the target directory
+            let template = fs.readFileSync(
+                `${__dirname}/../../templates/AngieFile.template.json`,
+                'utf8'
+            );
+            template = util.format(template, name, name, staticCache);
+            fs.writeFileSync(
+                `${mkDirFiles}AngieFile.json`,
+                template,
+                'utf8'
+            );
+
+            $LogProvider.info('Project successfully created');
+            p.exit(0);
+        }).catch(function(e) {
+            console.log(e);
+        });
+    }
 }
 
 class $$ProjectCreationError extends Error {
     constructor(e) {
         $LogProvider.error(e);
         super(e);
-        p.exit(1);
     }
 }
-
-// TODO add test folder, src folder inside

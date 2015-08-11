@@ -18,5 +18,5 @@
         "angie-injector",
         "angie-orm"
     ],
-    "cacheStaticAssets": false
+    "cacheStaticAssets": %s
 }

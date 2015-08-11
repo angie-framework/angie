@@ -49,7 +49,8 @@ gulp.task('mocha', function(cb) {
             ).pipe(mocha({
                 reporter: 'spec'
             }).on('error', function(e) {
-                resolve();
+                console.log('error', e);
+                reject();
             }).on('end', function() {
                 resolve();
             }));

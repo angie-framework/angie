@@ -2,8 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-#### [0.3.1] - 2015-07-15
-##### Added/Changed/Fixed
+#### [0.3.2] - 2015-08-10
+##### Added
+- Added CLI option parser
+
+### [0.3.1] - 2015-08-08
+#### Added/Changed/Fixed
 - Changed the naming conventions around many providers
 - Added support for declaring Angular providers via decorators
 - Added $on/$broadcast/$watch methods to $scope
