@@ -1,14 +1,20 @@
 'use strict'; 'use strong';
 
+import {default as register} from   'babel-core/register';
+register({
+    only: [ '**/node_modules/angie*/**', '**/src/**' ],
+    stage: 0
+});
+
 // System Modules
-import gulp from                'gulp';
-import {exec} from              'child_process';
-import eslint from              'gulp-eslint';
-import jscs from                'gulp-jscs';
-import istanbul from            'gulp-istanbul';
-import {Instrumenter} from      'isparta';
-import mocha from               'gulp-mocha';
-import cobertura from           'istanbul-cobertura-badger';
+import gulp from                    'gulp';
+import {exec} from                  'child_process';
+import eslint from                  'gulp-eslint';
+import jscs from                    'gulp-jscs';
+import istanbul from                'gulp-istanbul';
+import {Instrumenter} from          'isparta';
+import mocha from                   'gulp-mocha';
+import cobertura from               'istanbul-cobertura-badger';
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',
@@ -49,7 +55,7 @@ gulp.task('mocha', function(cb) {
             ).pipe(mocha({
                 reporter: 'spec'
             }).on('error', function(e) {
-                console.log('error', e);
+                console.error(e);
                 reject();
             }).on('end', function() {
                 resolve();

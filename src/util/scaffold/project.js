@@ -15,9 +15,12 @@ const p = process,
 
 /**
  * @desc $$createProject is the function called when the CLI attempts to create
- * a project from the command line. Scaffolds the main folder in the specified
- * location or no folder and then folders for commonly used providers and the
- * Angie config file, AngieFile.json.
+ * a project from the command line. This scaffolds the main folder in the
+ * specified location or no folder and then folders for commonly used providers
+ * and the Angie config file (AngieFile.json).
+ *
+ * The CLI function to create a project will ask the user a series of questions.
+ * The result of these questions will be passed to the AngieFile.json.
  *
  * This function will gracefully exit the process if successful and exit with
  * errors if unsuccessful.
@@ -93,16 +96,15 @@ export default function $$createProject(args = {}) {
 
         // cacheStaticAssets
         let staticCache = false;
+
+        // Wrap the prompts in a Promise
         new Promise(function(resolve) {
             promptly.confirm(
                 `${breen('Do you want Angie to cache static assets?')} :`,
-                function (e, value) {
-                    if (!e) {
-                        staticCache = value;
-                        resolve();
-                    }
-                }
+                resolve
             );
+        }).then(function(v) {
+            staticCache = !!v;
         }).then(function() {
 
             // Read our AngieFile template and reproduce in the target directory
