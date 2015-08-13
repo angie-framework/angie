@@ -4,7 +4,10 @@
 import {confirm, prompt} from           'promptly';
 import fs from                          'fs';
 import util from                        'util';
-import {bold, green} from               'chalk';
+import chalk, {
+    bold,
+    green
+} from                                  'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
@@ -98,7 +101,7 @@ export default function $$createProject(args = {}) {
         let staticCache = false,
 
             // Default JS to be loaded with all HTML files
-            defaultAppJavaScriptFilename = 'application.js';
+            defaultAppJavaScriptFilename;
 
         // Wrap the prompts in a Promise
         new Promise(function(resolve) {
@@ -114,22 +117,22 @@ export default function $$createProject(args = {}) {
             console.log('In second prompt');
 
             // Ask what the default JS filename should be
-            prompt(
-                `${breen(
-                    'What would you like to call the "default" loaded script file' +
-                    '(application.js)?'
-                 )} :`,
-                {
-                    validator: (v) => {
-                        if (!/\.js/.test(v)) {
-                            throw new Error('Input must be a ".js" file!');
-                        }
-                        return v;
-                    }
-                },
-                resolve
-            );
+            return new Promise(function(resolve) {
+                prompt(
+                    `${breen(
+                        'What would you like to call the "default" ' +
+                        'loaded script file ' +
+                        `(${bold(chalk.white('default is'))} ` +
+                        `${chalk.cyan('application.js')})?`
+                     )} :`,
+                     {
+                         default: 'application.js'
+                     },
+                    resolve
+                );
+            });
         }).then(function(e, v) {
+            console.log(arguments);
             defaultAppJavaScriptFilename = v || defaultAppJavaScriptFilename;
         }).then(function() {
 
@@ -153,6 +156,8 @@ export default function $$createProject(args = {}) {
 
             $LogProvider.info('Project successfully created');
             p.exit(0);
+        }).catch(function(e) {
+            console.log(e);
         });
     }
 }

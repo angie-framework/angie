@@ -12,8 +12,7 @@ import {$Response} from                         './$Responses';
 import {default as $Routes} from                '../factories/$RouteProvider';
 import {
     $templateCache,
-    $$templateLoader,
-    $resourceLoader
+    $$templateLoader
 } from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
