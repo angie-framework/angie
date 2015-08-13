@@ -154,4 +154,8 @@ function $resourceLoader() {
 }
 
 const $templateCache = new $TemplateCache();
-export {$templateCache, $$templateLoader, $resourceLoader};
+export {
+    $templateCache,
+    $$templateLoader,
+    $resourceLoader
+};

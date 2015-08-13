@@ -10,7 +10,11 @@ import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {default as $Routes} from                '../factories/$RouteProvider';
-import {$templateCache, $$templateLoader} from  '../factories/$TemplateCache';
+import {
+    $templateCache,
+    $$templateLoader,
+    $resourceLoader
+} from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 
@@ -18,14 +22,17 @@ import $Util, {
     $StringUtil
 } from                                          '../util/Util';
 
-// TODO move these out to an app constant
-const RESPONSE_HEADER_MESSAGES = {
-          200: 'OK',
-          404: 'File Not Found',
-          500: 'Invalid Request'
-      },
-      PRAGMA_HEADER = 'no-cache',
-      NO_CACHE_HEADER = 'private, no-cache, no-store, must-revalidate';
+app.constant('RESPONSE_HEADER_MESSAGES', {
+    200: 'OK',
+    404: 'File Not Found',
+    500: 'Invalid Request'
+}).constant(
+    'PRAGMA_HEADER',
+    'no-cache'
+).constant(
+    'NO_CACHE_HEADER',
+    'private, no-cache, no-store, must-revalidate'
+);
 
 /**
  * @desc The BaseRequest class processes all of the incoming Angie requests. It
@@ -199,10 +206,34 @@ class BaseRequest {
 
                 // Check to see if we can associate the template path with a
                 // mime type
-                me.responseHeaders[ 'Content-Type' ] = $MimeType.fromPath(
-                    me.route.templatePath
-                );
-                me.template = $templateCache.get(me.route.templatePath);
+                let mime = $MimeType.fromPath(me.route.templatePath),
+                    template = $templateCache.get(me.route.templatePath);
+                me.responseHeaders[ 'Content-Type' ] = mime;
+                me.template = template;
+
+                // Check to see if this is an HTML template and has a DOCTYPE
+                if (
+                    mime === 'text/html' &&
+                    /doctype(\s)?html/i.test(template) &&
+                    config.loadMainScriptFile === true &&
+                    me.route.useMainScriptFile !== false
+                ) {
+
+                    // If we have a text/html template, we can add a main script
+                    // file
+                    let tags = template.match(/<\/(body|head)>/i) || [],
+                        script =
+                            '<script type="text/javascript" src="application.js"' +
+                            '></script>';
+                    if (tags[0]) {
+                        template = template.replace(
+                            tags[0],
+                            `${script}${tags[0]}`
+                        );
+                    } else {
+                        template += `${script}`;
+                    }
+                }
             }
 
             // If there is a template/templatePath defined we should have a template
@@ -219,8 +250,8 @@ class BaseRequest {
                 // If there is a template, check to see if caching is set
                 me.responseHeaders = $Util._extend(me.responseHeaders, {
                     Expires: -1,
-                    Pragma: PRAGMA_HEADER,
-                    'Cache-Control': NO_CACHE_HEADER
+                    Pragma: app.constants.PRAGMA_HEADER,
+                    'Cache-Control': app.constants.NO_CACHE_HEADER
                 });
             }
 
@@ -288,7 +319,7 @@ class BaseRequest {
         prom.then(function() {
             me.response.writeHead(
                 200,
-                RESPONSE_HEADER_MESSAGES[ '200' ],
+                app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
                 me.responseHeaders
             );
             me.response.write(me.responseContent);
@@ -332,7 +363,7 @@ class BaseRequest {
         return new Promise(function() {
             me.response.writeHead(
                 200,
-                RESPONSE_HEADER_MESSAGES['200'],
+                app.constants.RESPONSE_HEADER_MESSAGES['200'],
                 me.responseHeaders
             );
             me.response.write(index);
@@ -348,7 +379,7 @@ class BaseRequest {
         return new Promise(function() {
             me.response.writeHead(
                 404,
-                RESPONSE_HEADER_MESSAGES['404'],
+                app.constants.RESPONSE_HEADER_MESSAGES['404'],
                 me.responseHeaders
             );
             me.response.write(fourOhFour);
@@ -357,18 +388,15 @@ class BaseRequest {
     errorPath() {
         this.response.writeHead(
             500,
-            RESPONSE_HEADER_MESSAGES[ '500' ],
+            app.constants.RESPONSE_HEADER_MESSAGES[ '500' ],
             this.responseHeaders
         );
-        this.response.write(`<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`);
+        this.response.write(
+            `<h1>${app.constants.RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`
+        );
     }
 }
 
-export {
-    BaseRequest,
-    RESPONSE_HEADER_MESSAGES,
-    PRAGMA_HEADER,
-    NO_CACHE_HEADER
-};
+export {BaseRequest};
 
 // TODO break up this file

@@ -1,7 +1,7 @@
 'use strict'; 'use strong';
 
 // System Modules
-import {default as promptly} from        'promptly';
+import {confirm, prompt} from           'promptly';
 import fs from                          'fs';
 import util from                        'util';
 import {bold, green} from               'chalk';
@@ -95,16 +95,42 @@ export default function $$createProject(args = {}) {
         // which we can populate our config:
 
         // cacheStaticAssets
-        let staticCache = false;
+        let staticCache = false,
+
+            // Default JS to be loaded with all HTML files
+            defaultAppJavaScriptFilename = 'application.js';
 
         // Wrap the prompts in a Promise
         new Promise(function(resolve) {
-            promptly.confirm(
+            confirm(
                 `${breen('Do you want Angie to cache static assets?')} :`,
                 resolve
             );
         }).then(function(v) {
             staticCache = !!v;
+            return;
+        }).then(function() {
+
+            console.log('In second prompt');
+
+            // Ask what the default JS filename should be
+            prompt(
+                `${breen(
+                    'What would you like to call the "default" loaded script file' +
+                    '(application.js)?'
+                 )} :`,
+                {
+                    validator: (v) => {
+                        if (!/\.js/.test(v)) {
+                            throw new Error('Input must be a ".js" file!');
+                        }
+                        return v;
+                    }
+                },
+                resolve
+            );
+        }).then(function(e, v) {
+            defaultAppJavaScriptFilename = v || defaultAppJavaScriptFilename;
         }).then(function() {
 
             // Read our AngieFile template and reproduce in the target directory
@@ -112,7 +138,13 @@ export default function $$createProject(args = {}) {
                 `${__dirname}/../../templates/AngieFile.template.json`,
                 'utf8'
             );
-            template = util.format(template, name, name, staticCache);
+            template = util.format(
+                template,
+                name,
+                name,
+                staticCache,
+                defaultAppJavaScriptFilename
+            );
             fs.writeFileSync(
                 `${mkDirFiles}AngieFile.json`,
                 template,

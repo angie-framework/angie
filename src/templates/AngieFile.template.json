@@ -18,5 +18,6 @@
         "angie-injector",
         "angie-orm"
     ],
-    "cacheStaticAssets": %s
+    "cacheStaticAssets": %s,
+    "loadMainScriptFile": %s
 }

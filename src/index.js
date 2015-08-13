@@ -125,6 +125,3 @@ function help() {
         )
     );
 }
-
-// TODO make all commands here
-// TODO cluster

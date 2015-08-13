@@ -4,7 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### [0.3.2] - 2015-08-10
 ##### Added
-- Added CLI option parser
+- Added default loaded JavaScript file (application.js)
+- Added CLI option parser with two options
+    - Should Angie cache static assets?
+    - What should the name be for the default script file loaded by the Angie app?
 
 ### [0.3.1] - 2015-08-08
 #### Added/Changed/Fixed

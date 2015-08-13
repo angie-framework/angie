@@ -14,12 +14,7 @@ import {config} from                './Config';
 import app from                     './Angie';
 import $CacheFactory from           './factories/$CacheFactory';
 import {$$templateLoader} from      './factories/$TemplateCache';
-import {
-    BaseRequest,
-    RESPONSE_HEADER_MESSAGES,
-    PRAGMA_HEADER,
-    NO_CACHE_HEADER
-} from                              './services/BaseRequest';
+import {BaseRequest} from           './services/BaseRequest';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
 const p = process;
@@ -71,15 +66,15 @@ function server(args) {
                             angieResponse.responseHeaders,
                             {
                                 Expires: -1,
-                                Pragma: PRAGMA_HEADER,
-                                'Cache-Control': NO_CACHE_HEADER
+                                Pragma: app.constants.PRAGMA_HEADER,
+                                'Cache-Control': app.constants.NO_CACHE_HEADER
                             }
                         );
                     }
 
                     response.writeHead(
                         200,
-                        RESPONSE_HEADER_MESSAGES[ '200' ],
+                        app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
                         angieResponse.responseHeaders
                     );
 
@@ -103,7 +98,7 @@ function server(args) {
                     // TODO extrapolate this to responses
                     response.writeHead(
                         500,
-                        RESPONSE_HEADER_MESSAGES[ '500' ],
+                        app.constants.RESPONSE_HEADER_MESSAGES[ '500' ],
                         angieResponse.responseHeaders
                     );
                     response.write(error);
