@@ -114,11 +114,9 @@ export default function $$createProject(args = {}) {
             return;
         }).then(function() {
 
-            console.log('In second prompt');
-
             // Ask what the default JS filename should be
             return new Promise(function(resolve) {
-                prompt(
+                return prompt(
                     `${breen(
                         'What would you like to call the "default" ' +
                         'loaded script file ' +
@@ -126,19 +124,30 @@ export default function $$createProject(args = {}) {
                         `${chalk.cyan('application.js')})?`
                      )} :`,
                      {
-                         default: 'application.js'
+                         default: 'application.js',
+                         validator: function(v) {
+                             if (v && v.indexOf('.js') === -1) {
+                                 throw new Error(
+                                     bold(chalk.red(
+                                         'Input must be a valid ".js" file.'
+                                     ))
+                                 );
+                             }
+                             return v.replace(/\/|\\/g, '');
+                         }
                      },
-                    resolve
+                    function(e, v) {
+                        return resolve(v);
+                    }
                 );
             });
-        }).then(function(e, v) {
-            console.log(arguments);
-            defaultAppJavaScriptFilename = v || defaultAppJavaScriptFilename;
+        }).then(function(v) {
+            defaultAppJavaScriptFilename = v;
         }).then(function() {
 
             // Read our AngieFile template and reproduce in the target directory
             let template = fs.readFileSync(
-                `${__dirname}/../../templates/AngieFile.template.json`,
+                `${__dirname}/../../templates/json/AngieFile.template.json`,
                 'utf8'
             );
             template = util.format(
@@ -152,6 +161,10 @@ export default function $$createProject(args = {}) {
                 `${mkDirFiles}AngieFile.json`,
                 template,
                 'utf8'
+            );
+            fs.writeFileSync(
+                `${mkDirFiles}static/${defaultAppJavaScriptFilename}`,
+                ''
             );
 
             $LogProvider.info('Project successfully created');

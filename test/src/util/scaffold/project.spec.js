@@ -68,7 +68,9 @@ describe('$$createProject', function() {
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
         expect(util.format.calls[0].args).to.deep.eq([
-            fs.readFileSync('../../../../src/templates/AngieFile.template.json'),
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
             'test',
             'test',
             true
@@ -103,7 +105,9 @@ describe('$$createProject', function() {
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
         expect(util.format.calls[0].args).to.deep.eq([
-            fs.readFileSync('../../../../src/templates/AngieFile.template.json'),
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
             'test',
             'test',
             false
@@ -134,7 +138,9 @@ describe('$$createProject', function() {
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
         expect(util.format.calls[0].args).to.deep.eq([
-            fs.readFileSync('../../../../src/templates/AngieFile.template.json'),
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
             'test',
             'test',
             true
@@ -181,7 +187,9 @@ describe('$$createProject', function() {
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
         expect(util.format.calls[0].args).to.deep.eq([
-            fs.readFileSync('../../../../src/templates/AngieFile.template.json'),
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
             'test',
             'test',
             true
