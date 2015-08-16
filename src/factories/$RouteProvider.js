@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import $LogProvider from    'angie-log';
 

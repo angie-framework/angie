@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 function Base(name) {
     return (obj) => { global.app[ name ](obj.name, obj); };
 }

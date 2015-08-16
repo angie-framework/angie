@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import repl from            'repl';
 import $LogProvider from    'angie-log';

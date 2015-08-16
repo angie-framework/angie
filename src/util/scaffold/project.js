@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import {confirm, prompt} from           'promptly';
 import fs from                          'fs';

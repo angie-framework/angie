@@ -1,4 +1,8 @@
-// 'use strict'; 'use strong';
+/**
+ * @module Angie.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // const $http =           require('http');
 

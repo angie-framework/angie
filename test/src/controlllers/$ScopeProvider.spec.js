@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import {expect} from        'chai';
 import simple, {mock} from          'simple-mock';

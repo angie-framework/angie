@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import fs from      'fs';
 import util from    'util';

@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 import {default as register} from   'babel-core/register';
 register({
     only: [ '**/node_modules/angie*/**', '**/src/**' ],

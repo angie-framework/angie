@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // Global Modules
 // TODO if this is used in other places, we do not need to redefine it
 import 'es6-module-loader';
