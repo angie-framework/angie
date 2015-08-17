@@ -9,7 +9,6 @@ import http from                    'http';
 import https from                   'https';
 import url from                     'url';
 import util from                    'util';
-import chalk from                   'chalk';
 import watch from                   'node-watch';
 import $LogProvider from            'angie-log';
 
@@ -25,14 +24,8 @@ const p = process;
 let firstrun = true;
 
 function server(args) {
-    const useSSL = /\-+usessl/i.test(args),
+    const useSSL = /\--?usessl/i.test(args),
           port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
-
-    if (firstrun) {
-        $LogProvider.warn(
-            `${chalk.cyan('angie server')} not suitable for production use.`
-        );
-    }
 
     app.$$load().then(function() {
 

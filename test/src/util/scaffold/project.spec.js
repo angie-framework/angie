@@ -1,5 +1,5 @@
 // Test Modules
-import {assert, expect} from            'chai';
+import {expect} from                    'chai';
 import simple, {mock} from              'simple-mock';
 
 // System Modules

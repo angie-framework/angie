@@ -16,7 +16,8 @@ import {$Response} from                         './$Responses';
 import {default as $Routes} from                '../factories/$RouteProvider';
 import {
     $templateCache,
-    $$templateLoader
+    $$templateLoader,
+    $resourceLoader
 } from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
@@ -141,6 +142,10 @@ class BaseRequest {
      *     TemplatePath (default): Serves template, expects compilation on
      * frontend
      *     Template: Serves template, expects compilation on frontend
+     *
+     * If the loadDefaultScriptFile option is added to AngieFile.json with a
+     * valid (existing and of type ".js") JavaScript filename, this default
+     * script file will be loaded.
      * @todo add documentation on views
      * @since 0.2.3
      * @access private
@@ -215,27 +220,21 @@ class BaseRequest {
                 me.template = template;
 
                 // Check to see if this is an HTML template and has a DOCTYPE
+                // and that the proper configuration options are set
                 if (
                     mime === 'text/html' &&
                     /doctype(\s)?html/i.test(template) &&
-                    config.loadMainScriptFile === true &&
-                    me.route.useMainScriptFile !== false
+                    config.loadDefaultScriptFile &&
+                    (
+                        !me.route.hasOwnProperty('useMainScriptFile') ||
+                        me.route.useMainScriptFile !== false
+                    )
                 ) {
 
-                    // If we have a text/html template, we can add a main script
-                    // file
-                    let tags = template.match(/<\/(body|head)>/i) || [],
-                        script =
-                            '<script type="text/javascript" src="application.js"' +
-                            '></script>';
-                    if (tags[0]) {
-                        template = template.replace(
-                            tags[0],
-                            `${script}${tags[0]}`
-                        );
-                    } else {
-                        template += `${script}`;
-                    }
+                    // Check that option is not true
+                    let scriptFile = config.loadDefaultScriptFile === true ?
+                        'application.js' : config.loadDefaultScriptFile;
+                    $resourceLoader(scriptFile);
                 }
             }
 

@@ -19,5 +19,5 @@
         "angie-orm"
     ],
     "cacheStaticAssets": %s,
-    "loadMainScriptFile": "%s"
+    "loadDefaultScriptFile": "%s"
 }

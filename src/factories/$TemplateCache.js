@@ -138,7 +138,7 @@ function $resourceLoader() {
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
-                staticAsset = $$templateLoader(assetPath, 'static');
+                staticAsset = $$templateLoader(assetPath, 'static', 'utf8');
             }
 
             if (staticAsset.length) {

@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added CLI option parser with two options
     - Should Angie cache static assets?
     - What should the name be for the default script file loaded by the Angie app?
+- Removed extraneous `"use strict"` commands in modules.
+- Removed warning for server stability.
 
 ### [0.3.1] - 2015-08-08
 #### Added/Changed/Fixed

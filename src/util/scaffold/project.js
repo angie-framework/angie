@@ -1,5 +1,6 @@
 // System Modules
-import {confirm, prompt} from           'promptly';
+// Do not alias this as the commands mirror the global `confirm` and `prompt`
+import {default as promptly} from       'promptly';
 import fs from                          'fs';
 import util from                        'util';
 import chalk, {
@@ -103,7 +104,7 @@ export default function $$createProject(args = {}) {
 
         // Wrap the prompts in a Promise
         new Promise(function(resolve) {
-            confirm(
+            promptly.confirm(
                 `${breen('Do you want Angie to cache static assets?')} :`,
                 resolve
             );
@@ -114,7 +115,7 @@ export default function $$createProject(args = {}) {
 
             // Ask what the default JS filename should be
             return new Promise(function(resolve) {
-                return prompt(
+                return promptly.prompt(
                     `${breen(
                         'What would you like to call the "default" ' +
                         'loaded script file ' +
