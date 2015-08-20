@@ -1,3 +1,9 @@
+/**
+ * @module project.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
+
 // System Modules
 // Do not alias this as the commands mirror the global `confirm` and `prompt`
 import {default as promptly} from       'promptly';
@@ -136,7 +142,7 @@ export default function $$createProject(args = {}) {
                          }
                      },
                     function(e, v) {
-                        return resolve(v);
+                        resolve(v);
                     }
                 );
             });

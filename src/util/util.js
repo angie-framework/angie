@@ -1,3 +1,9 @@
+/**
+ * @module util.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
+
 // System Modules
 import fs from      'fs';
 import util from    'util';

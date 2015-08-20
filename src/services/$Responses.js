@@ -1,5 +1,5 @@
 /**
- * @module Angie.js
+ * @module $Responses.js
  * @author Joe Groseclose <@benderTheCrime>
  * @date 8/16/2015
  */

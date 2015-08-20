@@ -1,5 +1,5 @@
 // Test Modules
-import {expect} from                    'chai';
+import {expect, assert} from            'chai';
 import simple, {mock} from              'simple-mock';
 
 // System Modules
@@ -29,6 +29,9 @@ describe('$$createProject', function() {
         mock(p, 'exit', noop);
         mock(promptly, 'confirm', function(_, fn) {
             fn(true);
+        });
+        mock(promptly, 'prompt', function(_, obj = {}, fn) {
+            fn(null, true);
         });
     });
     afterEach(() => simple.restore());
@@ -65,7 +68,7 @@ describe('$$createProject', function() {
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
-        expect(util.format.calls[0].args).to.deep.eq([
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
             fs.readFileSync(
                 '../../../../src/templates/json/AngieFile.template.json'
             ),
@@ -73,6 +76,7 @@ describe('$$createProject', function() {
             'test',
             true
         ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             'test/AngieFile.json', 'test', 'utf8'
         ]);
@@ -84,6 +88,9 @@ describe('$$createProject', function() {
     it('test successful project creation with location false confirm', function() {
         mock(promptly, 'confirm', function(_, fn) {
             fn(false);
+        });
+        mock(promptly, 'prompt', function(_, obj = {}, fn) {
+            fn(null, false);
         });
         project({
             name: 'test',
@@ -102,7 +109,8 @@ describe('$$createProject', function() {
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
-        expect(util.format.calls[0].args).to.deep.eq([
+        assert(promptly.prompt.called);
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
             fs.readFileSync(
                 '../../../../src/templates/json/AngieFile.template.json'
             ),
@@ -110,6 +118,7 @@ describe('$$createProject', function() {
             'test',
             false
         ]);
+        expect(util.format.calls[0].args[4].val).to.eq(false);
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             'test/AngieFile.json', 'test', 'utf8'
         ]);
@@ -135,7 +144,8 @@ describe('$$createProject', function() {
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
-        expect(util.format.calls[0].args).to.deep.eq([
+        assert(promptly.prompt.called);
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
             fs.readFileSync(
                 '../../../../src/templates/json/AngieFile.template.json'
             ),
@@ -143,6 +153,7 @@ describe('$$createProject', function() {
             'test',
             true
         ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             'AngieFile.json', 'test', 'utf8'
         ]);
@@ -184,7 +195,8 @@ describe('$$createProject', function() {
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
-        expect(util.format.calls[0].args).to.deep.eq([
+        assert(promptly.prompt.called);
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
             fs.readFileSync(
                 '../../../../src/templates/json/AngieFile.template.json'
             ),
@@ -192,6 +204,7 @@ describe('$$createProject', function() {
             'test',
             true
         ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
         expect(fs.writeFileSync.calls[0].args).to.deep.eq([
             '/Users/jg/angie/test/AngieFile.json', 'test', 'utf8'
         ]);
