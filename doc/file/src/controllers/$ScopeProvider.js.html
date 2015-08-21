@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/controllers/$ScopeProvider.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/benderTheCrime/angie.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/util/$ExceptionsProvider.js~$$InvalidConfigError.html">$$InvalidConfigError</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$CacheFactory.js~$CacheFactory.html">$CacheFactory</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$MimeTypeProvider.js~$MimeTypeProvider.html">$MimeTypeProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Request.js~$Request.html">$Request</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Responses.js~$Response.html">$Response</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$RouteProvider.js~$RouteProvider.html">$RouteProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$TemplateCache.js~$TemplateCache.html">$TemplateCache</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$Compile.js~$window.html">$window</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Angie.js~Angie.html">Angie</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/BaseRequest.js~BaseRequest.html">BaseRequest</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Config.js~Config.html">Config</a></span></li>
+</ul>
+</div>
+
+
+
+<div data-ice="functionWrap">
+  <h2><a href="function/">Function</a></h2>
+  <ul>
+    
+  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/controllers/$ScopeProvider.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">/**
+ * @module $ScopeProvider.js
+ * @author Joe Groseclose &lt;@benderTheCrime&gt;
+ * @date 8/16/2015
+ */
+
+let handlers = [];
+
+/**
+ * @desc $ScopeProvider is the parent class on which all of the content shared
+ * across the request can be shared. It also provides methods for messaging
+ * against and across the scope.
+ * @since 0.3.1
+ * @access private
+ */
+class $$ScopeProvider {
+    constructor() {
+        this.$$id = 1;
+    }
+
+    /**
+     * @desc Sets up an event listener on the scope
+     * @since 0.3.1
+     * @param {string} name The name of the message to call the event listener
+     * @param {function} fn The handler to call on message
+     * @returns {boolean} A representation of whether the listener was attached
+     * @access public
+     * @example $scope.$on(&apos;test&apos;, () =&gt; undefined);
+     */
+    $on(name, fn) {
+        if (typeof fn === &apos;function&apos;) {
+            handlers.push({ [ name ]: fn });
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @desc Calls an event listener on the scope
+     * @since 0.3.1
+     * @param {string} name The name of the message to call the event listener
+     * @param {boolean} async Should the handlers be called async?
+     * @returns {boolean} A representation of whether the listeners were called
+     * @access public
+     * @example $scope.$broadcast(&apos;test&apos;, true);
+     */
+    $broadcast(name, async) {
+        let args = Array.from(arguments).splice(0, 1);
+        for (let handler of handlers) {
+            if (handler.hasOwnProperty(name)) {
+                if (async) {
+                    setImmediate(handler[ name ].bind(null, args));
+                } else {
+                    handler[ name ](args);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @desc Sets up an observer on an object (shallow). This function does not
+     * support dots.
+     * @since 0.3.1
+     * @todo deep watch
+     * @param {object} obj The object upon which to set up the handler
+     * @param {function} fn The handler to call on message
+     * @returns {object} The passed object
+     * @access public
+     * @example $scope.$watch({}, () =&gt; undefined);
+     */
+    $watch(key, fn) {
+        return Object.observe(this[ key ], fn);
+    }
+
+    /**
+     * @desc Sets up an observer on an object (deep). This function does not
+     * support dots.
+     * @since 0.3.1
+     * @param {object} obj The object upon which to set up the handler
+     * @param {function} fn The handler to call on message
+     * @access public
+     * @example $scope.$watchCollection({ test: {} }, () =&gt; undefined);
+     */
+    // $watchCollection(key, fn) {
+    //     let me = this;
+    //     Object.observe(this[ key ], function(changes) {
+    //         changes.forEach(function(change) {
+    //             if (typeof me[ key ][ change.name ] === &apos;object&apos;) {
+    //                 me.$watch(me[ key ][ change.name ], fn);
+    //             }
+    //         });
+    //         fn.apply(me, arguments);
+    //     });
+    // }
+
+    /**
+     * @desc Removes all of the handlers from a listener
+     * @since 0.3.1
+     * @param {string} name The name of the message to call the event listener
+     * @returns {boolean} A representation of whether the listeners were attached
+     * @access public
+     * @example $scope.$off(&apos;test&apos;);
+     */
+    $$off(name) {
+        for (let handler of handlers) {
+            if (handler.hasOwnProperty(name)) {
+                handlers.splice(handlers.indexOf(handler), 1);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @desc Removes all of the watchers from an object
+     * @since 0.3.1
+     * @todo deep unwatch
+     * @param {object} obj The object from which to remove the handler
+     * @returns {boolean} A representation of whether the listeners were unattached
+     * @access public
+     * @example $scope.$$removeWatch({});
+     */
+    $$removeWatch(obj) {
+        Object.unwatch(obj);
+
+        return true;
+    }
+
+    /**
+     * @desc Sets up or removes all handlers
+     * @since 0.3.1
+     * @param {Array} $handlers An optional list of handlers
+     * @returns {Array} handlers
+     * @access private
+     */
+    $$handlers($handlers) {
+        return (handlers = $handlers || handlers);
+    }
+}
+
+/**
+ * @desc $scope is the instance of $$ScopeProvider allocated to resources
+ * @since 0.3.1
+ * @access private
+ */
+const $scope = new $$ScopeProvider();
+export default $$ScopeProvider;
+export {$scope};</code></pre>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.1.2)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

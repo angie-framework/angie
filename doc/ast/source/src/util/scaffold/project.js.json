@@ -1,0 +1,2072 @@
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "promptly",
+            "range": [
+              209,
+              217
+            ],
+            "loc": {
+              "start": {
+                "line": 9,
+                "column": 19
+              },
+              "end": {
+                "line": 9,
+                "column": 27
+              }
+            }
+          },
+          "imported": {
+            "type": "Identifier",
+            "name": "default",
+            "range": [
+              198,
+              205
+            ],
+            "loc": {
+              "start": {
+                "line": 9,
+                "column": 8
+              },
+              "end": {
+                "line": 9,
+                "column": 15
+              }
+            }
+          },
+          "range": [
+            198,
+            217
+          ],
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 8
+            },
+            "end": {
+              "line": 9,
+              "column": 27
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "promptly",
+        "raw": "'promptly'",
+        "range": [
+          230,
+          240
+        ],
+        "loc": {
+          "start": {
+            "line": 9,
+            "column": 40
+          },
+          "end": {
+            "line": 9,
+            "column": 50
+          }
+        }
+      },
+      "range": [
+        190,
+        241
+      ],
+      "loc": {
+        "start": {
+          "line": 9,
+          "column": 0
+        },
+        "end": {
+          "line": 9,
+          "column": 51
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Block",
+          "value": "*\n * @module project.js\n * @author Joe Groseclose <@benderTheCrime>\n * @date 8/16/2015\n ",
+          "range": [
+            0,
+            92
+          ],
+          "loc": {
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 5,
+              "column": 3
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " System Modules",
+          "range": [
+            94,
+            111
+          ],
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 0
+            },
+            "end": {
+              "line": 7,
+              "column": 17
+            }
+          }
+        },
+        {
+          "type": "Line",
+          "value": " Do not alias this as the commands mirror the global `confirm` and `prompt`",
+          "range": [
+            112,
+            189
+          ],
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 0
+            },
+            "end": {
+              "line": 8,
+              "column": 77
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "fs",
+            "range": [
+              249,
+              251
+            ],
+            "loc": {
+              "start": {
+                "line": 10,
+                "column": 7
+              },
+              "end": {
+                "line": 10,
+                "column": 9
+              }
+            }
+          },
+          "range": [
+            249,
+            251
+          ],
+          "loc": {
+            "start": {
+              "line": 10,
+              "column": 7
+            },
+            "end": {
+              "line": 10,
+              "column": 9
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "fs",
+        "raw": "'fs'",
+        "range": [
+          282,
+          286
+        ],
+        "loc": {
+          "start": {
+            "line": 10,
+            "column": 40
+          },
+          "end": {
+            "line": 10,
+            "column": 44
+          }
+        }
+      },
+      "range": [
+        242,
+        287
+      ],
+      "loc": {
+        "start": {
+          "line": 10,
+          "column": 0
+        },
+        "end": {
+          "line": 10,
+          "column": 45
+        }
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "util",
+            "range": [
+              295,
+              299
+            ],
+            "loc": {
+              "start": {
+                "line": 11,
+                "column": 7
+              },
+              "end": {
+                "line": 11,
+                "column": 11
+              }
+            }
+          },
+          "range": [
+            295,
+            299
+          ],
+          "loc": {
+            "start": {
+              "line": 11,
+              "column": 7
+            },
+            "end": {
+              "line": 11,
+              "column": 11
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "util",
+        "raw": "'util'",
+        "range": [
+          328,
+          334
+        ],
+        "loc": {
+          "start": {
+            "line": 11,
+            "column": 40
+          },
+          "end": {
+            "line": 11,
+            "column": 46
+          }
+        }
+      },
+      "range": [
+        288,
+        335
+      ],
+      "loc": {
+        "start": {
+          "line": 11,
+          "column": 0
+        },
+        "end": {
+          "line": 11,
+          "column": 47
+        }
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "chalk",
+            "range": [
+              343,
+              348
+            ],
+            "loc": {
+              "start": {
+                "line": 12,
+                "column": 7
+              },
+              "end": {
+                "line": 12,
+                "column": 12
+              }
+            }
+          },
+          "range": [
+            343,
+            348
+          ],
+          "loc": {
+            "start": {
+              "line": 12,
+              "column": 7
+            },
+            "end": {
+              "line": 12,
+              "column": 12
+            }
+          }
+        },
+        {
+          "type": "ImportSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "bold",
+            "range": [
+              356,
+              360
+            ],
+            "loc": {
+              "start": {
+                "line": 13,
+                "column": 4
+              },
+              "end": {
+                "line": 13,
+                "column": 8
+              }
+            }
+          },
+          "imported": {
+            "type": "Identifier",
+            "name": "bold",
+            "range": [
+              356,
+              360
+            ],
+            "loc": {
+              "start": {
+                "line": 13,
+                "column": 4
+              },
+              "end": {
+                "line": 13,
+                "column": 8
+              }
+            }
+          },
+          "range": [
+            356,
+            360
+          ],
+          "loc": {
+            "start": {
+              "line": 13,
+              "column": 4
+            },
+            "end": {
+              "line": 13,
+              "column": 8
+            }
+          }
+        },
+        {
+          "type": "ImportSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "green",
+            "range": [
+              366,
+              371
+            ],
+            "loc": {
+              "start": {
+                "line": 14,
+                "column": 4
+              },
+              "end": {
+                "line": 14,
+                "column": 9
+              }
+            }
+          },
+          "imported": {
+            "type": "Identifier",
+            "name": "green",
+            "range": [
+              366,
+              371
+            ],
+            "loc": {
+              "start": {
+                "line": 14,
+                "column": 4
+              },
+              "end": {
+                "line": 14,
+                "column": 9
+              }
+            }
+          },
+          "range": [
+            366,
+            371
+          ],
+          "loc": {
+            "start": {
+              "line": 14,
+              "column": 4
+            },
+            "end": {
+              "line": 14,
+              "column": 9
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "chalk",
+        "raw": "'chalk'",
+        "range": [
+          412,
+          419
+        ],
+        "loc": {
+          "start": {
+            "line": 15,
+            "column": 40
+          },
+          "end": {
+            "line": 15,
+            "column": 47
+          }
+        }
+      },
+      "range": [
+        336,
+        420
+      ],
+      "loc": {
+        "start": {
+          "line": 12,
+          "column": 0
+        },
+        "end": {
+          "line": 15,
+          "column": 48
+        }
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "$LogProvider",
+            "range": [
+              428,
+              440
+            ],
+            "loc": {
+              "start": {
+                "line": 16,
+                "column": 7
+              },
+              "end": {
+                "line": 16,
+                "column": 19
+              }
+            }
+          },
+          "range": [
+            428,
+            440
+          ],
+          "loc": {
+            "start": {
+              "line": 16,
+              "column": 7
+            },
+            "end": {
+              "line": 16,
+              "column": 19
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "angie-log",
+        "raw": "'angie-log'",
+        "range": [
+          461,
+          472
+        ],
+        "loc": {
+          "start": {
+            "line": 16,
+            "column": 40
+          },
+          "end": {
+            "line": 16,
+            "column": 51
+          }
+        }
+      },
+      "range": [
+        421,
+        473
+      ],
+      "loc": {
+        "start": {
+          "line": 16,
+          "column": 0
+        },
+        "end": {
+          "line": 16,
+          "column": 52
+        }
+      },
+      "trailingComments": [
+        {
+          "type": "Line",
+          "value": " Angie Modules",
+          "range": [
+            475,
+            491
+          ],
+          "loc": {
+            "start": {
+              "line": 18,
+              "column": 0
+            },
+            "end": {
+              "line": 18,
+              "column": 16
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "ImportDeclaration",
+      "specifiers": [
+        {
+          "type": "ImportSpecifier",
+          "local": {
+            "type": "Identifier",
+            "name": "$StringUtil",
+            "range": [
+              500,
+              511
+            ],
+            "loc": {
+              "start": {
+                "line": 19,
+                "column": 8
+              },
+              "end": {
+                "line": 19,
+                "column": 19
+              }
+            }
+          },
+          "imported": {
+            "type": "Identifier",
+            "name": "$StringUtil",
+            "range": [
+              500,
+              511
+            ],
+            "loc": {
+              "start": {
+                "line": 19,
+                "column": 8
+              },
+              "end": {
+                "line": 19,
+                "column": 19
+              }
+            }
+          },
+          "range": [
+            500,
+            511
+          ],
+          "loc": {
+            "start": {
+              "line": 19,
+              "column": 8
+            },
+            "end": {
+              "line": 19,
+              "column": 19
+            }
+          }
+        }
+      ],
+      "source": {
+        "type": "Literal",
+        "value": "../Util",
+        "raw": "'../Util'",
+        "range": [
+          533,
+          542
+        ],
+        "loc": {
+          "start": {
+            "line": 19,
+            "column": 41
+          },
+          "end": {
+            "line": 19,
+            "column": 50
+          }
+        }
+      },
+      "range": [
+        492,
+        543
+      ],
+      "loc": {
+        "start": {
+          "line": 19,
+          "column": 0
+        },
+        "end": {
+          "line": 19,
+          "column": 51
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Line",
+          "value": " Angie Modules",
+          "range": [
+            475,
+            491
+          ],
+          "loc": {
+            "start": {
+              "line": 18,
+              "column": 0
+            },
+            "end": {
+              "line": 18,
+              "column": 16
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "VariableDeclaration",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "p",
+            "range": [
+              551,
+              552
+            ],
+            "loc": {
+              "start": {
+                "line": 21,
+                "column": 6
+              },
+              "end": {
+                "line": 21,
+                "column": 7
+              }
+            }
+          },
+          "init": {
+            "type": "Identifier",
+            "name": "process",
+            "range": [
+              555,
+              562
+            ],
+            "loc": {
+              "start": {
+                "line": 21,
+                "column": 10
+              },
+              "end": {
+                "line": 21,
+                "column": 17
+              }
+            }
+          },
+          "range": [
+            551,
+            562
+          ],
+          "loc": {
+            "start": {
+              "line": 21,
+              "column": 6
+            },
+            "end": {
+              "line": 21,
+              "column": 17
+            }
+          }
+        },
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "breen",
+            "range": [
+              570,
+              575
+            ],
+            "loc": {
+              "start": {
+                "line": 22,
+                "column": 6
+              },
+              "end": {
+                "line": 22,
+                "column": 11
+              }
+            }
+          },
+          "init": {
+            "type": "ArrowFunctionExpression",
+            "id": null,
+            "params": [
+              {
+                "type": "Identifier",
+                "name": "v",
+                "range": [
+                  579,
+                  580
+                ],
+                "loc": {
+                  "start": {
+                    "line": 22,
+                    "column": 15
+                  },
+                  "end": {
+                    "line": 22,
+                    "column": 16
+                  }
+                }
+              }
+            ],
+            "body": {
+              "type": "CallExpression",
+              "callee": {
+                "type": "Identifier",
+                "name": "bold",
+                "range": [
+                  585,
+                  589
+                ],
+                "loc": {
+                  "start": {
+                    "line": 22,
+                    "column": 21
+                  },
+                  "end": {
+                    "line": 22,
+                    "column": 25
+                  }
+                }
+              },
+              "arguments": [
+                {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "name": "green",
+                    "range": [
+                      590,
+                      595
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 22,
+                        "column": 26
+                      },
+                      "end": {
+                        "line": 22,
+                        "column": 31
+                      }
+                    }
+                  },
+                  "arguments": [
+                    {
+                      "type": "Identifier",
+                      "name": "v",
+                      "range": [
+                        596,
+                        597
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 22,
+                          "column": 32
+                        },
+                        "end": {
+                          "line": 22,
+                          "column": 33
+                        }
+                      }
+                    }
+                  ],
+                  "range": [
+                    590,
+                    598
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 22,
+                      "column": 26
+                    },
+                    "end": {
+                      "line": 22,
+                      "column": 34
+                    }
+                  }
+                }
+              ],
+              "range": [
+                585,
+                599
+              ],
+              "loc": {
+                "start": {
+                  "line": 22,
+                  "column": 21
+                },
+                "end": {
+                  "line": 22,
+                  "column": 35
+                }
+              }
+            },
+            "generator": false,
+            "expression": true,
+            "range": [
+              578,
+              599
+            ],
+            "loc": {
+              "start": {
+                "line": 22,
+                "column": 14
+              },
+              "end": {
+                "line": 22,
+                "column": 35
+              }
+            }
+          },
+          "range": [
+            570,
+            599
+          ],
+          "loc": {
+            "start": {
+              "line": 22,
+              "column": 6
+            },
+            "end": {
+              "line": 22,
+              "column": 35
+            }
+          }
+        }
+      ],
+      "kind": "const",
+      "range": [
+        545,
+        600
+      ],
+      "loc": {
+        "start": {
+          "line": 21,
+          "column": 0
+        },
+        "end": {
+          "line": 22,
+          "column": 36
+        }
+      },
+      "trailingComments": [
+        {
+          "type": "Block",
+          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+          "range": [
+            602,
+            1539
+          ],
+          "loc": {
+            "start": {
+              "line": 24,
+              "column": 0
+            },
+            "end": {
+              "line": 42,
+              "column": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "ExportDefaultDeclaration",
+      "declaration": {
+        "type": "ClassDeclaration",
+        "id": {
+          "type": "Identifier",
+          "name": "$$ProjectCreationError",
+          "range": [
+            6052,
+            6074
+          ],
+          "loc": {
+            "start": {
+              "line": 183,
+              "column": 6
+            },
+            "end": {
+              "line": 183,
+              "column": 28
+            }
+          }
+        },
+        "superClass": {
+          "type": "Identifier",
+          "name": "Error",
+          "range": [
+            6083,
+            6088
+          ],
+          "loc": {
+            "start": {
+              "line": 183,
+              "column": 37
+            },
+            "end": {
+              "line": 183,
+              "column": 42
+            }
+          }
+        },
+        "body": {
+          "type": "ClassBody",
+          "body": [
+            {
+              "type": "MethodDefinition",
+              "key": {
+                "type": "Identifier",
+                "name": "constructor",
+                "range": [
+                  6095,
+                  6106
+                ],
+                "loc": {
+                  "start": {
+                    "line": 184,
+                    "column": 4
+                  },
+                  "end": {
+                    "line": 184,
+                    "column": 15
+                  }
+                }
+              },
+              "value": {
+                "type": "FunctionExpression",
+                "id": null,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "name": "e",
+                    "range": [
+                      6107,
+                      6108
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 184,
+                        "column": 16
+                      },
+                      "end": {
+                        "line": 184,
+                        "column": 17
+                      }
+                    }
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "MemberExpression",
+                          "computed": false,
+                          "object": {
+                            "type": "Identifier",
+                            "name": "$LogProvider",
+                            "range": [
+                              6120,
+                              6132
+                            ],
+                            "loc": {
+                              "start": {
+                                "line": 185,
+                                "column": 8
+                              },
+                              "end": {
+                                "line": 185,
+                                "column": 20
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "name": "error",
+                            "range": [
+                              6133,
+                              6138
+                            ],
+                            "loc": {
+                              "start": {
+                                "line": 185,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 185,
+                                "column": 26
+                              }
+                            }
+                          },
+                          "range": [
+                            6120,
+                            6138
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 185,
+                              "column": 8
+                            },
+                            "end": {
+                              "line": 185,
+                              "column": 26
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "name": "e",
+                            "range": [
+                              6139,
+                              6140
+                            ],
+                            "loc": {
+                              "start": {
+                                "line": 185,
+                                "column": 27
+                              },
+                              "end": {
+                                "line": 185,
+                                "column": 28
+                              }
+                            }
+                          }
+                        ],
+                        "range": [
+                          6120,
+                          6141
+                        ],
+                        "loc": {
+                          "start": {
+                            "line": 185,
+                            "column": 8
+                          },
+                          "end": {
+                            "line": 185,
+                            "column": 29
+                          }
+                        }
+                      },
+                      "range": [
+                        6120,
+                        6142
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 185,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 185,
+                          "column": 30
+                        }
+                      }
+                    },
+                    {
+                      "type": "ExpressionStatement",
+                      "expression": {
+                        "type": "CallExpression",
+                        "callee": {
+                          "type": "Super",
+                          "range": [
+                            6151,
+                            6156
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 186,
+                              "column": 8
+                            },
+                            "end": {
+                              "line": 186,
+                              "column": 13
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "name": "e",
+                            "range": [
+                              6157,
+                              6158
+                            ],
+                            "loc": {
+                              "start": {
+                                "line": 186,
+                                "column": 14
+                              },
+                              "end": {
+                                "line": 186,
+                                "column": 15
+                              }
+                            }
+                          }
+                        ],
+                        "range": [
+                          6151,
+                          6159
+                        ],
+                        "loc": {
+                          "start": {
+                            "line": 186,
+                            "column": 8
+                          },
+                          "end": {
+                            "line": 186,
+                            "column": 16
+                          }
+                        }
+                      },
+                      "range": [
+                        6151,
+                        6160
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 186,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 186,
+                          "column": 17
+                        }
+                      }
+                    }
+                  ],
+                  "range": [
+                    6110,
+                    6166
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 184,
+                      "column": 19
+                    },
+                    "end": {
+                      "line": 187,
+                      "column": 5
+                    }
+                  }
+                },
+                "generator": false,
+                "expression": false,
+                "range": [
+                  6106,
+                  6166
+                ],
+                "loc": {
+                  "start": {
+                    "line": 184,
+                    "column": 15
+                  },
+                  "end": {
+                    "line": 187,
+                    "column": 5
+                  }
+                }
+              },
+              "kind": "constructor",
+              "computed": false,
+              "range": [
+                6095,
+                6166
+              ],
+              "loc": {
+                "start": {
+                  "line": 184,
+                  "column": 4
+                },
+                "end": {
+                  "line": 187,
+                  "column": 5
+                }
+              },
+              "static": false
+            }
+          ],
+          "range": [
+            6089,
+            6168
+          ],
+          "loc": {
+            "start": {
+              "line": 183,
+              "column": 43
+            },
+            "end": {
+              "line": 188,
+              "column": 1
+            }
+          }
+        },
+        "range": [
+          6046,
+          6168
+        ],
+        "loc": {
+          "start": {
+            "line": 183,
+            "column": 0
+          },
+          "end": {
+            "line": 188,
+            "column": 1
+          }
+        },
+        "leadingComments": [
+          {
+            "type": "Block",
+            "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+            "range": [
+              602,
+              1539
+            ],
+            "loc": {
+              "start": {
+                "line": 24,
+                "column": 0
+              },
+              "end": {
+                "line": 42,
+                "column": 3
+              }
+            }
+          }
+        ],
+        "trailingComments": []
+      },
+      "range": [
+        1540,
+        6044
+      ],
+      "loc": {
+        "start": {
+          "line": 43,
+          "column": 0
+        },
+        "end": {
+          "line": 181,
+          "column": 1
+        }
+      },
+      "leadingComments": [
+        {
+          "type": "Block",
+          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+          "range": [
+            602,
+            1539
+          ],
+          "loc": {
+            "start": {
+              "line": 24,
+              "column": 0
+            },
+            "end": {
+              "line": 42,
+              "column": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "Identifier",
+      "id": {
+        "type": "Identifier",
+        "name": "$$ProjectCreationError",
+        "range": [
+          6052,
+          6074
+        ],
+        "loc": {
+          "start": {
+            "line": 183,
+            "column": 6
+          },
+          "end": {
+            "line": 183,
+            "column": 28
+          }
+        }
+      },
+      "superClass": {
+        "type": "Identifier",
+        "name": "Error",
+        "range": [
+          6083,
+          6088
+        ],
+        "loc": {
+          "start": {
+            "line": 183,
+            "column": 37
+          },
+          "end": {
+            "line": 183,
+            "column": 42
+          }
+        }
+      },
+      "body": {
+        "type": "ClassBody",
+        "body": [
+          {
+            "type": "MethodDefinition",
+            "key": {
+              "type": "Identifier",
+              "name": "constructor",
+              "range": [
+                6095,
+                6106
+              ],
+              "loc": {
+                "start": {
+                  "line": 184,
+                  "column": 4
+                },
+                "end": {
+                  "line": 184,
+                  "column": 15
+                }
+              }
+            },
+            "value": {
+              "type": "FunctionExpression",
+              "id": null,
+              "params": [
+                {
+                  "type": "Identifier",
+                  "name": "e",
+                  "range": [
+                    6107,
+                    6108
+                  ],
+                  "loc": {
+                    "start": {
+                      "line": 184,
+                      "column": 16
+                    },
+                    "end": {
+                      "line": 184,
+                      "column": 17
+                    }
+                  }
+                }
+              ],
+              "body": {
+                "type": "BlockStatement",
+                "body": [
+                  {
+                    "type": "ExpressionStatement",
+                    "expression": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "MemberExpression",
+                        "computed": false,
+                        "object": {
+                          "type": "Identifier",
+                          "name": "$LogProvider",
+                          "range": [
+                            6120,
+                            6132
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 185,
+                              "column": 8
+                            },
+                            "end": {
+                              "line": 185,
+                              "column": 20
+                            }
+                          }
+                        },
+                        "property": {
+                          "type": "Identifier",
+                          "name": "error",
+                          "range": [
+                            6133,
+                            6138
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 185,
+                              "column": 21
+                            },
+                            "end": {
+                              "line": 185,
+                              "column": 26
+                            }
+                          }
+                        },
+                        "range": [
+                          6120,
+                          6138
+                        ],
+                        "loc": {
+                          "start": {
+                            "line": 185,
+                            "column": 8
+                          },
+                          "end": {
+                            "line": 185,
+                            "column": 26
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "Identifier",
+                          "name": "e",
+                          "range": [
+                            6139,
+                            6140
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 185,
+                              "column": 27
+                            },
+                            "end": {
+                              "line": 185,
+                              "column": 28
+                            }
+                          }
+                        }
+                      ],
+                      "range": [
+                        6120,
+                        6141
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 185,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 185,
+                          "column": 29
+                        }
+                      }
+                    },
+                    "range": [
+                      6120,
+                      6142
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 185,
+                        "column": 8
+                      },
+                      "end": {
+                        "line": 185,
+                        "column": 30
+                      }
+                    }
+                  },
+                  {
+                    "type": "ExpressionStatement",
+                    "expression": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Super",
+                        "range": [
+                          6151,
+                          6156
+                        ],
+                        "loc": {
+                          "start": {
+                            "line": 186,
+                            "column": 8
+                          },
+                          "end": {
+                            "line": 186,
+                            "column": 13
+                          }
+                        }
+                      },
+                      "arguments": [
+                        {
+                          "type": "Identifier",
+                          "name": "e",
+                          "range": [
+                            6157,
+                            6158
+                          ],
+                          "loc": {
+                            "start": {
+                              "line": 186,
+                              "column": 14
+                            },
+                            "end": {
+                              "line": 186,
+                              "column": 15
+                            }
+                          }
+                        }
+                      ],
+                      "range": [
+                        6151,
+                        6159
+                      ],
+                      "loc": {
+                        "start": {
+                          "line": 186,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 186,
+                          "column": 16
+                        }
+                      }
+                    },
+                    "range": [
+                      6151,
+                      6160
+                    ],
+                    "loc": {
+                      "start": {
+                        "line": 186,
+                        "column": 8
+                      },
+                      "end": {
+                        "line": 186,
+                        "column": 17
+                      }
+                    }
+                  }
+                ],
+                "range": [
+                  6110,
+                  6166
+                ],
+                "loc": {
+                  "start": {
+                    "line": 184,
+                    "column": 19
+                  },
+                  "end": {
+                    "line": 187,
+                    "column": 5
+                  }
+                }
+              },
+              "generator": false,
+              "expression": false,
+              "range": [
+                6106,
+                6166
+              ],
+              "loc": {
+                "start": {
+                  "line": 184,
+                  "column": 15
+                },
+                "end": {
+                  "line": 187,
+                  "column": 5
+                }
+              }
+            },
+            "kind": "constructor",
+            "computed": false,
+            "range": [
+              6095,
+              6166
+            ],
+            "loc": {
+              "start": {
+                "line": 184,
+                "column": 4
+              },
+              "end": {
+                "line": 187,
+                "column": 5
+              }
+            },
+            "static": false
+          }
+        ],
+        "range": [
+          6089,
+          6168
+        ],
+        "loc": {
+          "start": {
+            "line": 183,
+            "column": 43
+          },
+          "end": {
+            "line": 188,
+            "column": 1
+          }
+        }
+      },
+      "range": [
+        6046,
+        6168
+      ],
+      "loc": {
+        "start": {
+          "line": 183,
+          "column": 0
+        },
+        "end": {
+          "line": 188,
+          "column": 1
+        }
+      }
+    }
+  ],
+  "sourceType": "module",
+  "range": [
+    190,
+    6168
+  ],
+  "loc": {
+    "start": {
+      "line": 9,
+      "column": 0
+    },
+    "end": {
+      "line": 188,
+      "column": 1
+    }
+  },
+  "comments": [
+    {
+      "type": "Block",
+      "value": "*\n * @module project.js\n * @author Joe Groseclose <@benderTheCrime>\n * @date 8/16/2015\n ",
+      "range": [
+        0,
+        92
+      ],
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " System Modules",
+      "range": [
+        94,
+        111
+      ],
+      "loc": {
+        "start": {
+          "line": 7,
+          "column": 0
+        },
+        "end": {
+          "line": 7,
+          "column": 17
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Do not alias this as the commands mirror the global `confirm` and `prompt`",
+      "range": [
+        112,
+        189
+      ],
+      "loc": {
+        "start": {
+          "line": 8,
+          "column": 0
+        },
+        "end": {
+          "line": 8,
+          "column": 77
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Angie Modules",
+      "range": [
+        475,
+        491
+      ],
+      "loc": {
+        "start": {
+          "line": 18,
+          "column": 0
+        },
+        "end": {
+          "line": 18,
+          "column": 16
+        }
+      }
+    },
+    {
+      "type": "Block",
+      "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+      "range": [
+        602,
+        1539
+      ],
+      "loc": {
+        "start": {
+          "line": 24,
+          "column": 0
+        },
+        "end": {
+          "line": 42,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Parse the passed arguments object",
+      "range": [
+        1598,
+        1634
+      ],
+      "loc": {
+        "start": {
+          "line": 45,
+          "column": 4
+        },
+        "end": {
+          "line": 45,
+          "column": 40
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " The process must exit if there is no passed name, or the name passed is",
+      "range": [
+        1796,
+        1870
+      ],
+      "loc": {
+        "start": {
+          "line": 52,
+          "column": 4
+        },
+        "end": {
+          "line": 52,
+          "column": 78
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " in an incorrect format",
+      "range": [
+        1875,
+        1900
+      ],
+      "loc": {
+        "start": {
+          "line": 53,
+          "column": 4
+        },
+        "end": {
+          "line": 53,
+          "column": 29
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Being super specific about which characters are OK and which are not",
+      "range": [
+        2104,
+        2175
+      ],
+      "loc": {
+        "start": {
+          "line": 60,
+          "column": 8
+        },
+        "end": {
+          "line": 60,
+          "column": 79
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Make sure that we're creating the project in the right spot",
+      "range": [
+        2319,
+        2381
+      ],
+      "loc": {
+        "start": {
+          "line": 66,
+          "column": 4
+        },
+        "end": {
+          "line": 66,
+          "column": 66
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " We cannot create a dir if the argument is empty",
+      "range": [
+        2582,
+        2632
+      ],
+      "loc": {
+        "start": {
+          "line": 73,
+          "column": 8
+        },
+        "end": {
+          "line": 73,
+          "column": 58
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Create provider folders",
+      "range": [
+        2735,
+        2761
+      ],
+      "loc": {
+        "start": {
+          "line": 79,
+          "column": 8
+        },
+        "end": {
+          "line": 79,
+          "column": 34
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Create static folders",
+      "range": [
+        2992,
+        3016
+      ],
+      "loc": {
+        "start": {
+          "line": 90,
+          "column": 8
+        },
+        "end": {
+          "line": 90,
+          "column": 32
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " This is where we create our AngieFile, we can pick certain values with",
+      "range": [
+        3271,
+        3344
+      ],
+      "loc": {
+        "start": {
+          "line": 102,
+          "column": 8
+        },
+        "end": {
+          "line": 102,
+          "column": 81
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " which we can populate our config:",
+      "range": [
+        3353,
+        3389
+      ],
+      "loc": {
+        "start": {
+          "line": 103,
+          "column": 8
+        },
+        "end": {
+          "line": 103,
+          "column": 44
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " cacheStaticAssets",
+      "range": [
+        3399,
+        3419
+      ],
+      "loc": {
+        "start": {
+          "line": 105,
+          "column": 8
+        },
+        "end": {
+          "line": 105,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Default JS to be loaded with all HTML files",
+      "range": [
+        3466,
+        3512
+      ],
+      "loc": {
+        "start": {
+          "line": 108,
+          "column": 12
+        },
+        "end": {
+          "line": 108,
+          "column": 58
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Wrap the prompts in a Promise",
+      "range": [
+        3564,
+        3596
+      ],
+      "loc": {
+        "start": {
+          "line": 111,
+          "column": 8
+        },
+        "end": {
+          "line": 111,
+          "column": 40
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Ask what the default JS filename should be",
+      "range": [
+        3904,
+        3949
+      ],
+      "loc": {
+        "start": {
+          "line": 122,
+          "column": 12
+        },
+        "end": {
+          "line": 122,
+          "column": 57
+        }
+      }
+    },
+    {
+      "type": "Line",
+      "value": " Read our AngieFile template and reproduce in the target directory",
+      "range": [
+        5180,
+        5248
+      ],
+      "loc": {
+        "start": {
+          "line": 153,
+          "column": 12
+        },
+        "end": {
+          "line": 153,
+          "column": 80
+        }
+      }
+    }
+  ]
+}

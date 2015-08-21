@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/Server.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/benderTheCrime/angie.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/util/$ExceptionsProvider.js~$$InvalidConfigError.html">$$InvalidConfigError</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$CacheFactory.js~$CacheFactory.html">$CacheFactory</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$MimeTypeProvider.js~$MimeTypeProvider.html">$MimeTypeProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Request.js~$Request.html">$Request</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Responses.js~$Response.html">$Response</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$RouteProvider.js~$RouteProvider.html">$RouteProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$TemplateCache.js~$TemplateCache.html">$TemplateCache</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$Compile.js~$window.html">$window</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Angie.js~Angie.html">Angie</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/BaseRequest.js~BaseRequest.html">BaseRequest</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Config.js~Config.html">Config</a></span></li>
+</ul>
+</div>
+
+
+
+<div data-ice="functionWrap">
+  <h2><a href="function/">Function</a></h2>
+  <ul>
+    
+  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/Server.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">/**
+ * @module server.js
+ * @author Joe Groseclose &lt;@benderTheCrime&gt;
+ * @date 8/16/2015
+ */
+
+// System Modules
+import http from                    &apos;http&apos;;
+import https from                   &apos;https&apos;;
+import url from                     &apos;url&apos;;
+import util from                    &apos;util&apos;;
+import watch from                   &apos;node-watch&apos;;
+import $LogProvider from            &apos;angie-log&apos;;
+
+// Angie Modules
+import {config} from                &apos;./Config&apos;;
+import app from                     &apos;./Angie&apos;;
+import $CacheFactory from           &apos;./factories/$CacheFactory&apos;;
+import {$$templateLoader} from      &apos;./factories/$TemplateCache&apos;;
+import {BaseRequest} from           &apos;./services/BaseRequest&apos;;
+import {default as $MimeType} from  &apos;./util/$MimeTypeProvider&apos;;
+
+const p = process;
+let firstrun = true;
+
+function server(args) {
+    const useSSL = /\--?usessl/i.test(args),
+          port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
+
+    app.$$load().then(function() {
+
+        // Start a webserver
+        // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
+        (useSSL ? https : http).createServer(function(request, response) {
+            const path = url.parse(request.url).pathname;
+            let angieResponse = new BaseRequest(path, request, response),
+                asset;
+
+            // A file cannot be in the static path if it doesn&apos;t have an extension, shortcut
+            // TODO you may want to move the asset loading block out of here
+            if (path.indexOf(&apos;.&apos;) &gt; -1) {
+                let assetCache = new $CacheFactory(&apos;staticAssets&apos;);
+
+                if (assetCache.get(path)) {
+                    asset = assetCache.get(path);
+                } else {
+                    asset = $$templateLoader(path, &apos;static&apos;);
+                }
+
+                // We have an asset and must render a response
+                if (asset) {
+
+                    // Set the content type
+                    angieResponse.responseHeaders[ &apos;Content-Type&apos; ] =
+                        $MimeType.fromPath(path);
+
+                    // We do not want to cache responses
+                    if (
+                        config.hasOwnProperty(&apos;cacheStaticAssets&apos;) &amp;&amp;
+                        !config.cacheStaticAssets
+                    ) {
+                        angieResponse.responseHeaders = util._extend(
+                            angieResponse.responseHeaders,
+                            {
+                                Expires: -1,
+                                Pragma: app.constants.PRAGMA_HEADER,
+                                &apos;Cache-Control&apos;: app.constants.NO_CACHE_HEADER
+                            }
+                        );
+                    }
+
+                    response.writeHead(
+                        200,
+                        app.constants.RESPONSE_HEADER_MESSAGES[ &apos;200&apos; ],
+                        angieResponse.responseHeaders
+                    );
+
+                    // Check if you have an image type asset
+                    $LogProvider.info(path, response._header);
+                    response.write(asset);
+                }
+
+                // End the response
+                response.end();
+                return;
+            }
+
+            // else {
+
+            angieResponse.$$route().then(function() {
+                let code = response.statusCode;
+                if (!code) {
+                    const error = $$templateLoader(&apos;500.html&apos;);
+
+                    // TODO extrapolate this to responses
+                    response.writeHead(
+                        500,
+                        app.constants.RESPONSE_HEADER_MESSAGES[ &apos;500&apos; ],
+                        angieResponse.responseHeaders
+                    );
+                    response.write(error);
+                    $LogProvider.error(path, response._header);
+                } else if (code &lt; 400) {
+                    $LogProvider.info(path, response._header);
+                } else if (code &lt; 500) {
+                    $LogProvider.warn(path, response._header);
+                } else {
+                    $LogProvider.error(path, response._header);
+                }
+                return true;
+            }).then(function() {
+
+                // End the response
+                response.end();
+
+                // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
+                // request.connection.end();
+                // request.connection.destroy();
+            });
+
+            // }
+
+        }).listen(port);
+
+        // Attempt to restart the webserver on change
+        if (firstrun) {
+            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
+
+            try {
+                let restartObj = {
+                        persistent: true,
+                        recursive: true
+                    };
+                watch(watchDirs, (() =&gt; restart(port)), restartObj);
+            } catch(e) {
+                $LogProvider.error(e);
+            }
+        }
+
+        // Info
+        $LogProvider.info(`Serving on port ${port}`);
+
+        // Set firstrun to false
+        firstrun = false;
+    });
+}
+
+function restart(port) {
+
+    // TODO this doesn&apos;t reload like you think it does
+    app.$$load().then(function() {
+        $LogProvider.info(
+            `Application files reloaded; Still serving on port ${port}`
+        );
+    });
+}
+
+export default server;
+</code></pre>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.1.2)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

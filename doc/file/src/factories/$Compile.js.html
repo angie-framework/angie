@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/factories/$Compile.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+</head>
+<body class="layout-container">
+
+<header>
+  <a href="./">Home</a>
+  <a href="identifiers.html">Identifier</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/benderTheCrime/angie.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div data-ice="classWrap">
+  <h2>Class</h2>
+  <ul>
+    
+  <li data-ice="classDoc"><span><a href="class/src/util/$ExceptionsProvider.js~$$InvalidConfigError.html">$$InvalidConfigError</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$CacheFactory.js~$CacheFactory.html">$CacheFactory</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/util/$MimeTypeProvider.js~$MimeTypeProvider.html">$MimeTypeProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Request.js~$Request.html">$Request</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/$Responses.js~$Response.html">$Response</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$RouteProvider.js~$RouteProvider.html">$RouteProvider</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$TemplateCache.js~$TemplateCache.html">$TemplateCache</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/factories/$Compile.js~$window.html">$window</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Angie.js~Angie.html">Angie</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/services/BaseRequest.js~BaseRequest.html">BaseRequest</a></span></li>
+<li data-ice="classDoc"><span><a href="class/src/Config.js~Config.html">Config</a></span></li>
+</ul>
+</div>
+
+
+
+<div data-ice="functionWrap">
+  <h2><a href="function/">Function</a></h2>
+  <ul>
+    
+  <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+</ul>
+</div>
+
+
+
+
+
+
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/factories/$Compile.js</h1>
+<pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">/**
+ * @module $Compile.js
+ * @author Joe Groseclose &lt;@benderTheCrime&gt;
+ * @date 8/16/2015
+ */
+
+// System Modules
+import {jsdom} from                 &apos;jsdom&apos;;
+import $LogProvider from            &apos;angie-log&apos;;
+
+// Angie Modules
+import app from                     &apos;../Angie&apos;;
+import {$$templateLoader} from      &apos;./$TemplateCache&apos;;
+import $Util, {$StringUtil} from    &apos;../util/Util&apos;;
+
+// ngie Incrementer
+let iid = 0;
+
+/**
+ * @desc $window is provided to any directive which has included it. It
+ * is a NodeJS representation of a window object.
+ *
+ * This should not be used to transform window properties as the window
+ * provided by the browser and $window are not the same instance.
+ *
+ * @since 0.2.4
+ * @access public
+ * @example new $window.HTMLElement(&apos;div&apos;);
+ */
+class $window {}
+
+/**
+ * @desc $document is provided to any directive which has included it. It
+ * is a NodeJS representation of a window.document object.
+ *
+ * This should not be used to transform document properties as the document
+ * provided by the browser and $document are not the same instance.
+ *
+ * @since 0.2.4
+ * @access public
+ * @example new $window.HTMLElement(&apos;div&apos;);
+ */
+class $document{}
+
+/**
+ * @desc $compile is provided to any service, Controller, directive, Model, or
+ * view which has included it as an argument.
+ *
+ * $compile is responsible for parsing all templates and templatePath files that
+ * are passed into a Controller. It will parse all triple bracketted statements,
+ * all ngie-native directives, and all custom directives.
+ *
+ * The triple bracket statement is utilized as a result of the Angular/Mustache/
+ * Handlebars standard of two brackets. While you can also do three brackets in
+ * either of the latter cases, it is generally considered unsafe and most
+ * definitely so in this case.
+ *
+ * Native directives are called &quot;ngie&quot; to avoid namespace collisions. Dirty
+ * checking is performed on directive names for camelCasing,
+ * underscore_separation, and dash-separation.
+ *
+ * It can also be referenced as `app.services.$compile`.
+ * @since 0.2.2
+ * @todo &quot;No parse operator&quot;
+ * @param {string} t Template string to be processed
+ * @returns {function} Template function, compiles in whatever scope is passed
+ * @access public
+ * @example $compile(&apos;{{{test}}}&apos;)({ test: 1 }) === 1; // true
+ */
+function $compile(t) {
+
+    if (!t) {
+        return $Util.noop;
+    }
+
+    // We need to call template.toString() because we did not load with utf8
+    let template = t.toString(),
+        listeners = template.match(/\{{3}[^\}]+\}{3}/g) || [],
+        directives = [];
+
+    // Direct reference by directive name to directive object
+    for (let $directive in app.directives) {
+        let directive = app.directives[ $directive ];
+        directive.$names = [
+            $directive,
+            $StringUtil.toUnderscore($directive),
+            $StringUtil.toDash($directive)
+        ];
+
+        // Add all parsed directve names to directives
+        directives.push(directive);
+    }
+
+    // Sort our directives for priority
+    directives.sort(function(a, b) {
+        if (!a.priority &amp;&amp; !b.priority) {
+            return 0;
+        }
+        return (a.priority &amp;&amp; !b.priority) || (a.priority &gt; b.priority) ? 1 : -1;
+    });
+
+    /**
+     * @desc Function returned by $compile
+     * @since 0.2.2
+     * @param {object} scope [param={}] Template string to be processed
+     * @param {boolean} assignDOMServices [param=true] Create a new
+     * $window/$document?
+     * @returns {string} The compiled template
+     */
+    return function $templateCompile (scope = {}, assignDOMServices = true) {
+
+        // Temporary template object, lets us hang on to our template
+        let tmpLet = template,
+            proms = [];
+
+        // Parse simple listeners/expressions
+        listeners.forEach(function(listener) {
+
+            // Remove the bracket mustaches
+            let parsedListener = listener.replace(/(\{|\}|\;)/g, &apos;&apos;).trim(),
+                val = &apos;&apos;;
+
+            // Evaluate the expression
+            try {
+                val = $$evalFn.call(scope, parsedListener);
+            } catch(e) {
+                $LogProvider.warn(e);
+            }
+
+            // Change the scope of the template
+            tmpLet = tmpLet.replace(listener, val);
+        });
+
+        // Parse directives
+        let $$document, $$window;
+        try {
+            $$document = jsdom(tmpLet, {
+                FetchExternalResources: [],
+                ProcessExternalResources: false
+            });
+            $$window = $$document.defaultView;
+        } catch(e) {
+            $LogProvider.error(e);
+        }
+
+        // Assign the window and document services
+        if (assignDOMServices === true) {
+            app.service(&apos;$window&apos;, $$window).service(&apos;$document&apos;, $$document);
+        }
+
+        if ($$document.body) {
+            let els = $$document.body.querySelectorAll(&apos;*&apos;);
+            for (let i = 0; i &lt; els.length; ++i) {
+                let el = els[ i ],
+                    type,
+                    prom;
+                directives.forEach(function(directive) {
+
+                    // Try and match a directive based on type
+                    // TODO classList is undefined in jsDOM, polyfill or find a better way
+                    if (
+                        el.className &amp;&amp;
+                        directive.$names.some((v) =&gt; el.className.indexOf(v) &gt; -1)
+                    ) {
+                        type = &apos;C&apos;;
+                    } else if (
+                        el.hasAttribute &amp;&amp;
+                        directive.$names.some((v) =&gt; !!(el.hasAttribute(v)))
+                    ) {
+                        type = &apos;A&apos;;
+                    } else if (
+                        el.tagName &amp;&amp;
+                        directive.$names.indexOf(el.tagName.toLowerCase()) &gt; -1
+                    ) {
+                        type = &apos;E&apos;;
+                    }
+
+                    // Check that the restriction is valid
+                    if (
+                        type &amp;&amp; (
+                            !directive.hasOwnProperty(&apos;restrict&apos;) ||
+                            (
+                                directive.hasOwnProperty(&apos;restrict&apos;) &amp;&amp;
+                                directive.restrict.indexOf(type) &gt; -1
+                            )
+                        )
+                    ) {
+                        prom = $$processDirective(
+                            $$document,
+                            el,
+                            scope,
+                            directive,
+                            type
+                        );
+                        proms.push(prom);
+                    }
+                });
+            }
+        }
+
+        return Promise.all(proms).then(function() {
+
+            // Check for a document.body in tmpLet
+            if (tmpLet.indexOf(&apos;&lt;body&apos;) &gt; -1 &amp;&amp; tmpLet.indexOf(&apos;/body&gt;&apos;) &gt; -1) {
+                tmpLet = `&lt;!DOCTYPE html&gt;\n${$$document.documentElement.outerHTML}`;
+            } else {
+
+                // Or return just the string
+                tmpLet = $$document.body.innerHTML;
+            }
+
+            app.services.$window = app.services.$document = {};
+            return tmpLet;
+        });
+    };
+}
+
+// A private function to evaluate the parsed template string in the context of
+// `scope`
+function $$evalFn(str) {
+    let keyStr = &apos;&apos;;
+
+    // Perform any parsing that needs to be performed on the scope value
+    for (let key in this) {
+        let val = this[ key ];
+        if (!val) {
+            continue;
+        } else if (typeof val === &apos;symbol&apos; || typeof val === &apos;string&apos;) {
+            val = `&quot;${val}&quot;`;
+        } else if (typeof val === &apos;object&apos;) {
+            val = JSON.stringify(val);
+        }
+
+        // I don&apos;t like having to use var here
+        keyStr += `var ${key}=${val};`;
+    }
+
+    // Literal eval is executed in its own context here to reduce security issues
+    /* eslint-disable */
+    return eval([ keyStr, str ].join(&apos;&apos;));
+
+    /* eslint-enable */
+}
+
+// Private function responsible for parsing directives
+function $$processDirective($$document, el, scope, directive, type) {
+    let template,
+        prom;
+
+    // Template parsing
+    if (
+        directive.hasOwnProperty(&apos;templatePath&apos;) &amp;&amp;
+        directive.templatePath.indexOf(&apos;.html&apos;) &gt; -1
+    ) {
+        template = $$templateLoader(directive.templatePath, &apos;template&apos;, &apos;utf8&apos;);
+    } else if (directive.hasOwnProperty(&apos;template&apos;)) {
+        template = directive.template;
+    }
+
+    if (template) {
+
+        // Setup the template HTML observing the prepend/append properties
+        prom = $compile(template)(scope, false).then(function(t) {
+            el.innerHTML =
+                `${directive.prepend === true ? &apos;&apos; : el.innerHTML}${t}` +
+                `${directive.prepend !== true ? &apos;&apos; : el.innerHTML}`;
+        });
+    } else {
+        prom = new Promise((r) =&gt; r());
+    }
+
+    // Setup Attrs
+    let attrs = el.attributes || {},
+        parsedAttrs = {};
+    if (el.hasAttribute &amp;&amp; el.getAttribute) {
+        for (let key in attrs) {
+            if (el.hasAttribute(key)) {
+                parsedAttrs[ $StringUtil.toCamel(key) ] = el.getAttribute(key);
+            }
+        }
+    }
+
+    // Link functionality
+    if (
+        directive.hasOwnProperty(&apos;link&apos;) &amp;&amp;
+        typeof directive.link === &apos;function&apos;
+    ) {
+        prom = prom.then(function() {
+            return new Promise(directive.link.bind(
+                app.services.$scope,
+                app.services.$scope,
+                type !== &apos;M&apos; ? el : null,
+                parsedAttrs
+            ));
+        }).then(function() {
+
+            // TODO an Observance model would be way better
+            if (el.setAttribute) {
+                for (let key in parsedAttrs) {
+
+                    // Replace all of the element attrs with parsedAttrs
+                    if (directive.$names.indexOf(key) === -1) {
+                        el.setAttribute($StringUtil.toDash(key), parsedAttrs[ key ]);
+                    }
+                }
+            }
+        });
+    }
+
+    // Replace directive keyword
+    prom.then(function() {
+        if (directive.replace === true) {
+            el.setAttribute(&apos;ngie-id&apos;, ++iid);
+            $$document.body.innerHTML = $$document.body.innerHTML.replace(
+                el.outerHTML,
+                el.innerHTML
+            );
+        }
+    });
+
+    return prom;
+}
+
+export default $compile;
+</code></pre>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.1.2)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
