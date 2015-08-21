@@ -40,7 +40,7 @@ Angie makes creating &amp; maintaining data models across many different databas
 <!-- #### Desktop Application Manager -->
 
 ### Documentation
-The entire application documentation can be found [here](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation")
+The entire application documentation can be found [here](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation").
 
 ### Quickstart
 Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: [nvm](https://github.com/creationix/nvm "nvm"). Please visit this link and follow the instructions listed for iojs-2.2.1. it will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. Switching in between versions after an Angie installation will cause module dependency mismatches.
