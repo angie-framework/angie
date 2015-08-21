@@ -11,7 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed extraneous `"use strict"` commands in modules.
 - Removed warning for server stability.
 - Added the ability to load a default script file on routes
-- Added tests for $resourceLoader
+- Added tests for `$resourceLoader`
+- Moved the entirety of the site from the `gh-pages` branch to the README.
 
 ### [0.3.1] - 2015-08-08
 #### Added/Changed/Fixed
