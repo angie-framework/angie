@@ -8,18 +8,18 @@
 
 [![NPM](https://nodei.co/npm/angie.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/angie/)
 
-### About
-Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.
-
-Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.
-
-For more details on how to get started, please see the [Quickstart](#Quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/benderTheCrime/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. Contributors to this Project are outlines in the [CONTRIBUTORS](https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file. AngularJS is in no way used or affiliated with this project.
-
 ### Usage
 ```bash
 npm i -g angie
 angie help
 ```
+
+### About
+Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.
+
+Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.
+
+For more details on how to get started, please see the [Quickstart](#quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/benderTheCrime/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. Contributors to this Project are outlines in the [CONTRIBUTORS](https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file. AngularJS is in no way used or affiliated with this project.
 
 ### Features
 #### Write components &amp; modules like you would in AngularJS
@@ -40,7 +40,7 @@ Angie makes creating &amp; maintaining data models across many different databas
 <!-- #### Desktop Application Manager -->
 
 ### Documentation
-The entire application documentation can be found [here](https://rawgit.com/benderTheCrime/angie/gh-pages/doc/index.html "documentation")
+The entire application documentation can be found [here](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation")
 
 ### Quickstart
 Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: [nvm](https://github.com/creationix/nvm "nvm"). Please visit this link and follow the instructions listed for iojs-2.2.1. it will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. Switching in between versions after an Angie installation will cause module dependency mismatches.
@@ -49,8 +49,8 @@ It is also worth mentioning beforehand that Angie supports writing all of the sy
 
 This tutorial should take about 15 minutes in its entirety.
 
-* [Now We Can Write Some Code!](#Now\ We\ Can\ Write\ Some\ Code!)
-* [Getting Started with Models!](#Getting\ Started\ with\ Models!)
+* [Now We Can Write Some Code!](#now-we-can-write-some-code)
+* [Getting Started with Models!](#getting-started-with-models)
 
 #### First, We're Going to Need Some Packages!
 In the directory you would like your project to live, please run the following command:
@@ -125,7 +125,7 @@ app.config(function($routeProvider) {
     });
 });
 ```
-In this context, the route matching the RegExp `/test\/([A-Za-z0-9])\/` will be followed and the match pattern (the RegExp clause of the route) will be passed to the `request.query` of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the [documentation](https://rawgit.com/benderTheCrime/angie/gh-pages/doc/index.html "documentation").
+In this context, the route matching the RegExp `/test\/([A-Za-z0-9])\/` will be followed and the match pattern (the RegExp clause of the route) will be passed to the `request.query` of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the [documentation](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation").
 
 #### Getting Started with Models!
 Next we will set up a very simple Model. Angie Models are very different from AngularJS models in the sense that they are actually database objects as opposed to front end data models. The databases which communicate with the Angie ORM are all configured in the `AngieFile.json`.
@@ -139,7 +139,7 @@ To create a new database connection, we add an object to our `AngieFile.json` un
   "name": "projectName.db"
 }
 ```
-However, no database is created until it is synced. For more information about what options are required by a specific database type or whether a database is supported, please see the [documentation](https://rawgit.com/benderTheCrime/angie/gh-pages/doc/index.html "documentation").
+However, no database is created until it is synced. For more information about what options are required by a specific database type or whether a database is supported, please see the [documentation](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation").
 
 Now let's create our database by running the "sync" command:
 ```bash
@@ -157,7 +157,7 @@ app.Model('TestAngie', function($fields) {
    });
 });
 ```
-If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The `$fields` service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The `$fields` service supports all of the fields you may want to use in your project. See the [documentation](https://rawgit.com/benderTheCrime/angie/gh-pages/doc/index.html "documentation") for a full list.
+If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The `$fields` service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The `$fields` service supports all of the fields you may want to use in your project. See the [documentation](https://rawgit.com/benderTheCrime/angie/master/doc/index.html "documentation") for a full list.
 
 Now for the fun part, we are going to create a record in our database and then get that record to render in our previously created template. Open up a sqlite shell using the following command:
 ```bash
