@@ -117,7 +117,7 @@ function $$templateLoader(url, type = 'template', encoding) {
 function $resourceLoader(files = [], loadStyle = 'src') {
     console.log('IN RESOURCE LOADER', files);
     let $response = $Injector.get('$response');
-
+    console.log('RESPONSE', $response);
     if (!$response || typeof $response !== 'object') {
         return false;
     } else if (!$response.$responseContent) {
@@ -162,16 +162,21 @@ function $resourceLoader(files = [], loadStyle = 'src') {
 
         asset += '</script>';
 
+        console.log('ASSET', asset);
+
         const BODY = '</body>',
             STR = $response.$responseContent;
         if (STR.indexOf(BODY) > -1) {
             let body = STR.lastIndexOf(BODY);
+
+            console.log('IN BODY');
 
             $response.$responseContent =
                 `${STR.substr(0, body)}${asset}${STR.substr(body)}`;
         } else {
             $response.$responseContent = $response.$responseContent + asset;
         }
+        console.log('content', $response.$responseContent);
     });
     return true;
 }
