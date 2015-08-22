@@ -250,9 +250,6 @@ class BaseRequest {
                 // If we have any sort of template
                 let match;
 
-                // Pull the response back in from wherever it was before
-                me.responseContent = me.response.$responseContent;
-
                 // In the context where MIME type is not set, but we have a
                 // DOCTYPE tag, we can force set the MIME
                 // We want this here instead of the explicit template definition
@@ -282,6 +279,9 @@ class BaseRequest {
                         'application.js' : config.loadDefaultScriptFile;
                     $resourceLoader(scriptFile);
                 }
+
+                // Pull the response back in from wherever it was before
+                me.responseContent = me.response.$responseContent;
 
                 // Render the template into the resoponse
                 return new Promise(function(resolve) {
