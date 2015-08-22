@@ -58,16 +58,15 @@ In the directory you would like your project to live, please run the following c
 npm install -g babel gulp-cli angie
 angie createProject [name] [location]
 ```
-Where NPM installs the Babel, Gulp, and Angie packages globally and where this Angie command creates a project in your current directory or passed (location) directory by the name entered. Not specifying a project name or specifying a location that is invalid will throw an error. To see a full list of Angie commands, use one of the following:
+Where NPM installs the Babel, Gulp, and Angie packages globally and where this Angie command creates a project in your current directory or passed (location) directory by the name entered. Not specifying a project name or specifying a location that is invalid will throw an error. To see a full list of Angie commands, use the following:
 ```bash
-angie
 angie help
 ```
 Hopefully by now, you've got a scaffolded project. If so, it's possible to start building our app.
 
 We can test that the application runs successfully by running the following command at the root of our application.
 ```bash
-angie s 3000
+angie watch 3000
 ```
 Once your server is running, you should visit the webserver started at [localhost](http://localhost:3000 "default") (provided you used port 3000 as opposed to another port). If you see the text "Angie Test Page," all is well.
 

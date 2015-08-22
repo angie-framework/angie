@@ -1,5 +1,5 @@
 /**
- * @module server.js
+ * @module Server.js
  * @author Joe Groseclose <@benderTheCrime>
  * @date 8/16/2015
  */
@@ -9,7 +9,11 @@ import http from                    'http';
 import https from                   'https';
 import url from                     'url';
 import util from                    'util';
-import watch from                   'node-watch';
+
+// TODO you can remove this from package if it doesn't work
+//import watch from                   'node-watch';
+import {Client} from                'fb-watchman';
+import {cyan} from                  'chalk';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
@@ -20,18 +24,73 @@ import {$$templateLoader} from      './factories/$TemplateCache';
 import {BaseRequest} from           './services/BaseRequest';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
-const p = process;
-let firstrun = true;
+const CWD = process.cwd(),
+    CLIENT = new Client(),
+    WATCH_DIRS = [
+        CWD,
+        __dirname
+    ].concat(app._$dependencies__),
+    SUB = {
+        expression: [ 'allof', [ 'match', '*.js' ] ],
+        fields: []
+    };
+let webserver;
+// let firstrun = true;
+
+// TODO watchman implementation, change these names
+function watch(args) {
+    const port = $$port(args);
+    // TODO you have to do this for each of the dirs
+    return CLIENT.capabilityCheck({}, function (e, resp) {
+        if (e) {
+            throw new Error(e);
+        }
+        console.log('DO I GET HERE', resp);
+        CLIENT.command([ `watch-project`, CWD ], function (e, resp) {
+            if (e) {
+                throw new Error(e);
+            } else if ('warning' in resp) {
+                $LogProvider.warn(resp.warning);
+            } else {
+
+                $LogProvider.info(`Watch initiated on ${cyan(resp.watch)}`);
+                CLIENT.command(
+                    ['subscribe', resp.watch, 'mysubscription', SUB],
+                    function (error, resp) {
+                        if (error) {
+                            //console.error('failed to subscribe: ', error);
+                        }
+                        //console.log('subscription ' + resp.subscribe + ' established');
+                        CLIENT.on('subscription', function (resp) {
+                         // for (var i in resp.files) {
+                            //var f = resp.files[i];
+                            //if (resp.subscription == 'mysubscription') {
+                                //$LogProvider.warn(`Restarting ${cyan('angie')} web server`);
+                              //server([port]);
+                            //}
+                         // }
+                         server([port]);
+                         //console.log('restarting service');
+                        });
+                    }
+                );
+            }
+        });
+    });
+}
 
 function server(args) {
-    const useSSL = /\--?usessl/i.test(args),
-          port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
+    const port = $$port(args);
+
+    // Stop any existing webserver
+    if (webserver) {
+        webserver.close();
+    }
 
     app.$$load().then(function() {
 
         // Start a webserver
-        // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
-        (useSSL ? https : http).createServer(function(request, response) {
+        webserver = (port === 443 ? https : http).createServer(function(request, response) {
             const path = url.parse(request.url).pathname;
             let angieResponse = new BaseRequest(path, request, response),
                 asset;
@@ -122,37 +181,13 @@ function server(args) {
 
         }).listen(port);
 
-        // Attempt to restart the webserver on change
-        if (firstrun) {
-            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
-
-            try {
-                let restartObj = {
-                        persistent: true,
-                        recursive: true
-                    };
-                watch(watchDirs, (() => restart(port)), restartObj);
-            } catch(e) {
-                $LogProvider.error(e);
-            }
-        }
-
         // Info
         $LogProvider.info(`Serving on port ${port}`);
-
-        // Set firstrun to false
-        firstrun = false;
     });
 }
 
-function restart(port) {
-
-    // TODO this doesn't reload like you think it does
-    app.$$load().then(function() {
-        $LogProvider.info(
-            `Application files reloaded; Still serving on port ${port}`
-        );
-    });
+function $$port(args) {
+    return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
 }
 
-export default server;
+export {watch, server};

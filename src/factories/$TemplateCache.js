@@ -115,6 +115,7 @@ function $$templateLoader(url, type = 'template', encoding) {
  * @example $resourceLoader('test.js');
  */
 function $resourceLoader(files = [], loadStyle = 'src') {
+    console.log('IN RESOURCE LOADER', files);
     let $response = $Injector.get('$response');
 
     if (!$response || typeof $response !== 'object') {
@@ -135,6 +136,8 @@ function $resourceLoader(files = [], loadStyle = 'src') {
         if (resource.split('.').pop() !== 'js') {
             return;
         }
+
+        console.log('IN RESOURCE LOADER', resource);
 
         // TODO put this into a template?
         let asset = '<script type="text/javascript"';

@@ -15,17 +15,19 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 import Config from                  './Config';
 import $$createProject from         './util/scaffold/project';
-import server from                  './Server';
+import {watch, server} from         './Server';
 import shell from                   './util/shell';
 
 // System/Tranform BabelJS options
 System.transpiler = 'babel';
 
-const p = process;
-let args = [],
+const p = process,
     $$server = requiresConfig.bind(null, server),
-    $$db = requiresConfig.bind(null, require.bind(null, 'angie-orm')),
-    $$shell = requiresConfig.bind(null, shell);
+    $$watch = requiresConfig.bind(null, watch),
+    $$shell = requiresConfig.bind(null, shell),
+    $$db = requiresConfig.bind(null, require.bind(null, 'angie-orm'));
+let args = [];
+
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
@@ -41,6 +43,9 @@ switch ((args[0] || '').toLowerCase()) {
         break;
     case 'server':
         $$server();
+        break;
+    case 'watch':
+        $$watch();
         break;
     case 's':
         $$server();
