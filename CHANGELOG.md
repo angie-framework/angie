@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added the ability to load a default script file on routes
 - Added tests for `$resourceLoader`
 - Moved the entirety of the site from the `gh-pages` branch to the README.
+- Created a `dist` folder/runtime with an equivalent pre-compiled Angie framework.
 
 ### [0.3.1] - 2015-08-08
 #### Added/Changed/Fixed

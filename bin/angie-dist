@@ -3,6 +3,6 @@
 'use strict';
 
 // TODO check to see that the most up to date version is installed
-global.ANGIE_VERSION = '0.3.3';
+global.ANGIE_VERSION = '0.3.2';
 
 require('../dist/index');
