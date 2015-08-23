@@ -357,6 +357,8 @@ class Angie {
             return Promise.all(proms);
         }).then(function() {
 
+            console.log(me.configs);
+
             // Once all of the modules are loaded, run the configs
             me.configs.forEach(function(v) {
 

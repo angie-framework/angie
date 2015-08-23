@@ -178,9 +178,6 @@ function server(args) {
                 // request.connection.end();
                 // request.connection.destroy();
             });
-
-            // }
-
         }).listen(port);
 
         // Info
