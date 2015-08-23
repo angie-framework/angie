@@ -52,8 +52,8 @@
   <ul>
     
   <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
-<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
 <li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-watch">watch</a></span></li>
 </ul>
 </div>
 
@@ -66,7 +66,7 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/Server.js</h1>
 <pre class="source-code line-number"><code class="prettyprint linenums" data-ice="content">/**
- * @module server.js
+ * @module Server.js
  * @author Joe Groseclose &lt;@benderTheCrime&gt;
  * @date 8/16/2015
  */
@@ -76,7 +76,11 @@ import http from                    &apos;http&apos;;
 import https from                   &apos;https&apos;;
 import url from                     &apos;url&apos;;
 import util from                    &apos;util&apos;;
-import watch from                   &apos;node-watch&apos;;
+
+// TODO you can remove this from package if it doesn&apos;t work
+//import watch from                   &apos;node-watch&apos;;
+import {Client} from                &apos;fb-watchman&apos;;
+import {cyan} from                  &apos;chalk&apos;;
 import $LogProvider from            &apos;angie-log&apos;;
 
 // Angie Modules
@@ -87,18 +91,73 @@ import {$$templateLoader} from      &apos;./factories/$TemplateCache&apos;;
 import {BaseRequest} from           &apos;./services/BaseRequest&apos;;
 import {default as $MimeType} from  &apos;./util/$MimeTypeProvider&apos;;
 
-const p = process;
-let firstrun = true;
+const CWD = process.cwd(),
+    CLIENT = new Client(),
+    WATCH_DIRS = [
+        CWD,
+        __dirname
+    ].concat(app._$dependencies__),
+    SUB = {
+        expression: [ &apos;allof&apos;, [ &apos;match&apos;, &apos;*.js&apos; ] ],
+        fields: []
+    };
+let webserver;
+// let firstrun = true;
+
+// TODO watchman implementation, change these names
+function watch(args) {
+    const port = $$port(args);
+    // TODO you have to do this for each of the dirs
+    return CLIENT.capabilityCheck({}, function (e, resp) {
+        if (e) {
+            throw new Error(e);
+        }
+        console.log(&apos;DO I GET HERE&apos;, resp);
+        CLIENT.command([ `watch-project`, CWD ], function (e, resp) {
+            if (e) {
+                throw new Error(e);
+            } else if (&apos;warning&apos; in resp) {
+                $LogProvider.warn(resp.warning);
+            } else {
+
+                $LogProvider.info(`Watch initiated on ${cyan(resp.watch)}`);
+                CLIENT.command(
+                    [&apos;subscribe&apos;, resp.watch, &apos;mysubscription&apos;, SUB],
+                    function (error, resp) {
+                        if (error) {
+                            //console.error(&apos;failed to subscribe: &apos;, error);
+                        }
+                        //console.log(&apos;subscription &apos; + resp.subscribe + &apos; established&apos;);
+                        CLIENT.on(&apos;subscription&apos;, function (resp) {
+                         // for (var i in resp.files) {
+                            //var f = resp.files[i];
+                            //if (resp.subscription == &apos;mysubscription&apos;) {
+                                //$LogProvider.warn(`Restarting ${cyan(&apos;angie&apos;)} web server`);
+                              //server([port]);
+                            //}
+                         // }
+                         server([port]);
+                         //console.log(&apos;restarting service&apos;);
+                        });
+                    }
+                );
+            }
+        });
+    });
+}
 
 function server(args) {
-    const useSSL = /\--?usessl/i.test(args),
-          port = useSSL ? 443 : !isNaN(args[1]) ? +args[1] : 3000;
+    const port = $$port(args);
+
+    // Stop any existing webserver
+    if (webserver) {
+        webserver.close();
+    }
 
     app.$$load().then(function() {
 
         // Start a webserver
-        // TODO run the webserver with Gulp and gulp watch project files and angie files to reload
-        (useSSL ? https : http).createServer(function(request, response) {
+        webserver = (port === 443 ? https : http).createServer(function(request, response) {
             const path = url.parse(request.url).pathname;
             let angieResponse = new BaseRequest(path, request, response),
                 asset;
@@ -189,40 +248,16 @@ function server(args) {
 
         }).listen(port);
 
-        // Attempt to restart the webserver on change
-        if (firstrun) {
-            let watchDirs = [ p.cwd(), __dirname ].concat(app._$dependencies__);
-
-            try {
-                let restartObj = {
-                        persistent: true,
-                        recursive: true
-                    };
-                watch(watchDirs, (() =&gt; restart(port)), restartObj);
-            } catch(e) {
-                $LogProvider.error(e);
-            }
-        }
-
         // Info
         $LogProvider.info(`Serving on port ${port}`);
-
-        // Set firstrun to false
-        firstrun = false;
     });
 }
 
-function restart(port) {
-
-    // TODO this doesn&apos;t reload like you think it does
-    app.$$load().then(function() {
-        $LogProvider.info(
-            `Application files reloaded; Still serving on port ${port}`
-        );
-    });
+function $$port(args) {
+    return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
 }
 
-export default server;
+export {watch, server};
 </code></pre>
 </div>
 

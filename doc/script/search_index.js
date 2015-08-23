@@ -72,15 +72,15 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "angie/src/server.js~server",
-    "function/index.html#static-function-server",
-    "<span>server</span> <span class=\"search-result-import-path\">angie/src/Server.js</span>",
-    "function"
-  ],
-  [
     "angie/src/util/shell.js~shell",
     "function/index.html#static-function-shell",
     "<span>shell</span> <span class=\"search-result-import-path\">angie/src/util/shell.js</span>",
+    "function"
+  ],
+  [
+    "angie/src/server.js~watch",
+    "function/index.html#static-function-watch",
+    "<span>watch</span> <span class=\"search-result-import-path\">angie/src/Server.js</span>",
     "function"
   ],
   [

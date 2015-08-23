@@ -52,8 +52,8 @@
   <ul>
     
   <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
-<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
 <li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-watch">watch</a></span></li>
 </ul>
 </div>
 
@@ -82,17 +82,19 @@ import $LogProvider from            &apos;angie-log&apos;;
 // Angie Modules
 import Config from                  &apos;./Config&apos;;
 import $$createProject from         &apos;./util/scaffold/project&apos;;
-import server from                  &apos;./Server&apos;;
+import {watch, server} from         &apos;./Server&apos;;
 import shell from                   &apos;./util/shell&apos;;
 
 // System/Tranform BabelJS options
 System.transpiler = &apos;babel&apos;;
 
-const p = process;
-let args = [],
+const p = process,
     $$server = requiresConfig.bind(null, server),
-    $$db = requiresConfig.bind(null, require.bind(null, &apos;angie-orm&apos;)),
-    $$shell = requiresConfig.bind(null, shell);
+    $$watch = requiresConfig.bind(null, watch),
+    $$shell = requiresConfig.bind(null, shell),
+    $$db = requiresConfig.bind(null, require.bind(null, &apos;angie-orm&apos;));
+let args = [];
+
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
@@ -108,6 +110,9 @@ switch ((args[0] || &apos;&apos;).toLowerCase()) {
         break;
     case &apos;server&apos;:
         $$server();
+        break;
+    case &apos;watch&apos;:
+        $$watch();
         break;
     case &apos;s&apos;:
         $$server();

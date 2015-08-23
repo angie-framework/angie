@@ -52,8 +52,8 @@
   <ul>
     
   <li data-ice="functionDoc"><span><a href="function/index.html#static-function-Base">Base</a></span></li>
-<li data-ice="functionDoc"><span><a href="function/index.html#static-function-server">server</a></span></li>
 <li data-ice="functionDoc"><span><a href="function/index.html#static-function-shell">shell</a></span></li>
+<li data-ice="functionDoc"><span><a href="function/index.html#static-function-watch">watch</a></span></li>
 </ul>
 </div>
 
@@ -116,11 +116,11 @@ app.constant(&apos;RESPONSE_HEADER_MESSAGES&apos;, {
 class BaseRequest {
     constructor(path, request, response) {
 
-        // Define URI
-        this.path = path;
-
         // Shortcut to set and receive the request object
         this.request = new $Request(request).request;
+
+        // Define URI
+        this.path = this.request.path = path;
 
         // Make the response object available to the API
         this.response = new $Response(response).response;
@@ -270,64 +270,85 @@ class BaseRequest {
 
         // Find and load template
         prom = prom.then(function(controllerName) {
+            let mime;
+
             if (
                 me.route.template &amp;&amp;
                 typeof me.route.template === &apos;string&apos; &amp;&amp;
                 me.route.template.length &gt; 0
             ) {
                 me.template = me.route.template;
-
             } else if (me.route.templatePath) {
+                let template = $templateCache.get(me.route.templatePath);
 
                 // Check to see if we can associate the template path with a
                 // mime type
-                let mime = $MimeType.fromPath(me.route.templatePath),
-                    template = $templateCache.get(me.route.templatePath);
+                mime = $MimeType.fromPath(me.route.templatePath);
+
+
+                // Check the caching options for static assets
+                // This should only be for templatePaths with &quot;.&quot;&apos;s,
+                // all others should apply to caching options
+                if (
+                    me.route.templatePath.indexOf(&apos;.&apos;) &gt; -1 &amp;&amp;
+                    config.hasOwnProperty(&apos;cacheStaticAssets&apos;) &amp;&amp;
+                    !config.cacheStaticAssets
+                ) {
+
+                    // If there is a template, check to see if caching is set
+                    me.responseHeaders = $Util._extend(me.responseHeaders, {
+                        Expires: -1,
+                        Pragma: app.constants.PRAGMA_HEADER,
+                        &apos;Cache-Control&apos;: app.constants.NO_CACHE_HEADER
+                    });
+                }
+
                 me.responseHeaders[ &apos;Content-Type&apos; ] = mime;
                 me.template = template;
+            }
+
+            // If there is a template/templatePath defined we should have a template
+            if (!me.template) {
+                if (me.route.template || me.route.templatePath) {
+                    return me.unknownPath();
+                }
+            } else {
+
+                // If we have any sort of template
+                let match;
+
+                // In the context where MIME type is not set, but we have a
+                // DOCTYPE tag, we can force set the MIME
+                // We want this here instead of the explicit template definition
+                // in case the MIME failed earlier
+                if (match = me.template.toString().match(/!doctype ([a-z]+)/i)) {
+                    mime = me.responseHeaders[ &apos;Content-Type&apos; ] =
+                        $MimeType.$$(match[1].toLowerCase());
+                }
 
                 // Check to see if this is an HTML template and has a DOCTYPE
                 // and that the proper configuration options are set
                 if (
-                    mime === &apos;text/html&apos; &amp;&amp;
-                    /doctype(\s)?html/i.test(template) &amp;&amp;
+                    (
+                        mime || me.responseHeaders[ &apos;Content-Type&apos; ]
+                    ) === &apos;text/html&apos; &amp;&amp;
                     config.loadDefaultScriptFile &amp;&amp;
                     (
                         !me.route.hasOwnProperty(&apos;useMainScriptFile&apos;) ||
-                        me.route.useMainScriptFile !== false
+                        me.route.useDefaultScriptFile !== false
                     )
                 ) {
+
+                    console.log(&apos;IM IN!!!&apos;);
 
                     // Check that option is not true
                     let scriptFile = config.loadDefaultScriptFile === true ?
                         &apos;application.js&apos; : config.loadDefaultScriptFile;
                     $resourceLoader(scriptFile);
                 }
-            }
 
-            // If there is a template/templatePath defined we should have a template
-            if (
-                (me.route.template || me.route.templatePath) &amp;&amp;
-                !me.template
-            ) {
-                return me.unknownPath();
-            } else if (
-                config.hasOwnProperty(&apos;cacheStaticAssets&apos;) &amp;&amp;
-                !config.cacheStaticAssets
-            ) {
-
-                // If there is a template, check to see if caching is set
-                me.responseHeaders = $Util._extend(me.responseHeaders, {
-                    Expires: -1,
-                    Pragma: app.constants.PRAGMA_HEADER,
-                    &apos;Cache-Control&apos;: app.constants.NO_CACHE_HEADER
-                });
-            }
-
-            // Pull the response back in from wherever it was before
-            me.responseContent = me.response.$responseContent;
-
-            if (me.template) {
+                // Pull the response back in from wherever it was before
+                me.responseContent = me.response.$responseContent;
 
                 // Render the template into the resoponse
                 return new Promise(function(resolve) {
@@ -347,8 +368,6 @@ class BaseRequest {
                     return controllerName;
                 });
             }
-
-            return controllerName;
         });
 
         // TODO See if any views have this Controller associated
@@ -468,7 +487,14 @@ class BaseRequest {
 
 export {BaseRequest};
 
-// TODO break up this file</code></pre>
+// TODO break up this file
+    // BaseRequest
+        // ControllerRequest
+            // ControllerWithTemplate
+            // ControllerWithTemplatePath
+            // ControllerWithView
+        // UnkownRequest
+        // ErrorRequest</code></pre>
 </div>
 
 <footer class="footer">

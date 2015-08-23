@@ -4,14 +4,13 @@
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: A Component-based NodeJS MVC",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "private": false,
   "preferGlobal": true,
   "scripts": {
-    "start": "node src/index.js",
-    "test": "gulp",
-    "publish": "gulp",
-    "postinstall": "chmod +x script/watchman.sh && ./script/watchman.sh"
+    "start": "node dist/index.js",
+    "test": "gulp test",
+    "publish": "gulp"
   },
   "engines": {
     "iojs": "*",
@@ -40,7 +39,7 @@
   "devDependencies": {
     "babel-eslint": "3.1.17",
     "chai": "2.3.0",
-    "esdoc": "0.1.2",
+    "esdoc": "0.2.2",
     "gulp": "3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-cli": "0.2.0",
@@ -51,7 +50,6 @@
     "isparta": "3.0.3",
     "istanbul-cobertura-badger": "0.0.4",
     "mocha": "2.2.4",
-    "npm": "^2.14.0",
     "simple-mock": "0.3.0",
     "yargs": "^3.21.0"
   },

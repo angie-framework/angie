@@ -13,13 +13,19 @@
 npm i -g angie
 angie help
 ```
+If you want your files to automatically refresh with the `angie watch` command, run this from the root of the
+Angie package:
+```
+chmod +x script/watchman.sh && ./script/watchman.sh
+```
+or install Facebook Watchman from the instructions [here](https://facebook.github.io/watchman/docs/install.html "Facebook Watchman").
 
 ### About
 Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.
 
 Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.
 
-For more details on how to get started, please see the [Quickstart](#quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/benderTheCrime/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. Contributors to this Project are outlines in the [CONTRIBUTORS](https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file. AngularJS is in no way used or affiliated with this project.
+For more details on how to get started, please see the [Quickstart](#quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/benderTheCrime/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. Contributors to this Project are outlined in the [CONTRIBUTORS](https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file. AngularJS is in no way used or affiliated with this project.
 
 ### Features
 #### Write components &amp; modules like you would in AngularJS

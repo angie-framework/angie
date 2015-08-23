@@ -919,10 +919,10 @@
       "trailingComments": [
         {
           "type": "Block",
-          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @todo If any more CL arguments are required, you must abstract confirm/prompt\n * as functions\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
           "range": [
             602,
-            1539
+            1636
           ],
           "loc": {
             "start": {
@@ -930,7 +930,7 @@
               "column": 0
             },
             "end": {
-              "line": 42,
+              "line": 44,
               "column": 3
             }
           }
@@ -945,16 +945,16 @@
           "type": "Identifier",
           "name": "$$ProjectCreationError",
           "range": [
-            6052,
-            6074
+            6149,
+            6171
           ],
           "loc": {
             "start": {
-              "line": 183,
+              "line": 185,
               "column": 6
             },
             "end": {
-              "line": 183,
+              "line": 185,
               "column": 28
             }
           }
@@ -963,16 +963,16 @@
           "type": "Identifier",
           "name": "Error",
           "range": [
-            6083,
-            6088
+            6180,
+            6185
           ],
           "loc": {
             "start": {
-              "line": 183,
+              "line": 185,
               "column": 37
             },
             "end": {
-              "line": 183,
+              "line": 185,
               "column": 42
             }
           }
@@ -986,16 +986,16 @@
                 "type": "Identifier",
                 "name": "constructor",
                 "range": [
-                  6095,
-                  6106
+                  6192,
+                  6203
                 ],
                 "loc": {
                   "start": {
-                    "line": 184,
+                    "line": 186,
                     "column": 4
                   },
                   "end": {
-                    "line": 184,
+                    "line": 186,
                     "column": 15
                   }
                 }
@@ -1008,16 +1008,16 @@
                     "type": "Identifier",
                     "name": "e",
                     "range": [
-                      6107,
-                      6108
+                      6204,
+                      6205
                     ],
                     "loc": {
                       "start": {
-                        "line": 184,
+                        "line": 186,
                         "column": 16
                       },
                       "end": {
-                        "line": 184,
+                        "line": 186,
                         "column": 17
                       }
                     }
@@ -1037,16 +1037,16 @@
                             "type": "Identifier",
                             "name": "$LogProvider",
                             "range": [
-                              6120,
-                              6132
+                              6217,
+                              6229
                             ],
                             "loc": {
                               "start": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 8
                               },
                               "end": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 20
                               }
                             }
@@ -1055,31 +1055,31 @@
                             "type": "Identifier",
                             "name": "error",
                             "range": [
-                              6133,
-                              6138
+                              6230,
+                              6235
                             ],
                             "loc": {
                               "start": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 21
                               },
                               "end": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 26
                               }
                             }
                           },
                           "range": [
-                            6120,
-                            6138
+                            6217,
+                            6235
                           ],
                           "loc": {
                             "start": {
-                              "line": 185,
+                              "line": 187,
                               "column": 8
                             },
                             "end": {
-                              "line": 185,
+                              "line": 187,
                               "column": 26
                             }
                           }
@@ -1089,47 +1089,47 @@
                             "type": "Identifier",
                             "name": "e",
                             "range": [
-                              6139,
-                              6140
+                              6236,
+                              6237
                             ],
                             "loc": {
                               "start": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 27
                               },
                               "end": {
-                                "line": 185,
+                                "line": 187,
                                 "column": 28
                               }
                             }
                           }
                         ],
                         "range": [
-                          6120,
-                          6141
+                          6217,
+                          6238
                         ],
                         "loc": {
                           "start": {
-                            "line": 185,
+                            "line": 187,
                             "column": 8
                           },
                           "end": {
-                            "line": 185,
+                            "line": 187,
                             "column": 29
                           }
                         }
                       },
                       "range": [
-                        6120,
-                        6142
+                        6217,
+                        6239
                       ],
                       "loc": {
                         "start": {
-                          "line": 185,
+                          "line": 187,
                           "column": 8
                         },
                         "end": {
-                          "line": 185,
+                          "line": 187,
                           "column": 30
                         }
                       }
@@ -1141,16 +1141,16 @@
                         "callee": {
                           "type": "Super",
                           "range": [
-                            6151,
-                            6156
+                            6248,
+                            6253
                           ],
                           "loc": {
                             "start": {
-                              "line": 186,
+                              "line": 188,
                               "column": 8
                             },
                             "end": {
-                              "line": 186,
+                              "line": 188,
                               "column": 13
                             }
                           }
@@ -1160,63 +1160,63 @@
                             "type": "Identifier",
                             "name": "e",
                             "range": [
-                              6157,
-                              6158
+                              6254,
+                              6255
                             ],
                             "loc": {
                               "start": {
-                                "line": 186,
+                                "line": 188,
                                 "column": 14
                               },
                               "end": {
-                                "line": 186,
+                                "line": 188,
                                 "column": 15
                               }
                             }
                           }
                         ],
                         "range": [
-                          6151,
-                          6159
+                          6248,
+                          6256
                         ],
                         "loc": {
                           "start": {
-                            "line": 186,
+                            "line": 188,
                             "column": 8
                           },
                           "end": {
-                            "line": 186,
+                            "line": 188,
                             "column": 16
                           }
                         }
                       },
                       "range": [
-                        6151,
-                        6160
+                        6248,
+                        6257
                       ],
                       "loc": {
                         "start": {
-                          "line": 186,
+                          "line": 188,
                           "column": 8
                         },
                         "end": {
-                          "line": 186,
+                          "line": 188,
                           "column": 17
                         }
                       }
                     }
                   ],
                   "range": [
-                    6110,
-                    6166
+                    6207,
+                    6263
                   ],
                   "loc": {
                     "start": {
-                      "line": 184,
+                      "line": 186,
                       "column": 19
                     },
                     "end": {
-                      "line": 187,
+                      "line": 189,
                       "column": 5
                     }
                   }
@@ -1224,16 +1224,16 @@
                 "generator": false,
                 "expression": false,
                 "range": [
-                  6106,
-                  6166
+                  6203,
+                  6263
                 ],
                 "loc": {
                   "start": {
-                    "line": 184,
+                    "line": 186,
                     "column": 15
                   },
                   "end": {
-                    "line": 187,
+                    "line": 189,
                     "column": 5
                   }
                 }
@@ -1241,16 +1241,16 @@
               "kind": "constructor",
               "computed": false,
               "range": [
-                6095,
-                6166
+                6192,
+                6263
               ],
               "loc": {
                 "start": {
-                  "line": 184,
+                  "line": 186,
                   "column": 4
                 },
                 "end": {
-                  "line": 187,
+                  "line": 189,
                   "column": 5
                 }
               },
@@ -1258,41 +1258,41 @@
             }
           ],
           "range": [
-            6089,
-            6168
+            6186,
+            6265
           ],
           "loc": {
             "start": {
-              "line": 183,
+              "line": 185,
               "column": 43
             },
             "end": {
-              "line": 188,
+              "line": 190,
               "column": 1
             }
           }
         },
         "range": [
-          6046,
-          6168
+          6143,
+          6265
         ],
         "loc": {
           "start": {
-            "line": 183,
+            "line": 185,
             "column": 0
           },
           "end": {
-            "line": 188,
+            "line": 190,
             "column": 1
           }
         },
         "leadingComments": [
           {
             "type": "Block",
-            "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+            "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @todo If any more CL arguments are required, you must abstract confirm/prompt\n * as functions\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
             "range": [
               602,
-              1539
+              1636
             ],
             "loc": {
               "start": {
@@ -1300,7 +1300,7 @@
                 "column": 0
               },
               "end": {
-                "line": 42,
+                "line": 44,
                 "column": 3
               }
             }
@@ -1309,26 +1309,26 @@
         "trailingComments": []
       },
       "range": [
-        1540,
-        6044
+        1637,
+        6141
       ],
       "loc": {
         "start": {
-          "line": 43,
+          "line": 45,
           "column": 0
         },
         "end": {
-          "line": 181,
+          "line": 183,
           "column": 1
         }
       },
       "leadingComments": [
         {
           "type": "Block",
-          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+          "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @todo If any more CL arguments are required, you must abstract confirm/prompt\n * as functions\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
           "range": [
             602,
-            1539
+            1636
           ],
           "loc": {
             "start": {
@@ -1336,7 +1336,7 @@
               "column": 0
             },
             "end": {
-              "line": 42,
+              "line": 44,
               "column": 3
             }
           }
@@ -1349,16 +1349,16 @@
         "type": "Identifier",
         "name": "$$ProjectCreationError",
         "range": [
-          6052,
-          6074
+          6149,
+          6171
         ],
         "loc": {
           "start": {
-            "line": 183,
+            "line": 185,
             "column": 6
           },
           "end": {
-            "line": 183,
+            "line": 185,
             "column": 28
           }
         }
@@ -1367,16 +1367,16 @@
         "type": "Identifier",
         "name": "Error",
         "range": [
-          6083,
-          6088
+          6180,
+          6185
         ],
         "loc": {
           "start": {
-            "line": 183,
+            "line": 185,
             "column": 37
           },
           "end": {
-            "line": 183,
+            "line": 185,
             "column": 42
           }
         }
@@ -1390,16 +1390,16 @@
               "type": "Identifier",
               "name": "constructor",
               "range": [
-                6095,
-                6106
+                6192,
+                6203
               ],
               "loc": {
                 "start": {
-                  "line": 184,
+                  "line": 186,
                   "column": 4
                 },
                 "end": {
-                  "line": 184,
+                  "line": 186,
                   "column": 15
                 }
               }
@@ -1412,16 +1412,16 @@
                   "type": "Identifier",
                   "name": "e",
                   "range": [
-                    6107,
-                    6108
+                    6204,
+                    6205
                   ],
                   "loc": {
                     "start": {
-                      "line": 184,
+                      "line": 186,
                       "column": 16
                     },
                     "end": {
-                      "line": 184,
+                      "line": 186,
                       "column": 17
                     }
                   }
@@ -1441,16 +1441,16 @@
                           "type": "Identifier",
                           "name": "$LogProvider",
                           "range": [
-                            6120,
-                            6132
+                            6217,
+                            6229
                           ],
                           "loc": {
                             "start": {
-                              "line": 185,
+                              "line": 187,
                               "column": 8
                             },
                             "end": {
-                              "line": 185,
+                              "line": 187,
                               "column": 20
                             }
                           }
@@ -1459,31 +1459,31 @@
                           "type": "Identifier",
                           "name": "error",
                           "range": [
-                            6133,
-                            6138
+                            6230,
+                            6235
                           ],
                           "loc": {
                             "start": {
-                              "line": 185,
+                              "line": 187,
                               "column": 21
                             },
                             "end": {
-                              "line": 185,
+                              "line": 187,
                               "column": 26
                             }
                           }
                         },
                         "range": [
-                          6120,
-                          6138
+                          6217,
+                          6235
                         ],
                         "loc": {
                           "start": {
-                            "line": 185,
+                            "line": 187,
                             "column": 8
                           },
                           "end": {
-                            "line": 185,
+                            "line": 187,
                             "column": 26
                           }
                         }
@@ -1493,47 +1493,47 @@
                           "type": "Identifier",
                           "name": "e",
                           "range": [
-                            6139,
-                            6140
+                            6236,
+                            6237
                           ],
                           "loc": {
                             "start": {
-                              "line": 185,
+                              "line": 187,
                               "column": 27
                             },
                             "end": {
-                              "line": 185,
+                              "line": 187,
                               "column": 28
                             }
                           }
                         }
                       ],
                       "range": [
-                        6120,
-                        6141
+                        6217,
+                        6238
                       ],
                       "loc": {
                         "start": {
-                          "line": 185,
+                          "line": 187,
                           "column": 8
                         },
                         "end": {
-                          "line": 185,
+                          "line": 187,
                           "column": 29
                         }
                       }
                     },
                     "range": [
-                      6120,
-                      6142
+                      6217,
+                      6239
                     ],
                     "loc": {
                       "start": {
-                        "line": 185,
+                        "line": 187,
                         "column": 8
                       },
                       "end": {
-                        "line": 185,
+                        "line": 187,
                         "column": 30
                       }
                     }
@@ -1545,16 +1545,16 @@
                       "callee": {
                         "type": "Super",
                         "range": [
-                          6151,
-                          6156
+                          6248,
+                          6253
                         ],
                         "loc": {
                           "start": {
-                            "line": 186,
+                            "line": 188,
                             "column": 8
                           },
                           "end": {
-                            "line": 186,
+                            "line": 188,
                             "column": 13
                           }
                         }
@@ -1564,63 +1564,63 @@
                           "type": "Identifier",
                           "name": "e",
                           "range": [
-                            6157,
-                            6158
+                            6254,
+                            6255
                           ],
                           "loc": {
                             "start": {
-                              "line": 186,
+                              "line": 188,
                               "column": 14
                             },
                             "end": {
-                              "line": 186,
+                              "line": 188,
                               "column": 15
                             }
                           }
                         }
                       ],
                       "range": [
-                        6151,
-                        6159
+                        6248,
+                        6256
                       ],
                       "loc": {
                         "start": {
-                          "line": 186,
+                          "line": 188,
                           "column": 8
                         },
                         "end": {
-                          "line": 186,
+                          "line": 188,
                           "column": 16
                         }
                       }
                     },
                     "range": [
-                      6151,
-                      6160
+                      6248,
+                      6257
                     ],
                     "loc": {
                       "start": {
-                        "line": 186,
+                        "line": 188,
                         "column": 8
                       },
                       "end": {
-                        "line": 186,
+                        "line": 188,
                         "column": 17
                       }
                     }
                   }
                 ],
                 "range": [
-                  6110,
-                  6166
+                  6207,
+                  6263
                 ],
                 "loc": {
                   "start": {
-                    "line": 184,
+                    "line": 186,
                     "column": 19
                   },
                   "end": {
-                    "line": 187,
+                    "line": 189,
                     "column": 5
                   }
                 }
@@ -1628,16 +1628,16 @@
               "generator": false,
               "expression": false,
               "range": [
-                6106,
-                6166
+                6203,
+                6263
               ],
               "loc": {
                 "start": {
-                  "line": 184,
+                  "line": 186,
                   "column": 15
                 },
                 "end": {
-                  "line": 187,
+                  "line": 189,
                   "column": 5
                 }
               }
@@ -1645,16 +1645,16 @@
             "kind": "constructor",
             "computed": false,
             "range": [
-              6095,
-              6166
+              6192,
+              6263
             ],
             "loc": {
               "start": {
-                "line": 184,
+                "line": 186,
                 "column": 4
               },
               "end": {
-                "line": 187,
+                "line": 189,
                 "column": 5
               }
             },
@@ -1662,31 +1662,31 @@
           }
         ],
         "range": [
-          6089,
-          6168
+          6186,
+          6265
         ],
         "loc": {
           "start": {
-            "line": 183,
+            "line": 185,
             "column": 43
           },
           "end": {
-            "line": 188,
+            "line": 190,
             "column": 1
           }
         }
       },
       "range": [
-        6046,
-        6168
+        6143,
+        6265
       ],
       "loc": {
         "start": {
-          "line": 183,
+          "line": 185,
           "column": 0
         },
         "end": {
-          "line": 188,
+          "line": 190,
           "column": 1
         }
       }
@@ -1695,7 +1695,7 @@
   "sourceType": "module",
   "range": [
     190,
-    6168
+    6265
   ],
   "loc": {
     "start": {
@@ -1703,7 +1703,7 @@
       "column": 0
     },
     "end": {
-      "line": 188,
+      "line": 190,
       "column": 1
     }
   },
@@ -1782,10 +1782,10 @@
     },
     {
       "type": "Block",
-      "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
+      "value": "*\n * @desc $$createProject is the function called when the CLI attempts to create\n * a project from the command line. This scaffolds the main folder in the\n * specified location or no folder and then folders for commonly used providers\n * and the Angie config file (AngieFile.json).\n *\n * The CLI function to create a project will ask the user a series of questions.\n * The result of these questions will be passed to the AngieFile.json.\n *\n * This function will gracefully exit the process if successful and exit with\n * errors if unsuccessful.\n * @since 0.0.1\n * @todo If any more CL arguments are required, you must abstract confirm/prompt\n * as functions\n * @param {object} args A list of arugments passed from the CLI parser\n * @param {string} args.name The name of the project being created. This must\n * consist of letters, dashes, & underscores\n * @param {string} args.location [param=process.cwd()] The location in which the\n * inner files of the project are created. CWD if no location is specified.\n * @access private\n ",
       "range": [
         602,
-        1539
+        1636
       ],
       "loc": {
         "start": {
@@ -1793,7 +1793,7 @@
           "column": 0
         },
         "end": {
-          "line": 42,
+          "line": 44,
           "column": 3
         }
       }
@@ -1802,16 +1802,16 @@
       "type": "Line",
       "value": " Parse the passed arguments object",
       "range": [
-        1598,
-        1634
+        1695,
+        1731
       ],
       "loc": {
         "start": {
-          "line": 45,
+          "line": 47,
           "column": 4
         },
         "end": {
-          "line": 45,
+          "line": 47,
           "column": 40
         }
       }
@@ -1820,16 +1820,16 @@
       "type": "Line",
       "value": " The process must exit if there is no passed name, or the name passed is",
       "range": [
-        1796,
-        1870
+        1893,
+        1967
       ],
       "loc": {
         "start": {
-          "line": 52,
+          "line": 54,
           "column": 4
         },
         "end": {
-          "line": 52,
+          "line": 54,
           "column": 78
         }
       }
@@ -1838,16 +1838,16 @@
       "type": "Line",
       "value": " in an incorrect format",
       "range": [
-        1875,
-        1900
+        1972,
+        1997
       ],
       "loc": {
         "start": {
-          "line": 53,
+          "line": 55,
           "column": 4
         },
         "end": {
-          "line": 53,
+          "line": 55,
           "column": 29
         }
       }
@@ -1856,16 +1856,16 @@
       "type": "Line",
       "value": " Being super specific about which characters are OK and which are not",
       "range": [
-        2104,
-        2175
+        2201,
+        2272
       ],
       "loc": {
         "start": {
-          "line": 60,
+          "line": 62,
           "column": 8
         },
         "end": {
-          "line": 60,
+          "line": 62,
           "column": 79
         }
       }
@@ -1874,16 +1874,16 @@
       "type": "Line",
       "value": " Make sure that we're creating the project in the right spot",
       "range": [
-        2319,
-        2381
+        2416,
+        2478
       ],
       "loc": {
         "start": {
-          "line": 66,
+          "line": 68,
           "column": 4
         },
         "end": {
-          "line": 66,
+          "line": 68,
           "column": 66
         }
       }
@@ -1892,16 +1892,16 @@
       "type": "Line",
       "value": " We cannot create a dir if the argument is empty",
       "range": [
-        2582,
-        2632
+        2679,
+        2729
       ],
       "loc": {
         "start": {
-          "line": 73,
+          "line": 75,
           "column": 8
         },
         "end": {
-          "line": 73,
+          "line": 75,
           "column": 58
         }
       }
@@ -1910,16 +1910,16 @@
       "type": "Line",
       "value": " Create provider folders",
       "range": [
-        2735,
-        2761
+        2832,
+        2858
       ],
       "loc": {
         "start": {
-          "line": 79,
+          "line": 81,
           "column": 8
         },
         "end": {
-          "line": 79,
+          "line": 81,
           "column": 34
         }
       }
@@ -1928,16 +1928,16 @@
       "type": "Line",
       "value": " Create static folders",
       "range": [
-        2992,
-        3016
+        3089,
+        3113
       ],
       "loc": {
         "start": {
-          "line": 90,
+          "line": 92,
           "column": 8
         },
         "end": {
-          "line": 90,
+          "line": 92,
           "column": 32
         }
       }
@@ -1946,16 +1946,16 @@
       "type": "Line",
       "value": " This is where we create our AngieFile, we can pick certain values with",
       "range": [
-        3271,
-        3344
+        3368,
+        3441
       ],
       "loc": {
         "start": {
-          "line": 102,
+          "line": 104,
           "column": 8
         },
         "end": {
-          "line": 102,
+          "line": 104,
           "column": 81
         }
       }
@@ -1964,16 +1964,16 @@
       "type": "Line",
       "value": " which we can populate our config:",
       "range": [
-        3353,
-        3389
+        3450,
+        3486
       ],
       "loc": {
         "start": {
-          "line": 103,
+          "line": 105,
           "column": 8
         },
         "end": {
-          "line": 103,
+          "line": 105,
           "column": 44
         }
       }
@@ -1982,16 +1982,16 @@
       "type": "Line",
       "value": " cacheStaticAssets",
       "range": [
-        3399,
-        3419
+        3496,
+        3516
       ],
       "loc": {
         "start": {
-          "line": 105,
+          "line": 107,
           "column": 8
         },
         "end": {
-          "line": 105,
+          "line": 107,
           "column": 28
         }
       }
@@ -2000,16 +2000,16 @@
       "type": "Line",
       "value": " Default JS to be loaded with all HTML files",
       "range": [
-        3466,
-        3512
+        3563,
+        3609
       ],
       "loc": {
         "start": {
-          "line": 108,
+          "line": 110,
           "column": 12
         },
         "end": {
-          "line": 108,
+          "line": 110,
           "column": 58
         }
       }
@@ -2018,16 +2018,16 @@
       "type": "Line",
       "value": " Wrap the prompts in a Promise",
       "range": [
-        3564,
-        3596
+        3661,
+        3693
       ],
       "loc": {
         "start": {
-          "line": 111,
+          "line": 113,
           "column": 8
         },
         "end": {
-          "line": 111,
+          "line": 113,
           "column": 40
         }
       }
@@ -2036,16 +2036,16 @@
       "type": "Line",
       "value": " Ask what the default JS filename should be",
       "range": [
-        3904,
-        3949
+        4001,
+        4046
       ],
       "loc": {
         "start": {
-          "line": 122,
+          "line": 124,
           "column": 12
         },
         "end": {
-          "line": 122,
+          "line": 124,
           "column": 57
         }
       }
@@ -2054,16 +2054,16 @@
       "type": "Line",
       "value": " Read our AngieFile template and reproduce in the target directory",
       "range": [
-        5180,
-        5248
+        5277,
+        5345
       ],
       "loc": {
         "start": {
-          "line": 153,
+          "line": 155,
           "column": 12
         },
         "end": {
-          "line": 153,
+          "line": 155,
           "column": 80
         }
       }

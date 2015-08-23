@@ -9,7 +9,6 @@ register({
 
 // System Modules
 import fs from                      'fs';
-import npm from                     'npm';
 import gulp from                    'gulp';
 import {argv} from                  'yargs';
 import {exec} from                  'child_process';
@@ -47,7 +46,7 @@ gulp.task('jscs', [ 'eslint' ], function () {
 });
 gulp.task('mocha', function(cb) {
     let proc;
-    new Promise(function(resolve, reject) {
+    new Promise(function(resolve) {
         proc = gulp.src(SRC).pipe(
             istanbul({
                 instrumenter: Instrumenter,
@@ -85,12 +84,6 @@ gulp.task('babel', function() {
 gulp.task('esdoc', function(cb) {
     exec('esdoc -c esdoc.json', cb);
 });
-gulp.task('watch', [ 'jscs', 'mocha' ], function() {
-    gulp.watch([ SRC, TEST_SRC, '../gh-pages-angie/**' ], [ 'mocha' ]);
-});
-gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
-    gulp.watch([ SRC, TEST_SRC, '../gh-pages-angie/**' ], [ 'mocha' ]);
-});
 gulp.task('bump', function(cb) {
     const version = argv.version,
         bump = (f) => fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(
@@ -105,5 +98,11 @@ gulp.task('bump', function(cb) {
         throw new Error(bold(red('No version specified!!')));
     }
 });
+gulp.task('watch', [ 'jscs', 'mocha' ], function() {
+    gulp.watch([ SRC, TEST_SRC ], [ 'mocha' ]);
+});
+gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
+    gulp.watch([ SRC, TEST_SRC ], [ 'mocha' ]);
+});
 gulp.task('test', [ 'jscs', 'mocha' ]);
-gulp.task('default', [ 'jscs', 'mocha', 'babel' ]);
+gulp.task('default', [ 'jscs', 'mocha', 'babel', 'esdoc' ]);

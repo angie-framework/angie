@@ -63,11 +63,11 @@
       "expectCount": 9,
       "actualCount": 9
     },
-    "src/Server.js": {
+    "src/util/shell.js": {
       "expectCount": 1,
       "actualCount": 0
     },
-    "src/util/shell.js": {
+    "src/Server.js": {
       "expectCount": 1,
       "actualCount": 0
     }

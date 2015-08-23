@@ -63,6 +63,8 @@ var p = process,
  * This function will gracefully exit the process if successful and exit with
  * errors if unsuccessful.
  * @since 0.0.1
+ * @todo If any more CL arguments are required, you must abstract confirm/prompt
+ * as functions
  * @param {object} args A list of arugments passed from the CLI parser
  * @param {string} args.name The name of the project being created. This must
  * consist of letters, dashes, & underscores
