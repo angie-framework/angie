@@ -11,7 +11,7 @@
     "start": "node dist/index.js",
     "test": "gulp test",
     "publish": "gulp",
-    "postinstall": "gulp bower"
+    "postinstall": "gulp babel"
   },
   "engines": {
     "iojs": "*",
