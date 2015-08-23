@@ -102,7 +102,7 @@ function $$templateLoader(url, type = 'template', encoding) {
  * @since 0.3.2
  * @todo Make this work with .css, .less, .scss, .haml
  * @todo Auto load Angular, jQuery, Underscore, etc. from their names alone
- * via Bower installs
+ * via Bower installs. Must create bower.json & bump bower version.
  * @param {string|Array} [param=10] filename Valid JS filename in Angie static
  * directories
  * @param {string} [param='src'] loadStyle How is this resource attached to the
@@ -116,7 +116,7 @@ function $$templateLoader(url, type = 'template', encoding) {
  */
 function $resourceLoader(files = [], loadStyle = 'src') {
     console.log('IN RESOURCE LOADER', files);
-    let $response = $Injector.get('$response');
+    let [ $request, $response ] = $Injector.get('$request', '$response');
     console.log('RESPONSE', $response);
     if (!$response || typeof $response !== 'object') {
         return false;
@@ -139,10 +139,15 @@ function $resourceLoader(files = [], loadStyle = 'src') {
 
         console.log('IN RESOURCE LOADER', resource);
 
+
         // TODO put this into a template?
         let asset = '<script type="text/javascript"';
         if (loadStyle === 'src') {
-            asset += ` src="${resource}">`;
+            asset += ` src="${[
+                $StringUtil.removeTrailingSlashes($request.path)
+                    .replace(/([A-Za-z]+)/g, '..'),
+                resource
+            ].join('/')}">`;
         } else {
             let assetCache = new $CacheFactory('staticAssets'),
                 assetPath = resource.split('/').pop(),

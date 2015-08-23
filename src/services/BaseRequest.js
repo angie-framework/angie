@@ -49,11 +49,11 @@ app.constant('RESPONSE_HEADER_MESSAGES', {
 class BaseRequest {
     constructor(path, request, response) {
 
-        // Define URI
-        this.path = path;
-
         // Shortcut to set and receive the request object
         this.request = new $Request(request).request;
+
+        // Define URI
+        this.path = this.request.path = path;
 
         // Make the response object available to the API
         this.response = new $Response(response).response;

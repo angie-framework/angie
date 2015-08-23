@@ -5,7 +5,10 @@ register({
 });
 
 // System Modules
+import fs from                      'fs';
+import npm from                     'npm';
 import gulp from                    'gulp';
+import {argv} from                  'yargs';
 import {exec} from                  'child_process';
 import eslint from                  'gulp-eslint';
 import jscs from                    'gulp-jscs';
@@ -13,6 +16,7 @@ import istanbul from                'gulp-istanbul';
 import {Instrumenter} from          'isparta';
 import mocha from                   'gulp-mocha';
 import cobertura from               'istanbul-cobertura-badger';
+import {bold, red} from                   'chalk';
 
 const src = 'src/**/*.js',
       testSrc = 'test/**/*.spec.js',
@@ -79,5 +83,32 @@ gulp.task('watch', [ 'jscs', 'mocha' ], function() {
 gulp.task('watch:mocha', [ 'jscs', 'mocha' ], function() {
     gulp.watch([ src, testSrc, '../gh-pages-angie/**' ], [ 'mocha' ]);
 });
+gulp.task('bump', function(cb) {
+    const version = argv.version,
+        bump = (f) => fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(
+            /[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}/,
+            version
+        ));
+    if (version) {
+        bump('bin/angie');
+        bump('bin/angie-dist');
+
+        // Cannot use as a Promise because NPM passes the error first. Why!?
+        npm.load(function (e, n) {
+            if (e) {
+                throw new Error(e);
+            }
+            n.commands.version(version.split('.').join(' | '), function(e) {
+                if (e) {
+                    throw new Error(e);
+                }
+                cb();
+            });
+        });
+    } else {
+        throw new Error(bold(red('No version specified!!')));
+    }
+});
+
 gulp.task('test', [ 'jscs', 'mocha' ]);
 gulp.task('default', [ 'jscs', 'mocha' ]);

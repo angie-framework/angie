@@ -50,8 +50,9 @@
     "isparta": "3.0.3",
     "istanbul-cobertura-badger": "0.0.4",
     "mocha": "2.2.4",
+    "npm": "^2.14.0",
     "simple-mock": "0.3.0",
-    "yargs": "3.8.0"
+    "yargs": "^3.21.0"
   },
   "dependencies": {
     "angie-injector": "^0.0.1",
