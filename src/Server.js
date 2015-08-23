@@ -24,53 +24,39 @@ import {$$templateLoader} from      './factories/$TemplateCache';
 import {BaseRequest} from           './services/BaseRequest';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
-const CWD = process.cwd(),
-    CLIENT = new Client(),
-    WATCH_DIRS = [
-        CWD,
-        __dirname
-    ].concat(app._$dependencies__),
+const CLIENT = new Client(),
     SUB = {
-        expression: [ 'allof', [ 'match', '*.js' ] ],
+        expression: [ 'anyof', [ 'match', '*.js' ], [ 'match', '*.es6' ] ],
         fields: []
     };
 let webserver;
-// let firstrun = true;
 
 // TODO watchman implementation, change these names
 function watch(args) {
-    const port = $$port(args);
-    // TODO you have to do this for each of the dirs
+    const PORT = $$port(args),
+        WATCH_DIR = /--?devmode/i.test(args) ? __dirname : process.cwd();
+
     return CLIENT.capabilityCheck({}, function (e, resp) {
         if (e) {
             throw new Error(e);
         }
-        console.log('DO I GET HERE', CWD);
-        CLIENT.command([ `watch-project`, CWD ], function (e, resp) {
+        CLIENT.command([ `watch-project`, WATCH_DIR ], function (e, resp) {
             if (e) {
                 throw new Error(e);
             } else if ('warning' in resp) {
                 $LogProvider.warn(resp.warning);
             } else {
-
                 $LogProvider.info(`Watch initiated on ${cyan(resp.watch)}`);
                 CLIENT.command(
-                    ['subscribe', resp.watch, 'mysubscription', SUB],
-                    function (error, resp) {
-                        if (error) {
-                            //console.error('failed to subscribe: ', error);
+                    ['subscribe', resp.watch, `ANGIE_WATCH`, SUB],
+                    function (e, resp) {
+                        if (e) {
+                            throw new Error(e);
                         }
-                        //console.log('subscription ' + resp.subscribe + ' established');
                         CLIENT.on('subscription', function (resp) {
-                         // for (var i in resp.files) {
-                            //var f = resp.files[i];
-                            //if (resp.subscription == 'mysubscription') {
-                                //$LogProvider.warn(`Restarting ${cyan('angie')} web server`);
-                              //server([port]);
-                            //}
-                         // }
-                         server([port]);
-                         //console.log('restarting service');
+                            if (resp.subscription == `ANGIE_WATCH`) {
+                                server([ PORT ]);
+                            }
                         });
                     }
                 );
@@ -80,7 +66,7 @@ function watch(args) {
 }
 
 function server(args) {
-    const port = $$port(args);
+    const PORT = $$port(args);
 
     console.log('CALLING SERVER');
 
@@ -92,7 +78,7 @@ function server(args) {
     app.$$load().then(function() {
 
         // Start a webserver
-        webserver = (port === 443 ? https : http).createServer(function(request, response) {
+        webserver = (PORT === 443 ? https : http).createServer(function(request, response) {
             const path = url.parse(request.url).pathname;
             let angieResponse = new BaseRequest(path, request, response),
                 asset;
@@ -178,10 +164,10 @@ function server(args) {
                 // request.connection.end();
                 // request.connection.destroy();
             });
-        }).listen(port);
+        }).listen(PORT);
 
         // Info
-        $LogProvider.info(`Serving on port ${port}`);
+        $LogProvider.info(`Serving on port ${PORT}`);
     });
 }
 

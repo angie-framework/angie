@@ -101,6 +101,7 @@ function runTests() {
 }
 
 function help() {
+    const $gray = (...args) => console.log(gray.apply(null, args));
     $LogProvider.bold('Angie');
     console.log('A Component-based NodeJS MVC');
     console.log('\r');
@@ -108,29 +109,30 @@ function help() {
     console.log(global.ANGIE_VERSION);
     console.log('\r');
     $LogProvider.bold('Commands:');
-    console.log(
-        'server [ port -- optional ]                        ' +
-        gray(
-            'Start the Angie Webserver (shortcut with s). Default port ' +
-            'is 3000.'
-        )
+    console.log('server [ port -- optional ] [ --usessl -- optional ]');
+    $gray(
+        'Start the Angie Webserver (shortcut with s). Default port ' +
+        'is 3000. "usessl" forces the port to 443.'
     );
     console.log(
-        'cluster [ port -- optional ]                       ' +
-        gray('Start the Angie Webserver as a Cluster.')
+        'watch [ port -- optional ] [ --devmode -- optional ] [ --usessl -- ' +
+        'optional ] '
     );
-    console.log(
-        'createProject [ name ] [ location -- optional ]    ' +
-        gray(
-            'Create a new Angie project with the specified name in the ' +
-            'current directory.'
-        )
+    $gray(
+        'Starts the Angie Webserver as a watched process and watches the ' +
+        'project directory. If started in "devmode," watch will target ' +
+        'the Angie module "src" directory'
     );
-    console.log(
-        'test                                               ' +
-        gray(
-            'Runs the Angie test suite and prints the results in the ' +
-            'console'
-        )
+    console.log('cluster [ port -- optional ]');
+    $gray('Start the Angie Webserver as a Cluster.')
+    console.log('createProject [ name ] [ location -- optional ]');
+    $gray(
+        'Create a new Angie project with the specified name in the ' +
+        'current directory.'
+    )
+    console.log('test');
+    $gray(
+        'Runs the Angie test suite and prints the results in the ' +
+        'console'
     );
 }
