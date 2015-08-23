@@ -45,7 +45,7 @@ function watch(args) {
         if (e) {
             throw new Error(e);
         }
-        console.log('DO I GET HERE', resp);
+        console.log('DO I GET HERE', CWD);
         CLIENT.command([ `watch-project`, CWD ], function (e, resp) {
             if (e) {
                 throw new Error(e);
@@ -81,6 +81,8 @@ function watch(args) {
 
 function server(args) {
     const port = $$port(args);
+
+    console.log('CALLING SERVER');
 
     // Stop any existing webserver
     if (webserver) {

@@ -157,11 +157,14 @@ function $resourceLoader(files = [], loadStyle = 'src') {
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
-                staticAsset = $$templateLoader(assetPath, 'static', 'utf8');
+                assetCache.put(
+                    assetPath,
+                    staticAsset = $$templateLoader(assetPath, 'static', 'utf8')
+                );
             }
 
             if (staticAsset.length) {
-                asset += `${staticAsset}`;
+                asset += staticAsset;
             }
         }
 

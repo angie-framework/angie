@@ -375,9 +375,10 @@ class Angie {
         let me = this;
 
         // Do not call load twice
-        if (this.$$loaded === true) {
-            return new Promise((r) => { r(); });
-        }
+        // TODO what is the reasoning behind this?
+        // if (this.$$loaded === true) {
+        //     return new Promise((r) => { r(); });
+        // }
 
         // Load any app dependencies
         return this.$$loadDependencies(config.dependencies).then(function() {
