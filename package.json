@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "test": "gulp test",
-    "publish": "gulp"
+    "publish": "gulp",
+    "postinstall": "gulp bower"
   },
   "engines": {
     "iojs": "*",
