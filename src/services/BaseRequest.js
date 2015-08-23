@@ -272,8 +272,6 @@ class BaseRequest {
                     )
                 ) {
 
-                    console.log('IM IN!!!');
-
                     // Check that option is not true
                     let scriptFile = config.loadDefaultScriptFile === true ?
                         'application.js' : config.loadDefaultScriptFile;

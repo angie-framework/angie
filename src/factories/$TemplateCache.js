@@ -115,9 +115,7 @@ function $$templateLoader(url, type = 'template', encoding) {
  * @example $resourceLoader('test.js');
  */
 function $resourceLoader(files = [], loadStyle = 'src') {
-    console.log('IN RESOURCE LOADER', files);
     let [ $request, $response ] = $Injector.get('$request', '$response');
-    console.log('RESPONSE', $response);
     if (!$response || typeof $response !== 'object') {
         return false;
     } else if (!$response.$responseContent) {
@@ -137,9 +135,6 @@ function $resourceLoader(files = [], loadStyle = 'src') {
             return;
         }
 
-        console.log('IN RESOURCE LOADER', resource);
-
-
         // TODO put this into a template?
         let asset = '<script type="text/javascript"';
         if (loadStyle === 'src') {
@@ -152,7 +147,6 @@ function $resourceLoader(files = [], loadStyle = 'src') {
             let assetCache = new $CacheFactory('staticAssets'),
                 assetPath = resource.split('/').pop(),
                 staticAsset;
-
             asset += '>';
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
@@ -170,21 +164,15 @@ function $resourceLoader(files = [], loadStyle = 'src') {
 
         asset += '</script>';
 
-        console.log('ASSET', asset);
-
         const BODY = '</body>',
             STR = $response.$responseContent;
         if (STR.indexOf(BODY) > -1) {
             let body = STR.lastIndexOf(BODY);
-
-            console.log('IN BODY');
-
             $response.$responseContent =
                 `${STR.substr(0, body)}${asset}${STR.substr(body)}`;
         } else {
             $response.$responseContent = $response.$responseContent + asset;
         }
-        console.log('content', $response.$responseContent);
     });
     return true;
 }
