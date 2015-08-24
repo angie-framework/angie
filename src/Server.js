@@ -5,6 +5,7 @@
  */
 
 // System Modules
+import repl from                    'repl';
 import http from                    'http';
 import https from                   'https';
 import url from                     'url';
@@ -29,46 +30,89 @@ const CLIENT = new Client(),
         expression: [ 'anyof', [ 'match', '*.js' ], [ 'match', '*.es6' ] ],
         fields: []
     };
-let webserver;
+let webserver,
+    shell;
 
-// TODO watchman implementation, change these names
-function watch(args) {
+function $$watch(args = []) {
     const PORT = $$port(args),
         WATCH_DIR = /--?devmode/i.test(args) ? __dirname : process.cwd();
 
-    return CLIENT.capabilityCheck({}, function (e, resp) {
-        if (e) {
-            throw new Error(e);
-        }
-        CLIENT.command([ `watch-project`, WATCH_DIR ], function (e, resp) {
+    return new Promise(function(resolve) {
+
+        // Verify that the user actually has Facebook Watchman installed
+        CLIENT.capabilityCheck({}, function (e, r) {
             if (e) {
                 throw new Error(e);
-            } else if ('warning' in resp) {
-                $LogProvider.warn(resp.warning);
-            } else {
-                $LogProvider.info(`Watch initiated on ${cyan(resp.watch)}`);
-                CLIENT.command(
-                    ['subscribe', resp.watch, `ANGIE_WATCH`, SUB],
-                    function (e, resp) {
-                        if (e) {
-                            throw new Error(e);
-                        }
-                        CLIENT.on('subscription', function (resp) {
-                            if (resp.subscription == `ANGIE_WATCH`) {
-                                server([ PORT ]);
-                            }
-                        });
-                    }
-                );
             }
+            resolve(r);
         });
+    }).then(function(r) {
+        return new Promise(function(resolve) {
+            CLIENT.command([ `watch-project`, WATCH_DIR ], function (e, r) {
+                if (e) {
+                    throw new Error(e);
+                }
+                if ('warning' in r) {
+                    $LogProvider.warn(r.warning);
+                }
+                resolve(r);
+            });
+        }).then(function(r) {
+            $LogProvider.info(`Watch initiated on ${cyan(r.watch)}`);
+
+            return new Promise(function(resolve) {
+                CLIENT.command([
+                    'subscribe',
+                    r.watch,
+                    `ANGIE_WATCH`,
+                    SUB
+                ], function (e, r) {
+                    if (e) {
+                        throw new Error(e);
+                    }
+                    resolve(r);
+                });
+            }).then(function(r) {
+                CLIENT.on('subscription', function (r) {
+                    if (r.subscription == `ANGIE_WATCH`) {
+                        (args[0] && args[0] === 'server' ? $$server : $$shell)(
+                            [ PORT ]
+                        );
+                    }
+                });
+            });
+        });
+    }).catch(function(e) {
+        throw new Error(e)
     });
 }
 
-function server(args) {
-    const PORT = $$port(args);
+function $$shell() {
+    const P = process,
+        SHELL_PROMPT = 'angie > ';
 
-    console.log('CALLING SERVER');
+    if (shell) {
+        P.stdout.write('\n');
+    }
+
+    app.$$load().then(function() {
+        P.stdin.setEncoding('utf8');
+
+        // Start a REPL after loading project files
+        if (!shell) {
+            shell = repl.start({
+                prompt: SHELL_PROMPT,
+                input: P.stdin,
+                output: P.stdout
+            });
+        } else {
+            P.stdout.write(SHELL_PROMPT);
+        }
+    });
+}
+
+function $$server(args = []) {
+    const PORT = $$port(args);
 
     // Stop any existing webserver
     if (webserver) {
@@ -85,6 +129,7 @@ function server(args) {
 
             // A file cannot be in the static path if it doesn't have an extension, shortcut
             // TODO you may want to move the asset loading block out of here
+            // TODO Move to "Asset Path" in BaseRequest
             if (path.indexOf('.') > -1) {
                 let assetCache = new $CacheFactory('staticAssets');
 
@@ -175,4 +220,8 @@ function $$port(args) {
     return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
 }
 
-export {watch, server};
+export {
+    $$watch,
+    $$shell,
+    $$server
+};

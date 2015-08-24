@@ -1,4 +1,5 @@
 ## Angie
+A Component-Based NodeJS MVC in ES6
 
 ![build status](https://travis-ci.org/benderTheCrime/angie.svg?branch=master "build status")
 ![iojs support](https://img.shields.io/badge/iojs-1.7.1+-brightgreen.svg "iojs support")

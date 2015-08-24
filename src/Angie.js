@@ -21,7 +21,13 @@ import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 const $$require = (v) => {
+
+    // If we dont first clear this out of the module cache, then we don't
+    // actually do anything with the require call that isn't assigned
     delete require.cache[ v ];
+
+    // Furthermore because it is unassigned, we do not have to force anything
+    // to return from this arrow function
     require(v);
 };
 

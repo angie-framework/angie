@@ -2,7 +2,7 @@
   "name": "angie",
   "version": "0.3.2",
   "authors": "Joe Groseclose <@benderTheCrime>",
-  "description": "Angie: A Component-based NodeJS MVC",
+  "description": "Angie: A Component-Based NodeJS MVC in ES6",
   "license": "MIT",
   "main": "dist/index.js",
   "private": false,
