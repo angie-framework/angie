@@ -10,9 +10,6 @@ import http from                    'http';
 import https from                   'https';
 import url from                     'url';
 import util from                    'util';
-
-// TODO you can remove this from package if it doesn't work
-//import watch from                   'node-watch';
 import {Client} from                'fb-watchman';
 import {cyan} from                  'chalk';
 import $LogProvider from            'angie-log';
@@ -53,7 +50,17 @@ let webserver,
  */
 function $$watch(args = []) {
     const PORT = $$port(args),
+        ACTION = args[0] || 'watch',
         WATCH_DIR = /--?devmode/i.test(args) ? __dirname : process.cwd();
+
+    // Check to see whether or not the config specifies the app as `development`
+    // and we are creating a web server. If so, pose the user with a warning:
+    if (config.development !== true && ACTION === 'watch') {
+        $LogProvider.warn(
+            `It is not necessary or wise to issue the ${cyan('watch')} ` +
+            'command in production'
+        );
+    }
 
     return new Promise(function(resolve) {
 
@@ -64,7 +71,7 @@ function $$watch(args = []) {
             }
             resolve(r);
         });
-    }).then(function(r) {
+    }).then(function() {
         return new Promise(function(resolve) {
             CLIENT.command([ `watch-project`, WATCH_DIR ], function (e, r) {
                 if (e) {
@@ -90,10 +97,10 @@ function $$watch(args = []) {
                     }
                     resolve(r);
                 });
-            }).then(function(r) {
+            }).then(function() {
                 CLIENT.on('subscription', function (r) {
-                    if (r.subscription == `ANGIE_WATCH`) {
-                        (args[0] && args[0] === 'server' ? $$server : $$shell)(
+                    if (r.subscription === 'ANGIE_WATCH') {
+                        (args[0] && args[0] === 'watch' ? $$server : $$shell)(
                             [ PORT ]
                         );
                     }
@@ -101,7 +108,7 @@ function $$watch(args = []) {
             });
         });
     }).catch(function(e) {
-        throw new Error(e)
+        throw new Error(e);
     });
 }
 
@@ -116,8 +123,6 @@ function $$watch(args = []) {
  * command and will reload all application files on save, on creation, or on
  * removal in the directory specified to the $$watch function.
  * @since 0.3.2
- * @param {Array} [param=[]] args An array of CLI arguments piped into the
- * function
  * @access private
  */
 function $$shell() {
@@ -128,7 +133,7 @@ function $$shell() {
         P.stdout.write('\n');
     }
 
-    app.$$load().then(function() {
+    return app.$$load().then(function() {
         P.stdin.setEncoding('utf8');
 
         // Start a REPL after loading project files
@@ -272,6 +277,8 @@ function $$port(args) {
 
 export {
     $$watch,
-    $$shell,
-    $$server
+    $$server,
+
+    // Exposed for testing purposes
+    $$shell
 };

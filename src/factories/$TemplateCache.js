@@ -116,7 +116,10 @@ function $$templateLoader(url, type = 'template', encoding) {
  */
 function $resourceLoader(files = [], loadStyle = 'src') {
     let [ $request, $response ] = $Injector.get('$request', '$response');
-    if (!$response || typeof $response !== 'object') {
+    if (
+        !$request || typeof $request !== 'object' ||
+        !$response || typeof $response !== 'object'
+    ) {
         return false;
     } else if (!$response.$responseContent) {
 
@@ -174,6 +177,8 @@ function $resourceLoader(files = [], loadStyle = 'src') {
             $response.$responseContent = $response.$responseContent + asset;
         }
     });
+
+    // For testing purposes
     return true;
 }
 

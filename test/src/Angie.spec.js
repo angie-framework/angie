@@ -1,5 +1,4 @@
 // Global Modules
-// TODO if this is used in other places, we do not need to redefine it
 import 'es6-module-loader';
 
 // Test Modules
@@ -19,19 +18,11 @@ import {
 } from                              '../../src/util/$ExceptionsProvider';
 
 describe('Angie', function() {
-    let app,
-        noop;
+    let noop = () => undefined,
+        app;
 
     beforeEach(function() {
-
-        // jscs:disable
         app = new Angie();
-        // jscs:enable
-
-        noop = () => undefined;
-    });
-    xit('test extension of static Angie methods from util', function() {
-        expect(Angie.noop).to.be.a('function');
     });
     describe('constructor', function() {
         it('test constructor properly instantiates app properties', function() {
@@ -185,8 +176,7 @@ describe('Angie', function() {
         it('test config added when called with function', function() {
             app.config(noop);
             expect(app.configs[0]).to.deep.eq({
-                fn: noop,
-                fired: false
+                fn: noop
             });
             expect($LogProvider.warn).to.not.have.been.called;
         });
@@ -257,30 +247,20 @@ describe('Angie', function() {
             expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
-            expect(app.configs[0].fired).to.be.true;
+            expect(app.configs).to.deep.eq([]);
         });
-        xit('test $$bootstrap with non-js files', function() {
+        it('test $$bootstrap with non-js files', function() {
             app.$$bootstrap();
             expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
-            expect(app.configs[0].fired).to.be.true;
         });
-        xit('test $$bootstrap', function() {
+        it('test $$bootstrap', function() {
             fs.readdirSync.returnWith([ 'test.js' ]);
-            expect(app.$$bootstrap()).to.deep.eq(
-                [ 'test.js', 'test.js' ]
-            );
+            expect(app.$$bootstrap().val).to.be.true;
             expect(System.import).to.have.been.called;
             expect(spy).to.have.been.called;
-            expect(app.configs[0].fired).to.be.true;
-        });
-        xit('test configs not called more than once', function() {
-            app.configs[0].fired = true;
-            app.$$bootstrap();
-            expect(spy).to.not.have.been.called;
+            expect(app.configs).to.deep.eq([]);
         });
     });
 });
-
-

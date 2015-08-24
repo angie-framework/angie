@@ -1,6 +1,7 @@
 {
     "projectName": "%s",
     "projectRoot": "./src",
+    "development": true,
     "databases": {
         "default": {
             "type": "sqlite3",

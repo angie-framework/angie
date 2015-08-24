@@ -56,7 +56,6 @@ class Angie {
         this.directives = {};
         this.$dependencies = [];
         this.$$registry = {};
-        this.$$loaded = false;
     }
 
     /**
@@ -287,7 +286,7 @@ class Angie {
                         if (service) {
 
                             // Instantiate the dependency as a provider
-                            //determined by its type
+                            // determined by its type
                             me[
                                 typeof service === 'function' ? 'factory' :
                                     typeof service === 'object' ? 'service' :
@@ -385,17 +384,8 @@ class Angie {
     $$load() {
         let me = this;
 
-        // Do not call load twice
-        // TODO what is the reasoning behind this?
-        // if (this.$$loaded === true) {
-        //     return new Promise((r) => { r(); });
-        // }
-
         // Load any app dependencies
         return this.$$loadDependencies(config.dependencies).then(function() {
-
-            // Set the app in a loaded state
-            //me.$$loaded = true;
 
             // Bootstrap the application
             me.$$bootstrap();

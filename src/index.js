@@ -17,7 +17,6 @@ import Config from                  './Config';
 import $$createProject from         './util/scaffold/project';
 import {
     $$watch,
-    $$shell,
     $$server
 } from                              './Server';
 
@@ -27,7 +26,6 @@ System.transpiler = 'babel';
 const p = process,
     server = requiresConfig.bind(null, $$server),
     watch = requiresConfig.bind(null, $$watch),
-    shell = requiresConfig.bind(null, $$shell),
     database = requiresConfig.bind(null, require.bind(null, 'angie-orm'));
 let args = [];
 
@@ -126,12 +124,12 @@ function help() {
         'the Angie module "src" directory'
     );
     console.log('cluster [ port -- optional ]');
-    gray('Start the Angie Webserver as a Cluster.')
+    gray('Start the Angie Webserver as a Cluster.');
     console.log('createProject [ name ] [ location -- optional ]');
     gray(
         'Create a new Angie project with the specified name in the ' +
         'current directory.'
-    )
+    );
     console.log('test');
     gray(
         'Runs the Angie test suite and prints the results in the ' +

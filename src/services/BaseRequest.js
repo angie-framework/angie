@@ -248,13 +248,13 @@ class BaseRequest {
             } else {
 
                 // If we have any sort of template
-                let match;
+                let match = me.template.toString().match(/!doctype ([a-z]+)/i);
 
                 // In the context where MIME type is not set, but we have a
                 // DOCTYPE tag, we can force set the MIME
                 // We want this here instead of the explicit template definition
                 // in case the MIME failed earlier
-                if (match = me.template.toString().match(/!doctype ([a-z]+)/i)) {
+                if (match) {
                     mime = me.responseHeaders[ 'Content-Type' ] =
                         $MimeType.$$(match[1].toLowerCase());
                 }

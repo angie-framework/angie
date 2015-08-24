@@ -28,7 +28,12 @@ const p = process,
  * and the Angie config file (AngieFile.json).
  *
  * The CLI function to create a project will ask the user a series of questions.
- * The result of these questions will be passed to the AngieFile.json.
+ * The result of these questions will be passed to the AngieFile.json:
+ *     - By default the `development` option is set to true
+ *     - By default, the `databases` object has one sqlite3 database, but this
+ * database is not instantiated
+ *     - User will be prompted for caching of static assets
+ *     - User will be prompted for default script file attachment
  *
  * This function will gracefully exit the process if successful and exit with
  * errors if unsuccessful.
@@ -176,8 +181,6 @@ export default function $$createProject(args = {}) {
 
             $LogProvider.info('Project successfully created');
             p.exit(0);
-        }).catch(function(e) {
-            console.log(e);
         });
     }
 }
