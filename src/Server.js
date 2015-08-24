@@ -33,6 +33,24 @@ const CLIENT = new Client(),
 let webserver,
     shell;
 
+/**
+ * @desc $$watch is an Angie implementation of Facebook Watchman for NodeJS.
+ *
+ * It is mentioned in the README that to use the `watch` command, it is
+ * necessary to install the Watchman binaries.
+ *
+ * This is the function that fires when the `angie watch` command is issued. It
+ * will subscribe to the target project folder by default. If passed the "devmode"
+ * argument, the script will subscribe to the Angie source files.
+ *
+ * On change to, addition of, or removal of files from the subscribed to
+ * directory, the $$watch function will restart the $$server/$$shell depending
+ * on the issued action.
+ * @since 0.3.2
+ * @param {Array} [param=[]] args An array of CLI arguments piped into the
+ * function
+ * @access private
+ */
 function $$watch(args = []) {
     const PORT = $$port(args),
         WATCH_DIR = /--?devmode/i.test(args) ? __dirname : process.cwd();
@@ -87,6 +105,21 @@ function $$watch(args = []) {
     });
 }
 
+/**
+ * @desc $$shell uses the NodeJS REPL to open an Angie-based shell
+ *
+ * Before load, the $$shell command will load all file dependencies of the
+ * target application. All application components will be available in the
+ * shell.
+ *
+ * The $$shell function is only called as a byproduct of the `angie watch`
+ * command and will reload all application files on save, on creation, or on
+ * removal in the directory specified to the $$watch function.
+ * @since 0.3.2
+ * @param {Array} [param=[]] args An array of CLI arguments piped into the
+ * function
+ * @access private
+ */
 function $$shell() {
     const P = process,
         SHELL_PROMPT = 'angie > ';
@@ -111,6 +144,23 @@ function $$shell() {
     });
 }
 
+/**
+ * @desc $$server uses the NodeJS http/https to open an Angie-based web server
+ *
+ * Before load, the $$server command will load all file dependencies of the
+ * target application. All application components will be available to the
+ * application running behind the server.
+ *
+ * The $$server function can be called as a byproduct of the `angie watch`
+ * command in which case it will reload all application files on save,
+ * on creation, or on removal in the directory specified to the $$watch function.
+ * It can also be called independently of the Facebook Watchman application by
+ * issuing the `angie server` or `angie s` commands from the CLI.
+ * @since 0.3.2
+ * @param {Array} [param=[]] args An array of CLI arguments piped into the
+ * function
+ * @access private
+ */
 function $$server(args = []) {
     const PORT = $$port(args);
 
