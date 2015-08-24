@@ -55,8 +55,8 @@
     "yargs": "^3.21.0"
   },
   "dependencies": {
-    "angie-injector": "^0.0.1",
     "angie-log": "^0.9.1",
+    "angie-injector": "^0.9.6",
     "angie-orm": "^0.0.1",
     "babel": "^5.6.23",
     "babel-core": "5.6.15",
