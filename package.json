@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "test": "gulp test",
-    "publish": "gulp",
+    "prepublish": "gulp test",
     "postinstall": "gulp babel"
   },
   "engines": {

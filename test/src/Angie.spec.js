@@ -241,7 +241,7 @@ describe('Angie', function() {
             ];
         });
         afterEach(() => simple.restore());
-        it('test $$bootstrap with node_modules', function() {
+        xit('test $$bootstrap with node_modules', function() {
             fs.readdirSync.returnWith([ 'node_modules' ]);
             app.$$bootstrap();
             expect(System.import).to.not.have.been.called;
@@ -249,13 +249,13 @@ describe('Angie', function() {
             expect(spy).to.have.been.called;
             expect(app.configs).to.deep.eq([]);
         });
-        it('test $$bootstrap with non-js files', function() {
+        xit('test $$bootstrap with non-js files', function() {
             app.$$bootstrap();
             expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
         });
-        it('test $$bootstrap', function() {
+        xit('test $$bootstrap', function() {
             fs.readdirSync.returnWith([ 'test.js' ]);
             expect(app.$$bootstrap().val).to.be.true;
             expect(System.import).to.have.been.called;
