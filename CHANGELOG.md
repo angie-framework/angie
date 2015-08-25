@@ -2,8 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-#### [0.3.1] - 2015-07-15
-##### Added/Changed/Fixed
+#### [0.3.2] - 2015-08-10
+##### Added/Removed/Fixed/Changed
+- Added default loaded JavaScript file (application.js)
+- Added CLI option parser with two options
+    - Should Angie cache static assets?
+    - What should the name be for the default script file loaded by the Angie app?
+- Removed extraneous `"use strict"` commands in modules.
+- Removed warning for server stability.
+- Added the ability to load a default script file on routes
+- Added tests for `$resourceLoader`
+- Moved the entirety of the site from the `gh-pages` branch to the README.
+- Created a `dist` folder/runtime with an equivalent pre-compiled Angie framework.
+- Changed the `watch` command to use Facebook Watchman. Added associated documentation.
+
+### [0.3.1] - 2015-08-08
+#### Added/Changed/Fixed
 - Changed the naming conventions around many providers
 - Added support for declaring Angular providers via decorators
 - Added $on/$broadcast/$watch methods to $scope

@@ -1,0 +1,7 @@
+{
+    "ignore_dirs": [
+        "test",
+        "node_modules",
+        "bower_components"
+    ]
+}

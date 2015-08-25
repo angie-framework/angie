@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 // System Modules
 import {expect} from        'chai';
 import simple, {mock} from          'simple-mock';
@@ -16,7 +14,6 @@ describe('$ScopeProvider', function() {
         $$scope = new $ScopeProvider();
     });
     it('constructor', function() {
-        console.log($$scope);
         expect($$scope.$$id).to.eq(1);
     });
     describe('$on', function() {
@@ -24,14 +21,12 @@ describe('$ScopeProvider', function() {
             $scope.$$handlers([]);
         });
         it('test called with function', function() {
-            console.log($scope);
             expect($scope.$on('test', () => undefined)).to.be.true;
             let handlers = $scope.$$handlers();
             expect(handlers.length).to.eq(1);
             expect(handlers[0]).to.be.a.function;
         });
         it('test called with an object', function() {
-            console.log($scope);
             expect($scope.$on('test', {})).to.be.false;
             expect($scope.$$handlers().length).to.eq(0);
         });

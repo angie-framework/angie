@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module Angie.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // System Modules
 import fs from                                          'fs';
@@ -15,6 +19,17 @@ import $compile from                                    './factories/$Compile';
 import {$templateCache, $resourceLoader} from           './factories/$TemplateCache';
 import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
+
+const $$require = (v) => {
+
+    // If we dont first clear this out of the module cache, then we don't
+    // actually do anything with the require call that isn't assigned
+    delete require.cache[ v ];
+
+    // Furthermore because it is unassigned, we do not have to force anything
+    // to return from this arrow function
+    require(v);
+};
 
 /**
  * @desc This is the default Angie class. It is instantiated and given
@@ -41,7 +56,6 @@ class Angie {
         this.directives = {};
         this.$dependencies = [];
         this.$$registry = {};
-        this.$$loaded = false;
     }
 
     /**
@@ -173,8 +187,7 @@ class Angie {
     config(fn) {
         if (typeof fn === 'function') {
             this.configs.push({
-                fn: fn,
-                fired: false
+                fn: fn
             });
         } else {
             $LogProvider.warn('Invalid config type specified');
@@ -271,13 +284,16 @@ class Angie {
 
                         // TODO make this try to load not an npm project config
                         if (service) {
+
+                            // Instantiate the dependency as a provider
+                            // determined by its type
                             me[
                                 typeof service === 'function' ? 'factory' :
                                     typeof service === 'object' ? 'service' :
                                         'constant'
                             ](
                                 name || $StringUtil.toCamel(dependency),
-                                require(dependency)
+                                service
                             );
                             $LogProvider.info(
                                 `Successfully loaded dependency ${magenta(v)}`
@@ -331,7 +347,7 @@ class Angie {
                             [ 'js', 'es6' ].indexOf(v.split('.').pop() || '') > -1
                         ) {
                             try {
-                                require(v);
+                                $$require(v);
                                 $LogProvider.info(
                                     `Successfully loaded file ${blue(v)}`
                                 );
@@ -354,32 +370,22 @@ class Angie {
         }).then(function() {
 
             // Once all of the modules are loaded, run the configs
-            me.configs.forEach(function(v) {
-
-                // Check to see if the config has already fired, if it has, we
-                // do not want to fire it again
-                if (!v.fired) {
-                    new $injectionBinder(v.fn, 'config')();
-
-                    // Mark as fired
-                    v.fired = true;
-                }
+            me.configs.map((v) => v.fn).forEach(function(v) {
+                new $injectionBinder(v, 'config')();
             });
+
+            // Once the configs object has been copied destroy it to prevent
+            // those functions from ever being fired again in this or future
+            // reloads within the same application context
+            me.configs.length = 0;
+            return true;
         });
     }
     $$load() {
         let me = this;
 
-        // Do not call load twice
-        if (this.$$loaded === true) {
-            return new Promise((r) => { r(); });
-        }
-
         // Load any app dependencies
         return this.$$loadDependencies(config.dependencies).then(function() {
-
-            // Set the app in a loaded state
-            me.$$loaded = true;
 
             // Bootstrap the application
             me.$$bootstrap();

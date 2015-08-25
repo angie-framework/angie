@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module $RouteProvider.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // System Modules
 import $LogProvider from    'angie-log';
