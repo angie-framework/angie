@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### [0.3.2] - 2015-08-10
-##### Added/Removed/Fixed
+##### Added/Removed/Fixed/Changed
 - Added default loaded JavaScript file (application.js)
 - Added CLI option parser with two options
     - Should Angie cache static assets?
@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added tests for `$resourceLoader`
 - Moved the entirety of the site from the `gh-pages` branch to the README.
 - Created a `dist` folder/runtime with an equivalent pre-compiled Angie framework.
+- Changed the `watch` command to use Facebook Watchman. Added associated documentation.
 
 ### [0.3.1] - 2015-08-08
 #### Added/Changed/Fixed
