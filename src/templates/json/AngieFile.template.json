@@ -1,6 +1,7 @@
 {
     "projectName": "%s",
     "projectRoot": "./src",
+    "development": true,
     "databases": {
         "default": {
             "type": "sqlite3",
@@ -18,5 +19,6 @@
         "angie-injector",
         "angie-orm"
     ],
-    "cacheStaticAssets": false
+    "cacheStaticAssets": %s,
+    "loadDefaultScriptFile": "%s"
 }

@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module $TemplateCache.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // System Modules
 import fs from                      'fs';
@@ -91,24 +95,37 @@ function $$templateLoader(url, type = 'template', encoding) {
     return template;
 }
 
-// TODO this is really more of a directive functionality
-// TODO make this work with .css, .less, .scss, .haml
-// TODO move this to $resource
-// TODO auto load angular, jquery, underscore, etc.
-function $resourceLoader() {
-    const $response = $Injector.get('$response');
-
-    if (!$response) {
+/**
+ * @desc $resourceLoader is a factory that will attach a JavaScript resource
+ * to any respose. It will attach it inside of the body if the file is requested
+ * to be attached on an HTML response.
+ * @since 0.3.2
+ * @todo Make this work with .css, .less, .scss, .haml
+ * @todo Auto load Angular, jQuery, Underscore, etc. from their names alone
+ * via Bower installs. Must create bower.json & bump bower version.
+ * @param {string|Array} [param=10] filename Valid JS filename in Angie static
+ * directories
+ * @param {string} [param='src'] loadStyle How is this resource attached to the
+ * document. Options:
+ *     'src':       Include a script tag with the name of the resource
+ *     'inline':    Include the resource content inline
+ * @returns {boolean} Whether this function successfully finished (not an
+ * indication that the resource was actually attached)
+ * @access public
+ * @example $resourceLoader('test.js');
+ */
+function $resourceLoader(files = [], loadStyle = 'src') {
+    let [ $request, $response ] = $Injector.get('$request', '$response');
+    if (
+        !$request || typeof $request !== 'object' ||
+        !$response || typeof $response !== 'object'
+    ) {
         return false;
+    } else if (!$response.$responseContent) {
+
+        // Just in case the response property was not already defined
+        $response.$responseContent = '';
     }
-
-    // TODO accepts a string or an array
-    // Options for loading files are:
-    // Inline: loads the script into script tags
-    // Script: attaches the url to the response resource
-    let files = arguments[0];
-
-    const loadStyle = arguments[1] || 'src';
 
     if (typeof files === 'string') {
         files = [ files ];
@@ -122,36 +139,52 @@ function $resourceLoader() {
         }
 
         // TODO put this into a template?
-        let asset = '<script type=\'text/javascript\'';
+        let asset = '<script type="text/javascript"';
         if (loadStyle === 'src') {
-            asset += ` src='${resource}'>`;
+            asset += ` src="${[
+                $StringUtil.removeTrailingSlashes($request.path)
+                    .replace(/([A-Za-z]+)/g, '..'),
+                resource
+            ].join('/')}">`;
         } else {
             let assetCache = new $CacheFactory('staticAssets'),
                 assetPath = resource.split('/').pop(),
                 staticAsset;
-
             asset += '>';
             if (assetCache.get(assetPath)) {
                 staticAsset = assetCache.get(assetPath);
             } else {
-                staticAsset = $$templateLoader(assetPath, 'static');
+                assetCache.put(
+                    assetPath,
+                    staticAsset = $$templateLoader(assetPath, 'static', 'utf8')
+                );
             }
 
             if (staticAsset.length) {
-                asset += `\n${staticAsset}`;
+                asset += staticAsset;
             }
         }
 
         asset += '</script>';
 
-        let index = $response.$responseContent.indexOf('</body>');
-        if (index > -1) {
-            $response.$responseContent.splice(index, 0, asset);
+        const BODY = '</body>',
+            STR = $response.$responseContent;
+        if (STR.indexOf(BODY) > -1) {
+            let body = STR.lastIndexOf(BODY);
+            $response.$responseContent =
+                `${STR.substr(0, body)}${asset}${STR.substr(body)}`;
         } else {
             $response.$responseContent = $response.$responseContent + asset;
         }
     });
+
+    // For testing purposes
+    return true;
 }
 
 const $templateCache = new $TemplateCache();
-export {$templateCache, $$templateLoader, $resourceLoader};
+export {
+    $templateCache,
+    $$templateLoader,
+    $resourceLoader
+};

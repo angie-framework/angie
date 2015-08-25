@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module BaseRequest.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // System Modules
 import $LogProvider from                        'angie-log';
@@ -10,7 +14,11 @@ import {config} from                            '../Config';
 import $Request from                            './$Request';
 import {$Response} from                         './$Responses';
 import {default as $Routes} from                '../factories/$RouteProvider';
-import {$templateCache, $$templateLoader} from  '../factories/$TemplateCache';
+import {
+    $templateCache,
+    $$templateLoader,
+    $resourceLoader
+} from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
 import {default as $MimeType} from              '../util/$MimeTypeProvider';
 
@@ -18,14 +26,17 @@ import $Util, {
     $StringUtil
 } from                                          '../util/Util';
 
-// TODO move these out to an app constant
-const RESPONSE_HEADER_MESSAGES = {
-          200: 'OK',
-          404: 'File Not Found',
-          500: 'Invalid Request'
-      },
-      PRAGMA_HEADER = 'no-cache',
-      NO_CACHE_HEADER = 'private, no-cache, no-store, must-revalidate';
+app.constant('RESPONSE_HEADER_MESSAGES', {
+    200: 'OK',
+    404: 'File Not Found',
+    500: 'Invalid Request'
+}).constant(
+    'PRAGMA_HEADER',
+    'no-cache'
+).constant(
+    'NO_CACHE_HEADER',
+    'private, no-cache, no-store, must-revalidate'
+);
 
 /**
  * @desc The BaseRequest class processes all of the incoming Angie requests. It
@@ -38,11 +49,11 @@ const RESPONSE_HEADER_MESSAGES = {
 class BaseRequest {
     constructor(path, request, response) {
 
-        // Define URI
-        this.path = path;
-
         // Shortcut to set and receive the request object
         this.request = new $Request(request).request;
+
+        // Define URI
+        this.path = this.request.path = path;
 
         // Make the response object available to the API
         this.response = new $Response(response).response;
@@ -131,6 +142,10 @@ class BaseRequest {
      *     TemplatePath (default): Serves template, expects compilation on
      * frontend
      *     Template: Serves template, expects compilation on frontend
+     *
+     * If the loadDefaultScriptFile option is added to AngieFile.json with a
+     * valid (existing and of type ".js") JavaScript filename, this default
+     * script file will be loaded.
      * @todo add documentation on views
      * @since 0.2.3
      * @access private
@@ -188,46 +203,83 @@ class BaseRequest {
 
         // Find and load template
         prom = prom.then(function(controllerName) {
+            let mime;
+
             if (
                 me.route.template &&
                 typeof me.route.template === 'string' &&
                 me.route.template.length > 0
             ) {
                 me.template = me.route.template;
-
             } else if (me.route.templatePath) {
+                let template = $templateCache.get(me.route.templatePath);
 
                 // Check to see if we can associate the template path with a
                 // mime type
-                me.responseHeaders[ 'Content-Type' ] = $MimeType.fromPath(
-                    me.route.templatePath
-                );
-                me.template = $templateCache.get(me.route.templatePath);
+                mime = $MimeType.fromPath(me.route.templatePath);
+
+
+                // Check the caching options for static assets
+                // This should only be for templatePaths with "."'s,
+                // all others should apply to caching options
+                if (
+                    me.route.templatePath.indexOf('.') > -1 &&
+                    config.hasOwnProperty('cacheStaticAssets') &&
+                    !config.cacheStaticAssets
+                ) {
+
+                    // If there is a template, check to see if caching is set
+                    me.responseHeaders = $Util._extend(me.responseHeaders, {
+                        Expires: -1,
+                        Pragma: app.constants.PRAGMA_HEADER,
+                        'Cache-Control': app.constants.NO_CACHE_HEADER
+                    });
+                }
+
+                me.responseHeaders[ 'Content-Type' ] = mime;
+                me.template = template;
             }
 
             // If there is a template/templatePath defined we should have a template
-            if (
-                (me.route.template || me.route.templatePath) &&
-                !me.template
-            ) {
-                return me.unknownPath();
-            } else if (
-                config.hasOwnProperty('cacheStaticAssets') &&
-                !config.cacheStaticAssets
-            ) {
+            if (!me.template) {
+                if (me.route.template || me.route.templatePath) {
+                    return me.unknownPath();
+                }
+            } else {
 
-                // If there is a template, check to see if caching is set
-                me.responseHeaders = $Util._extend(me.responseHeaders, {
-                    Expires: -1,
-                    Pragma: PRAGMA_HEADER,
-                    'Cache-Control': NO_CACHE_HEADER
-                });
-            }
+                // If we have any sort of template
+                let match = me.template.toString().match(/!doctype ([a-z]+)/i);
 
-            // Pull the response back in from wherever it was before
-            me.responseContent = me.response.$responseContent;
+                // In the context where MIME type is not set, but we have a
+                // DOCTYPE tag, we can force set the MIME
+                // We want this here instead of the explicit template definition
+                // in case the MIME failed earlier
+                if (match) {
+                    mime = me.responseHeaders[ 'Content-Type' ] =
+                        $MimeType.$$(match[1].toLowerCase());
+                }
 
-            if (me.template) {
+                // Check to see if this is an HTML template and has a DOCTYPE
+                // and that the proper configuration options are set
+                if (
+                    (
+                        mime || me.responseHeaders[ 'Content-Type' ]
+                    ) === 'text/html' &&
+                    config.loadDefaultScriptFile &&
+                    (
+                        !me.route.hasOwnProperty('useMainScriptFile') ||
+                        me.route.useDefaultScriptFile !== false
+                    )
+                ) {
+
+                    // Check that option is not true
+                    let scriptFile = config.loadDefaultScriptFile === true ?
+                        'application.js' : config.loadDefaultScriptFile;
+                    $resourceLoader(scriptFile);
+                }
+
+                // Pull the response back in from wherever it was before
+                me.responseContent = me.response.$responseContent;
 
                 // Render the template into the resoponse
                 return new Promise(function(resolve) {
@@ -247,8 +299,6 @@ class BaseRequest {
                     return controllerName;
                 });
             }
-
-            return controllerName;
         });
 
         // TODO See if any views have this Controller associated
@@ -288,7 +338,7 @@ class BaseRequest {
         prom.then(function() {
             me.response.writeHead(
                 200,
-                RESPONSE_HEADER_MESSAGES[ '200' ],
+                app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
                 me.responseHeaders
             );
             me.response.write(me.responseContent);
@@ -332,7 +382,7 @@ class BaseRequest {
         return new Promise(function() {
             me.response.writeHead(
                 200,
-                RESPONSE_HEADER_MESSAGES['200'],
+                app.constants.RESPONSE_HEADER_MESSAGES['200'],
                 me.responseHeaders
             );
             me.response.write(index);
@@ -348,7 +398,7 @@ class BaseRequest {
         return new Promise(function() {
             me.response.writeHead(
                 404,
-                RESPONSE_HEADER_MESSAGES['404'],
+                app.constants.RESPONSE_HEADER_MESSAGES['404'],
                 me.responseHeaders
             );
             me.response.write(fourOhFour);
@@ -357,18 +407,23 @@ class BaseRequest {
     errorPath() {
         this.response.writeHead(
             500,
-            RESPONSE_HEADER_MESSAGES[ '500' ],
+            app.constants.RESPONSE_HEADER_MESSAGES[ '500' ],
             this.responseHeaders
         );
-        this.response.write(`<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`);
+        this.response.write(
+            `<h1>${app.constants.RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`
+        );
     }
 }
 
-export {
-    BaseRequest,
-    RESPONSE_HEADER_MESSAGES,
-    PRAGMA_HEADER,
-    NO_CACHE_HEADER
-};
+export {BaseRequest};
 
 // TODO break up this file
+    // BaseRequest
+        // Asset Request
+        // ControllerRequest
+            // ControllerWithTemplate
+            // ControllerWithTemplatePath
+            // ControllerWithView
+        // UnkownRequest
+        // ErrorRequest

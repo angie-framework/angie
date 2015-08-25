@@ -6,7 +6,7 @@
 global.ANGIE_VERSION = '0.3.2';
 
 require('babel/register')({
-    only: [ '**/node_modules/angie*/**', '**/src/**' ],
+    only: [ '**/src/**' ],
     stage: 0
 });
-require('../src/index');
+require('../dist/index');

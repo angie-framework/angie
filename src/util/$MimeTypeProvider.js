@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module $MimeTypeProvider.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 const MIME_TYPE = {
           html: 'text/html',

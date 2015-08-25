@@ -1,4 +1,8 @@
-'use strict'; 'use strong';
+/**
+ * @module $Compile.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // System Modules
 import {jsdom} from                 'jsdom';

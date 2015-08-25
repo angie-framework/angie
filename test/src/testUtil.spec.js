@@ -1,5 +1,3 @@
-'use strict'; 'use strong';
-
 class _Promise {
     constructor(fn) {
         this.resolve = function(val) {

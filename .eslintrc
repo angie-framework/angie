@@ -17,7 +17,7 @@
         "eol-last": false,
         "global-strict": [
             2,
-            "always"
+            "never"
         ],
         "indent": 4,
         "key-spacing": false,
@@ -31,7 +31,11 @@
         "no-underscore-dangle": false,
         "no-use-before-define": false,
         "no-unused-expressions": false,
-        "quotes": [ 1, "single" ]
+        "quotes": [ 1, "single" ],
+        "strict": [
+            2,
+            "never"
+        ]
     },
     "emcaFeatures": {
         "arrowFunctions": true,

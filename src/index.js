@@ -1,31 +1,37 @@
-'use strict'; 'use strong';
+/**
+ * @module index.js
+ * @author Joe Groseclose <@benderTheCrime>
+ * @date 8/16/2015
+ */
 
 // Global Modules
 import 'es6-module-loader';
 
 // System Modules
 import {exec} from                  'child_process';
-import {gray} from                  'chalk';
+import {default as chalk} from      'chalk';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
 import Config from                  './Config';
 import $$createProject from         './util/scaffold/project';
-import server from                  './Server';
-import shell from                   './util/shell';
+import {
+    $$watch,
+    $$server
+} from                              './Server';
 
 // System/Tranform BabelJS options
 System.transpiler = 'babel';
 
-const p = process;
-let args = [],
-    $$server = requiresConfig.bind(null, server),
-    $$db = requiresConfig.bind(null, require.bind(null, 'angie-orm')),
-    $$shell = requiresConfig.bind(null, shell);
+const p = process,
+    server = requiresConfig.bind(null, $$server),
+    watch = requiresConfig.bind(null, $$watch),
+    database = requiresConfig.bind(null, require.bind(null, 'angie-orm'));
+let args = [];
 
 // Remove trivial arguments
 p.argv.forEach(function(v) {
-    if (!v.match(/(node|iojs|index|angie)/)) {
+    if (!v.match(/((babel-)?node|iojs|index|angie)/)) {
         args.push(v);
     }
 });
@@ -36,10 +42,13 @@ switch ((args[0] || '').toLowerCase()) {
         help();
         break;
     case 'server':
-        $$server();
+        server();
+        break;
+    case 'watch':
+        watch();
         break;
     case 's':
-        $$server();
+        server();
         break;
     case 'cluster':
         break;
@@ -50,16 +59,16 @@ switch ((args[0] || '').toLowerCase()) {
         });
         break;
     case 'syncdb':
-        $$db();
+        database();
         break;
     case 'migrate':
-        $$db();
+        database();
         break;
     case 'test':
         runTests();
         break;
     case 'shell':
-        $$shell();
+        watch();
         break;
     default:
         $LogProvider.error('Unrecognized CLI Argument');
@@ -92,6 +101,7 @@ function runTests() {
 }
 
 function help() {
+    let gray = (...args) => console.log(chalk.gray.apply(null, args));
     $LogProvider.bold('Angie');
     console.log('A Component-based NodeJS MVC');
     console.log('\r');
@@ -99,32 +109,30 @@ function help() {
     console.log(global.ANGIE_VERSION);
     console.log('\r');
     $LogProvider.bold('Commands:');
-    console.log(
-        'server [ port -- optional ]                        ' +
-        gray(
-            'Start the Angie Webserver (shortcut with s). Default port ' +
-            'is 3000.'
-        )
+    console.log('server [ port -- optional ] [ --usessl -- optional ]');
+    gray(
+        'Start the Angie Webserver (shortcut with s). Default port ' +
+        'is 3000. "usessl" forces the port to 443.'
     );
     console.log(
-        'cluster [ port -- optional ]                       ' +
-        gray('Start the Angie Webserver as a Cluster.')
+        'watch [ port -- optional ] [ --devmode -- optional ] [ --usessl -- ' +
+        'optional ] '
     );
-    console.log(
-        'createProject [ name ] [ location -- optional ]    ' +
-        gray(
-            'Create a new Angie project with the specified name in the ' +
-            'current directory.'
-        )
+    gray(
+        'Starts the Angie Webserver as a watched process and watches the ' +
+        'project directory. If started in "devmode," watch will target ' +
+        'the Angie module "src" directory'
     );
-    console.log(
-        'test                                               ' +
-        gray(
-            'Runs the Angie test suite and prints the results in the ' +
-            'console'
-        )
+    console.log('cluster [ port -- optional ]');
+    gray('Start the Angie Webserver as a Cluster.');
+    console.log('createProject [ name ] [ location -- optional ]');
+    gray(
+        'Create a new Angie project with the specified name in the ' +
+        'current directory.'
+    );
+    console.log('test');
+    gray(
+        'Runs the Angie test suite and prints the results in the ' +
+        'console'
     );
 }
-
-// TODO make all commands here
-// TODO cluster
