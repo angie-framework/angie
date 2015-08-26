@@ -28,7 +28,7 @@ describe('$$createProject', function() {
         mock($LogProvider, 'info', noop);
         mock(p, 'exit', noop);
         mock(promptly, 'confirm', function(_, fn) {
-            fn(true);
+            fn(null, true);
         });
         mock(promptly, 'prompt', function(_, obj = {}, fn) {
             fn(null, true);
