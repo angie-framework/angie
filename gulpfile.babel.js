@@ -95,8 +95,6 @@ gulp.task('bump', function(cb) {
     if (version) {
         const CHANGELOG = fs.readFileSync('CHANGELOG.md', 'utf8');
 
-        console.log(CHANGELOG);
-
         // Verify that the version is in the CHANGELOG
         if (CHANGELOG.indexOf(version) === -1) {
             throw new Error(bread('Version has no entry in CHANGELOG.md'));
