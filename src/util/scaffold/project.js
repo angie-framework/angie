@@ -117,14 +117,18 @@ export default function $$createProject(args = {}) {
             defaultAppJavaScriptFilename;
 
         // Wrap the prompts in a Promise
-        new Promise(function(resolve) {
+        new Promise(function(resolve, reject) {
             promptly.confirm(
                 `${breen('Do you want Angie to cache static assets?')} :`,
-                resolve
+                function(e, v) {
+                    if (e) {
+                        reject(e);
+                    }
+                    resolve(v);
+                }
             );
         }).then(function(v) {
             staticCache = !!v;
-            return;
         }).then(function() {
 
             // Ask what the default JS filename should be

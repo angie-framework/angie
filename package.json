@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: A Component-Based NodeJS MVC in ES6",
   "license": "MIT",
