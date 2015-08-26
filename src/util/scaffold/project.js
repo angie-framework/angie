@@ -88,6 +88,7 @@ export default function $$createProject(args = {}) {
             'constants',
             'configs',
             'services',
+            'factories',
             'controllers',
             'directives'
         ].forEach(function(v) {
