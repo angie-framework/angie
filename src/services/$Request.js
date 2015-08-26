@@ -25,20 +25,7 @@ class $Request {
         // Parse query params out of the url
         this.request.query = url.parse(request.url, true).query;
 
-        // Parse out the response content type
-        contentType = this.request.headers.accept;
-        if (contentType && contentType.indexOf(',') > -1) {
-            contentType = contentType.split(',')[0];
-        } else {
-            contentType = $MimeType.fromPath(path);
-        }
-
-        // this.responseContentType = contentType;
-
-        this.responseHeaders = {
-            'Content-Type': this.responseContentType = contentType
-        };
-
+        // Declare the routes on the request object
         this.routes = $Routes.fetch().routes;
         this.otherwise = $Routes.fetch().otherwise;
     }
@@ -88,5 +75,16 @@ class $Request {
         return this.otherPath();
     }
 }
+
+// TODO does this all belong in the $Request file?
+
+// TODO this will be done with the RESTful work
+// class ControllerViewRequest extends ControllerRequest {
+//     constructor() {
+//
+//     }
+// }
+
+// TODO this should contain methods specific to providing content, type, headers, etc
 
 export default $Request;

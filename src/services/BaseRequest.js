@@ -24,48 +24,6 @@ import $Util, {
 } from                                          '../util/Util';
 
 
-class BaseRequest {
-    constructor() {
-
-    }
-}
-
-class AssetRequest {
-    constructor() {
-
-    }
-}
-
-class ControllerRequest {
-    constructor() {
-
-    }
-}
-
-class ControllerTemplateRequest extends ControllerRequest {
-    constructor() {
-
-    }
-}
-
-class ControllerTemplatePathRequest extends ControllerRequest {
-    constructor() {
-
-    }
-}
-
-class UnknownRequest {
-    constructor() {
-
-    }
-}
-
-class ErrorRequest {
-    constructor() {
-
-    }
-}
-
 // TODO does this all belong in the $Request file?
 
 // TODO this will be done with the RESTful work
