@@ -8,8 +8,13 @@ import app from '../Angie';
 
 class $Response {
     constructor(response) {
+
+        // Define $Response based instance of createServer.prototype.response
         this.response = response;
-        app.service('$response', this.response);
+
+        // Define the Angie $responseContent string
+        this.response.$responseContent = '';
+        //app.service('$response', this.response);
     }
 }
 
@@ -22,4 +27,4 @@ class $Response {
 //
 // }
 
-export {$Response};
+export default $Response;

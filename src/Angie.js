@@ -209,11 +209,15 @@ class Angie {
     }
 
     // Tear down a registered component
-    $$tearDown(name) {
-        if (name && this.$$registry[ name ]) {
-            const type = this.$$registry[ name ];
-            delete this.$$registry[ name ];
-            delete this[ type ][ name ];
+    $$tearDown(names) {
+        names = typeof names === 'string' ?
+            [ names ] : names instanceof Array ? names : [];
+        for (let name of names) {
+            if (name && this.$$registry[ name ]) {
+                const type = this.$$registry[ name ];
+                delete this.$$registry[ name ];
+                delete this[ type ][ name ];
+            }
         }
         return this;
     }
@@ -394,6 +398,10 @@ class Angie {
 }
 
 let app = global.app = new Angie();
+
+// Require in any further external components
+import '../constants/request';
+
 app.config(function() {
     $templateCache.put(
         'index.html',

@@ -19,7 +19,10 @@ import {config} from                './Config';
 import app from                     './Angie';
 import $CacheFactory from           './factories/$CacheFactory';
 import {$$templateLoader} from      './factories/$TemplateCache';
-import {BaseRequest} from           './services/BaseRequest';
+
+// TODO changed from BaseRequest
+import $Request from                './services/$Request';
+import $Response from               './services/$Response';
 import {default as $MimeType} from  './util/$MimeTypeProvider';
 
 const CLIENT = new Client(),
@@ -177,93 +180,94 @@ function $$server(args = []) {
     app.$$load().then(function() {
 
         // Start a webserver
-        webserver = (PORT === 443 ? https : http).createServer(function(request, response) {
-            const path = url.parse(request.url).pathname;
-            let angieResponse = new BaseRequest(path, request, response),
+        webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
+            const path = url.parse(req.url).pathname;
+            let request = new $Request(path, req, res),
+                response = new $Response(res),
                 asset;
+
+            app.service('$request', request).service('$response', response);
 
             // A file cannot be in the static path if it doesn't have an extension, shortcut
             // TODO you may want to move the asset loading block out of here
             // TODO Move to "Asset Path" in BaseRequest
-            if (path.indexOf('.') > -1) {
-                let assetCache = new $CacheFactory('staticAssets');
-
-                if (assetCache.get(path)) {
-                    asset = assetCache.get(path);
-                } else {
-                    asset = $$templateLoader(path, 'static');
-                }
-
-                // We have an asset and must render a response
-                if (asset) {
-
-                    // Set the content type
-                    angieResponse.responseHeaders[ 'Content-Type' ] =
-                        $MimeType.fromPath(path);
-
-                    // We do not want to cache responses
-                    if (
-                        config.hasOwnProperty('cacheStaticAssets') &&
-                        !config.cacheStaticAssets
-                    ) {
-                        angieResponse.responseHeaders = util._extend(
-                            angieResponse.responseHeaders,
-                            {
-                                Expires: -1,
-                                Pragma: app.constants.PRAGMA_HEADER,
-                                'Cache-Control': app.constants.NO_CACHE_HEADER
-                            }
-                        );
-                    }
-
-                    response.writeHead(
-                        200,
-                        app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
-                        angieResponse.responseHeaders
-                    );
-
-                    // Check if you have an image type asset
-                    $LogProvider.info(path, response._header);
-                    response.write(asset);
-                }
-
-                // End the response
-                response.end();
-                return;
-            }
-
-            // else {
+            // if (path.indexOf('.') > -1) {
+            //     let assetCache = new $CacheFactory('staticAssets');
+            //
+            //     if (assetCache.get(path)) {
+            //         asset = assetCache.get(path);
+            //     } else {
+            //         asset = $$templateLoader(path, 'static');
+            //     }
+            //
+            //     // We have an asset and must render a response
+            //     if (asset) {
+            //
+            //         // Set the content type
+            //         angieResponse.responseHeaders[ 'Content-Type' ] =
+            //             $MimeType.fromPath(path);
+            //
+            //         // We do not want to cache responses
+            //         if (
+            //             config.hasOwnProperty('cacheStaticAssets') &&
+            //             !config.cacheStaticAssets
+            //         ) {
+            //             angieResponse.responseHeaders = util._extend(
+            //                 angieResponse.responseHeaders,
+            //                 {
+            //                     Expires: -1,
+            //                     Pragma: app.constants.PRAGMA_HEADER,
+            //                     'Cache-Control': app.constants.NO_CACHE_HEADER
+            //                 }
+            //             );
+            //         }
+            //
+            //         res.writeHead(
+            //             200,
+            //             app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
+            //             angieResponse.responseHeaders
+            //         );
+            //
+            //         // Check if you have an image type asset
+            //         $LogProvider.info(path, res._header);
+            //         res.write(asset);
+            //     }
+            //
+            //     // End the response
+            //     res.end();
+            //     return;
+            // }
 
             angieResponse.$$route().then(function() {
-                let code = response.statusCode;
+                let code = res.statusCode;
                 if (!code) {
                     const error = $$templateLoader('500.html');
 
                     // TODO extrapolate this to responses
-                    response.writeHead(
+                    res.writeHead(
                         500,
                         app.constants.RESPONSE_HEADER_MESSAGES[ '500' ],
                         angieResponse.responseHeaders
                     );
-                    response.write(error);
-                    $LogProvider.error(path, response._header);
+                    res.write(error);
+                    $LogProvider.error(path, res._header);
                 } else if (code < 400) {
-                    $LogProvider.info(path, response._header);
+                    $LogProvider.info(path, res._header);
                 } else if (code < 500) {
-                    $LogProvider.warn(path, response._header);
+                    $LogProvider.warn(path, res._header);
                 } else {
-                    $LogProvider.error(path, response._header);
+                    $LogProvider.error(path, res._header);
                 }
                 return true;
             }).then(function() {
 
                 // End the response
-                response.end();
-
-                // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
-                // request.connection.end();
-                // request.connection.destroy();
+                res.end();
             });
+
+            // After we have finished with the response, we can tear down
+            // request/response specific components
+            app.$$tearDown([ '$request', '$response' ]);
         }).listen(PORT);
 
         // Info
