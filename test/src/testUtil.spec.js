@@ -3,6 +3,9 @@ class _Promise {
         this.resolve = function(val) {
             this.val = val;
         };
+        this.reject = function(e) {
+            this.e = e;
+        };
         if (typeof fn === 'function') {
 
             // TODO no reject needed yet?

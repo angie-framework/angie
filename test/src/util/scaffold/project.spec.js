@@ -28,7 +28,7 @@ describe('$$createProject', function() {
         mock($LogProvider, 'info', noop);
         mock(p, 'exit', noop);
         mock(promptly, 'confirm', function(_, fn) {
-            fn(true);
+            fn(null, true);
         });
         mock(promptly, 'prompt', function(_, obj = {}, fn) {
             fn(null, true);
@@ -60,11 +60,12 @@ describe('$$createProject', function() {
         expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
         expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
         expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
-        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/controllers');
-        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/directives');
-        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/test');
-        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/static');
-        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/templates');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
@@ -101,11 +102,12 @@ describe('$$createProject', function() {
         expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
         expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
         expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
-        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/controllers');
-        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/directives');
-        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/test');
-        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/static');
-        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/templates');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
@@ -136,11 +138,12 @@ describe('$$createProject', function() {
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('src/constants');
         expect(fs.mkdirSync.calls[2].args[0]).to.eq('src/configs');
         expect(fs.mkdirSync.calls[3].args[0]).to.eq('src/services');
-        expect(fs.mkdirSync.calls[4].args[0]).to.eq('src/controllers');
-        expect(fs.mkdirSync.calls[5].args[0]).to.eq('src/directives');
-        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test');
-        expect(fs.mkdirSync.calls[7].args[0]).to.eq('static');
-        expect(fs.mkdirSync.calls[8].args[0]).to.eq('templates');
+        expect(fs.mkdirSync.calls[4].args[0]).to.eq('src/factories');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('src/controllers');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('src/directives');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('static');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('templates');
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
         );
@@ -180,19 +183,22 @@ describe('$$createProject', function() {
             `${CWD}/test/src/services`
         );
         expect(fs.mkdirSync.calls[5].args[0]).to.eq(
-            `${CWD}/test/src/controllers`
+            `${CWD}/test/src/factories`
         );
         expect(fs.mkdirSync.calls[6].args[0]).to.eq(
+            `${CWD}/test/src/controllers`
+        );
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq(
             `${CWD}/test/src/directives`
         );
         expect(
-            fs.mkdirSync.calls[7].args[0]
+            fs.mkdirSync.calls[8].args[0]
         ).to.eq(`${CWD}/test/test`);
         expect(
-            fs.mkdirSync.calls[8].args[0]
+            fs.mkdirSync.calls[9].args[0]
         ).to.eq(`${CWD}/test/static`);
         expect(
-            fs.mkdirSync.calls[9].args[0]
+            fs.mkdirSync.calls[10].args[0]
         ).to.eq(`${CWD}/test/templates`);
         expect(promptly.confirm.calls[0].args[0]).to.eq(
             `${bold(green('Do you want Angie to cache static assets?'))} :`
