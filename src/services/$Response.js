@@ -8,8 +8,16 @@
 import {default as $Injector} from  'angie-injector';
 
 // Angie Modules
+import {config} from                './Config';
 // import app from '../Angie';
+import $CacheFactory from           './factories/$CacheFactory';
+import {
+    $templateCache,
+    $$templateLoader,
+    $resourceLoader
+} from                              '../factories/$TemplateCache';
 import {default as $MimeType} from  '../util/$MimeTypeProvider';
+import $Util, {$StringUtil} from    '../util/Util';
 
 class $Response {
     constructor(response) {
@@ -23,7 +31,11 @@ class $Response {
     }
 }
 
-const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
+const [
+    RESPONSE_HEADER_MESSAGES,
+    PRAGMA_HEADER,
+    NO_CACHE_HEADER
+] = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
 class BaseResponse {
     constructor() {
@@ -50,6 +62,47 @@ class BaseResponse {
 class AssetResponse extends BaseResponse {
     constructor() {
         super();
+
+        // Set the content type based on the asset path
+        const path = this.path = $Injector.get('$request').path;
+        this.responseHeaders[ 'Content-Type' ] = $MimeType.fromPath(path);
+    }
+    head() {
+
+        // TODO this should be a config option at the response level
+        // Check to see if we should cache this response
+        // if (
+        //     config.hasOwnProperty('cacheStaticAssets') &&
+        //     !config.cacheStaticAssets
+        // ) {
+
+        $Util._extend(
+            this.responseHeaders,
+            {
+                Expires: -1,
+                Pragma: PRAGMA_HEADER,
+                'Cache-Control': NO_CACHE_HEADER
+            }
+        );
+
+        this.response.writeHead(
+            200,
+            RESPONSE_HEADER_MESSAGES[ '200' ],
+            this.responseHeaders
+        );
+    }
+    write() {
+        let assetCache = new $CacheFactory('staticAssets'),
+            asset = assetCache.get(path) || $$templateLoader(path, 'static') || '';
+
+        if (
+            config.hasOwnProperty('cacheStaticAssets') &&
+            !config.cacheStaticAssets
+        ) {
+            assetCache.put(this.path, asset);
+        }
+
+        response.write(asset);
     }
 }
 
@@ -76,17 +129,27 @@ class ControllerTemplatePathResponse extends ControllerResponse {
 
 class UnknownResponse extends BaseResponse {
     constructor() {
-
+        super();
+        this.html = $$templateLoader('404.html');
+    }
+    head() {
+        this.response.writeHead(
+            404,
+            app.constants.RESPONSE_HEADER_MESSAGES['404'],
+            this.responseHeaders
+        );
+    }
+    write() {
+        this.response.write(this.html);
     }
 }
 
 class ErrorResponse extends BaseResponse {
     constructor() {
         super();
+        this.html = `<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`;
     }
     head() {
-
-        // TODO where is the response
         this.response.writeHead(
             500,
             RESPONSE_HEADER_MESSAGES[ '500' ],
@@ -94,13 +157,23 @@ class ErrorResponse extends BaseResponse {
         );
         return this;
     }
+    write() {
+        this.response.write(this.html);
+    }
 }
+
+// TODO this will be done with the RESTful work
+// class ControllerViewRequest extends ControllerRequest {
+//     constructor() {
+//
+//     }
+// }
 
 export default $Response;
 export {
     AssetResponse,
     ControllerTemplateResponse,
-    ControllerTemplatePathResponse
+    ControllerTemplatePathResponse,
     UnknownResponse,
     ErrorResponse
 };

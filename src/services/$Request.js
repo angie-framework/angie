@@ -10,6 +10,7 @@ import url from                     'url';
 // Angie Modules
 import app from                     '../Angie';
 import {default as $Routes} from    '../factories/$RouteProvider';
+import $Util, {$StringUtil} from    '../util/Util';
 
 // TODO this has to be instantiated from outside the class
 class $Request {
@@ -30,6 +31,9 @@ class $Request {
         this.otherwise = $Routes.fetch().otherwise;
     }
     $$route() {
+
+        // TODO first check to see if a route is defined for the path
+        // TODO then check to see if an asset is defined for the path
 
         // Check against all of the RegExp routes in Reverse
         let regExpRoutes = [];
@@ -78,12 +82,7 @@ class $Request {
 
 // TODO does this all belong in the $Request file?
 
-// TODO this will be done with the RESTful work
-// class ControllerViewRequest extends ControllerRequest {
-//     constructor() {
-//
-//     }
-// }
+
 
 // TODO this should contain methods specific to providing content, type, headers, etc
 
