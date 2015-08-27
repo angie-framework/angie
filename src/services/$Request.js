@@ -10,18 +10,20 @@ import url from                     'url';
 // Angie Modules
 import app from                     '../Angie';
 import {default as $Routes} from    '../factories/$RouteProvider';
+import {* as $Responses} from       './$Response';
 import $Util, {$StringUtil} from    '../util/Util';
 
 // TODO this has to be instantiated from outside the class
 class $Request {
-    constructor(path, request, response) {
+    constructor(request) {
         let contentType;
 
         // Define $Request based instance of createServer.prototype.response
         this.request = request;
 
         // Define URI
-        this.path = this.request.path = path;
+        this.url = this.request.url = request.url;
+        this.path = this.request.path = url.parse(request.url).pathname;
 
         // Parse query params out of the url
         this.request.query = url.parse(request.url, true).query;
@@ -30,10 +32,10 @@ class $Request {
         this.routes = $Routes.fetch().routes;
         this.otherwise = $Routes.fetch().otherwise;
     }
+    $redirect(path) {
+        return new RedirectResponse(path).head().write();
+    }
     $$route() {
-
-        // TODO first check to see if a route is defined for the path
-        // TODO then check to see if an asset is defined for the path
 
         // Check against all of the RegExp routes in Reverse
         let regExpRoutes = [];
@@ -70,20 +72,29 @@ class $Request {
             this.route = this.routes[ this.path ];
         }
 
-        // TODO we have to replace these with request types
-
         // Route the request based on whether the route exists
+        let ResponseType;
         if (this.route) {
-            return this.$controllerPath();
+            if (this.route.template && this.route.template.length) {
+                ResponseType = 'ControllerTemplate';
+            } else if (this.route.templatePath) {
+                ResponseType += 'ControllerTemplatePath';
+            } else {
+                ResponseType = 'Asset';
+            }
+        } else if (this.otherwise) {
+            ResponseType = 'Redirect';
+        } else {
+            ResponseType = this.path === '/' ? 'Base' : 'Unknown';
         }
-        return this.otherPath();
+
+        if (ResponseType) {
+            return new $Responses[ `${ResponseType}Response` ]().head().write();
+        }
+
+        // We may or may not need this...just in case
+        return new ErrorResponse().head.write();
     }
 }
-
-// TODO does this all belong in the $Request file?
-
-
-
-// TODO this should contain methods specific to providing content, type, headers, etc
 
 export default $Request;
