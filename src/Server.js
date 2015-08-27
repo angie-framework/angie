@@ -176,10 +176,9 @@ function $$server(args = []) {
         // Start a webserver
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
             let request = new $Request(req),
-                response = new $Response(res),
-                asset;
+                response = new $Response(res).response;
 
-            app.service('$request', request).service('$response', response);
+            app.service('$request', request.request).service('$response', response);
 
             request.$$route().then(function() {
                 let code = res.statusCode;
@@ -192,8 +191,6 @@ function $$server(args = []) {
                 } else {
                     $LogProvider.error(path, res._header);
                 }
-                return true;
-            }).then(function() {
 
                 // End the response
                 res.end();

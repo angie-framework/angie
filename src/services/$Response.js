@@ -70,6 +70,8 @@ class BaseResponse {
             RESPONSE_HEADER_MESSAGES[ '200' ],
             this.responseHeaders
         );
+
+        return this;
     }
     html() {
         this.response.write($$templateLoader('index.html'));
@@ -106,6 +108,8 @@ class AssetResponse extends BaseResponse {
             RESPONSE_HEADER_MESSAGES[ '200' ],
             this.responseHeaders
         );
+
+        return this;
     }
     write() {
         let assetCache = new $CacheFactory('staticAssets'),
@@ -133,6 +137,7 @@ class ControllerResponse extends BaseResponse {
     }
     head() {
         super();
+        return this;
     }
     html() {
         let [ $scope, $response ] = Injector.get('$scope', '$response'),
@@ -185,6 +190,7 @@ class ControllerTemplateResponse extends ControllerResponse {
     }
     head() {
         super();
+        return this;
     }
     html() {
         let me = this;
@@ -204,6 +210,7 @@ class ControllerTemplatePathResponse extends ControllerResponse {
     }
     head() {
         super();
+        return this;
     }
     html() {
         let me = this;
@@ -230,6 +237,7 @@ class RedirectResponse extends BaseResponse {
     head(path) {
         this.response.statusCode = 302;
         this.response.setHeader('Location', `${this.path}`);
+        return this;
     }
     write() {
 
@@ -248,6 +256,7 @@ class UnknownResponse extends BaseResponse {
             app.constants.RESPONSE_HEADER_MESSAGES['404'],
             this.responseHeaders
         );
+        return this;
     }
     write() {
         this.response.write(this.html);
