@@ -24,6 +24,7 @@ import {
 import $compile from                '../factories/$Compile';
 import {default as $MimeType} from  '../util/$MimeTypeProvider';
 
+const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
 /**
  * @desc The $Response class controls all of the content contained in the
@@ -48,24 +49,18 @@ class $Response {
     }
 }
 
-// const [
-//     RESPONSE_HEADER_MESSAGES,
-//     PRAGMA_HEADER,
-//     NO_CACHE_HEADER
-// ] = $Injector.get(
-//     'RESPONSE_HEADER_MESSAGES',
-//     'PRAGMA_HEADER',
-//     'NO_CACHE_HEADER'
-// );
-const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
-
+/**
+ * @desc BaseResponse defines the default Angie response. It is responsible for
+ * serving the default response and setting up the headers associated with the
+ * default response.
+ * @since 0.4.0
+ * @access private
+ */
 class BaseResponse {
     constructor() {
         let request,
             contentType;
         [ request, this.response ]  = $Injector.get('$response', '$request');
-
-        console.log('REQUEST', request);
 
         // Parse out the response content type
         contentType = request.headers.accept;
@@ -80,6 +75,12 @@ class BaseResponse {
             'Content-Type': this.responseContentType = contentType
         };
     }
+
+    /**
+     * @desc Sets up the headers associated with the Asset Response
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         this.response.writeHead(
             200,
@@ -89,6 +90,13 @@ class BaseResponse {
 
         return this;
     }
+
+    /**
+     * @desc Loads the default Angie template html file, `index.html`, and
+     * writes the file to the response.
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         this.response.write($$templateLoader('index.html'));
     }
@@ -99,31 +107,16 @@ class AssetResponse extends BaseResponse {
         super();
 
         // Set the content type based on the asset path
-        const path = this.path = $Injector.get('$request').path;
-        this.responseHeaders[ 'Content-Type' ] = $MimeType.fromPath(path);
+        this.path = $Injector.get('$request').path;
     }
+
+    /**
+     * @desc Sets up the headers associated with the AssetResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
-
-        // TODO this should be a config option at the response level
-        // Check to see if we should cache this response
-        // if (
-        //     config.hasOwnProperty('cacheStaticAssets') &&
-        //     !config.cacheStaticAssets
-        // ) {
-        // $Util._extend(
-        //     this.responseHeaders,
-        //     {
-        //         Expires: -1,
-        //         Pragma: PRAGMA_HEADER,
-        //         'Cache-Control': NO_CACHE_HEADER
-        //     }
-        // );
-
-        this.response.writeHead(
-            200,
-            RESPONSE_HEADER_MESSAGES[ '200' ],
-            this.responseHeaders
-        );
+        super.head();
 
         return this;
     }
