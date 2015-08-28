@@ -6,13 +6,16 @@
 
 // System Modules
 import {blue} from                  'chalk';
-import {default as $Injector} from  'angie-injector';
-import $LogProvider fromPath        'angie-log';
+import {
+    default as $Injector,
+    $injectionBinder
+} from                              'angie-injector';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {config} from                './Config';
+import {config} from                '../Config';
 import app from                     '../Angie';
-import $CacheFactory from           './factories/$CacheFactory';
+import $CacheFactory from           '../factories/$CacheFactory';
 import {
     $templateCache,
     $$templateLoader,
@@ -20,7 +23,6 @@ import {
 } from                              '../factories/$TemplateCache';
 import $compile from                '../factories/$Compile';
 import {default as $MimeType} from  '../util/$MimeTypeProvider';
-import $Util, {$StringUtil} from    '../util/Util';
 
 class $Response {
     constructor(response) {
@@ -35,13 +37,13 @@ class $Response {
 }
 
 const [
-    RESPONSE_HEADER_MESSAGES,
-    PRAGMA_HEADER,
-    NO_CACHE_HEADER
+    RESPONSE_HEADER_MESSAGES //,
+    //PRAGMA_HEADER,
+    //NO_CACHE_HEADER
 ] = $Injector.get(
-    'RESPONSE_HEADER_MESSAGES',
-    'PRAGMA_HEADER',
-    'NO_CACHE_HEADER'
+    'RESPONSE_HEADER_MESSAGES' //,
+    // 'PRAGMA_HEADER',
+    // 'NO_CACHE_HEADER'
 );
 
 class BaseResponse {
@@ -55,7 +57,7 @@ class BaseResponse {
         if (contentType && contentType.indexOf(',') > -1) {
             contentType = contentType.split(',')[0];
         } else {
-            contentType = $MimeType.fromPath(path);
+            contentType = $MimeType.fromPath(request.path);
         }
 
         this.responseContentType = contentType;
@@ -73,7 +75,7 @@ class BaseResponse {
 
         return this;
     }
-    html() {
+    write() {
         this.response.write($$templateLoader('index.html'));
     }
 }
@@ -112,18 +114,19 @@ class AssetResponse extends BaseResponse {
         return this;
     }
     write() {
+        const request = $Injector.get('$request');
         let assetCache = new $CacheFactory('staticAssets'),
-            asset = assetCache.get(path) || $$templateLoader(path, 'static') ||
-                undefined;
+            asset = assetCache.get(request.path) ||
+                $$templateLoader(request.path, 'static') || undefined;
 
         if (asset) {
             if (
                 config.hasOwnProperty('cacheStaticAssets') &&
                 !config.cacheStaticAssets
             ) {
-                assetCache.put(this.path, asset);
+                assetCache.put(request.path, asset);
             }
-            response.write(asset);
+            this.response.write(asset);
         } else {
             new UnknownResponse().head().write();
         }
@@ -136,14 +139,14 @@ class ControllerResponse extends BaseResponse {
         super();
     }
     head() {
-        super();
+        super.head();
         return this;
     }
-    html() {
-        let [ $scope, $response ] = Injector.get('$scope', '$response'),
+    write() {
+        let $scope = $Injector.get('$scope'),
             me = this;
 
-        return new Promise(function(resolve, reject) {
+        return new Promise(function(resolve) {
             let controller = me.route.Controller;
 
             // Assign a function that can be called to resolve async
@@ -162,7 +165,7 @@ class ControllerResponse extends BaseResponse {
                     throw new $$ControllerNotFoundError(controller);
                 }
             } else {
-                 return resolve();
+                return resolve();
             }
 
             // Call the bound controller function
@@ -189,13 +192,13 @@ class ControllerTemplateResponse extends ControllerResponse {
         super();
     }
     head() {
-        super();
+        super.head();
         return this;
     }
-    html() {
+    write() {
         let me = this;
 
-        return super().then(function() {
+        return super.write().then(function() {
             me.template = me.route.template;
         }).then(
             controllerTemplateRouteResponse.bind(this)
@@ -209,13 +212,13 @@ class ControllerTemplatePathResponse extends ControllerResponse {
         super();
     }
     head() {
-        super();
+        super.head();
         return this;
     }
-    html() {
+    write() {
         let me = this;
 
-        return super().then(function() {
+        return super.write().then(function() {
             let template = $templateCache.get(me.route.templatePath);
 
             // Check to see if we can associate the template path with a
@@ -234,7 +237,7 @@ class RedirectResponse extends BaseResponse {
         super();
         this.path = path || $Injector.get('$request').otherwise;
     }
-    head(path) {
+    head() {
         this.response.statusCode = 302;
         this.response.setHeader('Location', `${this.path}`);
         return this;

@@ -8,15 +8,13 @@
 import url from                     'url';
 
 // Angie Modules
-import app from                     '../Angie';
 import {default as $Routes} from    '../factories/$RouteProvider';
-import {* as $Responses} from       './$Response';
+import * as $Responses from         './$Response';
 import $Util, {$StringUtil} from    '../util/Util';
 
 // TODO this has to be instantiated from outside the class
 class $Request {
     constructor(request) {
-        let contentType;
 
         // Define $Request based instance of createServer.prototype.response
         this.request = request;
@@ -33,7 +31,7 @@ class $Request {
         this.otherwise = $Routes.fetch().otherwise;
     }
     $redirect(path) {
-        return new RedirectResponse(path).head().write();
+        return new $Responses.RedirectResponse(path).head().write();
     }
     $$route() {
 
@@ -93,7 +91,7 @@ class $Request {
         }
 
         // We may or may not need this...just in case
-        return new ErrorResponse().head.write();
+        return new $Responses.ErrorResponse().head.write();
     }
 }
 

@@ -400,8 +400,20 @@ class Angie {
 let app = global.app = new Angie();
 
 // Require in any further external components
-import '../constants/request';
+// Constants
+app.constant('RESPONSE_HEADER_MESSAGES', {
+    200: 'OK',
+    404: 'File Not Found',
+    500: 'Invalid Request'
+}).constant(
+    'PRAGMA_HEADER',
+    'no-cache'
+).constant(
+    'NO_CACHE_HEADER',
+    'private, no-cache, no-store, must-revalidate'
+);
 
+// Configs
 app.config(function() {
     $templateCache.put(
         'index.html',
@@ -411,20 +423,21 @@ app.config(function() {
         '404.html',
         fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
     );
-})
-.factory('$Routes', $RouteProvider)
-.factory('$Cache', $CacheFactory)
-.factory('$compile', $compile)
-.factory('$resourceLoader', $resourceLoader)
+});
 
+// Factories
+app.factory('$Routes', $RouteProvider)
+    .factory('$Cache', $CacheFactory)
+    .factory('$compile', $compile)
+    .factory('$resourceLoader', $resourceLoader);
+
+// Services
 // Error utilities
-.service('$Exceptions', $ExceptionsProvider)
-
-// TODO we shouldn't have to expose this?
-.service('$scope', $scope)
-.service('$window', {})
-.service('$document', {})
-.service('$templateCache', $templateCache);
+app.service('$Exceptions', $ExceptionsProvider)
+    .service('$scope', $scope)
+    .service('$window', {})
+    .service('$document', {})
+    .service('$templateCache', $templateCache);
 
 export default app;
 export {Angie};

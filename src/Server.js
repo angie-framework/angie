@@ -183,13 +183,13 @@ function $$server(args = []) {
             request.$$route().then(function() {
                 let code = res.statusCode;
                 if (!code) {
-                    $LogProvider.error(path, res._header);
+                    $LogProvider.error(request.path, res._header);
                 } else if (code < 400) {
-                    $LogProvider.info(path, res._header);
+                    $LogProvider.info(request.path, res._header);
                 } else if (code < 500) {
-                    $LogProvider.warn(path, res._header);
+                    $LogProvider.warn(request.path, res._header);
                 } else {
-                    $LogProvider.error(path, res._header);
+                    $LogProvider.error(request.path, res._header);
                 }
 
                 // End the response
