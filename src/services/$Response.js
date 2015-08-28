@@ -358,8 +358,8 @@ function controllerTemplateRouteResponse() {
                 resolve(template);
             });
         }).then(function(template) {
-            me.responseContent += template;
-            me.response.write(me.response.$responseContent = me.responseContent);
+            me.response.$responseContent = me.responseContent += template;
+            me.response.write(me.responseContent);
         });
     }
 }
