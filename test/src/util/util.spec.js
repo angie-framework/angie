@@ -12,6 +12,42 @@ describe('$Util', function() {
 });
 
 describe('$StringUtil', function() {
+    describe('removeLeadingSlashes', function() {
+        let slashes;
+        beforeEach(function() {
+            slashes = $StringUtil.removeLeadingSlashes;
+        });
+        it('test called without any arguments', function() {
+            expect(slashes()).to.eq('');
+        });
+        it('test leading slash', function() {
+            expect(slashes('/test')).to.eq('test');
+        });
+        it('test many leading slashes', function() {
+            expect(slashes('//test')).to.eq('/test');
+        });
+        it('test intra-string slashes', function() {
+            expect(slashes('t/e/s/t')).to.eq('t/e/s/t');
+        });
+    });
+    describe('removeTrailingSlashes', function() {
+        let slashes;
+        beforeEach(function() {
+            slashes = $StringUtil.removeTrailingSlashes;
+        });
+        it('test called without any arguments', function() {
+            expect(slashes()).to.eq('');
+        });
+        it('test trailing slash', function() {
+            expect(slashes('test/')).to.eq('test');
+        });
+        it('test many trailing slashes', function() {
+            expect(slashes('test//')).to.eq('test/');
+        });
+        it('test intra-string slashes', function() {
+            expect(slashes('t/e/s/t')).to.eq('t/e/s/t');
+        });
+    });
     describe('removeTrailingLeadingSlashes', function() {
         let slashes;
         beforeEach(function() {

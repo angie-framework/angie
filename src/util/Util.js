@@ -43,8 +43,8 @@ class $StringUtil {
      * @returns {string} The str param with stripped leading slashes
      * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test'); // true
      */
-    static removeLeadingSlashes(str) {
-        return str.charAt(0) === '/' ? str.slice(1, str.length) : str;
+    static removeLeadingSlashes(str = '') {
+        return str.replace(/(^(\/))/g, '');
     }
 
     /**
@@ -54,8 +54,8 @@ class $StringUtil {
      * @returns {string} The str param with stripped trailing slashes
      * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('test/'); // true
      */
-    static removeTrailingSlashes(str) {
-        return str[ str.length - 1 ] === '/' ? str.slice(0, str.length - 1) : str;
+    static removeTrailingSlashes(str = '') {
+        return str.replace(/((\/)$)/g, '');
     }
 
     /**
@@ -66,7 +66,7 @@ class $StringUtil {
      * @example 'test' === $StringUtil.removeTrailingLeadingSlashes('/test/'); // true
      */
     static removeTrailingLeadingSlashes(str = '') {
-        return $StringUtil.removeTrailingSlashes($StringUtil.removeLeadingSlashes(str));
+        return str.replace(/(^(\/)|(\/)$)/g, '');
     }
 
     /**
