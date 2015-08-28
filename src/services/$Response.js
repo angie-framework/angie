@@ -24,6 +24,19 @@ import {
 import $compile from                '../factories/$Compile';
 import {default as $MimeType} from  '../util/$MimeTypeProvider';
 
+
+/**
+ * @desc The $Response class controls all of the content contained in the
+ * response from the Angie application. This is an extended NodeJS http/https
+ * createServer response and is responsible for storing this response and the
+ * content associated with the response. It can be required using a module
+ * import, but probably should not be unless it is being subclassed for a
+ * dependency package. It can also be used as an injected provider using
+ * `$request`.
+ * @since 0.4.0
+ * @access public
+ * @example $Injector.get('$response');
+ */
 class $Response {
     constructor(response) {
 
@@ -32,25 +45,27 @@ class $Response {
 
         // Define the Angie $responseContent string
         this.response.$responseContent = '';
-        //app.service('$response', this.response);
     }
 }
 
-const [
-    RESPONSE_HEADER_MESSAGES //,
-    //PRAGMA_HEADER,
-    //NO_CACHE_HEADER
-] = $Injector.get(
-    'RESPONSE_HEADER_MESSAGES' //,
-    // 'PRAGMA_HEADER',
-    // 'NO_CACHE_HEADER'
-);
+// const [
+//     RESPONSE_HEADER_MESSAGES,
+//     PRAGMA_HEADER,
+//     NO_CACHE_HEADER
+// ] = $Injector.get(
+//     'RESPONSE_HEADER_MESSAGES',
+//     'PRAGMA_HEADER',
+//     'NO_CACHE_HEADER'
+// );
+const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
 class BaseResponse {
     constructor() {
         let request,
             contentType;
-        [ this.response, request ]  = $Injector.get('$response', '$request');
+        [ request, this.response ]  = $Injector.get('$response', '$request');
+
+        console.log('REQUEST', request);
 
         // Parse out the response content type
         contentType = request.headers.accept;
@@ -60,8 +75,7 @@ class BaseResponse {
             contentType = $MimeType.fromPath(request.path);
         }
 
-        this.responseContentType = contentType;
-
+        // Set the response headers
         this.responseHeaders = {
             'Content-Type': this.responseContentType = contentType
         };
@@ -116,8 +130,9 @@ class AssetResponse extends BaseResponse {
     write() {
         const request = $Injector.get('$request');
         let assetCache = new $CacheFactory('staticAssets'),
-            asset = assetCache.get(request.path) ||
-                $$templateLoader(request.path, 'static') || undefined;
+            asset = this.response.$responseContent =
+                assetCache.get(request.path) ||
+                    $$templateLoader(request.path, 'static') || undefined;
 
         if (asset) {
             if (

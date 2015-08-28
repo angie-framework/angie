@@ -12,7 +12,15 @@ import {default as $Routes} from    '../factories/$RouteProvider';
 import * as $Responses from         './$Response';
 import $Util, {$StringUtil} from    '../util/Util';
 
-// TODO this has to be instantiated from outside the class
+/**
+ * @desc The $Request class processes all of the incoming Angie requests. It
+ * can be required using a module import, but probably should not be unless it
+ * is being subclassed for a dependency package. It can also be used as an
+ * injected provider using `$request`.
+ * @since 0.0.1
+ * @access public
+ * @example $Injector.get('$request');
+ */
 class $Request {
     constructor(request) {
 
@@ -30,9 +38,25 @@ class $Request {
         this.routes = $Routes.fetch().routes;
         this.otherwise = $Routes.fetch().otherwise;
     }
+
+    /**
+     * @desc Returns a rerouted request which will perform a site redirect on
+     * the front end.
+     * @since 0.4.0
+     * @param {string} path The relative or absolute path to which the Response
+     * is redirected.
+     * @access public
+     * @example $Injector.get('$request').$redirect('test');
+     */
     $redirect(path) {
         return new $Responses.RedirectResponse(path).head().write();
     }
+
+    /**
+     * @desc Performs the routing of all Angie requests
+     * @since 0.4.0
+     * @access private
+     */
     $$route() {
 
         // Check against all of the RegExp routes in Reverse
@@ -70,7 +94,8 @@ class $Request {
             this.route = this.routes[ this.path ];
         }
 
-        // Route the request based on whether the route exists
+        // Route the request based on whether the route exists and what the
+        // route states its response should contain.
         let ResponseType;
         if (this.route) {
             if (this.route.template && this.route.template.length) {
@@ -86,13 +111,17 @@ class $Request {
             ResponseType = this.path === '/' ? 'Base' : 'Unknown';
         }
 
+        // Perform the specified response type
         if (ResponseType) {
             return new $Responses[ `${ResponseType}Response` ]().head().write();
         }
 
-        // We may or may not need this...just in case
-        return new $Responses.ErrorResponse().head.write();
+        // Throw an error response if no other response type was specified
+        new $Responses.ErrorResponse().head.write();
     }
 }
+
+// TODO add content to actual response
+// TODO add headers to actual response
 
 export default $Request;

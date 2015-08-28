@@ -39,7 +39,7 @@ let routes = {
 class $RouteProvider {
 
     /**
-     * @desc Sets up a route as a possible endpoint in an Angie application..
+     * @desc Sets up a route as a possible endpoint in an Angie application.
      * @since 0.0.1
      * @param {string|Object} str String or RegExp to denote the endpoint
      * path
