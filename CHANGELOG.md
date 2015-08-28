@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+#### [0.4.0] - 2015-08-27
+##### Fixed/Added
+- Broke up `BaseRequest` into several response classes in `$Response`
+- Fixed `$StringUtil` functions to use RegExp instead of string manipulation
+
 #### [0.3.3] - 2015-08-27
 ##### Fixed/Added
 - Fixed the project scaffold option to cache static assets
