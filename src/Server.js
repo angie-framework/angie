@@ -183,13 +183,13 @@ function $$server(args = []) {
             request.$$route().then(function() {
                 let code = res.statusCode;
                 if (!code) {
-                    $LogProvider.error(request.path, res._header);
+                    $LogProvider.error(request.path, response._header);
                 } else if (code < 400) {
-                    $LogProvider.info(request.path, res._header);
+                    $LogProvider.info(request.path, response._header);
                 } else if (code < 500) {
-                    $LogProvider.warn(request.path, res._header);
+                    $LogProvider.warn(request.path, response._header);
                 } else {
-                    $LogProvider.error(request.path, res._header);
+                    $LogProvider.error(request.path, response._header);
                 }
 
                 // End the response
@@ -198,7 +198,7 @@ function $$server(args = []) {
 
             // After we have finished with the response, we can tear down
             // request/response specific components
-            app.$$tearDown([ '$request', '$response' ]);
+            app.$$tearDown('$request', '$response');
         }).listen(PORT);
 
         // Info

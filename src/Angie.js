@@ -208,12 +208,29 @@ class Angie {
         return this;
     }
 
-    // Tear down a registered component
-    $$tearDown(names) {
-        names = typeof names === 'string' ?
-            [ names ] : names instanceof Array ? names : [];
+    /**
+     * @desc $$tearDown will remove any component registered by method in the
+     * Angie `global.app` object. It will also remove any references to the
+     * component in the registry, removing the object from memory. This will
+     * not unload the file from which the component was loaded from the global
+     * module cache.
+     * @since 0.1.0
+     * @param {Array|string}  [param=[]] names A string name or Array of names
+     * to be torn down in the application. A list of argument strings can also
+     * be passed
+     * @access private
+     */
+    $$tearDown(names = []) {
+
+        // Avoid using Array.from for polyfill reasons
+        names = arguments[0] instanceof Array && arguments[0].length ?
+            arguments[0] : Array.prototype.slice.call(arguments);
+
         for (let name of names) {
-            if (name && this.$$registry[ name ]) {
+
+            // If the component is registered, remove it from the registry
+            // and from it's respective object
+            if (this.$$registry[ name ]) {
                 const type = this.$$registry[ name ];
                 delete this.$$registry[ name ];
                 delete this[ type ][ name ];
@@ -230,9 +247,9 @@ class Angie {
      * not load duplicate modules. Dependencies are typically declared as a
      * node_module path, but can also be declared as a singular (main) file.
      * @since 0.1.0
-     * @access private
      * @param {object}  [param=[]] dependencies The Array of dependencies
      * specified in the parent or localized AngieFile.json
+     * @access private
      */
     $$loadDependencies(dependencies = []) {
         let me = this,

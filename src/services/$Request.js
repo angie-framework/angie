@@ -121,7 +121,4 @@ class $Request {
     }
 }
 
-// TODO add content to actual response
-// TODO add headers to actual response
-
 export default $Request;

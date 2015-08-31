@@ -185,23 +185,40 @@ describe('Angie', function() {
         beforeEach(function() {
             app.service('test', {});
         });
-        it('test $$tearDown returns app', function() {
+        it('test called with no name does nothing', function() {
             expect(app.$$tearDown()).to.deep.eq(app);
-        });
-        it('test $$tearDown called with no name does nothing', function() {
-            app.$$tearDown();
             expect(app.$$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
-        it('test $$tearDown called with an improper service name', function() {
-            app.$$tearDown('test1');
+        it('test called with an improper service name', function() {
+            expect(app.$$tearDown('test2')).to.deep.eq(app);
             expect(app.$$registry.test).to.eq('services');
             expect(app.services.test).to.deep.eq({});
         });
-        it('test $$tearDown called with a proper service name', function() {
-            app.$$tearDown('test');
+        it('test called with a proper service name', function() {
+            expect(app.$$tearDown('test')).to.deep.eq(app);
             expect(app.$$registry.test).to.be.undefined;
             expect(app.service.test).to.be.undefined;
+        });
+        it('test called with many arguments', function() {
+            app.service('test2', {});
+            expect(app.$$tearDown('test', 'test2')).to.deep.eq(app);
+
+            expect(app.$$registry.test).to.be.undefined;
+            expect(app.service.test).to.be.undefined;
+
+            expect(app.$$registry.test1).to.be.undefined;
+            expect(app.service.test1).to.be.undefined;
+        });
+        it('test called with an array argument', function() {
+            app.service('test2', {});
+            expect(app.$$tearDown([ 'test', 'test2' ])).to.deep.eq(app);
+
+            expect(app.$$registry.test).to.be.undefined;
+            expect(app.service.test).to.be.undefined;
+
+            expect(app.$$registry.test1).to.be.undefined;
+            expect(app.service.test1).to.be.undefined;
         });
     });
     describe('$$loadDependencies', function() {
