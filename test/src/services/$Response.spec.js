@@ -6,7 +6,7 @@ import simple, {mock, spy} from     'simple-mock';
 import {default as $Injector} from  'angie-injector';
 
 // Angie Modules
-import $CacheFactory from           '../../../src/factories/$CacheFactory';
+// import $CacheFactory from           '../../../src/factories/$CacheFactory';
 import * as $TemplateCache from     '../../../src/factories/$TemplateCache';
 import * as $Responses from         '../../../src/services/$Response';
 
@@ -149,45 +149,45 @@ describe('$Responses', function() {
                 response.head();
                 assert(headMock.called);
             });
-            describe('write', function() {
-                let assetCacheGetMock,
-                    assetCachePutMock,
-                    $$templateLoaderMock;
-
-                it('test no asset', function() {
-                    assetCacheGetMock = spy();
-                    assetCachePutMock = spy();
-                    mock($CacheFactory.prototype, 'constructor', () => ({
-                        get: spy(() => false),
-                        put: spy()
-                    }));
-                    $$templateLoaderMock = mock(
-                        $TemplateCache,
-                        '$$templateLoader',
-                        () => false
-                    );
-                });
-                it('test no asset cache, no asset template', function() {
-                    let head = spy(),
-                        write = spy();
-                    mock(
-                        $Responses.UnknownResponse.prototype,
-                        'constructor',
-                        () => ({
-                            head: head,
-                            write: write
-                        })
-                    );
-                    response.write();
-                    assert(head.called);
-                    assert(write.called);
-                });
-                // Test no asset cache, no asset
-                // Test asset templateLoader, no caching
-                // Test asset assetCache, no caching
-                // Test asset templateLoader, caching
-                // Test asset assetCache, caching
-            });
+            // describe('write', function() {
+            //     let assetCacheGetMock,
+            //         assetCachePutMock,
+            //         $$templateLoaderMock;
+            //
+            //     it('test no asset', function() {
+            //         assetCacheGetMock = spy();
+            //         assetCachePutMock = spy();
+            //         mock($CacheFactory.prototype, 'constructor', () => ({
+            //             get: spy(() => false),
+            //             put: spy()
+            //         }));
+            //         $$templateLoaderMock = mock(
+            //             $TemplateCache,
+            //             '$$templateLoader',
+            //             () => false
+            //         );
+            //     });
+            //     it('test no asset cache, no asset template', function() {
+            //         let head = spy(),
+            //             write = spy();
+            //         mock(
+            //             $Responses.UnknownResponse.prototype,
+            //             'constructor',
+            //             () => ({
+            //                 head: head,
+            //                 write: write
+            //             })
+            //         );
+            //         response.write();
+            //         assert(head.called);
+            //         assert(write.called);
+            //     });
+            //     // Test no asset cache, no asset
+            //     // Test asset templateLoader, no caching
+            //     // Test asset assetCache, no caching
+            //     // Test asset templateLoader, caching
+            //     // Test asset assetCache, caching
+            // });
         });
     });
 });
