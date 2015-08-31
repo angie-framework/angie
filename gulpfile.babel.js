@@ -80,7 +80,7 @@ gulp.task('mocha', function(cb) {
         return cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
     });
 });
-gulp.task('babel', function() {
+gulp.task('build', function() {
     return gulp.src(SRC).pipe(babel()).pipe(gulp.dest(TRANSPILED_SRC));
 });
 gulp.task('esdoc', function(cb) {
