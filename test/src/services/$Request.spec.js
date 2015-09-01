@@ -1,11 +1,17 @@
-// // Test Modules
-// import {expect} from        'chai';
-// import {mock} from          'simple-mock';
-//
-// // Angie Modules
-// import {BaseRequest} from   '../../../src/services/BaseRequest';
-//
-// describe('BaseRequest', function() {
+// Test Modules
+import {expect} from        'chai';
+import {mock} from          'simple-mock';
+
+// Angie Modules
+import $Request from   '../../../src/services/$Request';
+
+describe('$Request', function() {
+    describe('constructor', function() {
+
+    });
+});
+
+
 //     let request;
 //
 //     beforeEach(function() {

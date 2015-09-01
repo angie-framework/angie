@@ -41,15 +41,11 @@ class $TemplateCache extends $CacheFactory {
 
 function $$templateLoader(url, type = 'template', encoding) {
 
-    console.log('BEFORE CLONE', type, config);
-
     // Clone the template dirs
     let templateDirs = (
         config[ `${type}Dirs` ].slice() || []
     ),
     template;
-
-    console.log('AFTER CLONE');
 
     // Add the default Angie template dirs to the existing config template dirs
     templateDirs = templateDirs.concat(

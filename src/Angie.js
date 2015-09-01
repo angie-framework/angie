@@ -43,7 +43,7 @@ const $$require = (v) => {
  * @todo rename this class
  * @since 0.0.1
  * @access public
- * @extends $Util
+ * @extends {$Util}
  * @example Angie.noop() // = undefined
  */
 class Angie {

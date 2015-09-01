@@ -38,10 +38,10 @@ describe('$Responses', function() {
         };
         $response = {
             test: 'test',
+            $responseContent: '',
             writeHead: writeHeadSpy,
             write: writeSpy
         };
-
     });
     afterEach(function() {
         simple.restore();
@@ -95,7 +95,7 @@ describe('$Responses', function() {
             });
             it('head', function() {
                 expect(response.response.test).to.eq('test');
-                response.head();
+                expect(response.head()).to.eq(response);
                 expect(writeHeadSpy.calls[0].args).to.deep.eq(
                     [ 200, 'OK', { 'Content-Type': 'text/html' } ]
                 );
@@ -147,7 +147,7 @@ describe('$Responses', function() {
                 response = new $Responses.AssetResponse();
             });
             it('head', function() {
-                response.head();
+                expect(response.head()).to.eq(response);
                 assert(headMock.called);
             });
             describe('write', function() {
@@ -155,43 +155,211 @@ describe('$Responses', function() {
                     assetCachePutMock,
                     $$templateLoaderMock;
 
-                it('test no asset', function() {
-                    assetCacheGetMock = spy();
-                    assetCachePutMock = spy();
-                    mock($CacheFactory.prototype, 'constructor', () => ({
-                        get: spy(() => true),
-                        put: spy()
-                    }));
+                beforeEach(function() {
+                    mock($CacheFactory.prototype, 'constructor', () => false);
+                    assetCacheGetMock = mock(
+                        $CacheFactory.prototype,
+                        'get',
+                        () => false
+                    );
+                    assetCachePutMock = mock(
+                        $CacheFactory.prototype,
+                        'put',
+                        () => true
+                    );
                     $$templateLoaderMock = mock(
                         $TemplateCache,
                         '$$templateLoader',
-                        () => true
+                        () => 'test'
                     );
-                    config.staticDirs = [];
+                    response.response = $response;
                 });
                 afterEach(function() {
-                    delete config.staticDirs;
+                    delete config.cacheStaticAssets;
+                    simple.restore();
                 });
                 it('test no asset cache, no asset template', function() {
-                    let head = spy(),
-                        write = spy();
+                    let headMock,
+                        unknownWriteSpy = spy();
+                    $$templateLoaderMock.returnWith(false);
                     mock(
                         $Responses.UnknownResponse.prototype,
                         'constructor',
-                        () => ({
-                            head: head,
-                            write: write
-                        })
+                        () => true
+                    );
+                    headMock = mock(
+                        $Responses.UnknownResponse.prototype,
+                        'head',
+                        () => ({ write: unknownWriteSpy })
                     );
                     response.write();
-                    assert(head.called);
-                    assert(write.called);
+                    assert(headMock.called);
+                    assert(unknownWriteSpy.called);
                 });
-                // Test no asset cache, no asset
-                // Test asset templateLoader, no caching
-                // Test asset assetCache, no caching
-                // Test asset templateLoader, caching
-                // Test asset assetCache, caching
+                it('test asset from $$templateLoader, no caching', function() {
+                    response.write();
+                    expect(assetCachePutMock).to.not.have.been.called;
+                    assert(writeSpy.called);
+                });
+                it('test asset from $$templateLoader, caching is false', function() {
+                    config.cacheStaticAssets = false;
+                    response.write();
+                    expect(assetCachePutMock).to.not.have.been.called;
+                    assert(writeSpy.called);
+                });
+                it('test asset from $$templateLoader, caching', function() {
+                    config.cacheStaticAssets = true;
+                    response.write();
+                    expect(
+                        assetCachePutMock.calls[0].args
+                    ).to.deep.eq([ 'test.html', 'test' ]);
+                    assert(writeSpy.called);
+                });
+                describe('assetCache', function() {
+                    beforeEach(function() {
+                        assetCacheGetMock.returnWith('test');
+                        $$templateLoaderMock.returnWith(false);
+                    });
+                    it('test asset from assetCache, no caching', function() {
+                        response.write();
+                        expect(assetCachePutMock).to.not.have.been.called;
+                        assert(writeSpy.called);
+                    });
+                    it('test asset from assetCache, caching is false', function() {
+                        config.cacheStaticAssets = false;
+                        response.write();
+                        expect(assetCachePutMock).to.not.have.been.called;
+                        assert(writeSpy.called);
+                    });
+                    it('test asset from assetCache, caching', function() {
+                        config.cacheStaticAssets = true;
+                        response.write();
+                        expect(
+                            assetCachePutMock.calls[0].args
+                        ).to.deep.eq([ 'test.html', 'test' ]);
+                        assert(writeSpy.called);
+                    });
+                });
+            });
+        });
+    });
+    describe('RedirectResponse', function() {
+        let BaseResponseMock,
+            $injectorMock;
+
+        beforeEach(function() {
+            BaseResponseMock = mock(
+                $Responses.BaseResponse.prototype,
+                'constructor',
+                () => true
+            );
+            $injectorMock = mock(
+                $Injector,
+                'get',
+                () => ({ otherwise: 'test2' })
+            );
+        });
+        describe('constructor', function() {
+            it('test with argument path', function() {
+                let response = new $Responses.RedirectResponse('test');
+                console.log(response);
+                assert(BaseResponseMock.called);
+                expect(response.path).to.eq('test');
+            });
+            it('test without argument path', function() {
+                let response = new $Responses.RedirectResponse();
+                assert(BaseResponseMock.called);
+                expect(response.path).to.eq('test2');
+            });
+        });
+        describe('methods', function() {
+            let setHeaderSpy;
+
+            beforeEach(function() {
+                response = new $Responses.RedirectResponse('test');
+                response.response = $response;
+
+                response.response.setHeader = setHeaderSpy = spy();
+            });
+            it('head', function() {
+                expect(response.head()).to.eq(response);
+                expect(response.response.statusCode).to.eq(302);
+                expect(
+                    setHeaderSpy.calls[0].args
+                ).to.deep.eq([ 'Location', 'test' ]);
+            });
+            it('write', function() {
+                response.write();
+            });
+        });
+    });
+    describe('UnknownResponse', function() {
+        let BaseResponseMock,
+            $$templateLoaderMock;
+
+        beforeEach(function() {
+            BaseResponseMock = mock(
+                $Responses.BaseResponse.prototype,
+                'constructor',
+                () => true
+            );
+            $$templateLoaderMock = mock(
+                $TemplateCache,
+                '$$templateLoader',
+                () => 'test'
+            );
+        });
+        it('constructor', function() {
+            let response = new $Responses.UnknownResponse();
+            assert(BaseResponseMock.called);
+            expect($$templateLoaderMock.calls[0].args[0]).to.eq('404.html');
+        });
+        describe('methods', function() {
+            beforeEach(function() {
+                response = new $Responses.UnknownResponse();
+                response.response = $response;
+            });
+            it('head', function() {
+                expect(response.head()).to.eq(response);
+                expect(
+                    writeHeadSpy.calls[0].args
+                ).to.deep.eq([ 404, 'File Not Found', $response.headers ]);
+            });
+            it('write', function() {
+                response.write();
+                expect(writeSpy.calls[0].args[0]).to.eq('test');
+            });
+        });
+    });
+    describe('ErrorResponse', function() {
+        let BaseResponseMock;
+
+        beforeEach(function() {
+            BaseResponseMock = mock(
+                $Responses.BaseResponse.prototype,
+                'constructor',
+                () => true
+            );
+        });
+        it('constructor', function() {
+            let response = new $Responses.ErrorResponse();
+            assert(BaseResponseMock.called);
+            expect(response.html).to.eq('<h1>Invalid Request</h1>');
+        });
+        describe('methods', function() {
+            beforeEach(function() {
+                response = new $Responses.ErrorResponse();
+                response.response = $response;
+            });
+            it('head', function() {
+                expect(response.head()).to.eq(response);
+                expect(
+                    writeHeadSpy.calls[0].args
+                ).to.deep.eq([ 500, 'Invalid Request', $response.headers ]);
+            });
+            it('write', function() {
+                response.write();
+                expect(writeSpy.calls[0].args[0]).to.eq(response.html);
             });
         });
     });

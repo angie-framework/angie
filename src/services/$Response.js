@@ -102,6 +102,15 @@ class BaseResponse {
     }
 }
 
+/**
+ * @desc AssetResponse defines any Angie response that has a path which can be
+ * mapped to a path in the Angie `staticDir`s which could not be routed via a
+ * controller. It is responsible for serving the asset response and setting up
+ * the headers associated with the served asset.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class AssetResponse extends BaseResponse {
     constructor() {
         super();
@@ -120,6 +129,12 @@ class AssetResponse extends BaseResponse {
 
         return this;
     }
+
+    /**
+     * @desc Finds the asset and writes it to the response.
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         const request = $Injector.get('$request');
         let assetCache = new $CacheFactory('staticAssets'),
@@ -130,7 +145,7 @@ class AssetResponse extends BaseResponse {
         if (asset) {
             if (
                 config.hasOwnProperty('cacheStaticAssets') &&
-                !config.cacheStaticAssets
+                config.cacheStaticAssets === true
             ) {
                 assetCache.put(request.path, asset);
             }
@@ -240,27 +255,74 @@ class ControllerTemplatePathResponse extends ControllerResponse {
     }
 }
 
+/**
+ * @desc RedirectResponse is either forced as a byproduct of the controller or
+ * when no other route can be matched and an "otherwise" route is defined. It
+ * is responsible for serving an empty response and setting up the headers
+ * associated with a 302 response.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class RedirectResponse extends BaseResponse {
+
+    /**
+     * @desc Loads a redirect path and the response via BaseResponse
+     * @since 0.4.0
+     * @access private
+     */
     constructor(path) {
         super();
         this.path = path || $Injector.get('$request').otherwise;
     }
+
+    /**
+     * @desc Sets up the headers associated with the RedirectResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         this.response.statusCode = 302;
-        this.response.setHeader('Location', `${this.path}`);
+        this.response.setHeader('Location', this.path);
         return this;
     }
+
+    /**
+     * @desc Placeholder method
+     * @since 0.4.0
+     * @access private
+     */
     write() {
 
         // There is no content in this method
     }
 }
 
+/**
+ * @desc UnknownResponse writes any Angie response that has a path which cannot
+ * be mapped to a route or a static asset. It is responsible for serving an
+ * unknown response and setting up the headers associated with a 404 response.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class UnknownResponse extends BaseResponse {
+
+    /**
+     * @desc Loads the 404.html and the response via BaseResponse
+     * @since 0.4.0
+     * @access private
+     */
     constructor() {
         super();
         this.html = $$templateLoader('404.html');
     }
+
+    /**
+     * @desc Sets up the headers associated with the UnknownResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         this.response.writeHead(
             404,
@@ -269,16 +331,45 @@ class UnknownResponse extends BaseResponse {
         );
         return this;
     }
+
+    /**
+     * @desc Writes the 404 html to the response.
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         this.response.write(this.html);
     }
 }
 
+/**
+ * @desc ErrorResponse defines a generic error response from Angie. It is called
+ * in the event that no routes or static assets are found, there is an issue
+ * with the 404 path, or a generic error occurs. It is responsible for serving an
+ * error response and setting up the headers associated with a 500 response.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class ErrorResponse extends BaseResponse {
+
+    /**
+     * @desc Loads the error response message and the response via BaseResponse
+     * @since 0.4.0
+     * @access private
+     */
     constructor() {
         super();
+
+        // Call the response header constants to write the html
         this.html = `<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`;
     }
+
+    /**
+     * @desc Sets up the headers associated with the ErrorResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         this.response.writeHead(
             500,
@@ -287,6 +378,12 @@ class ErrorResponse extends BaseResponse {
         );
         return this;
     }
+
+    /**
+     * @desc Writes the 500 html to the response.
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         this.response.write(this.html);
     }
@@ -374,6 +471,7 @@ export {
     AssetResponse,
     ControllerTemplateResponse,
     ControllerTemplatePathResponse,
+    RedirectResponse,
     UnknownResponse,
     ErrorResponse
 };
