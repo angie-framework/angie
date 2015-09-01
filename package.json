@@ -51,8 +51,7 @@
     "isparta": "3.0.3",
     "istanbul-cobertura-badger": "0.0.4",
     "mocha": "2.2.4",
-    "simple-mock": "0.3.0",
-    "yargs": "^3.21.0"
+    "simple-mock": "0.3.0"
   },
   "dependencies": {
     "angie-log": "^0.9.1",
@@ -64,6 +63,7 @@
     "es6-module-loader": "^0.17.3",
     "fb-watchman": "^1.5.0",
     "jsdom": "3.1.2",
-    "promptly": "^0.2.1"
+    "promptly": "^0.2.1",
+    "yargs": "^3.21.0"
   }
 }

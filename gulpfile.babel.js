@@ -34,13 +34,9 @@ const SRC_DIR = 'src',
 
 // Build Tasks
 gulp.task('eslint', function () {
-    gulp.src([ SRC, TEST_SRC ]).pipe(
-        eslint()
-    ).pipe(
-        eslint.format()
-    ).pipe(
-        eslint.failOnError()
-    );
+    gulp.src([ SRC, TEST_SRC ]).pipe(eslint().on('error', function(e) {
+        throw e;
+    }));
 });
 gulp.task('jscs', [ 'eslint' ], function () {
     return gulp.src([ SRC, TEST_SRC ])

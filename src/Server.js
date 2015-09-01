@@ -166,22 +166,29 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
+    console.log(PORT);
+
     // Stop any existing webserver
     if (webserver) {
         webserver.close();
     }
 
+    // Load necessary app components
     app.$$load().then(function() {
 
-        // Start a webserver
+        // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
             let request = new $Request(req),
                 response = new $Response(res).response;
 
+            // Add Angie components for the request and response objects
             app.service('$request', request.request).service('$response', response);
 
+            // Route the request in the application
             request.$$route().then(function() {
-                let code = res.statusCode;
+                let code = response.statusCode;
+
+                // Provide log information based on the application response
                 if (!code) {
                     $LogProvider.error(request.path, response._header);
                 } else if (code < 400) {
@@ -207,6 +214,7 @@ function $$server(args = []) {
 }
 
 function $$port(args) {
+    console.log(/\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000);
     return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
 }
 
