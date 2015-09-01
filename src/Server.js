@@ -166,8 +166,6 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
-    console.log(PORT);
-
     // Stop any existing webserver
     if (webserver) {
         webserver.close();
@@ -214,7 +212,6 @@ function $$server(args = []) {
 }
 
 function $$port(args) {
-    console.log(/\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000);
     return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
 }
 

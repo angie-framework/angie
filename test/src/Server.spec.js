@@ -1,24 +1,18 @@
-// // Test Modules
+// Test Modules
 import {assert, expect} from        'chai';
 import simple, {mock, spy} from     'simple-mock';
 import $LogProvider from            'angie-log';
-//
-// // System Modules
-// import repl from                    'repl';
+
+// System Modules
 import http from 'http';
 import https from 'https';
-//
-//
-// // Angie Modules
-import app from                         '../../src/Angie';
+
+// Angie Modules
+import app from                     '../../src/Angie';
 import {$$server} from              '../../src/Server';
-import $Request from                  '../../src/services/$Request';
-import $Response from                 '../../src/services/$Response';
-//
-// const P = process;
-//
-// describe('$$watch', function() {});
-// describe('$$shell', function() {});
+import $Request from                '../../src/services/$Request';
+import $Response from               '../../src/services/$Response';
+
 describe('$$server', function() {
     let request,
         response,
