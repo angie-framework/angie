@@ -32,7 +32,7 @@ class $Request {
         this.path = this.request.path = url.parse(request.url).pathname;
 
         // Parse query params out of the url
-        this.request.query = url.parse(request.url, true).query;
+        this.query = this.request.query = url.parse(request.url, true).query;
 
         // Declare the routes on the request object
         this.routes = $Routes.fetch().routes;

@@ -419,9 +419,9 @@ let app = global.app = new Angie();
 // Require in any further external components
 // Constants
 app.constant('RESPONSE_HEADER_MESSAGES', {
-    200: 'OK',
+    200: 'Ok',
     404: 'File Not Found',
-    500: 'Invalid Request'
+    500: 'Internal Server Error'
 }).constant(
     'PRAGMA_HEADER',
     'no-cache'

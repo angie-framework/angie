@@ -1,13 +1,61 @@
 // Test Modules
-import {expect} from        'chai';
-import {mock} from          'simple-mock';
+import {expect} from                'chai';
+import {mock} from                  'simple-mock';
 
 // Angie Modules
-import $Request from   '../../../src/services/$Request';
+import {default as $Routes} from    '../../../src/factories/$RouteProvider';
+import * as $Responses from         '../../../src/services/$Response';
+import $Request from                '../../../src/services/$Request';
 
 describe('$Request', function() {
+    let request = {
+            url: 'http://localhost:3000/test.html?id=1'
+        };
+
     describe('constructor', function() {
 
+        beforeEach(function() {
+            mock($Routes, 'fetch', () => ({
+                routes: 'test',
+                otherwise: 'test'
+            }));
+        });
+        it('test constructor declarations', function() {
+            let $request = new $Request(request);
+            expect($request.request).to.eq(request);
+            expect($request.url).to.eq(request.url);
+            expect($request.path).to.eq('/test.html');
+            expect($request.query).to.deep.eq({ id: '1' });
+            expect($request.routes).to.eq('test');
+            expect($request.otherwise).to.eq('test');
+        });
+        describe('$redirect', function() {
+            let RedirectResponseMock,
+                headSpy,
+                writeSpy;
+
+            beforeEach(function() {
+                RedirectResponseMock = mock(
+                    $Responses.RedirectResponse.prototype,
+                    'constructor',
+                    function() {
+                        return {
+                            head: headSpy = spy(function() {
+                                return {
+                                    write: writeSpy = spy()
+                                };
+                            })
+                        };
+                    }
+                );
+            });
+            it('test $redirect', function() {
+                new $Request(request).$redirect('test');
+                expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
+                assert(headSpy.called);
+                assert(writeSpy.called);
+            });
+        });
     });
 });
 
