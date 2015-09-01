@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed/Added
 - Broke up `BaseRequest` into several response classes in `$Response`
 - Fixed `$StringUtil` functions to use RegExp instead of string manipulation
+- Modified the fashion in which args are parsed for CLI tasks
 
 #### [0.3.3] - 2015-08-27
 ##### Fixed/Added
