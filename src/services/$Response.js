@@ -60,10 +60,15 @@ class BaseResponse {
     constructor() {
         let request,
             contentType;
-        [ request, this.response ]  = $Injector.get('$response', '$request');
+        [ request, this.response ]  = $Injector.get('$request', '$response');
+
+        // Set the route and otherwise
+        console.log(request, request.route, request.otherwise);
+        this.route = request.route;
+        this.otherwise = request.otherwise;
 
         // Parse out the response content type
-        contentType = request.headers.accept;
+        contentType = request.headers ? request.headers.accept : null;
         if (contentType && contentType.indexOf(',') > -1) {
             contentType = contentType.split(',')[0];
         } else {
@@ -98,7 +103,12 @@ class BaseResponse {
      * @access private
      */
     write() {
-        this.response.write($$templateLoader('index.html'));
+        let response = this.response;
+
+        return new Promise(function(resolve) {
+            response.write($$templateLoader('index.html'));
+            resolve();
+        });
     }
 }
 
@@ -136,27 +146,29 @@ class AssetResponse extends BaseResponse {
      * @access private
      */
     write() {
-        const request = $Injector.get('$request');
         let assetCache = new $CacheFactory('staticAssets'),
             asset = this.response.$responseContent =
-                assetCache.get(request.path) ||
-                    $$templateLoader(request.path, 'static') || undefined;
+                assetCache.get(this.path) ||
+                    $$templateLoader(this.path, 'static') || undefined;
 
-        if (asset) {
-            if (
-                config.hasOwnProperty('cacheStaticAssets') &&
-                config.cacheStaticAssets === true
-            ) {
-                assetCache.put(request.path, asset);
+        let me = this;
+        return new Promise(function(resolve) {
+            if (asset) {
+                if (
+                    config.hasOwnProperty('cacheStaticAssets') &&
+                    config.cacheStaticAssets === true
+                ) {
+                    assetCache.put(me.path, asset);
+                }
+                me.response.write(asset);
+            } else {
+                return new UnknownResponse().head().write();
             }
-            this.response.write(asset);
-        } else {
-            new UnknownResponse().head().write();
-        }
+            resolve();
+        });
     }
 }
 
-// TODO should do directive work
 class ControllerResponse extends BaseResponse {
     constructor() {
         super();
@@ -225,7 +237,7 @@ class ControllerTemplateResponse extends ControllerResponse {
             me.template = me.route.template;
         }).then(
             controllerTemplateRouteResponse.bind(this)
-        ).catch(controllerTemplateRouteError.bind(this));
+        );
     }
 }
 
@@ -251,7 +263,7 @@ class ControllerTemplatePathResponse extends ControllerResponse {
             me.template = template;
         }).then(
             controllerTemplateRouteResponse.bind(this)
-        ).catch(controllerTemplateRouteError.bind(this));
+        );
     }
 }
 
@@ -273,7 +285,7 @@ class RedirectResponse extends BaseResponse {
      */
     constructor(path) {
         super();
-        this.path = path || $Injector.get('$request').otherwise;
+        this.path = path || this.otherwise;
     }
 
     /**
@@ -295,6 +307,7 @@ class RedirectResponse extends BaseResponse {
     write() {
 
         // There is no content in this method
+        return new Promise((r) => r());
     }
 }
 
@@ -338,7 +351,12 @@ class UnknownResponse extends BaseResponse {
      * @access private
      */
     write() {
-        this.response.write(this.html);
+        let me = this;
+
+        return new Promise(function(resolve) {
+            me.response.write(me.html);
+            resolve();
+        });
     }
 }
 
@@ -358,11 +376,19 @@ class ErrorResponse extends BaseResponse {
      * @since 0.4.0
      * @access private
      */
-    constructor() {
+    constructor(e) {
         super();
 
-        // Call the response header constants to write the html
-        this.html = `<h1>${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`;
+        let html = '<h1>';
+        if (e && config.development === true) {
+            html += `${e}</h1><p>${e.stack}</p>`;
+        } else {
+
+            // Call the response header constants to write the html
+            html += `${RESPONSE_HEADER_MESSAGES[ '500' ]}</h1>`;
+        }
+
+        this.html = html;
     }
 
     /**
@@ -385,7 +411,12 @@ class ErrorResponse extends BaseResponse {
      * @access private
      */
     write() {
-        this.response.write(this.html);
+        let me = this;
+
+        return new Promise(function(resolve) {
+            me.response.write(me.html);
+            resolve();
+        });
     }
 }
 
@@ -459,10 +490,6 @@ function controllerTemplateRouteResponse() {
             me.response.write(me.responseContent);
         });
     }
-}
-
-function controllerTemplateRouteError() {
-    new ErrorResponse().head().write();
 }
 
 export default $Response;

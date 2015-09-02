@@ -5,18 +5,18 @@
  */
 
 // System Modules
-import repl from                    'repl';
-import http from                    'http';
-import https from                   'https';
-import {Client} from                'fb-watchman';
-import {cyan} from                  'chalk';
-import $LogProvider from            'angie-log';
+import repl from                        'repl';
+import http from                        'http';
+import https from                       'https';
+import {Client} from                    'fb-watchman';
+import {cyan} from                      'chalk';
+import $LogProvider from                'angie-log';
 
 // Angie Modules
-import {config} from                './Config';
-import app from                     './Angie';
-import $Request from                './services/$Request';
-import $Response from               './services/$Response';
+import {config} from                    './Config';
+import app from                         './Angie';
+import $Request from                    './services/$Request';
+import $Response, {ErrorResponse} from  './services/$Response';
 
 const CLIENT = new Client(),
     SUB = {
@@ -176,6 +176,7 @@ function $$server(args = []) {
 
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
+            console.log('REQ', typeof req);
             let request = new $Request(req),
                 response = new $Response(res).response;
 
@@ -199,11 +200,22 @@ function $$server(args = []) {
 
                 // End the response
                 res.end();
+            }).catch(function(e) {
+                new ErrorResponse(e).head().write();
+                $LogProvider.error(request.path, response._header);
+
+                // End the response
+                res.end();
             });
+
+            // End the response
+            // res.end();
 
             // After we have finished with the response, we can tear down
             // request/response specific components
-            app.$$tearDown('$request', '$response');
+
+
+            //app.$$tearDown('$request', '$response');
         }).listen(PORT);
 
         // Info

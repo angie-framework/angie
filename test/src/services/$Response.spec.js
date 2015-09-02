@@ -74,10 +74,23 @@ describe('$Responses', function() {
                     response.responseHeaders[ 'Content-Type' ]
                 ).to.eq('text/html');
             });
-            it('test content type no headers use request.path', function() {
+            it('test content type empty headers use request.path', function() {
                 $injectorMock.returnWith([
                     {
                         headers: {},
+                        path: 'test.html'
+                    },
+                    $response
+                ]);
+                response = new $Responses.BaseResponse();
+                expect(response.responseContentType).to.eq('text/html');
+                expect(
+                    response.responseHeaders[ 'Content-Type' ]
+                ).to.eq('text/html');
+            });
+            it('test content type no headers use request.path', function() {
+                $injectorMock.returnWith([
+                    {
                         path: 'test.html'
                     },
                     $response
@@ -97,7 +110,7 @@ describe('$Responses', function() {
                 expect(response.response.test).to.eq('test');
                 expect(response.head()).to.eq(response);
                 expect(writeHeadSpy.calls[0].args).to.deep.eq(
-                    [ 200, 'OK', { 'Content-Type': 'text/html' } ]
+                    [ 200, 'Ok', { 'Content-Type': 'text/html' } ]
                 );
             });
             describe('write', function() {
@@ -341,10 +354,22 @@ describe('$Responses', function() {
                 () => true
             );
         });
-        it('constructor', function() {
-            let response = new $Responses.ErrorResponse();
-            assert(BaseResponseMock.called);
-            expect(response.html).to.eq('<h1>Invalid Request</h1>');
+        describe('constructor', function() {
+            afterEach(function() {
+                delete config.development;
+            });
+            it('test no error', function() {
+                let response = new $Responses.ErrorResponse();
+                assert(BaseResponseMock.called);
+                expect(response.html).to.eq('<h1>Internal Server Error</h1>');
+            });
+            it('test error', function() {
+                config.development = true;
+                let e = new Error('test'),
+                    response = new $Responses.ErrorResponse(e);
+                assert(BaseResponseMock.called);
+                expect(response.html).to.eq(`<h1>${e}</h1><p>${e.stack}</p>`);
+            });
         });
         describe('methods', function() {
             beforeEach(function() {
@@ -355,7 +380,7 @@ describe('$Responses', function() {
                 expect(response.head()).to.eq(response);
                 expect(
                     writeHeadSpy.calls[0].args
-                ).to.deep.eq([ 500, 'Invalid Request', $response.headers ]);
+                ).to.deep.eq([ 500, 'Internal Server Error', $response.headers ]);
             });
             it('write', function() {
                 response.write();

@@ -97,27 +97,34 @@ class $Request {
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
         let ResponseType;
-        if (this.route) {
-            if (this.route.template && this.route.template.length) {
-                ResponseType = 'ControllerTemplate';
-            } else if (this.route.templatePath) {
-                ResponseType += 'ControllerTemplatePath';
+
+        try {
+            if (this.route) {
+                if (this.route.template && this.route.template.length) {
+                    ResponseType = 'ControllerTemplate';
+                } else if (this.route.templatePath) {
+                    ResponseType = 'ControllerTemplatePath';
+                } else {
+                    ResponseType = 'Asset';
+                }
+            } else if (this.otherwise) {
+                ResponseType = 'Redirect';
             } else {
-                ResponseType = 'Asset';
+                ResponseType = this.path === '/' ? 'Base' : 'Unknown';
             }
-        } else if (this.otherwise) {
-            ResponseType = 'Redirect';
-        } else {
-            ResponseType = this.path === '/' ? 'Base' : 'Unknown';
-        }
 
-        // Perform the specified response type
-        if (ResponseType) {
-            return new $Responses[ `${ResponseType}Response` ]().head().write();
-        }
+            // Perform the specified response type
+            if (ResponseType) {
+                console.log(ResponseType);
+                return new $Responses[ `${ResponseType}Response` ]().head().write();
+            } else {
+                throw new Error();
+            }
+        } catch(e) {
 
-        // Throw an error response if no other response type was specified
-        new $Responses.ErrorResponse().head.write();
+            // Throw an error response if no other response type was specified
+            new $Responses.ErrorResponse(e).head.write();
+        }
     }
 }
 
