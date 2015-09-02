@@ -21,7 +21,11 @@ describe('$$server', function() {
         closeSpy;
 
     beforeEach(function() {
-        listenSpy = spy();
+        listenSpy = spy(function() {
+            return {
+                catch: (fn) => fn(new Error())
+            };
+        });
         endSpy = spy();
         closeSpy = spy();
         request = {
@@ -106,11 +110,6 @@ describe('$$server', function() {
         ).to.deep.eq([ '$request', '$response' ]);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
-    // it('test called with webserver', function() {
-    //     $$server([ 'server', 1234 ]);
-    //     $$server([ 'server', 1234 ]);
-    //     assert(closeSpy.called);
-    // });
     it('test < 400 level response', function() {
         response.statusCode = 399;
         $$server([ 'server', 1234 ]);

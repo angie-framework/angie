@@ -63,9 +63,15 @@ class BaseResponse {
         [ request, this.response ]  = $Injector.get('$request', '$response');
 
         // Set the route and otherwise
-        console.log(request, request.route, request.otherwise);
-        this.route = request.route;
-        this.otherwise = request.otherwise;
+        [
+            this.path,
+            this.route,
+            this.otherwise
+        ] = [
+            request.path,
+            request.route,
+            request.otherwise
+        ];
 
         // Parse out the response content type
         contentType = request.headers ? request.headers.accept : null;
@@ -178,9 +184,9 @@ class ControllerResponse extends BaseResponse {
         return this;
     }
     write() {
-        let $scope = $Injector.get('$scope'),
-            me = this;
+        this.$scope = $Injector.get('$scope');
 
+        let me = this;
         return new Promise(function(resolve) {
             let controller = me.route.Controller;
 
@@ -417,6 +423,16 @@ class ErrorResponse extends BaseResponse {
             me.response.write(me.html);
             resolve();
         });
+
+    }
+
+    /**
+     * @desc Writes the 500 html to the response synchronously.
+     * @since 0.4.0
+     * @access private
+     */
+    writeSync() {
+        this.response.write(this.html);
     }
 }
 
@@ -458,7 +474,7 @@ function controllerTemplateRouteResponse() {
             mime === 'text/html' &&
             config.loadDefaultScriptFile &&
             (
-                this.route.hasOwnProperty('useMainScriptFile') ||
+                this.route.hasOwnProperty('useDefaultScriptFile') ||
                 this.route.useDefaultScriptFile !== false
             )
         ) {
@@ -475,13 +491,12 @@ function controllerTemplateRouteResponse() {
         // Render the template into the resoponse
         let me = this;
         return new Promise(function(resolve) {
-            let $scope = $Injector.get('$scope');
 
             // $Compile to parse template strings and app.directives
             return $compile(me.template)(
 
                 // In the context of the scope
-                $scope
+                me.$scope
             ).then(function(template) {
                 resolve(template);
             });

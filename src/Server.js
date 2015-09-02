@@ -201,7 +201,7 @@ function $$server(args = []) {
                 // End the response
                 res.end();
             }).catch(function(e) {
-                new ErrorResponse(e).head().write();
+                new ErrorResponse(e).head().writeSync();
                 $LogProvider.error(request.path, response._header);
 
                 // End the response
@@ -213,9 +213,7 @@ function $$server(args = []) {
 
             // After we have finished with the response, we can tear down
             // request/response specific components
-
-
-            //app.$$tearDown('$request', '$response');
+            // app.$$tearDown('$request', '$response');
         }).listen(PORT);
 
         // Info

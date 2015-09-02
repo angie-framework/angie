@@ -18,8 +18,7 @@ import $Util, {$StringUtil} from    '../util/Util';
  * is being subclassed for a dependency package. It can also be used as an
  * injected provider using `$request`.
  * @since 0.0.1
- * @access public
- * @example $Injector.get('$request');
+ * @access private
  */
 class $Request {
     constructor(request) {
@@ -45,8 +44,7 @@ class $Request {
      * @since 0.4.0
      * @param {string} path The relative or absolute path to which the Response
      * is redirected.
-     * @access public
-     * @example $Injector.get('$request').$redirect('test');
+     * @access private
      */
     $redirect(path) {
         return new $Responses.RedirectResponse(path).head().write();
@@ -100,6 +98,7 @@ class $Request {
 
         try {
             if (this.route) {
+                console.log('ROUTE', this.route);
                 if (this.route.template && this.route.template.length) {
                     ResponseType = 'ControllerTemplate';
                 } else if (this.route.templatePath) {
@@ -110,7 +109,7 @@ class $Request {
             } else if (this.otherwise) {
                 ResponseType = 'Redirect';
             } else {
-                ResponseType = this.path === '/' ? 'Base' : 'Unknown';
+                ResponseType = 'Unknown';
             }
 
             // Perform the specified response type
@@ -123,7 +122,7 @@ class $Request {
         } catch(e) {
 
             // Throw an error response if no other response type was specified
-            new $Responses.ErrorResponse(e).head.write();
+            new $Responses.ErrorResponse(e).head.writeSync();
         }
     }
 }
