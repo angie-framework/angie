@@ -22,6 +22,7 @@ import $Util, {$StringUtil} from    '../util/Util';
  */
 class $Request {
     constructor(request) {
+        let $routes;
 
         // Define $Request based instance of createServer.prototype.response
         this.request = request;
@@ -33,9 +34,11 @@ class $Request {
         // Parse query params out of the url
         this.query = this.request.query = url.parse(request.url, true).query;
 
-        // Declare the routes on the request object
-        this.routes = $Routes.fetch().routes;
-        this.otherwise = $Routes.fetch().otherwise;
+        $routes = $Routes.fetch();
+
+        // Declare the routes on the local request object
+        this.routes = $routes.routes;
+        this.otherwise = this.request.otherwise = $routes.otherwise;
     }
 
     /**
@@ -92,13 +95,16 @@ class $Request {
             this.route = this.routes[ this.path ];
         }
 
+        // Set the request reference to route to the $Request route object once
+        // and only once
+        this.request.route = this.route || null;
+
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
         let ResponseType;
 
         try {
             if (this.route) {
-                console.log('ROUTE', this.route);
                 if (this.route.template && this.route.template.length) {
                     ResponseType = 'ControllerTemplate';
                 } else if (this.route.templatePath) {

@@ -213,13 +213,16 @@ class ControllerResponse extends BaseResponse {
             me.controller = new $injectionBinder(
                 controller,
                 'controller'
-            ).call($scope, resolve);
+            ).call(me.$scope, resolve);
 
             // Resolve the Promise if the controller does not return a
             // function
             if (
-                !me.controller.constructor ||
-                me.controller.constructor.name !== 'Promise'
+                controller &&
+                (
+                    !controller.constructor ||
+                    controller.constructor.name !== 'Promise'
+                )
             ) {
                 return resolve(controller);
             }
