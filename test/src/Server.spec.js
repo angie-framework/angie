@@ -11,56 +11,72 @@ import https from 'https';
 import app from                     '../../src/Angie';
 import {$$server} from              '../../src/Server';
 import $Request from                '../../src/services/$Request';
-import $Response from               '../../src/services/$Response';
+import * as $Responses from         '../../src/services/$Response';
 
 describe('$$server', function() {
     let request,
         response,
-        listenSpy,
-        endSpy,
+        listen,
+        end,
         closeSpy;
 
     beforeEach(function() {
-        listenSpy = spy(function() {
+        listen = spy(function() {
             return {
-                catch: (fn) => fn(new Error())
+                catch(fn) { fn(new Error()); }
             };
         });
-        endSpy = spy();
+        end = spy();
         closeSpy = spy();
         request = {
             url: 'test'
         };
         response = {
-            end: endSpy,
+            end,
             _header: 'test'
         };
         mock(app, '$$load', function() {
             return {
-                then: (fn) => fn()
+                then(fn) { fn(); }
             };
         });
         mock(http, 'createServer', function(fn) {
             fn(request, response);
-            return {
-                listen: listenSpy
-            };
+            return { listen };
         });
         mock(https, 'createServer', function(fn) {
             fn(request, response);
-            return {
-                listen: listenSpy
-            };
+            return { listen };
         });
         mock($Request.prototype, '$$route', function() {
             return {
-                then: (fn) => fn()
+                then(fn) {
+                    fn();
+                    return {
+                        catch(fn) {
+                            fn(new Error());
+                        }
+                    };
+                }
             };
         });
-        mock($Response.prototype, 'constructor', function() {
-            return {
-                response: response
-            };
+        mock(
+            $Responses.ErrorResponse.prototype,
+            'constructor',
+            function() {
+                return {
+                    head() {
+                        return {
+                            write() {
+
+                            }
+                        };
+                    }
+                };
+            }
+        )
+        mock($Responses.default.prototype, 'constructor', function() {
+            return { response };
         });
         mock(app, '$$tearDown', () => true);
         mock($LogProvider, 'error', () => true);
@@ -75,8 +91,8 @@ describe('$$server', function() {
         expect(https.createServer).to.not.have.been.called;
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(endSpy.called);
-        expect(listenSpy.calls[0].args[0]).to.eq(1234);
+        assert(end.called);
+        expect(listen.calls[0].args[0]).to.eq(1234);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);
@@ -89,8 +105,8 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(endSpy.called);
-        expect(listenSpy.calls[0].args[0]).to.eq(443);
+        assert(end.called);
+        expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);
@@ -103,8 +119,8 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(endSpy.called);
-        expect(listenSpy.calls[0].args[0]).to.eq(443);
+        assert(end.called);
+        expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);

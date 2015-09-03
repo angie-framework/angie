@@ -301,7 +301,6 @@ class RedirectResponse extends BaseResponse {
      */
     constructor(path) {
         super();
-        console.log(this.otherwise);
         this.path = path || this.otherwise;
     }
 

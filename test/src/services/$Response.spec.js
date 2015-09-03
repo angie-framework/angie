@@ -268,11 +268,6 @@ describe('$Responses', function() {
                     this.otherwise = 'test2';
                 }
             );
-            // $injectorMock = mock(
-            //     $Injector,
-            //     'get',
-            //     () => ({ otherwise: 'test2' })
-            // );
         });
         describe('constructor', function() {
             it('test with argument path', function() {

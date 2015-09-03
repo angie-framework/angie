@@ -97,6 +97,14 @@ function $$watch(args = []) {
             }).then(function() {
                 CLIENT.on('subscription', function (r) {
                     if (r.subscription === 'ANGIE_WATCH') {
+
+                        // Stop any existing webserver
+                        if (webserver) {
+                            webserver.close();
+                        }
+
+                        // Call the passed command to restart the watched
+                        // process
                         (args[0] && args[0] === 'watch' ? $$server : $$shell)(
                             [ PORT ]
                         );
@@ -166,11 +174,6 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
-    // Stop any existing webserver
-    if (webserver) {
-        webserver.close();
-    }
-
     // Load necessary app components
     app.$$load().then(function() {
 
@@ -183,19 +186,21 @@ function $$server(args = []) {
             app.service('$request', request.request).service('$response', response);
 
             // Route the request in the application
+            console.log(request.$$route().then(function() {}));
             request.$$route().then(function() {
-                let code = response.statusCode;
+                let code = response.statusCode,
+                    path = request.path,
+                    header = response._header,
+                    log = 'error';
 
                 // Provide log information based on the application response
-                if (!code) {
-                    $LogProvider.error(request.path, response._header);
-                } else if (code < 400) {
-                    $LogProvider.info(request.path, response._header);
+                if (code < 400) {
+                    log = 'info';
                 } else if (code < 500) {
-                    $LogProvider.warn(request.path, response._header);
-                } else {
-                    $LogProvider.error(request.path, response._header);
+                    log = 'warn';
                 }
+
+                $LogProvider[ log ](path, header);
 
                 // Call this inside route block to make sure that we only
                 // return once

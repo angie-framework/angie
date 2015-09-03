@@ -38,6 +38,7 @@ describe('$Request', function() {
         beforeEach(function() {
             write = spy();
             head = spy(function() {
+                console.log('in head');
                 return { write };
             });
             RedirectResponseMock = mock(
@@ -51,8 +52,8 @@ describe('$Request', function() {
         it('test $redirect', function() {
             new $Request(request).$redirect('test');
             expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
-            assert(headSpy.called);
-            assert(writeSpy.called);
+            assert(head.called);
+            assert(write.called);
         });
     });
 });
