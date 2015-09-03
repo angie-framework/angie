@@ -16,12 +16,7 @@ import {
     $FileUtil
 } from                              '../util/Util';
 
-const p = process,
-      ANGIE_TEMPLATE_DIRS = [
-          `${__dirname}/../templates/html`,
-          `${__dirname}/../../test/src/templates`
-      ],
-      ANGIE_STATIC_DIRS = [];
+const p = process;
 
 class $TemplateCache extends $CacheFactory {
     constructor() {
@@ -39,6 +34,7 @@ class $TemplateCache extends $CacheFactory {
     }
 }
 
+// TODO remove static dir conglomeration to constants!!
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
@@ -46,27 +42,6 @@ function $$templateLoader(url, type = 'template', encoding) {
         config[ `${type}Dirs` ].slice() || []
     ),
     template;
-
-    // Add the default Angie template dirs to the existing config template dirs
-    templateDirs = templateDirs.concat(
-        type === 'template' ? ANGIE_TEMPLATE_DIRS :
-            type === 'static' ? ANGIE_STATIC_DIRS : []
-    );
-
-    templateDirs = templateDirs.map(function(dir) {
-        if (
-            (
-                (type === 'template' && ANGIE_TEMPLATE_DIRS.indexOf(dir) === -1) ||
-                (type === 'static' && ANGIE_STATIC_DIRS.indexOf(dir) === -1)
-            ) &&
-            dir.indexOf(p.cwd()) === -1
-        ) {
-            dir = $StringUtil.removeLeadingSlashes(dir);
-            dir = `${p.cwd()}/${dir}`;
-        }
-        dir = $StringUtil.removeTrailingSlashes(dir);
-        return dir;
-    });
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = templateDirs.length - 1; i >= 0; --i) {

@@ -61,10 +61,7 @@ class $Request {
     $$route() {
 
         // Check against all of the RegExp routes in Reverse
-        let regExpRoutes = [];
-        if (this.routes.regExp) {
-            regExpRoutes = Object.keys(this.routes.regExp).reverse();
-        }
+        let regExpRoutes = Object.keys(this.routes.regExp).reverse();
 
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
@@ -97,7 +94,7 @@ class $Request {
 
         // Set the request reference to route to the $Request route object once
         // and only once
-        this.request.route = this.route || null;
+        this.request.route = this.route;
 
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
@@ -105,13 +102,16 @@ class $Request {
 
         try {
             if (this.route) {
-                if (this.route.template && this.route.template.length) {
-                    ResponseType = 'ControllerTemplate';
-                } else if (this.route.templatePath) {
-                    ResponseType = 'ControllerTemplatePath';
-                } else {
-                    ResponseType = 'Asset';
+                ResponseType = 'ControllerTemplate';
+                if (this.route.templatePath) {
+                    ResponseType += 'Path';
                 }
+            } else if (
+                $Responses.AssetResponse.testRoutedAssetResourceResponse(
+                    this.path
+                )
+            ) {
+                ResponseType = 'Asset';
             } else if (this.otherwise) {
                 ResponseType = 'Redirect';
             } else {
@@ -120,7 +120,6 @@ class $Request {
 
             // Perform the specified response type
             if (ResponseType) {
-                console.log(ResponseType);
                 return new $Responses[ `${ResponseType}Response` ]().head().write();
             } else {
                 throw new Error();
@@ -128,7 +127,7 @@ class $Request {
         } catch(e) {
 
             // Throw an error response if no other response type was specified
-            new $Responses.ErrorResponse(e).head.writeSync();
+            return new $Responses.ErrorResponse(e).head().write();
         }
     }
 }

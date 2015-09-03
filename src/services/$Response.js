@@ -23,6 +23,7 @@ import {
 } from                              '../factories/$TemplateCache';
 import $compile from                '../factories/$Compile';
 import {default as $MimeType} from  '../util/$MimeTypeProvider';
+import {$FileUtil} from             '../util/Util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
@@ -173,6 +174,12 @@ class AssetResponse extends BaseResponse {
             resolve();
         });
     }
+
+    static testRoutedAssetResourceResponse(path) {
+        return config.staticDirs.some(
+            (v) => $FileUtil.find(v, path)
+        );
+    }
 }
 
 class ControllerResponse extends BaseResponse {
@@ -294,6 +301,7 @@ class RedirectResponse extends BaseResponse {
      */
     constructor(path) {
         super();
+        console.log(this.otherwise);
         this.path = path || this.otherwise;
     }
 

@@ -264,18 +264,19 @@ describe('$Responses', function() {
             BaseResponseMock = mock(
                 $Responses.BaseResponse.prototype,
                 'constructor',
-                () => true
+                function() {
+                    this.otherwise = 'test2';
+                }
             );
-            $injectorMock = mock(
-                $Injector,
-                'get',
-                () => ({ otherwise: 'test2' })
-            );
+            // $injectorMock = mock(
+            //     $Injector,
+            //     'get',
+            //     () => ({ otherwise: 'test2' })
+            // );
         });
         describe('constructor', function() {
             it('test with argument path', function() {
                 let response = new $Responses.RedirectResponse('test');
-                console.log(response);
                 assert(BaseResponseMock.called);
                 expect(response.path).to.eq('test');
             });

@@ -176,7 +176,6 @@ function $$server(args = []) {
 
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
-            console.log('REQ', typeof req);
             let request = new $Request(req),
                 response = new $Response(res).response;
 
@@ -198,22 +197,17 @@ function $$server(args = []) {
                     $LogProvider.error(request.path, response._header);
                 }
 
-                // End the response
-                res.end();
+                // Call this inside route block to make sure that we only
+                // return once
+                end(response);
             }).catch(function(e) {
                 new ErrorResponse(e).head().writeSync();
                 $LogProvider.error(request.path, response._header);
 
-                // End the response
-                res.end();
+                // Call this inside route block to make sure that we only
+                // return once
+                end(response);
             });
-
-            // End the response
-            // res.end();
-
-            // After we have finished with the response, we can tear down
-            // request/response specific components
-            // app.$$tearDown('$request', '$response');
         }).listen(PORT);
 
         // Info
@@ -223,6 +217,16 @@ function $$server(args = []) {
 
 function $$port(args) {
     return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
+}
+
+function end(response) {
+
+    // End the response
+    response.end();
+
+    // After we have finished with the response, we can tear down
+    // request/response specific components
+    app.$$tearDown('$request', '$response');
 }
 
 export {

@@ -1,6 +1,6 @@
 // Test Modules
 import {expect} from                'chai';
-import {mock} from                  'simple-mock';
+import {mock, spy} from             'simple-mock';
 
 // Angie Modules
 import {default as $Routes} from    '../../../src/factories/$RouteProvider';
@@ -29,32 +29,30 @@ describe('$Request', function() {
             expect($request.routes).to.eq('test');
             expect($request.otherwise).to.eq('test');
         });
-        describe('$redirect', function() {
-            let RedirectResponseMock,
-                headSpy,
-                writeSpy;
+    });
+    describe('$redirect', function() {
+        let RedirectResponseMock,
+            head,
+            write;
 
-            beforeEach(function() {
-                RedirectResponseMock = mock(
-                    $Responses.RedirectResponse.prototype,
-                    'constructor',
-                    function() {
-                        return {
-                            head: headSpy = spy(function() {
-                                return {
-                                    write: writeSpy = spy()
-                                };
-                            })
-                        };
-                    }
-                );
+        beforeEach(function() {
+            write = spy();
+            head = spy(function() {
+                return { write };
             });
-            it('test $redirect', function() {
-                new $Request(request).$redirect('test');
-                expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
-                assert(headSpy.called);
-                assert(writeSpy.called);
-            });
+            RedirectResponseMock = mock(
+                $Responses.RedirectResponse.prototype,
+                'constructor',
+                function() {
+                    return { head };
+                }
+            );
+        });
+        it('test $redirect', function() {
+            new $Request(request).$redirect('test');
+            expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
+            assert(headSpy.called);
+            assert(writeSpy.called);
         });
     });
 });
