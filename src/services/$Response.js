@@ -175,9 +175,9 @@ class AssetResponse extends BaseResponse {
         });
     }
 
-    static testRoutedAssetResourceResponse(path) {
+    static isRoutedAssetResourceResponse(path) {
         return config.staticDirs.some(
-            (v) => $FileUtil.find(v, path)
+            (v) => !!$FileUtil.find(v, path)
         );
     }
 }

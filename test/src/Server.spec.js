@@ -18,7 +18,8 @@ describe('$$server', function() {
         response,
         listen,
         end,
-        closeSpy,
+        head,
+        writeSync,
         e;
 
     beforeEach(function() {
@@ -29,7 +30,6 @@ describe('$$server', function() {
             };
         });
         end = spy();
-        closeSpy = spy();
         request = {
             url: 'test'
         };
@@ -56,27 +56,23 @@ describe('$$server', function() {
                     fn();
                     return {
                         catch(fn) {
-                            return true;
+                            fn(e);
                         }
                     };
                 }
             };
         });
+        writeSync = spy();
+        head = spy(function() {
+            return { writeSync };
+        });
         mock(
-            $Responses.ErrorResponse.prototype,
-            'constructor',
+            $Responses,
+            'ErrorResponse',
             function() {
-                return {
-                    head() {
-                        return {
-                            write() {
-
-                            }
-                        };
-                    }
-                };
+                return { head };
             }
-        )
+        );
         mock($Responses.default.prototype, 'constructor', function() {
             return { response };
         });
@@ -93,11 +89,17 @@ describe('$$server', function() {
         expect(https.createServer).to.not.have.been.called;
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(end.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        assert(head.called);
+        assert(writeSync.called);
         expect(listen.calls[0].args[0]).to.eq(1234);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 1234');
     });
     it('test call with https and port 443', function() {
@@ -107,11 +109,18 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(end.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        assert(head.called);
+        assert(writeSync.called);
+        expect($LogProvider.error.calls[1].args).to.deep.eq([ 'test', 'test' ]);
         expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test call with https and --usessl', function() {
@@ -121,11 +130,18 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
-        assert(end.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        assert(head.called);
+        assert(writeSync.called);
+        expect($LogProvider.error.calls[1].args).to.deep.eq([ 'test', 'test' ]);
         expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
         ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test < 400 level response', function() {

@@ -107,7 +107,7 @@ class $Request {
                     ResponseType += 'Path';
                 }
             } else if (
-                $Responses.AssetResponse.testRoutedAssetResourceResponse(
+                $Responses.AssetResponse.isRoutedAssetResourceResponse(
                     this.path
                 )
             ) {

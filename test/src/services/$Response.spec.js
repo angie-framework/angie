@@ -10,6 +10,7 @@ import {config} from                '../../../src/Config';
 import $CacheFactory from           '../../../src/factories/$CacheFactory';
 import * as $TemplateCache from     '../../../src/factories/$TemplateCache';
 import * as $Responses from         '../../../src/services/$Response';
+import {$FileUtil} from             '../../../src/util/Util';
 
 describe('$Response', function() {
     it('constructor', function() {
@@ -255,6 +256,28 @@ describe('$Responses', function() {
                 });
             });
         });
+        describe('isRoutedAssetResourceResponse', function() {
+            let findMock;
+
+            beforeEach(function() {
+                config.staticDirs = [ 'test', 'test2' ];
+                findMock = mock($FileUtil, 'find', () => true)
+            });
+            afterEach(function() {
+                delete config.staticDirs;
+            });
+            it('test found asset', function() {
+                expect(
+                    $Responses.AssetResponse.isRoutedAssetResourceResponse()
+                ).to.be.true;
+            });
+            it('test did not find asset', function() {
+                findMock.returnWith(false);
+                expect(
+                    $Responses.AssetResponse.isRoutedAssetResourceResponse()
+                ).to.be.false;
+            });
+        });
     });
     describe('RedirectResponse', function() {
         let BaseResponseMock,
@@ -380,6 +403,10 @@ describe('$Responses', function() {
             });
             it('write', function() {
                 response.write();
+                expect(writeSpy.calls[0].args[0]).to.eq(response.html);
+            });
+            it('writeSync', function() {
+                response.writeSync();
                 expect(writeSpy.calls[0].args[0]).to.eq(response.html);
             });
         });
