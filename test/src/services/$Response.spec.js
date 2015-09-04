@@ -65,11 +65,16 @@ describe('$Responses', function() {
                         headers: {
                             accept: 'text/plain'
                         },
-                        path: 'test.html'
+                        path: 'test.html',
+                        route: 'test',
+                        otherwise: 'test'
                     },
                     $response
                 ]);
                 response = new $Responses.BaseResponse();
+                expect(response.path).to.eq('test.html');
+                expect(response.route).to.eq('test');
+                expect(response.otherwise).to.eq('test');
                 expect(response.responseContentType).to.eq('text/html');
                 expect(
                     response.responseHeaders[ 'Content-Type' ]
@@ -406,7 +411,7 @@ describe('$Responses', function() {
                 expect(writeSpy.calls[0].args[0]).to.eq(response.html);
             });
             it('writeSync', function() {
-                response.writeSync();
+                response.write();
                 expect(writeSpy.calls[0].args[0]).to.eq(response.html);
             });
         });
