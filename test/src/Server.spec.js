@@ -18,12 +18,14 @@ describe('$$server', function() {
         response,
         listen,
         end,
-        closeSpy;
+        closeSpy,
+        e;
 
     beforeEach(function() {
+        e = new Error();
         listen = spy(function() {
             return {
-                catch(fn) { fn(new Error()); }
+                catch(fn) { fn(e); }
             };
         });
         end = spy();
@@ -54,7 +56,7 @@ describe('$$server', function() {
                     fn();
                     return {
                         catch(fn) {
-                            fn(new Error());
+                            return true;
                         }
                     };
                 }

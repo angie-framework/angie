@@ -1,15 +1,16 @@
 // Test Modules
-import {expect} from            'chai';
-import simple, {mock} from      'simple-mock';
+import {expect} from                'chai';
+import simple, {mock} from          'simple-mock';
 
 // System Modules
-import $LogProvider from        'angie-log';
+import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {config} from            '../../../src/Config';
-import app from                 '../../../src/Angie';
-import $compile from            '../../../src/factories/$Compile';
-import $Util from               '../../../src/util/Util';
+import {config} from                '../../../src/Config';
+import app from                     '../../../src/Angie';
+import $compile from                '../../../src/factories/$Compile';
+import * as $TemplateCache from     '../../../src/factories/$TemplateCache';
+import $Util from                   '../../../src/util/Util';
 
 describe('$compile', function() {
 
@@ -216,9 +217,14 @@ describe('$compile', function() {
 
             // TODO this should be tested using a mocked service
             it('test directive templatePath ".html"', function() {
-                app.directives.testDir.templatePath = 'html/testDirectiveTemplatePath.html';
+                app.directives.testDir.templatePath =
+                    'html/testDirectiveTemplatePath.html';
+                mock($TemplateCache, '$$templateLoader', () => 'test');
                 $compile('<div class="testDir"></div>')({}).then(function(t) {
                     expect(t).to.eq('<div class="testDir">test</div>');
+                    expect(
+                        $TemplateCache.$$templateLoader.calls[0].args[0]
+                    ).to.eq(app.directives.testDir.templatePath);
                 });
             });
         });

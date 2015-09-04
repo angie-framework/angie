@@ -131,25 +131,24 @@ function $$watch(args = []) {
  * @access private
  */
 function $$shell() {
-    const P = process,
-        SHELL_PROMPT = 'angie > ';
+    const SHELL_PROMPT = 'angie > ';
 
     if (shell) {
-        P.stdout.write('\n');
+        process.stdout.write('\n');
     }
 
     return app.$$load().then(function() {
-        P.stdin.setEncoding('utf8');
+        process.stdin.setEncoding('utf8');
 
         // Start a REPL after loading project files
         if (!shell) {
             shell = repl.start({
                 prompt: SHELL_PROMPT,
-                input: P.stdin,
-                output: P.stdout
+                input: process.stdin,
+                output: process.stdout
             });
         } else {
-            P.stdout.write(SHELL_PROMPT);
+            process.stdout.write(SHELL_PROMPT);
         }
     });
 }
@@ -186,7 +185,6 @@ function $$server(args = []) {
             app.service('$request', request.request).service('$response', response);
 
             // Route the request in the application
-            console.log(request.$$route().then(function() {}));
             request.$$route().then(function() {
                 let code = response.statusCode,
                     path = request.path,

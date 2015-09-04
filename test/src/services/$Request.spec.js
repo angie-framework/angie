@@ -1,5 +1,5 @@
 // Test Modules
-import {expect} from                'chai';
+import {assert, expect} from        'chai';
 import {mock, spy} from             'simple-mock';
 
 // Angie Modules
@@ -38,12 +38,11 @@ describe('$Request', function() {
         beforeEach(function() {
             write = spy();
             head = spy(function() {
-                console.log('in head');
                 return { write };
             });
             RedirectResponseMock = mock(
-                $Responses.RedirectResponse.prototype,
-                'constructor',
+                $Responses,
+                'RedirectResponse',
                 function() {
                     return { head };
                 }
