@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed/Added
 - Broke up `BaseRequest` into several response classes in `$Response`
 - Fixed `$StringUtil` functions to use RegExp instead of string manipulation
+- Made `$$tearDown` on the Angie object accept multiple modules.
+- Fixed many many tests
+- Added documentation for the new $Response methods.
 
 #### [0.3.3] - 2015-08-27
 ##### Fixed/Added
