@@ -50,7 +50,7 @@ class $Request {
      * @access private
      */
     $redirect(path) {
-        return new $Responses.RedirectResponse(path).head().write();
+        return new $Responses.RedirectResponse(path).head().writeSync();
     }
 
     /**
@@ -112,7 +112,7 @@ class $Request {
             ) {
                 ResponseType = 'Asset';
             } else if (this.otherwise) {
-                ResponseType = 'Redirect';
+                return new $Responses.RedirectResponse().head().writeSync();
             } else {
                 ResponseType = 'Unknown';
             }

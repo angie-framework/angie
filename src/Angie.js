@@ -461,7 +461,6 @@ app.factory('$Routes', $RouteProvider)
     .factory('$resourceLoader', $resourceLoader);
 
 // Services
-// Error utilities
 app.service('$Exceptions', $ExceptionsProvider)
     .service('$scope', $scope)
     .service('$window', {})

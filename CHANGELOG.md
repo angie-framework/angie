@@ -6,8 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Fixed/Added
 - Broke up `BaseRequest` into several response classes in `$Response`
 - Fixed `$StringUtil` functions to use RegExp instead of string manipulation
-- Made `$$tearDown` on the Angie object accept multiple modules.
-- Force a response with a timeout if no response is received from the Controller, configurable based on the AngieFile `responseErrorTimeout` option.
+- Made `$$tearDown` on the Angie object accept multiple modules
+- Force a response with a timeout if no response is received from the Controller, configurable based on the AngieFile `responseErrorTimeout` option
 - Fixed many many tests
 - Added documentation for the new $Response methods.
 

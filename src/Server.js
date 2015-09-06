@@ -10,6 +10,7 @@ import http from                        'http';
 import https from                       'https';
 import {Client} from                    'fb-watchman';
 import {cyan} from                      'chalk';
+import {default as $Injector} from      'angie-injector';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
@@ -21,7 +22,8 @@ import $Response, {
     $CustomResponse
 } from                                  './services/$Response';
 
-const CLIENT = new Client(),
+const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES'),
+    CLIENT = new Client(),
     SUB = {
         expression: [
             'anyof', [ 'match', '*.js' ], [ 'match', '*.es6' ] ],
@@ -190,9 +192,13 @@ function $$server(args = []) {
 
             // Set a request error timeout so that we ensure every request
             // resolves to something
+
+            console.log('BEFORE');
+
             requestTimeout = setTimeout(
                 forceEnd.bind(null, request.path, response),
-                config.responseErrorTimeout || 5000
+                config.hasOwnProperty('responseErrorTimeout') ?
+                    config.responseErrorTimeout : 5000
             );
 
             // Route the request in the application
@@ -230,35 +236,38 @@ function $$server(args = []) {
 
         // Info
         $LogProvider.info(`Serving on port ${PORT}`);
+
+        function end(response) {
+
+            // End the response
+            response.end();
+
+            // After we have finished with the response, we can tear down
+            // request/response specific components
+            app.$$tearDown('$request', '$response');
+        }
+
+        // Force an ended response with a timeout
+        function forceEnd(path, response) {
+
+            console.log('IN FORCE');
+
+            // Send a custom response for gateway timeout
+            new $CustomResponse().head(504, null, {
+                'Content-Type': 'text/html'
+            }).writeSync(`<h1>${RESPONSE_HEADER_MESSAGES[ 504 ]}</h1>`);
+
+            // Log something
+            $LogProvider.error(path, response._header);
+
+            // End the response
+            end(response);
+        }
     });
 }
 
 function $$port(args) {
     return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
-}
-
-function end(response) {
-
-    // End the response
-    response.end();
-
-    // After we have finished with the response, we can tear down
-    // request/response specific components
-    app.$$tearDown('$request', '$response');
-}
-
-function forceEnd(path, response) {
-
-    // Send a custom response for gateway timeout
-    new $CustomResponse().head(504, null, {
-        'Content-Type': 'text/html'
-    }).writeSync('Request Timed Out');
-
-    // Log something
-    $LogProvider.error(path, response._header);
-
-    // End the response
-    end(response);
 }
 
 export {

@@ -17,6 +17,8 @@ describe('$$server', function() {
     let request,
         response,
         listen,
+        timeoutMock,
+        routeMock,
         end,
         head,
         writeSync,
@@ -50,7 +52,9 @@ describe('$$server', function() {
             fn(request, response);
             return { listen };
         });
-        mock($Request.prototype, '$$route', function() {
+        timeoutMock = mock(global, 'setTimeout', () => true);
+        mock(global, 'clearTimeout', () => true);
+        routeMock = mock($Request.prototype, '$$route', function() {
             return {
                 then(fn) {
                     fn();
@@ -73,6 +77,13 @@ describe('$$server', function() {
                 return { head };
             }
         );
+        mock(
+            $Responses,
+            '$CustomResponse',
+            function() {
+                return { head };
+            }
+        );
         mock($Responses.default.prototype, 'constructor', function() {
             return { response };
         });
@@ -81,12 +92,14 @@ describe('$$server', function() {
         mock($LogProvider, 'warn', () => true);
         mock($LogProvider, 'info', () => true);
     });
-    afterEach(() => simple.restore());
+    afterEach(simple.restore);
     it('test call with http', function() {
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
         assert(http.createServer.called);
         expect(https.createServer).to.not.have.been.called;
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
@@ -107,6 +120,8 @@ describe('$$server', function() {
         assert(app.$$load.called);
         expect(http.createServer).to.not.have.been.called;
         assert(https.createServer.called);
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
@@ -128,6 +143,8 @@ describe('$$server', function() {
         assert(app.$$load.called);
         expect(http.createServer).to.not.have.been.called;
         assert(https.createServer.called);
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
         assert($Request.prototype.$$route.called);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
@@ -158,5 +175,23 @@ describe('$$server', function() {
         response.statusCode = 500;
         $$server([ 'server', 1234 ]);
         expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+    });
+    it('test timeout response', function() {
+        timeoutMock.callFn((fn) => fn());
+        routeMock.returnWith({
+            then() {
+                return {
+                    catch() {}
+                };
+            }
+        });
+        $$server([ 'server', 1234 ]);
+        assert($Responses.$CustomResponse.called);
+        expect(head.calls[0].args).to.deep.eq([ 504, null, {
+            'Content-Type': 'text/html'
+        } ]);
+        expect(writeSync.calls[0].args[0]).to.eq('<h1>Gateway Timeout</h1>');
+        expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        assert(end.called);
     });
 });

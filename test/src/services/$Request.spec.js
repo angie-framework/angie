@@ -33,12 +33,12 @@ describe('$Request', function() {
     describe('$redirect', function() {
         let RedirectResponseMock,
             head,
-            write;
+            writeSync;
 
         beforeEach(function() {
-            write = spy();
+            writeSync = spy();
             head = spy(function() {
-                return { write };
+                return { writeSync };
             });
             RedirectResponseMock = mock(
                 $Responses,
@@ -53,7 +53,7 @@ describe('$Request', function() {
             new $Request(request).$redirect('test');
             expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
             assert(head.called);
-            assert(write.called);
+            assert(writeSync.called);
         });
     });
     describe('$$route', function() {
@@ -96,6 +96,8 @@ describe('$Request', function() {
             });
         });
         describe('test RedirectResponse', function() {
+            let writeSync;
+
             beforeEach(function() {
                 mock($Routes, 'fetch', () => ({
                     otherwise: 'test',
@@ -104,6 +106,8 @@ describe('$Request', function() {
                 request = new $Request({
                     url: 'http://localhost:3000/test'
                 });
+                writeSync = spy();
+                head.returnWith({ writeSync });
                 mock(
                     $Responses,
                     'RedirectResponse',
@@ -112,11 +116,11 @@ describe('$Request', function() {
                     }
                 );
             });
-            it('test no found route, no asset', function() {
+            it('test no found route, no asset with otherwise', function() {
                 request.$$route();
                 assert($Responses.RedirectResponse.called);
                 assert(head.called);
-                assert(write.called);
+                assert(writeSync.called);
             });
         });
         describe('test AssetResponse', function() {

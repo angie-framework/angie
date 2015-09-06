@@ -44,9 +44,7 @@ describe('$Responses', function() {
             write: writeSpy
         };
     });
-    afterEach(function() {
-        simple.restore();
-    });
+    afterEach(simple.restore);
     describe('BaseResponse', function() {
         beforeEach(function() {
             $injectorMock = mock($Injector, 'get', () => [ $request, $response ]);
@@ -121,12 +119,27 @@ describe('$Responses', function() {
             });
             describe('write', function() {
                 beforeEach(function() {
+                    mock(response, 'writeSync', () => true);
+                });
+                it(
+                    'test write calls response.writeSync',
+                    function() {
+                        response.write();
+                        assert(response.writeSync.called);
+                    }
+                );
+            });
+            describe('writeSync', function() {
+                beforeEach(function() {
                     mock($TemplateCache, '$$templateLoader', () => 'test');
                 });
                 it(
-                    'test write calls response.write and $$templateLoader',
+                    'test writeSync calls $$templateLoader',
                     function() {
-                        response.write();
+                        response.writeSync();
+                        expect(
+                            $TemplateCache.$$templateLoader.calls[0].args[0]
+                        ).to.eq('html/index.html');
                         expect(
                             response.response.write.calls[0].args[0]
                         ).to.eq('test');
@@ -310,23 +323,26 @@ describe('$Responses', function() {
             });
         });
         describe('methods', function() {
-            let setHeaderSpy;
-
             beforeEach(function() {
                 response = new $Responses.RedirectResponse('test');
-                response.response = $response;
 
-                response.response.setHeader = setHeaderSpy = spy();
+                $response.end = spy();
+                $response.setHeader = spy();
+                response.response = $response;
             });
             it('head', function() {
                 expect(response.head()).to.eq(response);
                 expect(response.response.statusCode).to.eq(302);
                 expect(
-                    setHeaderSpy.calls[0].args
+                    $response.setHeader.calls[0].args
                 ).to.deep.eq([ 'Location', 'test' ]);
             });
             it('write', function() {
-                response.write();
+                expect(response.write().then).to.be.a('function');
+            });
+            it('writeSync', function() {
+                response.writeSync();
+                assert($response.end.called);
             });
         });
     });
@@ -349,7 +365,7 @@ describe('$Responses', function() {
         it('constructor', function() {
             let response = new $Responses.UnknownResponse();
             assert(BaseResponseMock.called);
-            expect($$templateLoaderMock.calls[0].args[0]).to.eq('404.html');
+            expect($$templateLoaderMock.calls[0].args[0]).to.eq('html/404.html');
         });
         describe('methods', function() {
             beforeEach(function() {
@@ -387,12 +403,19 @@ describe('$Responses', function() {
                 assert(BaseResponseMock.called);
                 expect(response.html).to.eq('<h1>Internal Server Error</h1>');
             });
-            it('test error', function() {
+            it('test error with stack', function() {
                 config.development = true;
                 let e = new Error('test'),
                     response = new $Responses.ErrorResponse(e);
                 assert(BaseResponseMock.called);
                 expect(response.html).to.eq(`<h1>${e}</h1><p>${e.stack}</p>`);
+            });
+            it('test error without stack', function() {
+                config.development = true;
+                let e = new Error('test'),
+                    response = new $Responses.ErrorResponse('test');
+                assert(BaseResponseMock.called);
+                expect(response.html).to.eq('<h1>test</h1><p>No Traceback</p>');
             });
         });
         describe('methods', function() {
@@ -411,8 +434,64 @@ describe('$Responses', function() {
                 expect(writeSpy.calls[0].args[0]).to.eq(response.html);
             });
             it('writeSync', function() {
-                response.write();
+                response.writeSync();
                 expect(writeSpy.calls[0].args[0]).to.eq(response.html);
+            });
+        });
+    });
+    describe('$CustomResponse', function() {
+        let BaseResponseMock;
+
+        beforeEach(function() {
+            BaseResponseMock = mock(
+                $Responses.BaseResponse.prototype,
+                'constructor',
+                () => true
+            );
+        });
+        it('constructor', function() {
+            let response = new $Responses.$CustomResponse();
+            assert(BaseResponseMock.called);
+        });
+        describe('methods', function() {
+            let html;
+
+            beforeEach(function() {
+                html = 'test';
+                response = new $Responses.$CustomResponse();
+                response.response = $response;
+            });
+            describe('head', function() {
+                beforeEach(function() {
+                    response.responseHeaders = {};
+                });
+                it('test without header message', function() {
+                    expect(response.head(504, null)).to.eq(response);
+                    expect(
+                        writeHeadSpy.calls[0].args
+                    ).to.deep.eq([ 504, 'Gateway Timeout', {} ]);
+                });
+                it('test with header message', function() {
+                    expect(response.head(200, 'test')).to.eq(response);
+                    expect(
+                        writeHeadSpy.calls[0].args
+                    ).to.deep.eq([ 200, 'test', {} ]);
+                });
+                it('test with additional response headers', function() {
+                    let test = 'test';
+                    expect(response.head(504, null, { test })).to.eq(response);
+                    expect(
+                        writeHeadSpy.calls[0].args
+                    ).to.deep.eq([ 504, 'Gateway Timeout', { test } ]);
+                });
+            });
+            it('write', function() {
+                response.write(html);
+                expect(writeSpy.calls[0].args[0]).to.eq(html);
+            });
+            it('writeSync', function() {
+                response.writeSync(html);
+                expect(writeSpy.calls[0].args[0]).to.eq(html);
             });
         });
     });

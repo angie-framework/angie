@@ -126,7 +126,7 @@ class BaseResponse {
      * @access private
      */
     writeSync() {
-        this.response.write($$templateLoader('index.html'));
+        this.response.write($$templateLoader('html/index.html'));
     }
 }
 
@@ -403,6 +403,15 @@ class RedirectResponse extends BaseResponse {
         // There is no content in this method
         return new Promise((r) => r());
     }
+
+    /**
+     * @desc Ends the redirect response (synchronously).
+     * @since 0.4.0
+     * @access private
+     */
+    writeSync() {
+        this.response.end();
+    }
 }
 
 /**
@@ -523,19 +532,40 @@ class ErrorResponse extends BaseResponse {
     }
 }
 
+/**
+ * @desc $CustomResponse is an exposed custom response method which can be used
+ * to defined any response outside of the pre-canned response classes. It is,
+ * for example, used by the Angie server to return a Gateway Timeout (504) in
+ * the event that a request is not resolved within the timeframe defined by the
+ * AngieFile.json `responseErrorTimeout`.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class $CustomResponse extends BaseResponse {
+    constructor() {
+        super();
+    }
 
+    /**
+     * @desc Sets up the headers associated with the CustomResponse
+     * @since 0.4.0
+     * @access private
+     */
     head(code = 200, msg, headers = {}) {
-        code = +code;
         msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
 
-        this.response.writeHead(
-            code, msg, util._extend(this.responseHeaders, {})
-        );
+        this.responseHeaders = util._extend(this.responseHeaders, headers);
+        this.response.writeHead(+code, msg, this.responseHeaders);
 
         return this;
     }
 
+    /**
+     * @desc Writes the custom data to the response.
+     * @since 0.4.0
+     * @access private
+     */
     write(data) {
         let me = this;
 
@@ -545,6 +575,11 @@ class $CustomResponse extends BaseResponse {
         });
     }
 
+    /**
+     * @desc Writes the custom data to the response synchronously.
+     * @since 0.4.0
+     * @access private
+     */
     writeSync(data) {
         this.response.write(data);
     }
