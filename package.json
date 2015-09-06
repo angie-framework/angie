@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "test": "gulp test",
-    "postinstall": "babel src --out-dir dist --comments false"
+    "postinstall": "babel src --out-dir dist --comments false && cp -R src/templates dist"
   },
   "engines": {
     "iojs": "*",
@@ -43,6 +43,7 @@
     "gulp": "3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-cli": "0.2.0",
+    "gulp-copy": "0.0.2",
     "gulp-esdoc": "0.0.3",
     "gulp-eslint": "0.12.0",
     "gulp-istanbul": "0.9.0",
