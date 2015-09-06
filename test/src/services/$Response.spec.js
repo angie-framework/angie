@@ -261,7 +261,7 @@ describe('$Responses', function() {
                 });
             });
         });
-        describe('isRoutedAssetResourceResponse', function() {
+        describe('$isRoutedAssetResourceResponse', function() {
             let findMock;
 
             beforeEach(function() {
@@ -273,13 +273,13 @@ describe('$Responses', function() {
             });
             it('test found asset', function() {
                 expect(
-                    $Responses.AssetResponse.isRoutedAssetResourceResponse()
+                    $Responses.AssetResponse.$isRoutedAssetResourceResponse()
                 ).to.be.true;
             });
             it('test did not find asset', function() {
                 findMock.returnWith(false);
                 expect(
-                    $Responses.AssetResponse.isRoutedAssetResourceResponse()
+                    $Responses.AssetResponse.$isRoutedAssetResourceResponse()
                 ).to.be.false;
             });
         });

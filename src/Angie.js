@@ -20,9 +20,8 @@ import {$templateCache, $resourceLoader} from           './factories/$TemplateCa
 import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
-const CWD = process.cwd();
-
-const $$require = (v) => {
+const CWD = process.cwd(),
+    $$require = (v) => {
 
         // If we dont first clear this out of the module cache, then we don't
         // actually do anything with the require call that isn't assigned
@@ -420,8 +419,7 @@ let app = global.app = new Angie();
 // Require in any further external components
 // Constants
 app.constant('ANGIE_TEMPLATE_DIRS', [
-    `${__dirname}/templates/html`,
-    `${__dirname}/../test/src/templates`
+    `${__dirname}/templates`
 ].concat((config.templateDirs || []).map(function(v) {
     if (v.indexOf(CWD) === -1) {
         v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;

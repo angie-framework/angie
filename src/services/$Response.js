@@ -156,9 +156,8 @@ class AssetResponse extends BaseResponse {
         let assetCache = new $CacheFactory('staticAssets'),
             asset = this.response.$responseContent =
                 assetCache.get(this.path) ||
-                    $$templateLoader(this.path, 'static') || undefined;
-
-        let me = this;
+                    $$templateLoader(this.path, 'static') || undefined,
+            me = this;
         return new Promise(function(resolve) {
             if (asset) {
                 if (
@@ -175,21 +174,50 @@ class AssetResponse extends BaseResponse {
         });
     }
 
-    static isRoutedAssetResourceResponse(path) {
+    /**
+     * @desc Determines whether or not the response has an asset to which it can
+     * be associated.
+     * @param {string} path The relative url of the asset path from the
+     * AngieFile.json staticDirs
+     * @returns {boolean} Does the relative staticDirs path exist
+     * @since 0.4.0
+     * @access private
+     */
+    static $isRoutedAssetResourceResponse(path) {
         return config.staticDirs.some(
             (v) => !!$FileUtil.find(v, path)
         );
     }
 }
 
+/**
+ * @desc ControllerResponse defines any Angie response that has a path which is
+ * associated with a template or template path. It is responsible for calling
+ * the controller and any post-processed templating.
+ * @since 0.4.0
+ * @access private
+ * @extends {BaseResponse}
+ */
 class ControllerResponse extends BaseResponse {
     constructor() {
         super();
     }
+
+    /**
+     * @desc Sets up the headers associated with the ControllerResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         super.head();
         return this;
     }
+
+    /**
+     * @desc Performs the Controller and calls any templating in the response
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         this.$scope = $Injector.get('$scope');
 
@@ -237,15 +265,34 @@ class ControllerResponse extends BaseResponse {
     }
 }
 
-// TODO should call super for directive work
+/**
+ * @desc ControllerTemplateResponse defines any Angie response that has a path
+ * which is associated with a template. It is responsible for calling the
+ * controller and any post-processed templating.
+ * @since 0.4.0
+ * @access private
+ * @extends {ControllerResponse}
+ */
 class ControllerTemplateResponse extends ControllerResponse {
     constructor() {
         super();
     }
+
+    /**
+     * @desc Sets up the headers associated with the ControllerTemplateResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         super.head();
         return this;
     }
+
+    /**
+     * @desc Performs the Controller templating
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         let me = this;
 
@@ -257,15 +304,35 @@ class ControllerTemplateResponse extends ControllerResponse {
     }
 }
 
-// TODO should call super for directive work
+/**
+ * @desc ControllerTemplatePathResponse defines any Angie response that has a
+ * path which is associated with a template path. It is responsible for calling
+ * the controller and any post-processed templating.
+ * @since 0.4.0
+ * @access private
+ * @extends {ControllerResponse}
+ */
 class ControllerTemplatePathResponse extends ControllerResponse {
     constructor() {
         super();
     }
+
+    /**
+     * @desc Sets up the headers associated with the
+     * ControllerTemplatePathResponse
+     * @since 0.4.0
+     * @access private
+     */
     head() {
         super.head();
         return this;
     }
+
+    /**
+     * @desc Performs the Controller path templating
+     * @since 0.4.0
+     * @access private
+     */
     write() {
         let me = this;
 
@@ -453,13 +520,27 @@ class ErrorResponse extends BaseResponse {
 //     }
 // }
 
+/**
+ * @desc Resolves any situation in which a Controller is referenced where it
+ * does not exist
+ * @since 0.4.0
+ * @access private
+ * @extends {Reference}
+ */
 class $$ControllerNotFoundError extends ReferenceError {
+
+    /**
+     * @param {string} name Controller Name
+     * @since 0.4.0
+     * @access private
+     */
     constructor(name) {
         $LogProvider.error(`Unknown Controller ${blue(name)}`);
         super();
     }
 }
 
+// Performs the templating inside of Controller Classes
 function controllerTemplateRouteResponse() {
     if (!this.template) {
 

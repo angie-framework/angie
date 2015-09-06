@@ -26,7 +26,7 @@ import {bold, red} from     'chalk';
 const bread = (str) => bold(red(str));
 
 const SRC_DIR = 'src',
-    SRC = `${SRC}/**/*.js`,
+    SRC = `${SRC_DIR}/**/*.js`,
     TRANSPILED_SRC = 'dist',
     TEST_SRC = 'test/**/*.spec.js',
     DOC_SRC = 'doc',
@@ -74,12 +74,15 @@ gulp.task('cobertura', [ 'mocha' ], function(cb) {
 });
 
 gulp.task('esdoc', [ 'cobertura' ], function() {
-    return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
+    return gulp.src(SRC_DIR).pipe(esdoc({
+        destination: DOC_SRC
+    }));
 });
-gulp.task('babel', [ 'esdoc' ], function() {
-    return gulp.src('src/**').pipe(babel({
+gulp.task('babel', [ 'esdoc' ], function(cb) {
+    gulp.src(SRC).pipe(babel({
         comments: false
     })).pipe(gulp.dest('dist'));
+    exec(`cp -R ${SRC_DIR}/templates ${TRANSPILED_SRC}/templates`, cb);
 });
 
 // Bundled Tasks

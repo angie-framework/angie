@@ -61,7 +61,7 @@ class $Request {
     $$route() {
 
         // Check against all of the RegExp routes in Reverse
-        let regExpRoutes = Object.keys(this.routes.regExp).reverse();
+        let regExpRoutes = Object.keys(this.routes.regExp || {}).reverse();
 
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
@@ -99,7 +99,6 @@ class $Request {
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
         let ResponseType;
-
         try {
             if (this.route) {
                 ResponseType = 'ControllerTemplate';
@@ -107,7 +106,7 @@ class $Request {
                     ResponseType += 'Path';
                 }
             } else if (
-                $Responses.AssetResponse.isRoutedAssetResourceResponse(
+                $Responses.AssetResponse.$isRoutedAssetResourceResponse(
                     this.path
                 )
             ) {
@@ -119,11 +118,7 @@ class $Request {
             }
 
             // Perform the specified response type
-            if (ResponseType) {
-                return new $Responses[ `${ResponseType}Response` ]().head().write();
-            } else {
-                throw new Error();
-            }
+            return new $Responses[ `${ResponseType}Response` ]().head().write();
         } catch(e) {
 
             // Throw an error response if no other response type was specified
