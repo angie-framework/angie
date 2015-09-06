@@ -432,7 +432,8 @@ app.constant('ANGIE_TEMPLATE_DIRS', [
 ).constant('RESPONSE_HEADER_MESSAGES', {
     200: 'Ok',
     404: 'File Not Found',
-    500: 'Internal Server Error'
+    500: 'Internal Server Error',
+    504: 'Gateway Timeout'
 }).constant(
     'PRAGMA_HEADER',
     'no-cache'

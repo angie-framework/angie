@@ -16,7 +16,10 @@ import $LogProvider from                'angie-log';
 import {config} from                    './Config';
 import app from                         './Angie';
 import $Request from                    './services/$Request';
-import $Response, {ErrorResponse} from  './services/$Response';
+import $Response, {
+    ErrorResponse,
+    $CustomResponse
+} from                                  './services/$Response';
 
 const CLIENT = new Client(),
     SUB = {
@@ -179,10 +182,18 @@ function $$server(args = []) {
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
             let request = new $Request(req),
-                response = new $Response(res).response;
+                response = new $Response(res).response,
+                requestTimeout;
 
             // Add Angie components for the request and response objects
             app.service('$request', request.request).service('$response', response);
+
+            // Set a request error timeout so that we ensure every request
+            // resolves to something
+            requestTimeout = setTimeout(
+                forceEnd.bind(null, request.path, response),
+                config.responseErrorTimeout || 5000
+            );
 
             // Route the request in the application
             request.$$route().then(function() {
@@ -190,6 +201,10 @@ function $$server(args = []) {
                     path = request.path,
                     header = response._header,
                     log = 'error';
+
+                // Clear the request error because now we are guaranteed some
+                // sort of response
+                clearTimeout(requestTimeout);
 
                 // Provide log information based on the application response
                 if (code < 400) {
@@ -230,6 +245,20 @@ function end(response) {
     // After we have finished with the response, we can tear down
     // request/response specific components
     app.$$tearDown('$request', '$response');
+}
+
+function forceEnd(path, response) {
+
+    // Send a custom response for gateway timeout
+    new $CustomResponse().head(504, null, {
+        'Content-Type': 'text/html'
+    }).writeSync('Request Timed Out');
+
+    // Log something
+    $LogProvider.error(path, response._header);
+
+    // End the response
+    end(response);
 }
 
 export {

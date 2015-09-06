@@ -5,6 +5,7 @@
  */
 
 // System Modules
+import util from                    'util';
 import {blue} from                  'chalk';
 import {
     default as $Injector,
@@ -110,12 +111,22 @@ class BaseResponse {
      * @access private
      */
     write() {
-        let response = this.response;
+        let me = this;
 
         return new Promise(function(resolve) {
-            response.write($$templateLoader('index.html'));
+            me.writeSync();
             resolve();
         });
+    }
+
+    /**
+     * @desc Loads the default Angie template html file, `index.html`, and
+     * writes the file to the response synchronously
+     * @since 0.4.0
+     * @access private
+     */
+    writeSync() {
+        this.response.write($$templateLoader('index.html'));
     }
 }
 
@@ -245,7 +256,7 @@ class ControllerResponse extends BaseResponse {
             }
 
             // Call the bound controller function
-            me.controller = new $injectionBinder(
+            return new $injectionBinder(
                 controller,
                 'controller'
             ).call(me.$scope, resolve);
@@ -253,10 +264,10 @@ class ControllerResponse extends BaseResponse {
             // Resolve the Promise if the controller does not return a
             // function
             if (
-                controller &&
+                me.controller &&
                 (
-                    !controller.constructor ||
-                    controller.constructor.name !== 'Promise'
+                    !me.controller.constructor ||
+                    me.controller.constructor.name !== 'Promise'
                 )
             ) {
                 return resolve(controller);
@@ -411,7 +422,7 @@ class UnknownResponse extends BaseResponse {
      */
     constructor() {
         super();
-        this.html = $$templateLoader('404.html');
+        this.html = $$templateLoader('html/404.html');
     }
 
     /**
@@ -464,7 +475,7 @@ class ErrorResponse extends BaseResponse {
 
         let html = '<h1>';
         if (e && config.development === true) {
-            html += `${e}</h1><p>${e.stack}</p>`;
+            html += `${e}</h1><p>${e.stack || 'No Traceback'}</p>`;
         } else {
 
             // Call the response header constants to write the html
@@ -497,10 +508,9 @@ class ErrorResponse extends BaseResponse {
         let me = this;
 
         return new Promise(function(resolve) {
-            me.response.write(me.html);
+            me.writeSync();
             resolve();
         });
-
     }
 
     /**
@@ -510,6 +520,33 @@ class ErrorResponse extends BaseResponse {
      */
     writeSync() {
         this.response.write(this.html);
+    }
+}
+
+class $CustomResponse extends BaseResponse {
+
+    head(code = 200, msg, headers = {}) {
+        code = +code;
+        msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
+
+        this.response.writeHead(
+            code, msg, util._extend(this.responseHeaders, {})
+        );
+
+        return this;
+    }
+
+    write(data) {
+        let me = this;
+
+        return new Promise(function(resolve) {
+            me.writeSync(data);
+            resolve();
+        });
+    }
+
+    writeSync(data) {
+        this.response.write(data);
     }
 }
 
@@ -606,5 +643,6 @@ export {
     ControllerTemplatePathResponse,
     RedirectResponse,
     UnknownResponse,
-    ErrorResponse
+    ErrorResponse,
+    $CustomResponse
 };

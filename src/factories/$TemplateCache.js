@@ -38,16 +38,13 @@ class $TemplateCache extends $CacheFactory {
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
-    const TEMPLATE_DIRS = $Injector.get('TEMPLATE_DIRS');
+    const TEMPLATE_DIRS = $Injector.get('ANGIE_TEMPLATE_DIRS');
     let template;
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = TEMPLATE_DIRS.length - 1; i >= 0; --i) {
         let dir = TEMPLATE_DIRS[i],
             path = $FileUtil.find(dir, url);
-
-        console.log(dir);
-        console.log(url);
 
         if (typeof path === 'string') {
             template = fs.readFileSync(path, encoding || undefined);
