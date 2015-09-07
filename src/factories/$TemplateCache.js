@@ -16,8 +16,6 @@ import {
     $FileUtil
 } from                              '../util/Util';
 
-const p = process;
-
 class $TemplateCache extends $CacheFactory {
     constructor() {
         super('templateCache');

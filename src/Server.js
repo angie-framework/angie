@@ -192,9 +192,6 @@ function $$server(args = []) {
 
             // Set a request error timeout so that we ensure every request
             // resolves to something
-
-            console.log('BEFORE');
-
             requestTimeout = setTimeout(
                 forceEnd.bind(null, request.path, response),
                 config.hasOwnProperty('responseErrorTimeout') ?
@@ -249,8 +246,6 @@ function $$server(args = []) {
 
         // Force an ended response with a timeout
         function forceEnd(path, response) {
-
-            console.log('IN FORCE');
 
             // Send a custom response for gateway timeout
             new $CustomResponse().head(504, null, {
