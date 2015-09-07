@@ -5,26 +5,28 @@
  */
 
 // System Modules
-import repl from                    'repl';
-import http from                    'http';
-import https from                   'https';
-import url from                     'url';
-import util from                    'util';
-import {Client} from                'fb-watchman';
-import {cyan} from                  'chalk';
-import $LogProvider from            'angie-log';
+import repl from                        'repl';
+import http from                        'http';
+import https from                       'https';
+import {Client} from                    'fb-watchman';
+import {cyan} from                      'chalk';
+import {default as $Injector} from      'angie-injector';
+import $LogProvider from                'angie-log';
 
 // Angie Modules
-import {config} from                './Config';
-import app from                     './Angie';
-import $CacheFactory from           './factories/$CacheFactory';
-import {$$templateLoader} from      './factories/$TemplateCache';
-import {BaseRequest} from           './services/BaseRequest';
-import {default as $MimeType} from  './util/$MimeTypeProvider';
+import {config} from                    './Config';
+import app from                         './Angie';
+import $Request from                    './services/$Request';
+import $Response, {
+    ErrorResponse,
+    $CustomResponse
+} from                                  './services/$Response';
 
-const CLIENT = new Client(),
+const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES'),
+    CLIENT = new Client(),
     SUB = {
-        expression: [ 'anyof', [ 'match', '*.js' ], [ 'match', '*.es6' ] ],
+        expression: [
+            'anyof', [ 'match', '*.js' ], [ 'match', '*.es6' ] ],
         fields: []
     };
 let webserver,
@@ -100,6 +102,14 @@ function $$watch(args = []) {
             }).then(function() {
                 CLIENT.on('subscription', function (r) {
                     if (r.subscription === 'ANGIE_WATCH') {
+
+                        // Stop any existing webserver
+                        if (webserver) {
+                            webserver.close();
+                        }
+
+                        // Call the passed command to restart the watched
+                        // process
                         (args[0] && args[0] === 'watch' ? $$server : $$shell)(
                             [ PORT ]
                         );
@@ -126,25 +136,24 @@ function $$watch(args = []) {
  * @access private
  */
 function $$shell() {
-    const P = process,
-        SHELL_PROMPT = 'angie > ';
+    const SHELL_PROMPT = 'angie > ';
 
     if (shell) {
-        P.stdout.write('\n');
+        process.stdout.write('\n');
     }
 
     return app.$$load().then(function() {
-        P.stdin.setEncoding('utf8');
+        process.stdin.setEncoding('utf8');
 
         // Start a REPL after loading project files
         if (!shell) {
             shell = repl.start({
                 prompt: SHELL_PROMPT,
-                input: P.stdin,
-                output: P.stdout
+                input: process.stdin,
+                output: process.stdout
             });
         } else {
-            P.stdout.write(SHELL_PROMPT);
+            process.stdout.write(SHELL_PROMPT);
         }
     });
 }
@@ -169,105 +178,86 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
-    // Stop any existing webserver
-    if (webserver) {
-        webserver.close();
-    }
-
+    // Load necessary app components
     app.$$load().then(function() {
 
-        // Start a webserver
-        webserver = (PORT === 443 ? https : http).createServer(function(request, response) {
-            const path = url.parse(request.url).pathname;
-            let angieResponse = new BaseRequest(path, request, response),
-                asset;
+        // Start a webserver, use http/https based on port
+        webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
+            let request = new $Request(req),
+                response = new $Response(res).response,
+                requestTimeout;
 
-            // A file cannot be in the static path if it doesn't have an extension, shortcut
-            // TODO you may want to move the asset loading block out of here
-            // TODO Move to "Asset Path" in BaseRequest
-            if (path.indexOf('.') > -1) {
-                let assetCache = new $CacheFactory('staticAssets');
+            // Add Angie components for the request and response objects
+            app.service('$request', request.request).service('$response', response);
 
-                if (assetCache.get(path)) {
-                    asset = assetCache.get(path);
-                } else {
-                    asset = $$templateLoader(path, 'static');
-                }
+            // Set a request error timeout so that we ensure every request
+            // resolves to something
+            requestTimeout = setTimeout(
+                forceEnd.bind(null, request.path, response),
+                config.hasOwnProperty('responseErrorTimeout') ?
+                    config.responseErrorTimeout : 5000
+            );
 
-                // We have an asset and must render a response
-                if (asset) {
+            // Route the request in the application
+            request.$$route().then(function() {
+                let code = response.statusCode,
+                    path = request.path,
+                    header = response._header,
+                    log = 'error';
 
-                    // Set the content type
-                    angieResponse.responseHeaders[ 'Content-Type' ] =
-                        $MimeType.fromPath(path);
+                // Clear the request error because now we are guaranteed some
+                // sort of response
+                clearTimeout(requestTimeout);
 
-                    // We do not want to cache responses
-                    if (
-                        config.hasOwnProperty('cacheStaticAssets') &&
-                        !config.cacheStaticAssets
-                    ) {
-                        angieResponse.responseHeaders = util._extend(
-                            angieResponse.responseHeaders,
-                            {
-                                Expires: -1,
-                                Pragma: app.constants.PRAGMA_HEADER,
-                                'Cache-Control': app.constants.NO_CACHE_HEADER
-                            }
-                        );
-                    }
-
-                    response.writeHead(
-                        200,
-                        app.constants.RESPONSE_HEADER_MESSAGES[ '200' ],
-                        angieResponse.responseHeaders
-                    );
-
-                    // Check if you have an image type asset
-                    $LogProvider.info(path, response._header);
-                    response.write(asset);
-                }
-
-                // End the response
-                response.end();
-                return;
-            }
-
-            // else {
-
-            angieResponse.$$route().then(function() {
-                let code = response.statusCode;
-                if (!code) {
-                    const error = $$templateLoader('500.html');
-
-                    // TODO extrapolate this to responses
-                    response.writeHead(
-                        500,
-                        app.constants.RESPONSE_HEADER_MESSAGES[ '500' ],
-                        angieResponse.responseHeaders
-                    );
-                    response.write(error);
-                    $LogProvider.error(path, response._header);
-                } else if (code < 400) {
-                    $LogProvider.info(path, response._header);
+                // Provide log information based on the application response
+                if (code < 400) {
+                    log = 'info';
                 } else if (code < 500) {
-                    $LogProvider.warn(path, response._header);
-                } else {
-                    $LogProvider.error(path, response._header);
+                    log = 'warn';
                 }
-                return true;
-            }).then(function() {
 
-                // End the response
-                response.end();
+                $LogProvider[ log ](path, header);
 
-                // TODO this seems to cause ERR_INCOMPLETE_CHUNKED_ENCODING
-                // request.connection.end();
-                // request.connection.destroy();
+                // Call this inside route block to make sure that we only
+                // return once
+                end(response);
+            }).catch(function(e) {
+                new ErrorResponse(e).head().writeSync();
+                $LogProvider.error(request.path, response._header);
+
+                // Call this inside route block to make sure that we only
+                // return once
+                end(response);
             });
         }).listen(PORT);
 
         // Info
         $LogProvider.info(`Serving on port ${PORT}`);
+
+        function end(response) {
+
+            // End the response
+            response.end();
+
+            // After we have finished with the response, we can tear down
+            // request/response specific components
+            app.$$tearDown('$request', '$response');
+        }
+
+        // Force an ended response with a timeout
+        function forceEnd(path, response) {
+
+            // Send a custom response for gateway timeout
+            new $CustomResponse().head(504, null, {
+                'Content-Type': 'text/html'
+            }).writeSync(`<h1>${RESPONSE_HEADER_MESSAGES[ 504 ]}</h1>`);
+
+            // Log something
+            $LogProvider.error(path, response._header);
+
+            // End the response
+            end(response);
+        }
     });
 }
 

@@ -34,12 +34,13 @@ let routes = {
  *
  * It can also be referenced as `app.services.$Routes` or imported as
  * '$RouteProvider' from the Angie Path.
+ * @todo use Symbols for RegExp store
  * @since 0.0.1
  */
 class $RouteProvider {
 
     /**
-     * @desc Sets up a route as a possible endpoint in an Angie application..
+     * @desc Sets up a route as a possible endpoint in an Angie application.
      * @since 0.0.1
      * @param {string|Object} str String or RegExp to denote the endpoint
      * path
@@ -69,8 +70,7 @@ class $RouteProvider {
         if (path.constructor.name === 'RegExp') {
             regExpFlag = true;
 
-            // Set the route regExp identifier
-            if (!routes.regExp) {
+            if (!routes.hasOwnProperty('regExp')) {
                 routes.regExp = {};
             }
 

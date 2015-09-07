@@ -15,10 +15,6 @@
         "comma-spacing": false,
         "consistent-return": false,
         "eol-last": false,
-        "global-strict": [
-            2,
-            "never"
-        ],
         "indent": 4,
         "key-spacing": false,
         "new-cap": false,
