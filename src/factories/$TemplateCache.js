@@ -16,13 +16,6 @@ import {
     $FileUtil
 } from                              '../util/Util';
 
-const p = process,
-      ANGIE_TEMPLATE_DIRS = [
-          `${__dirname}/../templates/html`,
-          `${__dirname}/../../test/src/templates`
-      ],
-      ANGIE_STATIC_DIRS = [];
-
 class $TemplateCache extends $CacheFactory {
     constructor() {
         super('templateCache');
@@ -39,38 +32,16 @@ class $TemplateCache extends $CacheFactory {
     }
 }
 
+// TODO remove static dir conglomeration to constants!!
 function $$templateLoader(url, type = 'template', encoding) {
 
-    // Clone them template dirs
-    let templateDirs = (
-        config[ `${type}Dirs` ].slice() || []
-    ),
-    template;
-
-    // Add the default Angie template dirs to the existing config template dirs
-    templateDirs = templateDirs.concat(
-        type === 'template' ? ANGIE_TEMPLATE_DIRS :
-            type === 'static' ? ANGIE_STATIC_DIRS : []
-    );
-
-    templateDirs = templateDirs.map(function(dir) {
-        if (
-            (
-                (type === 'template' && ANGIE_TEMPLATE_DIRS.indexOf(dir) === -1) ||
-                (type === 'static' && ANGIE_STATIC_DIRS.indexOf(dir) === -1)
-            ) &&
-            dir.indexOf(p.cwd()) === -1
-        ) {
-            dir = $StringUtil.removeLeadingSlashes(dir);
-            dir = `${p.cwd()}/${dir}`;
-        }
-        dir = $StringUtil.removeTrailingSlashes(dir);
-        return dir;
-    });
+    // Clone the template dirs
+    const TEMPLATE_DIRS = $Injector.get('ANGIE_TEMPLATE_DIRS');
+    let template;
 
     // Deliberately use a for loop so that we can break out of it
-    for (var i = templateDirs.length - 1; i >= 0; --i) {
-        let dir = templateDirs[i],
+    for (var i = TEMPLATE_DIRS.length - 1; i >= 0; --i) {
+        let dir = TEMPLATE_DIRS[i],
             path = $FileUtil.find(dir, url);
 
         if (typeof path === 'string') {

@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-#### [0.4.0] - 2015-08-27
+#### [0.4.0] - 2015-09-07
 ##### Fixed/Added
 - Broke up `BaseRequest` into several response classes in `$Response`
 - Fixed `$StringUtil` functions to use RegExp instead of string manipulation
+- Made `$$tearDown` on the Angie object accept multiple modules
+- Force a response with a timeout if no response is received from the Controller, configurable based on the AngieFile `responseErrorTimeout` option
+- Added a README update for Collaborators
+- Fixed many many tests
+- Added documentation for the new $Response methods.
 
 #### [0.3.3] - 2015-08-27
 ##### Fixed/Added

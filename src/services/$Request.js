@@ -18,11 +18,11 @@ import $Util, {$StringUtil} from    '../util/Util';
  * is being subclassed for a dependency package. It can also be used as an
  * injected provider using `$request`.
  * @since 0.0.1
- * @access public
- * @example $Injector.get('$request');
+ * @access private
  */
 class $Request {
     constructor(request) {
+        let $routes;
 
         // Define $Request based instance of createServer.prototype.response
         this.request = request;
@@ -32,11 +32,13 @@ class $Request {
         this.path = this.request.path = url.parse(request.url).pathname;
 
         // Parse query params out of the url
-        this.request.query = url.parse(request.url, true).query;
+        this.query = this.request.query = url.parse(request.url, true).query;
 
-        // Declare the routes on the request object
-        this.routes = $Routes.fetch().routes;
-        this.otherwise = $Routes.fetch().otherwise;
+        $routes = $Routes.fetch();
+
+        // Declare the routes on the local request object
+        this.routes = $routes.routes;
+        this.otherwise = this.request.otherwise = $routes.otherwise;
     }
 
     /**
@@ -45,11 +47,10 @@ class $Request {
      * @since 0.4.0
      * @param {string} path The relative or absolute path to which the Response
      * is redirected.
-     * @access public
-     * @example $Injector.get('$request').$redirect('test');
+     * @access private
      */
     $redirect(path) {
-        return new $Responses.RedirectResponse(path).head().write();
+        return new $Responses.RedirectResponse(path).head().writeSync();
     }
 
     /**
@@ -60,10 +61,7 @@ class $Request {
     $$route() {
 
         // Check against all of the RegExp routes in Reverse
-        let regExpRoutes = [];
-        if (this.routes.regExp) {
-            regExpRoutes = Object.keys(this.routes.regExp).reverse();
-        }
+        let regExpRoutes = Object.keys(this.routes.regExp || {}).reverse();
 
         for (let i = 0; i < regExpRoutes.length; ++i) {
 
@@ -94,30 +92,38 @@ class $Request {
             this.route = this.routes[ this.path ];
         }
 
+        // Set the request reference to route to the $Request route object once
+        // and only once
+        this.request.route = this.route;
+
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
         let ResponseType;
-        if (this.route) {
-            if (this.route.template && this.route.template.length) {
+        try {
+            if (this.route) {
                 ResponseType = 'ControllerTemplate';
-            } else if (this.route.templatePath) {
-                ResponseType += 'ControllerTemplatePath';
-            } else {
+                if (this.route.templatePath) {
+                    ResponseType += 'Path';
+                }
+            } else if (
+                $Responses.AssetResponse.$isRoutedAssetResourceResponse(
+                    this.path
+                )
+            ) {
                 ResponseType = 'Asset';
+            } else if (this.otherwise) {
+                return new $Responses.RedirectResponse().head().writeSync();
+            } else {
+                ResponseType = 'Unknown';
             }
-        } else if (this.otherwise) {
-            ResponseType = 'Redirect';
-        } else {
-            ResponseType = this.path === '/' ? 'Base' : 'Unknown';
-        }
 
-        // Perform the specified response type
-        if (ResponseType) {
+            // Perform the specified response type
             return new $Responses[ `${ResponseType}Response` ]().head().write();
-        }
+        } catch(e) {
 
-        // Throw an error response if no other response type was specified
-        new $Responses.ErrorResponse().head.write();
+            // Throw an error response if no other response type was specified
+            return new $Responses.ErrorResponse(e).head().write();
+        }
     }
 }
 

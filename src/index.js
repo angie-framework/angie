@@ -103,7 +103,7 @@ function runTests() {
 function help() {
     let gray = (...args) => console.log(chalk.gray.apply(null, args));
     $LogProvider.bold('Angie');
-    console.log('A Component-based NodeJS MVC');
+    console.log('A Module-Based NodeJS Web Application Framework in ES6');
     console.log('\r');
     $LogProvider.bold('Version:');
     console.log(global.ANGIE_VERSION);

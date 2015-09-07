@@ -8,7 +8,7 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 import {default as $Routes} from    '../../../src/factories/$RouteProvider';
 
-describe('$RequestProvider', function() {
+describe('$RouteProvider', function() {
     describe('when', function() {
         before(() => $Routes.$$clear());
         afterEach(() => $Routes.$$clear());

@@ -20,16 +20,17 @@ import {$templateCache, $resourceLoader} from           './factories/$TemplateCa
 import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
-const $$require = (v) => {
+const CWD = process.cwd(),
+    $$require = (v) => {
 
-    // If we dont first clear this out of the module cache, then we don't
-    // actually do anything with the require call that isn't assigned
-    delete require.cache[ v ];
+        // If we dont first clear this out of the module cache, then we don't
+        // actually do anything with the require call that isn't assigned
+        delete require.cache[ v ];
 
-    // Furthermore because it is unassigned, we do not have to force anything
-    // to return from this arrow function
-    require(v);
-};
+        // Furthermore because it is unassigned, we do not have to force anything
+        // to return from this arrow function
+        require(v);
+    };
 
 /**
  * @desc This is the default Angie class. It is instantiated and given
@@ -40,10 +41,9 @@ const $$require = (v) => {
  * with the resource pipeline & webserver, instead, use the Angie class to
  * access commonly used static methods.
  *
- * @todo rename this class
  * @since 0.0.1
  * @access public
- * @extends $Util
+ * @extends {$Util}
  * @example Angie.noop() // = undefined
  */
 class Angie {
@@ -341,7 +341,7 @@ class Angie {
      * @access private
      * @param {string}  [param=process.cwd()] dir The dir to scan for modules
      */
-    $$bootstrap(dir = process.cwd()) {
+    $$bootstrap(dir = CWD) {
         let me = this,
             src = typeof config.projectRoot === 'string' ?
                 $StringUtil.removeTrailingLeadingSlashes(config.projectRoot) :
@@ -418,10 +418,22 @@ let app = global.app = new Angie();
 
 // Require in any further external components
 // Constants
-app.constant('RESPONSE_HEADER_MESSAGES', {
-    200: 'OK',
+app.constant('ANGIE_TEMPLATE_DIRS', [
+    `${__dirname}/templates`
+].concat((config.templateDirs || []).map(function(v) {
+    if (v.indexOf(CWD) === -1) {
+        v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
+    }
+    v = $StringUtil.removeTrailingSlashes(v);
+    return v;
+}))).constant(
+    'ANGIE_STATIC_DIRS',
+    config.staticDirs || []
+).constant('RESPONSE_HEADER_MESSAGES', {
+    200: 'Ok',
     404: 'File Not Found',
-    500: 'Invalid Request'
+    500: 'Internal Server Error',
+    504: 'Gateway Timeout'
 }).constant(
     'PRAGMA_HEADER',
     'no-cache'
@@ -449,7 +461,6 @@ app.factory('$Routes', $RouteProvider)
     .factory('$resourceLoader', $resourceLoader);
 
 // Services
-// Error utilities
 app.service('$Exceptions', $ExceptionsProvider)
     .service('$scope', $scope)
     .service('$window', {})

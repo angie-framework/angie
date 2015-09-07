@@ -183,7 +183,10 @@ class $FileUtil {
         }
 
         // Check to see that the 'template' we found is an actual file
-        if (template && fileDirectoryExists(template, 'File')) {
+        if (
+            (template || template === '') &&
+            fileDirectoryExists(template, 'File')
+        ) {
             return template;
         }
         return undefined;

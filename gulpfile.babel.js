@@ -12,7 +12,6 @@ register({
 import fs from              'fs';
 import gulp from            'gulp';
 import {argv} from          'yargs';
-import {exec} from          'child_process';
 import eslint from          'gulp-eslint';
 import jscs from            'gulp-jscs';
 import {Instrumenter} from  'isparta';
@@ -21,12 +20,13 @@ import istanbul from        'gulp-istanbul';
 import cobertura from       'istanbul-cobertura-badger';
 import esdoc from           'gulp-esdoc';
 import babel from           'gulp-babel';
+import copy from            'gulp-copy';
 import {bold, red} from     'chalk';
 
 const bread = (str) => bold(red(str));
 
 const SRC_DIR = 'src',
-    SRC = `${SRC}/**/*.js`,
+    SRC = `${SRC_DIR}/**/*.js`,
     TRANSPILED_SRC = 'dist',
     TEST_SRC = 'test/**/*.spec.js',
     DOC_SRC = 'doc',
@@ -74,12 +74,21 @@ gulp.task('cobertura', [ 'mocha' ], function(cb) {
 });
 
 gulp.task('esdoc', [ 'cobertura' ], function() {
-    return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
+    return gulp.src(SRC_DIR).pipe(esdoc({
+        destination: DOC_SRC
+    }));
 });
-gulp.task('babel', [ 'esdoc' ], function() {
-    return gulp.src('src/**').pipe(babel({
+gulp.task('babel', [ 'esdoc' ], function(cb) {
+    gulp.src(SRC).pipe(babel({
         comments: false
-    })).pipe(gulp.dest('dist'));
+    })).pipe(gulp.dest(TRANSPILED_SRC)).on('finish', function() {
+        gulp.src(`${SRC_DIR}/templates/**`).pipe(
+            copy(`${TRANSPILED_SRC}/templates`, {
+                prefix: 2
+            })
+        );
+        cb();
+    });
 });
 
 // Bundled Tasks
