@@ -134,6 +134,9 @@ class Angie {
      * @example Angie.Controller('foo', () => {});
      */
     Controller(name, obj) {
+        if (typeof obj !== 'function') {
+            throw new $ExceptionsProvider.$$InvalidControllerConfigError(name);
+        }
         return this.$$register('Controllers', name, obj);
     }
 
@@ -141,10 +144,8 @@ class Angie {
      * @desc Creates an Angie directive provider. The second parameter
      * of the directive function must be an object, with properties defining the
      * directive itself.
-     *
      * @since 0.2.3
      * @access public
-     *
      * @param {string} name The name of the constant being created
      * @param {function|object} obj The directive value, returns directive params
      * @param {string} obj().Controller The associated directive controller
@@ -163,7 +164,6 @@ class Angie {
      * @param {string} obj().templatePath The path to an HTML template to be
      * added as a byproduct of the directive
      * @returns {object} this instanceof Angie
-     *
      * @example Angie.directive('foo', {
      *     return {
      *         Controller: 'test',
@@ -183,6 +183,21 @@ class Angie {
             throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
         return this.$$register('directives', name, dir);
+    }
+
+    /**
+     * @desc Alias of the directive function.
+     * @since 0.4.1
+     * @access public
+     * @example Angie.directive('foo', {
+     *     return {
+     *         Controller: 'test',
+     *         link: function() {}
+     *     };
+     * });
+     */
+    view(name, obj) {
+        reutrn view.call(this, name, obj);
     }
     config(fn) {
         if (typeof fn === 'function') {
