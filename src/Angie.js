@@ -197,7 +197,7 @@ class Angie {
      * });
      */
     view(name, obj) {
-        reutrn view.call(this, name, obj);
+        return this.directive.call(this, name, obj);
     }
     config(fn) {
         if (typeof fn === 'function') {
@@ -267,6 +267,10 @@ class Angie {
      * @access private
      */
     $$loadDependencies(dependencies = []) {
+        const DEPENDENCY_DIRS = [
+            `${CWD}/node_modules`,
+            `${__dirname}/../node_modules`
+        ];
         let me = this,
             proms = [];
 
@@ -287,15 +291,19 @@ class Angie {
                         name,
                         subDependencies;
 
-                    try {
-                        $config = JSON.parse(
-                            fs.readFileSync(
-                                `./node_modules/${dependency}/AngieFile.json`,
-                                'utf8'
-                            )
-                        );
-                    } catch(e) {
-                        $LogProvider.error(e);
+                    for (let i = DEPENDENCY_DIRS.length - 1; i >= 0; --i) {
+                        let dir = DEPENDENCY_DIRS[ i ];
+                        try {
+                            $config = JSON.parse(
+                                fs.readFileSync(
+                                    `${dir}/${dependency}/AngieFile.json`,
+                                    'utf8'
+                                )
+                            );
+                            break;
+                        } catch(e) {
+                            $LogProvider.error(e);
+                        }
                     }
 
                     if (typeof $config === 'object') {
@@ -316,7 +324,7 @@ class Angie {
 
                     try {
 
-                        let service = require(dependency);
+                        let service = $$require(dependency);
 
                         // TODO make this try to load not an npm project config
                         if (service) {
