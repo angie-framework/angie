@@ -268,8 +268,9 @@ class Angie {
      */
     $$loadDependencies(dependencies = []) {
         const DEPENDENCY_DIRS = [
-            `${CWD}/node_modules`,
-            `${__dirname}/../node_modules`
+            `${CWD}/node_modules/`,
+            `${__dirname}/../node_modules/`,
+            ''
         ];
         let me = this,
             proms = [];
@@ -287,64 +288,77 @@ class Angie {
                 // This will load all of the modules, overwriting a module name
                 // will replace it
                 prom = new Promise(function(resolve) {
-                    let $config,
-                        name,
-                        subDependencies;
-
                     for (let i = DEPENDENCY_DIRS.length - 1; i >= 0; --i) {
-                        let dir = DEPENDENCY_DIRS[ i ];
+                        let dir = DEPENDENCY_DIRS[ i ],
+                            $config,
+                            $package,
+                            name,
+                            subDependencies;
                         try {
                             $config = JSON.parse(
                                 fs.readFileSync(
-                                    `${dir}/${dependency}/AngieFile.json`,
+                                    `${dir}${dependency}/AngieFile.json`,
                                     'utf8'
                                 )
                             );
-                            break;
-                        } catch(e) {
-                            $LogProvider.error(e);
-                        }
-                    }
-
-                    if (typeof $config === 'object') {
-
-                        // Grab the dependency name fo' reals
-                        name = $config.projectName;
-
-                        // Find any sub dependencies for recursive module
-                        // loading
-                        subDependencies = config.dependencies;
-
-                        // Set the config in dependency configs (just in case)
-                        if (!app.$dependencyConfig) {
-                            app.$dependencyConfig = {};
-                        }
-                        app.$dependencyConfig[ dependency ] = $config;
-                    }
-
-                    try {
-
-                        let service = $$require(dependency);
-
-                        // TODO make this try to load not an npm project config
-                        if (service) {
-
-                            // Instantiate the dependency as a provider
-                            // determined by its type
-                            me[
-                                typeof service === 'function' ? 'factory' :
-                                    typeof service === 'object' ? 'service' :
-                                        'constant'
-                            ](
-                                name || $StringUtil.toCamel(dependency),
-                                service
+                            $package = JSON.parse(
+                                fs.readFileSync(
+                                    `${dir}${dependency}/package.json`
+                                )
                             );
+
+                            // If a config was found
+                            if (typeof $config === 'object') {
+
+                                // Grab the dependency name fo' reals
+                                name = $config.projectName;
+
+                                // Find any sub dependencies for recursive module
+                                // loading
+                                subDependencies = config.dependencies;
+
+                                // Set the config in dependency configs (just in case)
+                                if (!app.$dependencyConfig) {
+                                    app.$dependencyConfig = {};
+                                }
+                            } else {
+
+                                // Not an Angie package, pass
+                                throw new Error();
+                            }
+
+                            // No package.json, can't be an Angie package
+                            if (typeof $package !== 'object') {
+                                throw new Error();
+                            }
+
+                            // Try to load package "main"
+                            let service = $$require(
+                                `${dir}${dependency}/${$package.main}`
+                            );
+
+                            if (service) {
+
+                                // Instantiate the dependency as a provider
+                                // determined by its type
+                                me[
+                                    typeof service === 'function' ? 'factory' :
+                                        typeof service === 'object' ? 'service' :
+                                            'constant'
+                                ](
+                                    name || $StringUtil.toCamel(dependency),
+                                    service
+                                );
+                            }
+
+                            app.$dependencyConfig[ dependency ] = $config;
+
                             $LogProvider.info(
                                 `Successfully loaded dependency ${magenta(v)}`
                             );
-                        }
-                    } catch(e) {
-                        $LogProvider.error(e);
+
+                            break;
+                        } catch() {}
                     }
 
                     return app.$$loadDependencies(
