@@ -141,6 +141,16 @@ class Angie {
     }
 
     /**
+     * @desc Alias of the Controller function.
+     * @since 0.4.1
+     * @access public
+     * @example Angie.Controller('foo', () => {});
+     */
+    controller(name, obj) {
+        return this.Controller.call(this, name, obj);
+    }
+
+    /**
      * @desc Creates an Angie directive provider. The second parameter
      * of the directive function must be an object, with properties defining the
      * directive itself.
@@ -288,12 +298,13 @@ class Angie {
                 // This will load all of the modules, overwriting a module name
                 // will replace it
                 prom = new Promise(function(resolve) {
+                    let subDependencies = [],
+                        $config,
+                        $package,
+                        name;
+
                     for (let i = DEPENDENCY_DIRS.length - 1; i >= 0; --i) {
-                        let dir = DEPENDENCY_DIRS[ i ],
-                            $config,
-                            $package,
-                            name,
-                            subDependencies;
+                        let dir = DEPENDENCY_DIRS[ i ];
                         try {
                             $config = JSON.parse(
                                 fs.readFileSync(
@@ -358,7 +369,11 @@ class Angie {
                             );
 
                             break;
-                        } catch() {}
+                        } catch(e) {
+
+                            // I'm a pointless continue
+                            continue;
+                        }
                     }
 
                     return app.$$loadDependencies(

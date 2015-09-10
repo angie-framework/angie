@@ -234,7 +234,7 @@ class ControllerResponse extends BaseResponse {
 
         let me = this;
         return new Promise(function(resolve) {
-            let controller = me.route.Controller;
+            let controller = me.route.Controller || me.route.controller;
 
             // Assign a function that can be called to resolve async
             // behavior in Controllers
@@ -614,11 +614,7 @@ class $$ControllerNotFoundError extends ReferenceError {
 
 // Performs the templating inside of Controller Classes
 function controllerTemplateRouteResponse() {
-    if (!this.template) {
-
-        // Template was not found and we need to go into the catch function
-        throw new Error();
-    } else {
+    if (this.template) {
         let match = this.template.toString().match(/!doctype ([a-z]+)/i),
             mime;
 
