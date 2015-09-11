@@ -255,6 +255,8 @@ class ControllerResponse extends BaseResponse {
                 return resolve();
             }
 
+            console.log('CONTROLLER', controller);
+
             // Call the bound controller function
             return new $injectionBinder(
                 controller,

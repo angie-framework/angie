@@ -4,13 +4,12 @@
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: A Module-Based NodeJS Web Application Framework in ES6",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "private": false,
   "preferGlobal": true,
   "scripts": {
-    "start": "node dist/index.js",
-    "test": "gulp test",
-    "postinstall": "babel src --out-dir dist --comments false && cp -R src/templates dist"
+    "start": "node src/index.js",
+    "test": "gulp test"
   },
   "engines": {
     "iojs": "*",
@@ -18,8 +17,7 @@
     "node": "*"
   },
   "bin": {
-    "angie": "bin/angie",
-    "angie-dist": "bin/angie-dist"
+    "angie": "bin/angie"
   },
   "repository": {
     "type": "git",
