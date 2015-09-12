@@ -91,16 +91,6 @@ gulp.task('babel', [ 'esdoc' ], function(cb) {
     });
 });
 
-// Bundled Tasks
-gulp.task('test', [ 'mocha' ]);
-gulp.task('watch', [ 'test' ], function() {
-    gulp.watch([ SRC, TEST_SRC ], [ 'test' ]);
-});
-gulp.task('watch:babel', [ 'babel' ], function() {
-    gulp.watch([ 'src/**' ], [ 'babel' ]);
-});
-gulp.task('default', [ 'babel' ]);
-
 // Utility Tasks
 gulp.task('bump', function() {
     const version = argv.version,
@@ -122,3 +112,14 @@ gulp.task('bump', function() {
         throw new Error(bread('No version specified!!'));
     }
 });
+
+// Bundled Tasks
+gulp.task('test', [ 'mocha' ]);
+gulp.task('watch', [ 'test' ], function() {
+    gulp.watch([ SRC, TEST_SRC ], [ 'test' ]);
+});
+gulp.task('watch:babel', [ 'babel' ], function() {
+    gulp.watch([ 'src/**' ], [ 'babel' ]);
+});
+gulp.task('default', [ 'babel' ]);
+
