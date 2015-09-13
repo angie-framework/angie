@@ -217,7 +217,7 @@ function $$server(args = []) {
                 $LogProvider[ log ](
                     request.method,
                     request.path,
-                    response._header
+                    response._header || ''
                 );
 
                 // Call this inside route block to make sure that we only
@@ -230,7 +230,7 @@ function $$server(args = []) {
                 $LogProvider.error(
                     req.method,
                     request.path,
-                    response._header
+                    response._header || ''
                 );
 
                 // Call this inside route block to make sure that we only
