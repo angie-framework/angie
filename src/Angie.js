@@ -88,6 +88,8 @@ class Angie {
      */
     service(name, obj) {
 
+        console.log(name);
+
         // Verify that the service is an object
         if (typeof obj !== 'object') {
             throw new $ExceptionsProvider.$$InvalidServiceConfigError(name);
@@ -371,6 +373,7 @@ class Angie {
                             break;
                         } catch(e) {
 
+                            console.log(e);
                             // I'm a pointless continue
                             continue;
                         }

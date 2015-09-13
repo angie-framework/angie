@@ -94,12 +94,12 @@ class BaseResponse {
      * @since 0.4.0
      * @access private
      */
-    head() {
-        this.response.writeHead(
-            200,
-            RESPONSE_HEADER_MESSAGES[ '200' ],
-            this.responseHeaders
-        );
+    head(code = 200) {
+        this.statusCode = code;
+
+        for (let header in this.responseHeaders) {
+            this.response.setHeader(header, this.responseHeaders[ header ]);
+        }
 
         return this;
     }
@@ -153,9 +153,7 @@ class AssetResponse extends BaseResponse {
      * @access private
      */
     head() {
-        super.head();
-
-        return this;
+        return super.head();
     }
 
     /**
@@ -220,8 +218,7 @@ class ControllerResponse extends BaseResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -255,22 +252,20 @@ class ControllerResponse extends BaseResponse {
                 return resolve();
             }
 
-            console.log('CONTROLLER', controller);
-
             // Call the bound controller function
-            return new $injectionBinder(
+            let controllerResponse = new $injectionBinder(
                 controller,
                 'controller'
             ).call(me.$scope, resolve);
 
+            console.log('HERE');
+
             // Resolve the Promise if the controller does not return a
             // function
             if (
-                me.controller &&
-                (
-                    !me.controller.constructor ||
-                    me.controller.constructor.name !== 'Promise'
-                )
+                !controllerResponse ||
+                !controllerResponse.constructor ||
+                controllerResponse.constructor.name !== 'Promise'
             ) {
                 return resolve(controller);
             }
@@ -297,8 +292,7 @@ class ControllerTemplateResponse extends ControllerResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -337,8 +331,7 @@ class ControllerTemplatePathResponse extends ControllerResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -390,9 +383,8 @@ class RedirectResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.statusCode = 302;
         this.response.setHeader('Location', this.path);
-        return this;
+        return super.head(302);
     }
 
     /**
@@ -442,12 +434,7 @@ class UnknownResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.writeHead(
-            404,
-            app.constants.RESPONSE_HEADER_MESSAGES['404'],
-            this.responseHeaders
-        );
-        return this;
+        return super.head(404);
     }
 
     /**
@@ -502,12 +489,7 @@ class ErrorResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.writeHead(
-            500,
-            RESPONSE_HEADER_MESSAGES[ '500' ],
-            this.responseHeaders
-        );
-        return this;
+        return super.head(500);
     }
 
     /**
@@ -554,13 +536,11 @@ class $CustomResponse extends BaseResponse {
      * @since 0.4.0
      * @access private
      */
-    head(code = 200, msg, headers = {}) {
-        msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
+    head(code = 200, headers = {}) {
+        // msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
 
         this.responseHeaders = util._extend(this.responseHeaders, headers);
-        this.response.writeHead(+code, msg, this.responseHeaders);
-
-        return this;
+        return super.head(code);
     }
 
     /**
@@ -616,6 +596,8 @@ class $$ControllerNotFoundError extends ReferenceError {
 
 // Performs the templating inside of Controller Classes
 function controllerTemplateRouteResponse() {
+    console.log('ALSO HERE', this.template);
+
     if (this.template) {
         let match = this.template.toString().match(/!doctype ([a-z]+)/i),
             mime;

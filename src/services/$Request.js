@@ -6,6 +6,7 @@
 
 // System Modules
 import url from                     'url';
+import util from                    'util';
 
 // Angie Modules
 import {default as $Routes} from    '../factories/$RouteProvider';
@@ -24,21 +25,23 @@ class $Request {
     constructor(request) {
         let $routes;
 
+        util._extend(this, request);
+
         // Define $Request based instance of createServer.prototype.response
-        this.request = request;
+        // this.request = request;
 
         // Define URI
-        this.url = this.request.url = request.url;
-        this.path = this.request.path = url.parse(request.url).pathname;
+        // this.url = this.request.url = request.url;
+        this.path = url.parse(this.url).pathname;
 
         // Parse query params out of the url
-        this.query = this.request.query = url.parse(request.url, true).query;
+        this.query = url.parse(this.url, true).query;
 
         $routes = $Routes.fetch();
 
         // Declare the routes on the local request object
         this.routes = $routes.routes;
-        this.otherwise = this.request.otherwise = $routes.otherwise;
+        this.otherwise = $routes.otherwise;
     }
 
     /**
@@ -91,10 +94,6 @@ class $Request {
         if (!this.route && this.routes[ this.path ]) {
             this.route = this.routes[ this.path ];
         }
-
-        // Set the request reference to route to the $Request route object once
-        // and only once
-        this.request.route = this.route;
 
         // Route the request based on whether the route exists and what the
         // route states its response should contain.

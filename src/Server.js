@@ -188,7 +188,7 @@ function $$server(args = []) {
                 requestTimeout;
 
             // Add Angie components for the request and response objects
-            app.service('$request', request.request).service('$response', response);
+            app.service('$request', request).service('$response', response);
 
             // Set a request error timeout so that we ensure every request
             // resolves to something
@@ -201,8 +201,6 @@ function $$server(args = []) {
             // Route the request in the application
             request.$$route().then(function() {
                 let code = response.statusCode,
-                    path = request.path,
-                    header = response._header,
                     log = 'error';
 
                 // Clear the request error because now we are guaranteed some
@@ -216,14 +214,24 @@ function $$server(args = []) {
                     log = 'warn';
                 }
 
-                $LogProvider[ log ](path, header);
+                $LogProvider[ log ](
+                    request.method,
+                    request.path,
+                    response._header
+                );
 
                 // Call this inside route block to make sure that we only
                 // return once
                 end(response);
             }).catch(function(e) {
+                console.log('ERROR', e);
                 new ErrorResponse(e).head().writeSync();
-                $LogProvider.error(request.path, response._header);
+                console.log('METHOD', request.method);
+                $LogProvider.error(
+                    req.method,
+                    request.path,
+                    response._header
+                );
 
                 // Call this inside route block to make sure that we only
                 // return once
