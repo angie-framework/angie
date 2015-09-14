@@ -224,9 +224,7 @@ function $$server(args = []) {
                 // return once
                 end(response);
             }).catch(function(e) {
-                console.log('ERROR', e);
                 new ErrorResponse(e).head().writeSync();
-                console.log('METHOD', request.method);
                 $LogProvider.error(
                     req.method,
                     request.path,

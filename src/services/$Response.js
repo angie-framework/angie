@@ -95,7 +95,7 @@ class BaseResponse {
      * @access private
      */
     head(code = 200) {
-        this.statusCode = code;
+        this.response.statusCode = code;
 
         for (let header in this.responseHeaders) {
             this.response.setHeader(header, this.responseHeaders[ header ]);
@@ -257,8 +257,6 @@ class ControllerResponse extends BaseResponse {
                 controller,
                 'controller'
             ).call(me.$scope, resolve);
-
-            console.log('HERE');
 
             // Resolve the Promise if the controller does not return a
             // function
@@ -596,8 +594,6 @@ class $$ControllerNotFoundError extends ReferenceError {
 
 // Performs the templating inside of Controller Classes
 function controllerTemplateRouteResponse() {
-    console.log('ALSO HERE', this.template);
-
     if (this.template) {
         let match = this.template.toString().match(/!doctype ([a-z]+)/i),
             mime;

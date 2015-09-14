@@ -450,8 +450,7 @@ class Angie {
             // Once the configs object has been copied destroy it to prevent
             // those functions from ever being fired again in this or future
             // reloads within the same application context
-            me.configs.length = 0;
-            return true;
+            me.configs = [];
         });
     }
     $$load() {
@@ -466,59 +465,61 @@ class Angie {
     }
 }
 
-let app = global.app = new Angie();
+let app = global.app;
+if (!app) {
+     app = global.app = new Angie();
 
-// Require in any further external components
-// Constants
-app.constant('ANGIE_TEMPLATE_DIRS', [
-    `${__dirname}/templates`
-].concat((config.templateDirs || []).map(function(v) {
-    if (v.indexOf(CWD) === -1) {
-        v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
-    }
-    v = $StringUtil.removeTrailingSlashes(v);
-    return v;
-}))).constant(
-    'ANGIE_STATIC_DIRS',
-    config.staticDirs || []
-).constant('RESPONSE_HEADER_MESSAGES', {
-    200: 'Ok',
-    404: 'File Not Found',
-    500: 'Internal Server Error',
-    504: 'Gateway Timeout'
-}).constant(
-    'PRAGMA_HEADER',
-    'no-cache'
-).constant(
-    'NO_CACHE_HEADER',
-    'private, no-cache, no-store, must-revalidate'
-);
-
-// Configs
-app.config(function() {
-    $templateCache.put(
-        'index.html',
-        fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+    // Require in any further external components
+    // Constants
+    app.constant('ANGIE_TEMPLATE_DIRS', [
+        `${__dirname}/templates`
+    ].concat((config.templateDirs || []).map(function(v) {
+        if (v.indexOf(CWD) === -1) {
+            v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
+        }
+        v = $StringUtil.removeTrailingSlashes(v);
+        return v;
+    }))).constant(
+        'ANGIE_STATIC_DIRS',
+        config.staticDirs || []
+    ).constant('RESPONSE_HEADER_MESSAGES', {
+        200: 'Ok',
+        404: 'File Not Found',
+        500: 'Internal Server Error',
+        504: 'Gateway Timeout'
+    }).constant(
+        'PRAGMA_HEADER',
+        'no-cache'
+    ).constant(
+        'NO_CACHE_HEADER',
+        'private, no-cache, no-store, must-revalidate'
     );
-    $templateCache.put(
-        '404.html',
-        fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
-    );
-});
 
-// Factories
-app.factory('$Routes', $RouteProvider)
-    .factory('$Cache', $CacheFactory)
-    .factory('$compile', $compile)
-    .factory('$resourceLoader', $resourceLoader);
+    // Configs
+    app.config(function() {
+        $templateCache.put(
+            'index.html',
+            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+        );
+        $templateCache.put(
+            '404.html',
+            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
+        );
+    });
 
-// Services
-app.service('$Exceptions', $ExceptionsProvider)
-    .service('$scope', $scope)
-    .service('$window', {})
-    .service('$document', {})
-    .service('$templateCache', $templateCache);
+    // Factories
+    app.factory('$Routes', $RouteProvider)
+        .factory('$Cache', $CacheFactory)
+        .factory('$compile', $compile)
+        .factory('$resourceLoader', $resourceLoader);
+
+    // Services
+    app.service('$Exceptions', $ExceptionsProvider)
+        .service('$scope', $scope)
+        .service('$window', {})
+        .service('$document', {})
+        .service('$templateCache', $templateCache);
+}
 
 export default app;
 export {Angie};
-
