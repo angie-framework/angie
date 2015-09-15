@@ -9,6 +9,7 @@ const MIME_TYPE = {
           css: 'text/css',
           jpg: 'image/jpeg',
           js: 'application/javascript',
+          json: 'application/json',
           png: 'image/png',
           svg: 'image/svg+xml'
       },
@@ -33,7 +34,7 @@ class $MimeTypeProvider {
      * @example $MimeTypeProvider._('json'); // = 'application/json'
      */
     static $$(ext = '') {
-        return MIME_TYPE[ ext ] || DEFAULT_TYPE;
+        return MIME_TYPE[ ext.toLowerCase() ] || DEFAULT_TYPE;
     }
 
     /**

@@ -92,10 +92,10 @@ function $resourceLoader(files = [], loadStyle = 'src') {
         !$response || typeof $response !== 'object'
     ) {
         return false;
-    } else if (!$response.$responseContent) {
+    } else if (!$response.$content) {
 
         // Just in case the response property was not already defined
-        $response.$responseContent = '';
+        $response.$content = '';
     }
 
     if (typeof files === 'string') {
@@ -139,13 +139,13 @@ function $resourceLoader(files = [], loadStyle = 'src') {
         asset += '</script>';
 
         const BODY = '</body>',
-            STR = $response.$responseContent;
+            STR = $response.$content;
         if (STR.indexOf(BODY) > -1) {
             let body = STR.lastIndexOf(BODY);
-            $response.$responseContent =
+            $response.$content =
                 `${STR.substr(0, body)}${asset}${STR.substr(body)}`;
         } else {
-            $response.$responseContent = $response.$responseContent + asset;
+            $response.$content = $response.$content + asset;
         }
     });
 
