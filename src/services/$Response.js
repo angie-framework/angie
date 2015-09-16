@@ -228,6 +228,8 @@ class ControllerResponse extends BaseResponse {
     write() {
         this.$scope = $Injector.get('$scope');
 
+        console.log('IN CONTROLLER');
+
         let me = this;
         return new Promise(function(resolve) {
             let controller = me.route.Controller || me.route.controller;
@@ -526,6 +528,7 @@ class ErrorResponse extends BaseResponse {
 class $CustomResponse extends BaseResponse {
     constructor() {
         super();
+        console.log('CUSTOM RESPONSE');
     }
 
     /**
@@ -563,13 +566,6 @@ class $CustomResponse extends BaseResponse {
         this.response.write(data);
     }
 }
-
-// TODO this will be done with the RESTful work
-// class ControllerViewRequest extends ControllerRequest {
-//     constructor() {
-//
-//     }
-// }
 
 /**
  * @desc Resolves any situation in which a Controller is referenced where it

@@ -183,25 +183,34 @@ function $$server(args = []) {
 
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
-            let request = new $Request(req),
-                response = new $Response(res).response,
+            let $request = new $Request(req),
                 requestTimeout;
 
-            // Add Angie components for the request and response objects
-            app.service('$request', request).service('$response', response);
+            // Instantiate the request, get the data
+            $request.$$data().then(function() {
+                console.log('request');
 
-            // Set a request error timeout so that we ensure every request
-            // resolves to something
-            requestTimeout = setTimeout(
-                forceEnd.bind(null, request.path, response),
-                config.hasOwnProperty('responseErrorTimeout') ?
-                    config.responseErrorTimeout : 5000
-            );
+                let response = new $Response(res).response;
 
-            // Route the request in the application
-            request.$$route().then(function() {
+                // Add Angie components for the request and response objects
+                app.service('$request', $request).service('$response', response);
+
+                // Set a request error timeout so that we ensure every request
+                // resolves to something
+                requestTimeout = setTimeout(
+                    forceEnd.bind(null, $request.path, response),
+                    config.hasOwnProperty('responseErrorTimeout') ?
+                        config.responseErrorTimeout : 5000
+                );
+
+                console.log('here');
+
+            // Route the request
+            }).then(() => $request.$$route()).then(function() {
                 let code = response.statusCode,
                     log = 'error';
+
+                console.log('ROUTED CONTROLLER');
 
                 // Clear the request error because now we are guaranteed some
                 // sort of response
@@ -216,7 +225,7 @@ function $$server(args = []) {
 
                 $LogProvider[ log ](
                     request.method,
-                    request.path,
+                    $request.path,
                     response._header || ''
                 );
 
@@ -227,7 +236,7 @@ function $$server(args = []) {
                 new ErrorResponse(e).head().writeSync();
                 $LogProvider.error(
                     req.method,
-                    request.path,
+                    $request.path,
                     response._header || ''
                 );
 

@@ -26,9 +26,7 @@ class $Request {
         let $routes;
 
         util._extend(this, request);
-
-        // Define $Request based instance of createServer.prototype.response
-        // this.request = request;
+        this.$$request = request;
 
         // Define URI
         // this.url = this.request.url = request.url;
@@ -123,6 +121,30 @@ class $Request {
             // Throw an error response if no other response type was specified
             return new $Responses.ErrorResponse(e).head().write();
         }
+    }
+
+    $$data() {
+        let me = this,
+            request = this.$$request;
+        delete this.$$request;
+
+        console.log('IN DATA');
+
+        return new Promise(function(resolve) {
+            let body = '';
+            request.on('data', function(d) {
+                body += d;
+                if (body.length > 1E6) {
+                    request.connection.destroy();
+                    throw new Error();
+                }
+            });
+            request.on('end', function() {
+                console.log(body);
+                me.body = request.body = body;
+                resolve();
+            });
+        });
     }
 }
 
