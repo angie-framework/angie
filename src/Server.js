@@ -184,13 +184,11 @@ function $$server(args = []) {
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
             let $request = new $Request(req),
+                response = new $Response(res).response,
                 requestTimeout;
 
             // Instantiate the request, get the data
             $request.$$data().then(function() {
-                console.log('request');
-
-                let response = new $Response(res).response;
 
                 // Add Angie components for the request and response objects
                 app.service('$request', $request).service('$response', response);
@@ -203,14 +201,10 @@ function $$server(args = []) {
                         config.responseErrorTimeout : 5000
                 );
 
-                console.log('here');
-
             // Route the request
             }).then(() => $request.$$route()).then(function() {
                 let code = response.statusCode,
                     log = 'error';
-
-                console.log('ROUTED CONTROLLER');
 
                 // Clear the request error because now we are guaranteed some
                 // sort of response
@@ -224,7 +218,7 @@ function $$server(args = []) {
                 }
 
                 $LogProvider[ log ](
-                    request.method,
+                    req.method,
                     $request.path,
                     response._header || ''
                 );

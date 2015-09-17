@@ -6,6 +6,7 @@
 
 // System Modules
 import url from                     'url';
+import {Form} from                  'multiparty';
 import util from                    'util';
 
 // Angie Modules
@@ -125,12 +126,13 @@ class $Request {
 
     $$data() {
         let me = this,
-            request = this.$$request;
+            request = this.$$request,
+            proms = [],
+            prom;
         delete this.$$request;
+        request.formData = {};
 
-        console.log('IN DATA');
-
-        return new Promise(function(resolve) {
+        prom = new Promise(function(resolve) {
             let body = '';
             request.on('data', function(d) {
                 body += d;
@@ -140,11 +142,34 @@ class $Request {
                 }
             });
             request.on('end', function() {
-                console.log(body);
                 me.body = request.body = body;
                 resolve();
             });
         });
+
+        proms.push(prom);
+
+        prom = new Promise(function(resolve) {
+            try {
+                new Form().parse(request, function(e, ...data) {
+                    resolve(data);
+                });
+            } catch(e) {
+                resolve();
+            }
+        }).then(function([ rawData = {}, files = {} ]) {
+            let // rawData = data[0],
+                formData = {};
+            for (let field in rawData) {
+                formData[ field ] = typeof rawData[ field ] === 'object' ?
+                    rawData[ field ][0] : rawData[ field ];
+            }
+            me.formData = request.formData = formData;
+            me.files = request.files = files; //data[1];
+        });
+
+        proms.push(prom);
+        return Promise.all(proms);
     }
 }
 

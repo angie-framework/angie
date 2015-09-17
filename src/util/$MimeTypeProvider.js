@@ -5,15 +5,19 @@
  */
 
 const MIME_TYPE = {
-          html: 'text/html',
-          css: 'text/css',
-          jpg: 'image/jpeg',
-          js: 'application/javascript',
-          json: 'application/json',
-          png: 'image/png',
-          svg: 'image/svg+xml'
-      },
-      DEFAULT_TYPE = 'text/plain';
+        atom: 'application/atom+xml',
+        css: 'text/css',
+        html: 'text/html',
+        javascript: 'application/javascript',
+        jpg: 'image/jpeg',
+        js: 'application/javascript',
+        json: 'application/json',
+        png: 'image/png',
+        rss: 'application/rss+xml',
+        svg: 'image/svg+xml',
+        xml: 'application/xml'
+    },
+    DEFAULT_TYPE = 'text/plain';
 
 /**
  * @desc $MimeTypeProvider is predominately used internally to specify a properties

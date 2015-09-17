@@ -64,6 +64,7 @@
     "es6-module-loader": "^0.17.3",
     "fb-watchman": "^1.5.0",
     "jsdom": "3.1.2",
+    "multiparty": "^4.1.2",
     "promptly": "^0.2.1",
     "yargs": "^3.21.0"
   }

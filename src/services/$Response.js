@@ -228,8 +228,6 @@ class ControllerResponse extends BaseResponse {
     write() {
         this.$scope = $Injector.get('$scope');
 
-        console.log('IN CONTROLLER');
-
         let me = this;
         return new Promise(function(resolve) {
             let controller = me.route.Controller || me.route.controller;
@@ -266,7 +264,7 @@ class ControllerResponse extends BaseResponse {
                 !controllerResponse.constructor ||
                 controllerResponse.constructor.name !== 'Promise'
             ) {
-                return resolve(controller);
+                resolve(controller);
             }
         });
     }
@@ -528,7 +526,6 @@ class ErrorResponse extends BaseResponse {
 class $CustomResponse extends BaseResponse {
     constructor() {
         super();
-        console.log('CUSTOM RESPONSE');
     }
 
     /**
@@ -537,8 +534,6 @@ class $CustomResponse extends BaseResponse {
      * @access private
      */
     head(code = 200, headers = {}) {
-        // msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
-
         this.response.$headers = util._extend(this.response.$headers, headers);
         return super.head(code);
     }
