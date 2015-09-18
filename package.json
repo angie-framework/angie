@@ -23,10 +23,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/benderTheCrime/angie.git"
+    "url": "https://github.com/angie-framework/angie.git"
   },
   "bugs": {
-    "url": "https://github.com/benderTheCrime/angie.git/issues"
+    "url": "https://github.com/angie-framework/angie.git/issues"
   },
   "keywords": [
     "Angie",

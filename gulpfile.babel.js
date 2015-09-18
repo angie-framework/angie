@@ -72,7 +72,6 @@ gulp.task('mocha', [ 'istanbul' ], function() {
 gulp.task('cobertura', [ 'mocha' ], function(cb) {
     cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
 });
-
 gulp.task('esdoc', [ 'cobertura' ], function() {
     return gulp.src(SRC_DIR).pipe(esdoc({
         destination: DOC_SRC

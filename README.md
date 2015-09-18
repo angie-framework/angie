@@ -26,16 +26,16 @@ Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows y
 
 Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.
 
-For more details on how to get started, please see the [Quickstart](#quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/benderTheCrime/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. AngularJS is in no way used or affiliated with this project.
+For more details on how to get started, please see the [Quickstart](#quickstart) section. For a list of Frequently Asked Questions, please see the [FAQ](https://github.com/angie-framework/angie/blob/master/FAQ.md "FAQ") and the [CHANGELOG](https://github.com/angie-framework/angie/blob/master/CHANGELOG.md "CHANGELOG") for an up to date list of changes. AngularJS is in no way used or affiliated with this project.
 
 
 ### Contributors
 It's easy to contribute to the Angie framework:
-    - Feature requests should be made through the [issues](https://github.com/benderTheCrime/angie-log/issues "issues") section of this repository.
-    - Issues should be logged through the [issues](https://github.com/benderTheCrime/angie-log/issues "issues") tab as well.
-    - Ancillary functionality can be added to Angie in a package. You may use the [Angie Package Template](https://github.com/benderTheCrime/angie-package-template "Angie Package Template") as a bootstrapped dependency package template.
+    - Feature requests should be made through the [issues](https://github.com/angie-framework/angie-injector/issues "issues") section of this repository.
+    - Issues should be logged through the [issues](https://github.com/angie-framework/angie-injector/issues "issues") tab as well.
+    - Ancillary functionality can be added to Angie in a package. You may use the [Angie Package Template](https://github.com/angie-framework/angie-package-template "Angie Package Template") as a bootstrapped dependency package template.
 
-Contributors to this Project are outlined in the [CONTRIBUTORS](https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file.
+Contributors to this Project are outlined in the [CONTRIBUTORS](https://github.com/angie-framework/angie/blob/master/CONTRIBUTORS.md "CONTRIBUTORS") file.
 
 ### Features
 #### Write components &amp; modules like you would in AngularJS
@@ -50,13 +50,13 @@ Angie allows you to define dependencies to inject services straight into your ap
 <!-- #### RESTful API responses &amp; template rendering -->
 
 #### Flexible ORM
-Angie makes creating &amp; maintaining data models across many different databases easy. Add your configuration options to a configuration file, sync your database and perform CRUDdy operations with ease. Support for more databases is being added all the time. For more information on the ORM, please visit the [Angie ORM Repository](https://github.com/benderTheCrime/angie-orm "angie-orm")
+Angie makes creating &amp; maintaining data models across many different databases easy. Add your configuration options to a configuration file, sync your database and perform CRUDdy operations with ease. Support for more databases is being added all the time. For more information on the ORM, please visit the [Angie ORM Repository](https://github.com/angie-framework/angie-orm "angie-orm")
 
 <!-- #### "6-way" databinding -->
 <!-- #### Desktop Application Manager -->
 
 ### Documentation
-The entire application documentation can be found [here](https://doc.esdoc.org/github.com/benderTheCrime/angie/ "documentation").
+The entire application documentation can be found [here](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
 
 ### Quickstart
 Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: [nvm](https://github.com/creationix/nvm "nvm"). Please visit this link and follow the instructions listed for iojs-2.2.1. it will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. Switching in between versions after an Angie installation will cause module dependency mismatches.
@@ -140,12 +140,12 @@ app.config(function($routeProvider) {
     });
 });
 ```
-In this context, the route matching the RegExp `/test\/([A-Za-z0-9])\/` will be followed and the match pattern (the RegExp clause of the route) will be passed to the `request.query` of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the [documentation](https://doc.esdoc.org/github.com/benderTheCrime/angie/ "documentation").
+In this context, the route matching the RegExp `/test\/([A-Za-z0-9])\/` will be followed and the match pattern (the RegExp clause of the route) will be passed to the `request.query` of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the [documentation](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
 
 #### Getting Started with Models!
 Next we will set up a very simple Model. Angie Models are very different from AngularJS models in the sense that they are actually database objects as opposed to front end data models. The databases which communicate with the Angie ORM are all configured in the `AngieFile.json`.
 
-All of the following code is required into the Angie project from the [Angie ORM Repository](https://github.com/benderTheCrime/angie-orm "angie-orm") and outlined in additional detail on that repository's site.
+All of the following code is required into the Angie project from the [Angie ORM Repository](https://github.com/angie-framework/angie-orm "angie-orm") and outlined in additional detail on that repository's site.
 
 To create a new database connection, we add an object to our `AngieFile.json` under the "databases" property under a key that represents the database name. One should already exist as a result of the scaffold.
 ```json
@@ -154,7 +154,7 @@ To create a new database connection, we add an object to our `AngieFile.json` un
   "name": "projectName.db"
 }
 ```
-However, no database is created until it is synced. For more information about what options are required by a specific database type or whether a database is supported, please see the [documentation](https://doc.esdoc.org/github.com/benderTheCrime/angie/ "documentation").
+However, no database is created until it is synced. For more information about what options are required by a specific database type or whether a database is supported, please see the [documentation](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
 
 Now let's create our database by running the "sync" command:
 ```bash
@@ -172,7 +172,7 @@ app.Model('TestAngie', function($fields) {
    });
 });
 ```
-If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The `$fields` service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The `$fields` service supports all of the fields you may want to use in your project. See the [documentation](https://doc.esdoc.org/github.com/benderTheCrime/angie/ "documentation") for a full list.
+If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The `$fields` service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The `$fields` service supports all of the fields you may want to use in your project. See the [documentation](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation") for a full list.
 
 Now for the fun part, we are going to create a record in our database and then get that record to render in our previously created template. Open up a sqlite shell using the following command:
 ```bash
@@ -197,4 +197,4 @@ AngieUserModel.filter({
 Now, if you revisit our former [test page](http://localhost:3000/test) you should see the text "blah." Note that our Controller can be asynchronous or synchronous, but if it operates in an async fashion, it must resolve. It can resolve based on the very last argument passed to the Controller, or the
 done method on `app.Controller` or `$response.Controller`.
 
-This concludes the Angie Quickstart! I hope you enjoyed building your very own backend app with Angie. Feel free to let me know what you think about the library or any [issues](https://github.com/benderTheCrime/angie/issues) in this repository.
+This concludes the Angie Quickstart! I hope you enjoyed building your very own backend app with Angie. Feel free to let me know what you think about the library or any [issues](https://github.com/angie-framework/angie/issues) in this repository.
