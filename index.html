@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Angie by angie-framework</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Angie</h1>
+      <h2 class="project-tagline">A Module-Based NodeJS Web Application Framework in ES6</h2>
+      <a href="https://github.com/angie-framework/angie" class="btn">View on GitHub</a>
+      <a href="https://github.com/angie-framework/angie/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/angie-framework/angie/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="angie" class="anchor" href="#angie" aria-hidden="true"><span class="octicon octicon-link"></span></a>Angie</h2>
+
+<p>A Module-Based NodeJS Web Application Framework in ES6</p>
+
+<p><img src="https://travis-ci.org/benderTheCrime/angie.svg?branch=master" alt="build status" title="build status">
+<img src="https://img.shields.io/badge/iojs-1.7.1+-brightgreen.svg" alt="iojs support" title="iojs support">
+<img src="https://img.shields.io/badge/node-0.12.0+-brightgreen.svg" alt="node support" title="node support">
+<img src="https://rawgit.com/benderTheCrime/angie/master/svg/coverage.svg" alt="code coverage" title="code coverage">
+<img src="https://img.shields.io/npm/dm/angie.svg" alt="npm downloads" title="npm downloads"></p>
+
+<p><a href="https://nodei.co/npm/angie/"><img src="https://nodei.co/npm/angie.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<div class="highlight highlight-source-shell"><pre>npm i -g angie
+angie <span class="pl-c1">help</span></pre></div>
+
+<p>If you want your files to automatically refresh with the <code>angie watch</code> command, run this from the root of the
+Angie package:</p>
+
+<pre><code>chmod +x script/watchman.sh &amp;&amp; ./script/watchman.sh
+</code></pre>
+
+<p>or install Facebook Watchman from the instructions <a href="https://facebook.github.io/watchman/docs/install.html" title="Facebook Watchman">here</a>.</p>
+
+<h3>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h3>
+
+<p>Angie is an MVC that runs in NodeJS designed with AngularJS in mind. It allows you to create web applications by routing requests to controllers and directives and referencing data models in a fashion similar to how you would using AngularJS. Although the naming and providers are different, the goals and best practices are the same.</p>
+
+<p>Angie is simple to use, flexible, and lightweight and offers a holistic approach to JavaScript across the stack.</p>
+
+<p>For more details on how to get started, please see the <a href="#quickstart">Quickstart</a> section. For a list of Frequently Asked Questions, please see the <a href="https://github.com/benderTheCrime/angie/blob/master/FAQ.md" title="FAQ">FAQ</a> and the <a href="https://github.com/benderTheCrime/angie/blob/master/CHANGELOG.md" title="CHANGELOG">CHANGELOG</a> for an up to date list of changes. AngularJS is in no way used or affiliated with this project.</p>
+
+<h3>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h3>
+
+<p>It's easy to contribute to the Angie framework:
+    - Feature requests should be made through the <a href="https://github.com/benderTheCrime/angie-log/issues" title="issues">issues</a> section of this repository.
+    - Issues should be logged through the <a href="https://github.com/benderTheCrime/angie-log/issues" title="issues">issues</a> tab as well.
+    - Ancillary functionality can be added to Angie in a package. You may use the <a href="https://github.com/benderTheCrime/angie-package-template" title="Angie Package Template">Angie Package Template</a> as a bootstrapped dependency package template.</p>
+
+<p>Contributors to this Project are outlined in the <a href="https://github.com/benderTheCrime/angie/blob/master/CONTRIBUTORS.md" title="CONTRIBUTORS">CONTRIBUTORS</a> file.</p>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<h4>
+<a id="write-components--modules-like-you-would-in-angularjs" class="anchor" href="#write-components--modules-like-you-would-in-angularjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write components &amp; modules like you would in AngularJS</h4>
+
+<p>Angie lets you create modules the way you would on the front end to serve as Controllers, directives, services, and Models on the back end. Both 1.x and 2.x AngularJS flavor syntax is supported.</p>
+
+<h4>
+<a id="easy-to-use-cli" class="anchor" href="#easy-to-use-cli" aria-hidden="true"><span class="octicon octicon-link"></span></a>Easy to use CLI</h4>
+
+<p>Scaffold a new project, run a web server, sync your database, migrate your models, open an Angie shell, and more all from the command line.</p>
+
+<h4>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h4>
+
+<p>Angie allows you to define dependencies to inject services straight into your application from any other Angie application. In the AngieFile.json created when you scaffold an app is a "dependencies" section. Add the absolute path of another Angie project to this list and when the app is bootstrapped, it will give you access to any of the code you have created in the dependency application.</p>
+
+
+
+<h4>
+<a id="flexible-orm" class="anchor" href="#flexible-orm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Flexible ORM</h4>
+
+<p>Angie makes creating &amp; maintaining data models across many different databases easy. Add your configuration options to a configuration file, sync your database and perform CRUDdy operations with ease. Support for more databases is being added all the time. For more information on the ORM, please visit the <a href="https://github.com/benderTheCrime/angie-orm" title="angie-orm">Angie ORM Repository</a></p>
+
+
+
+
+
+<h3>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h3>
+
+<p>The entire application documentation can be found <a href="https://doc.esdoc.org/github.com/benderTheCrime/angie/" title="documentation">here</a>.</p>
+
+<h3>
+<a id="quickstart" class="anchor" href="#quickstart" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quickstart</h3>
+
+<p>Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: <a href="https://github.com/creationix/nvm" title="nvm">nvm</a>. Please visit this link and follow the instructions listed for iojs-2.2.1. it will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. Switching in between versions after an Angie installation will cause module dependency mismatches.</p>
+
+<p>It is also worth mentioning beforehand that Angie supports writing all of the syntax in this document in an ES6 fashion as well. Models can be instantiated as classes, and imports can be performed instead of references to the <code>global.app</code> object.</p>
+
+<p>This tutorial should take about 15 minutes in its entirety.</p>
+
+<ul>
+<li><a href="#now-we-can-write-some-code">Now We Can Write Some Code!</a></li>
+<li><a href="#getting-started-with-models">Getting Started with Models!</a></li>
+</ul>
+
+<h4>
+<a id="first-were-going-to-need-some-packages" class="anchor" href="#first-were-going-to-need-some-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>First, We're Going to Need Some Packages!</h4>
+
+<p>In the directory you would like your project to live, please run the following command:</p>
+
+<div class="highlight highlight-source-shell"><pre>npm install -g babel gulp-cli angie
+angie createProject [name] [location]</pre></div>
+
+<p>Where NPM installs the Babel, Gulp, and Angie packages globally and where this Angie command creates a project in your current directory or passed (location) directory by the name entered. Not specifying a project name or specifying a location that is invalid will throw an error. To see a full list of Angie commands, use the following:</p>
+
+<div class="highlight highlight-source-shell"><pre>angie <span class="pl-c1">help</span></pre></div>
+
+<p>Hopefully by now, you've got a scaffolded project. If so, it's possible to start building our app.</p>
+
+<p>We can test that the application runs successfully by running the following command at the root of our application.</p>
+
+<div class="highlight highlight-source-shell"><pre>angie watch 3000</pre></div>
+
+<p>Once your server is running, you should visit the webserver started at <a href="http://localhost:3000" title="default">localhost</a> (provided you used port 3000 as opposed to another port). If you see the text "Angie Test Page," all is well.</p>
+
+<h4>
+<a id="now-we-can-write-some-code" class="anchor" href="#now-we-can-write-some-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now We Can Write Some Code!</h4>
+
+<p>I like to encourage developer behavior whenever possible. Therefore, for the time being, it is not possible to load modules outside of the folders which have been scaffolded. That is to say that modules outside of these folders will not be loaded. However, any type of module can live in any of the prescribed folders.</p>
+
+<p>Let's start by setting up some routes! In the configs directory, "src/configs", create a file called <code>routes.config.js</code>. Add the following code to that file:</p>
+
+<div class="highlight highlight-source-js"><pre>app.config(<span class="pl-k">function</span>(<span class="pl-smi">$routeProvider</span>) {
+    $routeProvider.when(<span class="pl-s"><span class="pl-pds">'</span>/test<span class="pl-pds">'</span></span>, {
+        templatePath<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>index.html<span class="pl-pds">'</span></span>
+    });
+});</pre></div>
+
+<p>This block should look somewhat familiar to you if you have written an AngularJS application. If you have not, I recommend looking into AngularJS. What we have just done is set up a custom route in our Angie application. To make sure that Angie knows where to find this route let's also add a file to our "template" directory. This directory was automatically added to your application when it was scaffolded.</p>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-c1">cd</span> templates
+<span class="pl-c1">echo</span> <span class="pl-c1">test</span> <span class="pl-k">&gt;&gt;</span> <span class="pl-c1">test</span>.html</pre></div>
+
+<p>This should have created a file called test.html in your templates folder. Because the templates directory is already included in our <code>AngieFile.json</code>, we do not need to tell the application where to find this template file. However, if we were to add the file in <code>templates/html</code>, we would need to specify this directory under <code>templateDirs</code> in the scaffolded <code>AngieFile.json</code>.</p>
+
+<p>If you visit <a href="http://localhost:3000/test" title="route">that route</a> in your browser, you should now see the file you created. Simple web server: check. Now, let's get a little fancy... just a little. Open the test.html file you just created and triple bracket "test":</p>
+
+<div class="highlight highlight-text-html-basic"><pre>{{{test}}}</pre></div>
+
+<p>In Angie templates triple brackets are compiled. Default directives are prefaced with "ngie". We can now configure a scope with which to compile this template. We will first need a controller. From the application root, navigate to the <code>src/controllers</code> folder. Once there, create a file called <code>test.ctrl.js</code> to which we will add the following:</p>
+
+<div class="highlight highlight-source-js"><pre>app.Controller(<span class="pl-s"><span class="pl-pds">'</span>testCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">$scope</span>, <span class="pl-smi">$request</span>) {
+    $scope.test <span class="pl-k">=</span> $request.query.test <span class="pl-k">||</span> <span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>;
+});</pre></div>
+
+<p>Now that we have a Controller, we can update our route to reference it.</p>
+
+<div class="highlight highlight-source-js"><pre>app.config(<span class="pl-k">function</span>(<span class="pl-smi">$routeProvider</span>) {
+    $routeProvider.when(<span class="pl-s"><span class="pl-pds">'</span>/test<span class="pl-pds">'</span></span>, {
+        templatePath<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>index.html<span class="pl-pds">'</span></span>
+        Controller<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>testCtrl<span class="pl-pds">'</span></span>
+    });
+});</pre></div>
+
+<p>With that in place, if you visit the same route as before you should see the text "test," but if you visit <a href="http://localhost:3000/test?test=angie" title="modified route">the route with an added query param, <code>test=angie</code></a> you should see the text "angie". We have modified our scope to reflect the scope property "test," which is subsequently compiled into the template before a response is returned.</p>
+
+<p>Angie will parse any expression included in triple brackets. If your expression is not interpreted, most likely because you referenced a property that did not actually exist on your scope, the triple bracketed expression will be replaced by an empty string.</p>
+
+<p>It is worth noting that deep routes and RegExp routes can also be written! Each deep property that is not a <code>$routeProvider</code> keyword will be added as a route:</p>
+
+<div class="highlight highlight-source-js"><pre>app.config(<span class="pl-k">function</span>(<span class="pl-smi">$routeProvider</span>) {
+    $routeProvider.when(<span class="pl-s"><span class="pl-pds">'</span>/test<span class="pl-pds">'</span></span>, {
+        templatePath<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>index.html<span class="pl-pds">'</span></span>
+        Controller<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>testCtrl<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>/([A-Za-z0-9])/<span class="pl-pds">'</span></span><span class="pl-k">:</span> {
+            templatePath<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>nextIndex.html<span class="pl-pds">'</span></span>
+        }
+    });
+});</pre></div>
+
+<p>In this context, the route matching the RegExp <code>/test\/([A-Za-z0-9])\/</code> will be followed and the match pattern (the RegExp clause of the route) will be passed to the <code>request.query</code> of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the <a href="https://doc.esdoc.org/github.com/benderTheCrime/angie/" title="documentation">documentation</a>.</p>
+
+<h4>
+<a id="getting-started-with-models" class="anchor" href="#getting-started-with-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started with Models!</h4>
+
+<p>Next we will set up a very simple Model. Angie Models are very different from AngularJS models in the sense that they are actually database objects as opposed to front end data models. The databases which communicate with the Angie ORM are all configured in the <code>AngieFile.json</code>.</p>
+
+<p>All of the following code is required into the Angie project from the <a href="https://github.com/benderTheCrime/angie-orm" title="angie-orm">Angie ORM Repository</a> and outlined in additional detail on that repository's site.</p>
+
+<p>To create a new database connection, we add an object to our <code>AngieFile.json</code> under the "databases" property under a key that represents the database name. One should already exist as a result of the scaffold.</p>
+
+<div class="highlight highlight-source-json"><pre><span class="pl-s"><span class="pl-pds">"</span>testCtrl<span class="pl-pds">"</span></span>: {
+  <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>sqlite3<span class="pl-pds">"</span></span>,
+  <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>projectName.db<span class="pl-pds">"</span></span>
+}</pre></div>
+
+<p>However, no database is created until it is synced. For more information about what options are required by a specific database type or whether a database is supported, please see the <a href="https://doc.esdoc.org/github.com/benderTheCrime/angie/" title="documentation">documentation</a>.</p>
+
+<p>Now let's create our database by running the "sync" command:</p>
+
+<div class="highlight highlight-source-shell"><pre>angie syncdb [database name]</pre></div>
+
+<p>Note that the command above takes an optional database option. This is not required if we are syncing our default database. Also, note that we haven't actually created any models. Let's create one now. In the scaffolded folder <code>src/Models</code> create a file called <code>test.model.js</code>. In this file, we will create our model.</p>
+
+<div class="highlight highlight-source-js"><pre>app.Model(<span class="pl-s"><span class="pl-pds">'</span>TestAngie<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">$fields</span>) {
+   <span class="pl-k">let</span> obj <span class="pl-k">=</span> {};
+   obj.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>test_angie<span class="pl-pds">'</span></span>;
+   obj.<span class="pl-c1">name</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">$fields.CharField</span>({
+       minLength<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+       maxLength<span class="pl-k">:</span> <span class="pl-c1">50</span>,
+       unique<span class="pl-k">:</span> <span class="pl-c1">true</span>
+   });
+});</pre></div>
+
+<p>If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The <code>$fields</code> service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The <code>$fields</code> service supports all of the fields you may want to use in your project. See the <a href="https://doc.esdoc.org/github.com/benderTheCrime/angie/" title="documentation">documentation</a> for a full list.</p>
+
+<p>Now for the fun part, we are going to create a record in our database and then get that record to render in our previously created template. Open up a sqlite shell using the following command:</p>
+
+<div class="highlight highlight-source-shell"><pre>sqlite3 <span class="pl-k">&lt;</span> [database name] <span class="pl-c"># Do not forget the .db!</span></pre></div>
+
+<p>After the database shell opens, run the following command and then quit the shell.</p>
+
+<div class="highlight highlight-source-sql"><pre><span class="pl-k">INSERT INTO</span> test_angie (username) <span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>blah<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>We are finally ready to revisit our Controller. In the <code>test.ctrl.js</code> we created before replace the <code>$scope</code> assignment of "test" with the following code:</p>
+
+<div class="highlight highlight-source-js"><pre>AngieUserModel.filter({
+    rows<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+    head<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    username<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>blah<span class="pl-pds">'</span></span>,
+    database<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>default<span class="pl-pds">'</span></span>
+}).then(<span class="pl-k">function</span>(<span class="pl-smi">queryset</span>) {
+    $scope.test <span class="pl-k">=</span> queryset[<span class="pl-c1">0</span>].username;
+    app.Controller.done();
+});</pre></div>
+
+<p>Now, if you revisit our former <a href="http://localhost:3000/test">test page</a> you should see the text "blah." Note that our Controller can be asynchronous or synchronous, but if it operates in an async fashion, it must resolve. It can resolve based on the very last argument passed to the Controller, or the
+done method on <code>app.Controller</code> or <code>$response.Controller</code>.</p>
+
+<p>This concludes the Angie Quickstart! I hope you enjoyed building your very own backend app with Angie. Feel free to let me know what you think about the library or any <a href="https://github.com/benderTheCrime/angie/issues">issues</a> in this repository.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/angie-framework/angie">Angie</a> is maintained by <a href="https://github.com/angie-framework">angie-framework</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-64054304-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
