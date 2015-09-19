@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "test": "gulp test",
-    "postinstall": "babel src --out-dir dist --comments false && cp -R src/templates dist"
+    "postinstall": "babel src --out-dir dist --comments false --copy-files"
   },
   "engines": {
     "iojs": "*",

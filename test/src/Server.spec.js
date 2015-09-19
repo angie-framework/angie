@@ -14,10 +14,12 @@ import $Request from                '../../src/services/$Request';
 import * as $Responses from         '../../src/services/$Response';
 
 describe('$$server', function() {
+    const noop = () => false;
     let request,
         response,
         listen,
         timeoutMock,
+        dataMock,
         routeMock,
         end,
         head,
@@ -33,7 +35,8 @@ describe('$$server', function() {
         });
         end = spy();
         request = {
-            url: 'test'
+            url: 'test',
+            method: 'GET'
         };
         response = {
             end,
@@ -54,18 +57,29 @@ describe('$$server', function() {
         });
         timeoutMock = mock(global, 'setTimeout', () => true);
         mock(global, 'clearTimeout', () => true);
-        routeMock = mock($Request.prototype, '$$route', function() {
+        dataMock = mock($Request.prototype, '$$data', function() {
             return {
                 then(fn) {
                     fn();
                     return {
-                        catch(fn) {
-                            fn(e);
+                        then(fn) {
+                            fn();
+                            return {
+                                then(fn) {
+                                    fn();
+                                    return {
+                                        catch(fn) {
+                                            fn(e);
+                                        }
+                                    };
+                                }
+                            };
                         }
                     };
                 }
             };
         });
+        routeMock = mock($Request.prototype, '$$route', noop);
         writeSync = spy();
         head = spy(function() {
             return { writeSync };
@@ -100,9 +114,12 @@ describe('$$server', function() {
         expect(https.createServer).to.not.have.been.called;
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
-        assert($Request.prototype.$$route.called);
-        expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        assert(dataMock.called);
+        assert(routeMock.called);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
         assert(head.called);
         assert(writeSync.called);
         expect(listen.calls[0].args[0]).to.eq(1234);
@@ -122,12 +139,17 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
-        assert($Request.prototype.$$route.called);
-        expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        assert(dataMock.called);
+        assert(routeMock.called);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
         assert(head.called);
         assert(writeSync.called);
-        expect($LogProvider.error.calls[1].args).to.deep.eq([ 'test', 'test' ]);
+        expect(
+            $LogProvider.error.calls[1].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
         expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
@@ -145,12 +167,17 @@ describe('$$server', function() {
         assert(https.createServer.called);
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
-        assert($Request.prototype.$$route.called);
-        expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        assert(dataMock.called);
+        assert(routeMock.called);
         expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
         assert(head.called);
         assert(writeSync.called);
-        expect($LogProvider.error.calls[1].args).to.deep.eq([ 'test', 'test' ]);
+        expect(
+            $LogProvider.error.calls[1].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
         expect(listen.calls[0].args[0]).to.eq(443);
         expect(
             app.$$tearDown.calls[0].args
@@ -164,17 +191,23 @@ describe('$$server', function() {
     it('test < 400 level response', function() {
         response.statusCode = 399;
         $$server([ 'server', 1234 ]);
-        expect($LogProvider.info.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        expect(
+            $LogProvider.info.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
     });
     it('test < 500 level response', function() {
         response.statusCode = 499;
         $$server([ 'server', 1234 ]);
-        expect($LogProvider.warn.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        expect(
+            $LogProvider.warn.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
     });
     it('test >= 500 or unknown level response', function() {
         response.statusCode = 500;
         $$server([ 'server', 1234 ]);
-        expect($LogProvider.error.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
     });
     it('test timeout response', function() {
         timeoutMock.callFn((fn) => fn());

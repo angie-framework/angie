@@ -46,8 +46,8 @@ class $Response {
         // Define $Response based instance of createServer.prototype.response
         this.response = response;
 
-        // Define the Angie $content string
-        this.response.$content = '';
+        // Define the Angie content string
+        this.response.content = '';
     }
 }
 
@@ -162,7 +162,7 @@ class AssetResponse extends BaseResponse {
      */
     write() {
         let assetCache = new $CacheFactory('staticAssets'),
-            asset = this.response.$content =
+            asset = this.response.content =
                 assetCache.get(this.path) ||
                     $$templateLoader(this.path, 'static') || undefined,
             me = this;
@@ -615,7 +615,7 @@ function controllerTemplateRouteResponse() {
         }
 
         // Pull the response back in from wherever it was before
-        this.$content = this.response.$content;
+        this.content = this.response.content;
 
         // Render the template into the resoponse
         let me = this;
@@ -630,8 +630,8 @@ function controllerTemplateRouteResponse() {
                 resolve(template);
             });
         }).then(function(template) {
-            me.response.$content = me.$content += template;
-            me.response.write(me.$content);
+            me.response.content = me.content += template;
+            me.response.write(me.content);
         });
     }
 }
