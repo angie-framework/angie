@@ -154,7 +154,7 @@ class $Request {
                     resolve(data);
                 });
             } catch(e) {
-                resolve();
+                resolve([]);
             }
         })
 
