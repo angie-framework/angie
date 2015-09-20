@@ -241,7 +241,6 @@ describe('Angie', function() {
         beforeEach(function() {
             mock(fs, 'readFileSync', () => '{ "test": "test" }');
             mock($LogProvider, 'error', noop);
-            mock($LogProvider, 'info', noop);
             mock(app, '$$bootstrap', () => new Promise());
         });
         afterEach(() => simple.restore());
@@ -250,9 +249,8 @@ describe('Angie', function() {
         });
         it('test called with dependencies', function() {
             expect(app.$$loadDependencies([ 'test' ]).val.length).to.eq(1);
-            // assert(fs.readFileSync.callCount === 4);
+            assert(fs.readFileSync.callCount === 14);
             expect(app.$$bootstrap).to.have.been.called;
-            // assert($LogProvider.info.called);
         });
         it('test invalid JSON in AngieFile', function() {
             fs.readFileSync = () => '{,}';

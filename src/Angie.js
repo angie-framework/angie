@@ -21,7 +21,7 @@ import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
 const CWD = process.cwd(),
-    $$require = (v) => {
+    $$require = v => {
 
         // If we dont first clear this out of the module cache, then we don't
         // actually do anything with the require call that isn't assigned
@@ -30,7 +30,8 @@ const CWD = process.cwd(),
         // Furthermore because it is unassigned, we do not have to force anything
         // to return from this arrow function
         require(v);
-    };
+    },
+    parse = v => JSON.parse(fs.readFileSync(v, 'utf8'));
 
 /**
  * @desc This is the default Angie class. It is instantiated and given
@@ -306,17 +307,10 @@ class Angie {
                     for (let i = DEPENDENCY_DIRS.length - 1; i >= 0; --i) {
                         let dir = DEPENDENCY_DIRS[ i ];
                         try {
-                            $config = JSON.parse(
-                                fs.readFileSync(
-                                    `${dir}${dependency}/AngieFile.json`,
-                                    'utf8'
-                                )
-                            );
-                            $package = JSON.parse(
-                                fs.readFileSync(
-                                    `${dir}${dependency}/package.json`
-                                )
-                            );
+
+                            // Load the angie and the package config
+                            $config = parse(`${dir}${dependency}/AngieFile.json`);
+                            $package = parse(`${dir}${dependency}/package.json`);
 
                             // If a config was found
                             if (typeof $config === 'object') {
