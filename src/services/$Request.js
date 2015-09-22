@@ -129,6 +129,7 @@ class $Request {
             proms = [],
             prom;
         delete this.$$request;
+        request.body = '';
         request.formData = {};
 
         prom = new Promise(function(resolve) {
