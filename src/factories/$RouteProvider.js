@@ -13,7 +13,9 @@ import {$StringUtil} from   '../util/Util';
 const IGNORE_KEYS = [
     'Controller',
     'template',
-    'templatePath'
+    'templatePath',
+    'serializers',
+    'renderer'
 ];
 let routes = {
         '/': {
@@ -83,42 +85,50 @@ class $RouteProvider {
         }
 
         // Find any "deep" routes which we may want to add on to the root route
-        Object.keys(obj).forEach(function(v) {
+        for (let key in obj) {
             let childPath,
-                childObj = obj[ v ];
+                childObj = obj[ key ];
 
             // We're talking about a template or a Controller and we don't want
             // that
+            // Serializers and Renderer added for REST Framework
+
             // It's worth noting that return based "if"s in Coffee are pretty
             // dope
-            if (IGNORE_KEYS.indexOf(v) > -1) {
-                return;
-            } else if (regExpFlag || /\/.*\//.test(v)) {
-
-                // Check to see if we previously had or now have a path with
-                // RegExp
-                childPath = $RouteProvider.$stringsToRegExp(
-                    path,
-                    $StringUtil.removeTrailingLeadingSlashes(v)
-                );
-            } else {
-
-                // Concatenate two string paths
-                childPath = [ path, v ].join('/').replace(/\/\//g, '/');
+            if (IGNORE_KEYS.indexOf(key) > -1) {
+                continue;
             }
 
-            // If the child route does not have a Controller, force it to
-            // it's parent inherit
-            if (obj.Controller && !childObj.Controller) {
-                childObj.Controller = obj.Controller;
-            }
+            // Child keys that do not have object values are ignored, but we
+            // still want to delete the object property
+            if (typeof childObj === 'object') {
+                if (regExpFlag || /\/.*\//.test(key)) {
 
-            // Set a route child object
-            $RouteProvider.when(childPath, childObj);
+                    // Check to see if we previously had or now have a path with
+                    // RegExp
+                    childPath = $RouteProvider.$stringsToRegExp(
+                        path,
+                        $StringUtil.removeTrailingLeadingSlashes(key)
+                    );
+                } else {
+
+                    // Concatenate two string paths
+                    childPath = [ path, key ].join('/').replace(/\/\//g, '/');
+                }
+
+                // If the child route does not have a Controller, force it to
+                // it's parent inherit
+                if (obj.Controller && !childObj.Controller) {
+                    childObj.Controller = obj.Controller;
+                }
+
+                // Set a route child object
+                $RouteProvider.when(childPath, childObj);
+            }
 
             // Strip the child from the original route object
-            delete obj[ v ];
-        });
+            delete obj[ key ];
+        }
         return this;
     }
 
