@@ -3,10 +3,17 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### [0.4.1] - 2015-09-20
-##### Added/Changed
+##### Added/Changed/Removed
 - Modified the way headers are added to responses
 - Added `app.controller` as an alias method for `app.Controller`
 - Added `app.view` as an alias method for `app.directive`
+- Removed jsDOM
+- Added README documentation around directives and their simple usage
+- Added Cheerio for compilation, which offers many advantages:
+    - Ease of installation (no Contextify)
+    - Speed of compilation
+    - Flexibility in HTML parsing
+    - More information is available on the [Cheerio GitHub repository](https://github.com/cheeriojs/cheerio "Cheerio")
 
 ### [0.4.0] - 2015-09-07
 #### Added/Fixed

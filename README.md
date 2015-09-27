@@ -1,4 +1,5 @@
-## Angie
+![emblem](https://github.com/angie-framework/angie/blob/master/svg/angie.svg "emblem")
+
 A Module-Based NodeJS Web Application Framework in ES6
 
 ![build status](https://travis-ci.org/benderTheCrime/angie.svg?branch=master "build status")
@@ -67,6 +68,7 @@ This tutorial should take about 15 minutes in its entirety.
 
 * [Now We Can Write Some Code!](#now-we-can-write-some-code)
 * [Getting Started with Models!](#getting-started-with-models)
+* [Adding Template Complexity with Directives](#adding-template-complexity-with-directives)
 
 #### First, We're Going to Need Some Packages!
 In the directory you would like your project to live, please run the following command:
@@ -101,18 +103,18 @@ app.config(function($routeProvider) {
 This block should look somewhat familiar to you if you have written an AngularJS application. If you have not, I recommend looking into AngularJS. What we have just done is set up a custom route in our Angie application. To make sure that Angie knows where to find this route let's also add a file to our "template" directory. This directory was automatically added to your application when it was scaffolded.
 ```bash
 cd templates
-echo test >> test.html
+echo test >> index.html
 ```
 This should have created a file called test.html in your templates folder. Because the templates directory is already included in our `AngieFile.json`, we do not need to tell the application where to find this template file. However, if we were to add the file in `templates/html`, we would need to specify this directory under `templateDirs` in the scaffolded `AngieFile.json`.
 
-If you visit [that route](http://localhost:3000/test "route") in your browser, you should now see the file you created. Simple web server: check. Now, let's get a little fancy... just a little. Open the test.html file you just created and triple bracket "test":
+If you visit [that route](http://localhost:3000/test "route") in your browser, you should now see the file you created. Simple web server: check. Now, let's get a little fancy... just a little. Open the index.html file you just created and triple bracket "test":
 ```html
-{{{test}}}
+{{{foo}}}
 ```
-In Angie templates triple brackets are compiled. Default directives are prefaced with "ngie". We can now configure a scope with which to compile this template. We will first need a controller. From the application root, navigate to the `src/controllers` folder. Once there, create a file called `test.ctrl.js` to which we will add the following:
+In Angie templates triple brackets are compiled. We can now configure a scope with which to compile this template. We will first need a controller. From the application root, navigate to the `src/controllers` folder. Once there, create a file called `test.ctrl.js` to which we will add the following:
 ```javascript
 app.Controller('testCtrl', function($scope, $request) {
-    $scope.test = $request.query.test || 'test';
+    $scope.foo = $request.query.test || 'test';
 });
 ```
 Now that we have a Controller, we can update our route to reference it.
@@ -141,6 +143,59 @@ app.config(function($routeProvider) {
 });
 ```
 In this context, the route matching the RegExp `/test\/([A-Za-z0-9])\/` will be followed and the match pattern (the RegExp clause of the route) will be passed to the `request.query` of the request as params with keys 0-4 (up to five patterns will be matched). More details on this are available in the [documentation](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
+
+#### Adding Template Complexity with Directives
+Directives can be used to modify the content of your routed controller in many ways. Whether you provide a template via `template` or `templatePath` to a Controller, post process compilation will occur on that template in the context of the Controller provided `$scope`. Default directives are prefaced with "ngie".
+
+In the example above, we used a very simple compilation to replace a single triple bracketed statement with a value. Let us now define a directive to do a little bit more work in our template. For this, we will define a directive.
+
+First, let us create a sub template, `directive.html`, to which we will add the following html:
+```html
+{{{bar}}}
+```
+
+Ok, we now have two templates and one endpoint. It can be useful to have many templates which feed into the context of a single route for the sake of reuse (reduce, reuse, recycle)! Let's do something with the template we just created.
+
+From the application root, navigate to the `src/directives` folder. Once there, create a file called `test.directive.js` to which we will add the following:
+```javascript
+app.directive('TestDir', function() {
+    return {
+        restrict: 'C',
+        templatePath: 'directive.html'
+    };
+});
+```
+
+This is a very simple directive which will compile and load the contents of the `directive.html` into any element on which it is specified. Note that this is a function, but one could declare a class to perform the same task. Back in our `index.html` file, let's add the following code:
+
+```html
+<div class='test-dir'>
+```
+
+We've declared the directive as "C" or "Class restrictive" which implies that we can only declare it as a class. If we wanted, we could also declare it as "A" or "Attribute restrictive", "E or Element restrictive", or any combination of the three (I never understood why anyone would want to conflate HTML comments with parsed HTML content and therefore the "M" functionality of AngularJS is not supported in Angie directives).
+
+This is great, you should be able to load the same route as before without any issues. However, you will quickly notice that our addition of the `TestDir` directive did nothing. Why? `$scope.bar` is `undefined`. To demonstrate the functionality of directive link functions, I will define the `$scope.bar` property as a byproduct of the directives associated link function. The directive link function is a function that fires every time a directive is referenced and loaded into the template, but before it is compiled.
+
+Back in our `test.directive.js` file, add the following to the directive we just defined:
+```javascript
+// app.directive('TestDir', function() {
+    // return {
+        // restrict: 'C',
+        // templatePath: 'directive.html',
+        link: function($scope) {
+            $scope.bar = 'bar';
+        }
+    // };
+// });
+```
+Bear in mind two things here:
+- Angie preserves whitespace in all template rendering
+- Directives inject dependencies in the same fashion as any other Module, so at the top level, one would declare all of the required dependencies, however, the link function is always provided the same arguments:
+    - $scope
+    - The element upon which the link function is firing as a jqLite style element (Cheerio provides their own jQuery like API on top of parsed DOM elements)
+    - The attributes of the element upon which the link function is firing, parsed to camelCase
+
+Opening the very same endpoint as before, you should now see the text `foo bar`.
 
 #### Getting Started with Models!
 Next we will set up a very simple Model. Angie Models are very different from AngularJS models in the sense that they are actually database objects as opposed to front end data models. The databases which communicate with the Angie ORM are all configured in the `AngieFile.json`.

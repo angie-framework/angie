@@ -162,8 +162,6 @@ class Angie {
      * @param {string} obj().Controller The associated directive controller
      * @param {number} obj().priority A number representing the directive's
      * priority, relative to the other declared directives
-     * @param {boolean} obj().replace Does the directive root get replaced by
-     * its inner HTML?
      * @param {string} obj().restrict What HTML components can parse this directive:
      *    'A': attribute
      *    'E': element
