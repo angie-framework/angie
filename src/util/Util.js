@@ -78,10 +78,7 @@ class $StringUtil {
      */
     static toCamel(str) {
         return str.toLowerCase().replace(
-            /[-_][a-z]/g,
-            function(m) {
-                return m.toUpperCase().replace(/[-_]/g, '');
-            }
+            /[-_][A-Za-z]/g, m => m.toUpperCase().replace(/[-_]/g, '')
         );
     }
 

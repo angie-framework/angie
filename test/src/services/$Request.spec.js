@@ -1,18 +1,25 @@
 // Test Modules
-import {assert, expect} from        'chai';
-import simple, {mock, spy} from     'simple-mock';
+import { assert, expect } from      'chai';
+import simple, { mock, spy } from   'simple-mock';
+
+// System Modules
+import { Form } from                'multiparty';
 
 // Angie Modules
-import {default as $Routes} from    '../../../src/factories/$RouteProvider';
+import { default as $Routes } from  '../../../src/factories/$RouteProvider';
 import * as $Responses from         '../../../src/services/$Response';
 import $Request from                '../../../src/services/$Request';
+import $Util from                   '../../../src/util/Util';
 
 describe('$Request', function() {
-    let request = {
+    const noop = () => false;
+    let req = {
             url: 'http://localhost:3000/test.html?id=1'
         };
 
     describe('constructor', function() {
+        let request;
+
         beforeEach(function() {
             mock($Routes, 'fetch', () => ({
                 routes: 'test',
@@ -21,13 +28,12 @@ describe('$Request', function() {
         });
         afterEach(simple.restore);
         it('test constructor declarations', function() {
-            let $request = new $Request(request);
-            expect($request.request).to.eq(request);
-            expect($request.url).to.eq(request.url);
-            expect($request.path).to.eq('/test.html');
-            expect($request.query).to.deep.eq({ id: '1' });
-            expect($request.routes).to.eq('test');
-            expect($request.otherwise).to.eq('test');
+            request = new $Request(req);
+            expect(request.url).to.eq(req.url);
+            expect(request.path).to.eq('/test.html');
+            expect(request.query).to.deep.eq({ id: '1' });
+            expect(request.routes).to.eq('test');
+            expect(request.otherwise).to.eq('test');
         });
     });
     describe('$redirect', function() {
@@ -50,7 +56,7 @@ describe('$Request', function() {
         });
         afterEach(simple.restore);
         it('test $redirect', function() {
-            new $Request(request).$redirect('test');
+            new $Request(req).$redirect('test');
             expect(RedirectResponseMock.calls[0].args[0]).to.eq('test');
             assert(head.called);
             assert(writeSync.called);
@@ -76,9 +82,7 @@ describe('$Request', function() {
         afterEach(simple.restore);
         describe('test UnknownResponse', function() {
             beforeEach(function() {
-                request = new $Request({
-                    url: 'http://localhost:3000/test2'
-                });
+                request = new $Request(req);
                 mock(
                     $Responses,
                     'UnknownResponse',
@@ -103,9 +107,7 @@ describe('$Request', function() {
                     otherwise: 'test',
                     routes: {}
                 }));
-                request = new $Request({
-                    url: 'http://localhost:3000/test'
-                });
+                request = new $Request(req);
                 writeSync = spy();
                 head.returnWith({ writeSync });
                 mock(
@@ -116,6 +118,7 @@ describe('$Request', function() {
                     }
                 );
             });
+            afterEach(simple.restore);
             it('test no found route, no asset with otherwise', function() {
                 request.$$route();
                 assert($Responses.RedirectResponse.called);
@@ -127,9 +130,7 @@ describe('$Request', function() {
             beforeEach(function() {
                 $isRoutedAssetResourceResponseMock.returnWith(true);
                 mock($Routes, 'fetch', () => ({ routes: {} }));
-                request = new $Request({
-                    url: 'http://localhost:3000/test.html'
-                });
+                request = new $Request(req);
                 mock(
                     $Responses.AssetResponse.prototype,
                     'constructor',
@@ -138,40 +139,13 @@ describe('$Request', function() {
                     }
                 );
             });
+            afterEach(simple.restore);
             xit('test no found route, asset', function() {
                 request.$$route();
                 expect(
                     $isRoutedAssetResourceResponseMock.calls[0].args[0]
                 ).to.eq('/test.html');
                 assert($Responses.AssetResponse.called);
-                assert(head.called);
-                assert(write.called);
-            });
-        });
-        describe('test ControllerTemplatePathResponse', function() {
-            beforeEach(function() {
-                mock($Routes, 'fetch', () => ({
-                    otherwise: 'test',
-                    routes: {
-                        '/test': {
-                            templatePath: 'test.html'
-                        }
-                    }
-                }));
-                request = new $Request({
-                    url: 'http://localhost:3000/test'
-                });
-                mock(
-                    $Responses,
-                    'ControllerTemplatePathResponse',
-                    function() {
-                        return { head };
-                    }
-                );
-            });
-            it('test found route', function() {
-                request.$$route();
-                assert($Responses.ControllerTemplatePathResponse.called);
                 assert(head.called);
                 assert(write.called);
             });
@@ -183,12 +157,17 @@ describe('$Request', function() {
                     routes: {
                         '/test': {
                             template: 'test'
+                        },
+                        regExp: {
+                            '/([A-Za-z]+)/': {
+                                template: 'test'
+                            }
                         }
                     }
                 }));
-                request = new $Request({
-                    url: 'http://localhost:3000/test'
-                });
+                mock($Routes, '$$parseURLParams', noop);
+                mock($Util, '_extend', noop);
+                request = new $Request(req);
                 mock(
                     $Responses,
                     'ControllerTemplateResponse',
@@ -197,9 +176,44 @@ describe('$Request', function() {
                     }
                 );
             });
+            afterEach(simple.restore);
             it('test found route', function() {
                 request.$$route();
                 assert($Responses.ControllerTemplateResponse.called);
+                assert(head.called);
+                assert(write.called);
+            });
+            it('test regExp route', function() {
+                request.$$route();
+                assert($Util._extend.called);
+                assert($Routes.$$parseURLParams.called);
+            });
+        });
+        describe('test ControllerTemplatePathResponse', function() {
+            beforeEach(function() {
+                mock($Routes, 'fetch', () => ({
+                    otherwise: 'test',
+                    routes: {
+                        '/test': {
+                            templatePath: 'test.html'
+                        },
+                        regExp: {}
+                    }
+                }));
+                request = new $Request(req);
+                request.path = '/test';
+                mock(
+                    $Responses,
+                    'ControllerTemplatePathResponse',
+                    function() {
+                        return { head };
+                    }
+                );
+            });
+            afterEach(simple.restore);
+            it('test found route', function() {
+                request.$$route();
+                assert($Responses.ControllerTemplatePathResponse.called);
                 assert(head.called);
                 assert(write.called);
             });
@@ -214,9 +228,7 @@ describe('$Request', function() {
                         }
                     }
                 }));
-                request = new $Request({
-                    url: 'http://localhost:3000/test'
-                });
+                request = new $Request(req);
                 mock(
                     $Responses,
                     'ControllerTemplateResponse',
@@ -232,6 +244,7 @@ describe('$Request', function() {
                     }
                 );
             });
+            afterEach(simple.restore);
             it('test error', function() {
                 request.$$route();
                 assert($Responses.ErrorResponse.called);
@@ -239,33 +252,88 @@ describe('$Request', function() {
                 assert(write.called);
             });
         });
-        describe('test ControllerTemplateResponse', function() {
-            beforeEach(function() {
-                mock($Routes, 'fetch', () => ({
-                    routes: {
-                        regExp: {
-                            '/([A-Za-z]+)/': {
-                                template: 'test'
-                            }
-                        }
-                    }
-                }));
-                mock($Routes, '$$parseURLParams', () => true);
-                request = new $Request({
-                    url: 'http://localhost:3000/test'
-                });
-                mock(
-                    $Responses,
-                    'ControllerTemplateResponse',
-                    function() {
-                        return { head };
-                    }
-                );
+    });
+    describe('$$data', function() {
+        let destroy,
+            request,
+            data,
+            end,
+            formMock,
+            test;
+
+        beforeEach(function() {
+            destroy = spy();
+            req.connection = { destroy };
+            request = new $Request(req);
+
+            request.$$request.on = function(s, fn) {
+                if (s === 'data') {
+                    data = fn;
+                } else {
+                    end = fn;
+                }
+            };
+            test = { test: 'test' };
+            formMock = mock(Form.prototype, 'parse', function(_, fn) {
+                return fn(null, test, test);
             });
-            it('test regExp route', function() {
-                request.$$route();
-                assert($Routes.$$parseURLParams.called);
+            spy(Promise, 'all');
+        });
+        it('test $$data with raw data, errors', function() {
+            formMock.callFn(function() {
+                throw new Error();
             });
+
+            request.$$data();
+            expect(data).to.be.a.function;
+            expect(end).to.be.a.function;
+
+            let d = '_'.repeat(1E6 + 1);
+            expect(data.bind(null, d)).to.throw();
+
+            end();
+            expect(req.body).to.eq(d);
+
+            expect(req.formData).to.deep.eq({});
+            expect(req.files).to.deep.eq({});
+
+            expect(Promise.all.called);
+        });
+        it('test $$data with Array raw data, no errors', function() {
+            formMock.callFn(function(_, fn) {
+                return fn(null, { test: [ 'test' ] }, test);
+            });
+
+            request.$$data();
+            expect(data).to.be.a.function;
+            expect(end).to.be.a.function;
+
+            let d = '_'.repeat(1E6 + 1);
+            expect(data.bind(null, d)).to.throw();
+
+            end();
+            expect(req.body).to.eq(d);
+
+            expect(req.formData).to.deep.eq(test);
+            expect(req.files).to.deep.eq(test);
+
+            expect(Promise.all.called);
+        });
+        it('test $$data with raw data, no errors', function() {
+            request.$$data();
+            expect(data).to.be.a.function;
+            expect(end).to.be.a.function;
+
+            let d = '_'.repeat(1E6 + 1);
+            expect(data.bind(null, d)).to.throw();
+
+            end();
+            expect(req.body).to.eq(d);
+
+            expect(req.formData).to.deep.eq(test);
+            expect(req.files).to.deep.eq(test);
+
+            expect(Promise.all.called);
         });
     });
 });

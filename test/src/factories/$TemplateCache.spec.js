@@ -15,9 +15,7 @@ describe('$resourceLoader', function() {
         $injectorMock;
 
     beforeEach(function() {
-        $request = {
-            path: '/'
-        };
+        $request = { path: '/' };
         $response = {};
         $injectorMock = mock($Injector, 'get', () => [ $request, $response ]);
     });
@@ -42,35 +40,35 @@ describe('$resourceLoader', function() {
     });
     it('test non-js file', function() {
         expect($resourceLoader('test')).to.be.true;
-        expect($response.$responseContent).to.eq('');
+        expect($response.content).to.eq('');
     });
     it('test single file string src', function() {
-        $response.$responseContent = 'TEST';
+        $response.content = 'TEST';
         expect($resourceLoader('test.js')).to.be.true;
-        expect($response.$responseContent).to.eq(
+        expect($response.content).to.eq(
             'TEST<script type="text/javascript" src="/test.js"></script>'
         );
     });
     it('test single file string src non-root path', function() {
-        $response.$responseContent = 'TEST';
+        $response.content = 'TEST';
         $request.path = '/index/test';
         expect($resourceLoader('test.js')).to.be.true;
-        expect($response.$responseContent).to.eq(
+        expect($response.content).to.eq(
             'TEST<script type="text/javascript" src="/../../test.js"></script>'
         );
     });
     it('test array of files string src', function() {
-        $response.$responseContent = 'TEST';
+        $response.content = 'TEST';
         expect($resourceLoader([ 'test.js', 'test1.js' ])).to.be.true;
-        expect($response.$responseContent).to.eq(
+        expect($response.content).to.eq(
             'TEST<script type="text/javascript" src="/test.js"></script>' +
             '<script type="text/javascript" src="/test1.js"></script>'
         );
     });
     it('test single file string src with </body>', function() {
-        $response.$responseContent = '</body>';
+        $response.content = '</body>';
         expect($resourceLoader('test.js')).to.be.true;
-        expect($response.$responseContent).to.eq(
+        expect($response.content).to.eq(
             '<script type="text/javascript" src="/test.js"></script></body>'
         );
     });
