@@ -1,6 +1,6 @@
 ## Angie
 
-![emblem](https://raw.githubusercontent.com/angie-framework/angie/master/svg/angie.svg "emblem")
+![emblem](https://rawgit.com/angie-framework/angie/master/svg/angie.svg "emblem")
 
 A Module-Based NodeJS Web Application Framework in ES6
 
