@@ -2,8 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-#### [0.4.0] - 2015-09-07
-##### Fixed/Added
+#### [0.4.1] - 2015-09-20
+##### Added/Changed/Removed
+- Modified the way headers are added to responses
+- Added `app.controller` as an alias method for `app.Controller`
+- Added `app.view` as an alias method for `app.directive`
+- Removed jsDOM
+- Added README documentation around directives and their simple usage
+- Added Cheerio for compilation, which offers many advantages:
+    - Ease of installation (no Contextify)
+    - Speed of compilation
+    - Flexibility in HTML parsing
+    - More information is available on the [Cheerio GitHub repository](https://github.com/cheeriojs/cheerio "Cheerio")
+
+### [0.4.0] - 2015-09-07
+#### Added/Fixed
 - Broke up `BaseRequest` into several response classes in `$Response`
 - Fixed `$StringUtil` functions to use RegExp instead of string manipulation
 - Made `$$tearDown` on the Angie object accept multiple modules
@@ -13,12 +26,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added documentation for the new $Response methods.
 
 #### [0.3.3] - 2015-08-27
-##### Fixed/Added
+##### Added/Fixed
 - Fixed the project scaffold option to cache static assets
 - Added `factories` directory to scaffold
 
 #### [0.3.2] - 2015-08-10
-##### Added/Removed/Fixed/Changed
+##### Added/Changed/Fixed/Removed
 - Added default loaded JavaScript file (application.js)
 - Added CLI option parser with two options
     - Should Angie cache static assets?
@@ -31,8 +44,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Created a `dist` folder/runtime with an equivalent pre-compiled Angie framework.
 - Changed the `watch` command to use Facebook Watchman. Added associated documentation.
 
-### [0.3.1] - 2015-08-08
-#### Added/Changed/Fixed
+#### [0.3.1] - 2015-08-08
+##### Added/Changed/Fixed
 - Changed the naming conventions around many providers
 - Added support for declaring Angular providers via decorators
 - Added $on/$broadcast/$watch methods to $scope
@@ -40,8 +53,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Audited $Util classes
 - Fixed/Added Tests and docstrings
 
-## [0.3.0] - 2015-07-04
-### Fixed/Added
+### [0.3.0] - 2015-07-04
+#### Added/Fixed
 - Fixed some issues with deep routing and RegExp
 - Added support for routed Controllers as functions
 
@@ -53,18 +66,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ##### Changed
 - Improved the way $MimeType works to never return an empty value.
 
-### [0.2.6] - 2015-06-28
-#### Added
+#### [0.2.6] - 2015-06-28
+##### Added
 - Added deep routing (Both RegExp and string matching) to $RouteProvider and BaseRequest. This is configurable with the same  $RouteProvider.prototype.when function as before called with either a RegExp object or a string and a route object with as many nested route objects as desired.
 
-### [0.2.5] - 2015-06-27
-#### Added
+#### [0.2.5] - 2015-06-27
+##### Added
 - Added operators to Model queries. "~" can be used for a "like" query and "<," ">," "=" can all be used alone or in conjunction to make conditional queries
 
-### [0.2.4] - 2015-06-26
-#### Added
+#### [0.2.4] - 2015-06-26
+##### Added
 - Template/Directive parsing support.
 
-### [0.2.3] - 2015-06-10
-#### Added
+#### [0.2.3] - 2015-06-10
+##### Added
 - MySQL and Sqlite3 CRUDdy operation support.

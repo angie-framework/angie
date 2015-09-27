@@ -2,20 +2,22 @@
 import 'es6-module-loader';
 
 // Test Modules
-import {expect} from                'chai';
-import simple, {mock} from          'simple-mock';
+import { expect, assert } from      'chai';
+import simple, { mock } from        'simple-mock';
 
 // System Modules
 import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {Angie} from               '../../src/Angie';
+import { Angie } from               '../../src/Angie';
 import {
     $$InvalidDirectiveConfigError,
     $$InvalidServiceConfigError,
     $$InvalidFactoryConfigError
 } from                              '../../src/util/$ExceptionsProvider';
+
+const CWD = process.cwd();
 
 describe('Angie', function() {
     let noop = () => undefined,
@@ -152,12 +154,26 @@ describe('Angie', function() {
                 ).to.throw($$InvalidFactoryConfigError);
             });
         });
+        it(
+            'test Controller throws an error if not called with a function',
+            function() {
+                expect(app.Controller.bind(null, 'test', 'test')).to.throw();
+            }
+        );
         it('test Controller makes a call to $$register', function() {
-            app.Controller('test', 'test');
+            app.Controller('test', noop);
             expect(app.$$register.calls[0].args).to.deep.eq([
                 'Controllers',
                 'test',
-                'test'
+                noop
+            ]);
+        });
+        it('test controller makes a call to $$register', function() {
+            app.controller('test', noop);
+            expect(app.$$register.calls[0].args).to.deep.eq([
+                'Controllers',
+                'test',
+                noop
             ]);
         });
     });
@@ -233,7 +249,7 @@ describe('Angie', function() {
         });
         it('test called with dependencies', function() {
             expect(app.$$loadDependencies([ 'test' ]).val.length).to.eq(1);
-            expect(fs.readFileSync.calls[0].args[0]).to.eq('./node_modules/test/AngieFile.json');
+            assert(fs.readFileSync.called);
             expect(app.$$bootstrap).to.have.been.called;
         });
         it('test invalid JSON in AngieFile', function() {

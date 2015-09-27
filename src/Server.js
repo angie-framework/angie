@@ -183,26 +183,27 @@ function $$server(args = []) {
 
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
-            let request = new $Request(req),
+            let $request = new $Request(req),
                 response = new $Response(res).response,
                 requestTimeout;
 
-            // Add Angie components for the request and response objects
-            app.service('$request', request.request).service('$response', response);
+            // Instantiate the request, get the data
+            $request.$$data().then(function() {
 
-            // Set a request error timeout so that we ensure every request
-            // resolves to something
-            requestTimeout = setTimeout(
-                forceEnd.bind(null, request.path, response),
-                config.hasOwnProperty('responseErrorTimeout') ?
-                    config.responseErrorTimeout : 5000
-            );
+                // Add Angie components for the request and response objects
+                app.service('$request', $request).service('$response', response);
 
-            // Route the request in the application
-            request.$$route().then(function() {
+                // Set a request error timeout so that we ensure every request
+                // resolves to something
+                requestTimeout = setTimeout(
+                    forceEnd.bind(null, $request.path, response),
+                    config.hasOwnProperty('responseErrorTimeout') ?
+                        config.responseErrorTimeout : 5000
+                );
+
+            // Route the request
+            }).then(() => $request.$$route()).then(function() {
                 let code = response.statusCode,
-                    path = request.path,
-                    header = response._header,
                     log = 'error';
 
                 // Clear the request error because now we are guaranteed some
@@ -216,14 +217,22 @@ function $$server(args = []) {
                     log = 'warn';
                 }
 
-                $LogProvider[ log ](path, header);
+                $LogProvider[ log ](
+                    req.method,
+                    $request.path,
+                    response._header || ''
+                );
 
                 // Call this inside route block to make sure that we only
                 // return once
                 end(response);
             }).catch(function(e) {
                 new ErrorResponse(e).head().writeSync();
-                $LogProvider.error(request.path, response._header);
+                $LogProvider.error(
+                    req.method,
+                    $request.path,
+                    response._header || ''
+                );
 
                 // Call this inside route block to make sure that we only
                 // return once
