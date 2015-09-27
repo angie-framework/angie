@@ -60,7 +60,7 @@ Angie makes creating &amp; maintaining data models across many different databas
 The entire application documentation can be found [here](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
 
 ### Quickstart
-Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: [nvm](https://github.com/creationix/nvm "nvm"). Please visit this link and follow the instructions listed for iojs-2.2.1. it will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. Switching in between versions after an Angie installation will cause module dependency mismatches.
+Angie is designed predominately to be used with versions of iojs-2.0.0+. I recommend using nvm. to manage your NodeJS versions. It cannot be downloaded via NPM: [nvm](https://github.com/creationix/nvm "nvm"). It will also work with 0.12.x versions of NodeJS, but I am advising using these versions with caution, predominately as a byproduct of NPM package version installation dependencies. You can also try it with the newest NodeJS, but many packages are broken, so I'm not recommending it at this point. Switching in between versions after an Angie installation will cause module dependency mismatches.
 
 It is also worth mentioning beforehand that Angie supports writing all of the syntax in this document in an ES6 fashion as well. Models can be instantiated as classes, and imports can be performed instead of references to the `global.app` object.
 

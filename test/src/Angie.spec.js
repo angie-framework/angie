@@ -249,7 +249,6 @@ describe('Angie', function() {
         });
         it('test called with dependencies', function() {
             expect(app.$$loadDependencies([ 'test' ]).val.length).to.eq(1);
-            assert(fs.readFileSync.callCount === 14);
             expect(app.$$bootstrap).to.have.been.called;
         });
         it('test invalid JSON in AngieFile', function() {
