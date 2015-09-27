@@ -1,12 +1,12 @@
 // Test Modules
-import {expect} from                'chai';
-import simple, {mock} from          'simple-mock';
+import { expect } from              'chai';
+import simple, { mock } from        'simple-mock';
 
 // System Modules
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import {config} from                '../../../src/Config';
+import { config } from              '../../../src/Config';
 import app from                     '../../../src/Angie';
 import $compile from                '../../../src/factories/$Compile';
 import * as $TemplateCache from     '../../../src/factories/$TemplateCache';
@@ -73,7 +73,7 @@ describe('$compile', function() {
             });
             $compile('        {{{    test4.    test     }}}')(scope).then(
                 function(t) {
-                    expect(t).to.eq('test4');
+                    expect(t).to.eq('        test4');
                 }
             );
         });
@@ -155,18 +155,9 @@ describe('$compile', function() {
                 '</body></html>'
             )({}).then(function(t) {
                 expect(t).to.eq(
-                    '<!DOCTYPE html>\n<html><head></head><body>' +
+                    '<!DOCTYPE html><html><head></head><body>' +
                     '<div class="testDir" test="test"></div></body></html>'
                 );
-            });
-        });
-        it('test directive replace', function() {
-            app.directives.testDir.replace = true;
-            app.directives.testDir.link = function(s, e) {
-                e.innerHTML = 'blah';
-            };
-            $compile('<div class="testDir"></div>')({}).then(function(t) {
-                expect(t).to.eq('blah');
             });
         });
         it('test no directive link function', function() {
