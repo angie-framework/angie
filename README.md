@@ -1,3 +1,5 @@
+## Angie
+
 ![emblem](https://github.com/angie-framework/angie/blob/master/svg/angie.svg "emblem")
 
 A Module-Based NodeJS Web Application Framework in ES6
@@ -198,6 +200,12 @@ Bear in mind two things here:
 Opening the very same endpoint as before, you should now see the text `foo bar`.
 
 #### Getting Started with Models!
+Communicating with data models is a quintessential part of using an MVC. Nevertheless, the Angie ORM is not included by default. To use the ORM, simply install it:
+```bash
+npm install angie-orm
+```
+anf include `angie-orm` as a dependency in your `AngieFile.json`.
+
 Next we will set up a very simple Model. Angie Models are very different from AngularJS models in the sense that they are actually database objects as opposed to front end data models. The databases which communicate with the Angie ORM are all configured in the `AngieFile.json`.
 
 All of the following code is required into the Angie project from the [Angie ORM Repository](https://github.com/angie-framework/angie-orm "angie-orm") and outlined in additional detail on that repository's site.
