@@ -1,0 +1,13 @@
+{
+    "projectName": "Angie",
+    "projectRoot": "./src",
+    "development": false,
+    "templateDirs": [
+        "src/templates/"
+    ],
+    "dependencies": [
+        "angie-log",
+        "angie-injector"
+    ],
+    "responseErrorTimeout": 5000
+}

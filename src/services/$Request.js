@@ -6,11 +6,12 @@
 
 // System Modules
 import url from                     'url';
+import { Form } from                'multiparty';
 
 // Angie Modules
-import {default as $Routes} from    '../factories/$RouteProvider';
+import { default as $Routes } from  '../factories/$RouteProvider';
 import * as $Responses from         './$Response';
-import $Util, {$StringUtil} from    '../util/Util';
+import $Util, { $StringUtil } from  '../util/Util';
 
 /**
  * @desc The $Request class processes all of the incoming Angie requests. It
@@ -24,21 +25,21 @@ class $Request {
     constructor(request) {
         let $routes;
 
-        // Define $Request based instance of createServer.prototype.response
-        this.request = request;
+        $Util._extend(this, request);
+        this.$$request = request;
 
         // Define URI
-        this.url = this.request.url = request.url;
-        this.path = this.request.path = url.parse(request.url).pathname;
+        this.url = request.url;
+        this.path = url.parse(this.url).pathname;
 
         // Parse query params out of the url
-        this.query = this.request.query = url.parse(request.url, true).query;
+        this.query = url.parse(this.url, true).query;
 
         $routes = $Routes.fetch();
 
         // Declare the routes on the local request object
         this.routes = $routes.routes;
-        this.otherwise = this.request.otherwise = $routes.otherwise;
+        this.otherwise = $routes.otherwise;
     }
 
     /**
@@ -79,7 +80,7 @@ class $Request {
                 // Hooray, we've set our route, now we need to do some additional
                 // param parsing
                 $Util._extend(
-                    this.request.query,
+                    this.query,
                     $Routes.$$parseURLParams(pattern, this.path)
                 );
 
@@ -91,10 +92,6 @@ class $Request {
         if (!this.route && this.routes[ this.path ]) {
             this.route = this.routes[ this.path ];
         }
-
-        // Set the request reference to route to the $Request route object once
-        // and only once
-        this.request.route = this.route;
 
         // Route the request based on whether the route exists and what the
         // route states its response should contain.
@@ -124,6 +121,58 @@ class $Request {
             // Throw an error response if no other response type was specified
             return new $Responses.ErrorResponse(e).head().write();
         }
+    }
+
+    $$data() {
+        let me = this,
+            request = this.$$request,
+            proms = [],
+            prom;
+        delete this.$$request;
+        request.body = '';
+        request.formData = {};
+
+        prom = new Promise(function(resolve) {
+            let body = '';
+            request.on('data', function(d) {
+                body += d;
+                if (body.length > 1E6) {
+                    request.connection.destroy();
+                    throw new Error();
+                }
+            });
+            request.on('end', function() {
+                me.body = request.body = body;
+                resolve();
+            });
+        });
+
+        proms.push(prom);
+
+        prom = new Promise(function(resolve) {
+            try {
+                new Form().parse(request, function(e, ...data) {
+                    resolve(data);
+                });
+            } catch(e) {
+                resolve([]);
+            }
+        })
+
+        proms.push(prom);
+        prom.then(function() {
+            let rawData = arguments[0][0] || {},
+                files = arguments[0][1] || {},
+                formData = {};
+            for (let field in rawData) {
+                formData[ field ] = typeof rawData[ field ] === 'object' ?
+                    rawData[ field ][0] : rawData[ field ];
+            }
+            me.formData = request.formData = formData;
+            me.files = request.files = files;
+        });
+
+        return Promise.all(proms);
     }
 }
 

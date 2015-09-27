@@ -57,8 +57,8 @@ gulp.task('istanbul', [ 'jscs' ], function(cb) {
 });
 gulp.task('mocha', [ 'istanbul' ], function() {
     return gulp.src([
-        'test/src/testUtil.spec.js',
-        'test/**/*.spec.js'
+        'test/src/test.spec.js',
+        'test/**/*!(test).spec.js'
     ]).pipe(mocha({
         reporter: 'spec'
     })).pipe(istanbul.writeReports({
@@ -72,7 +72,6 @@ gulp.task('mocha', [ 'istanbul' ], function() {
 gulp.task('cobertura', [ 'mocha' ], function(cb) {
     cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
 });
-
 gulp.task('esdoc', [ 'cobertura' ], function() {
     return gulp.src(SRC_DIR).pipe(esdoc({
         destination: DOC_SRC
@@ -90,13 +89,6 @@ gulp.task('babel', [ 'esdoc' ], function(cb) {
         cb();
     });
 });
-
-// Bundled Tasks
-gulp.task('test', [ 'mocha' ]);
-gulp.task('watch', [ 'test' ], function() {
-    gulp.watch([ SRC, TEST_SRC ], [ 'test' ]);
-});
-gulp.task('default', [ 'babel' ]);
 
 // Utility Tasks
 gulp.task('bump', function() {
@@ -119,3 +111,14 @@ gulp.task('bump', function() {
         throw new Error(bread('No version specified!!'));
     }
 });
+
+// Bundled Tasks
+gulp.task('test', [ 'mocha' ]);
+gulp.task('watch', [ 'test' ], function() {
+    gulp.watch([ SRC, TEST_SRC ], [ 'test' ]);
+});
+gulp.task('watch:babel', [ 'babel' ], function() {
+    gulp.watch([ 'src/**' ], [ 'babel' ]);
+});
+gulp.task('default', [ 'babel' ]);
+

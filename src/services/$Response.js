@@ -46,8 +46,8 @@ class $Response {
         // Define $Response based instance of createServer.prototype.response
         this.response = response;
 
-        // Define the Angie $responseContent string
-        this.response.$responseContent = '';
+        // Define the Angie content string
+        this.response.content = '';
     }
 }
 
@@ -55,6 +55,7 @@ class $Response {
  * @desc BaseResponse defines the default Angie response. It is responsible for
  * serving the default response and setting up the headers associated with the
  * default response.
+ * @todo Move Content-Type resolution to $Response constructor
  * @since 0.4.0
  * @access private
  */
@@ -84,9 +85,7 @@ class BaseResponse {
         }
 
         // Set the response headers
-        this.responseHeaders = {
-            'Content-Type': this.responseContentType = contentType
-        };
+        this.response.$headers = { 'Content-Type': contentType };
     }
 
     /**
@@ -94,12 +93,12 @@ class BaseResponse {
      * @since 0.4.0
      * @access private
      */
-    head() {
-        this.response.writeHead(
-            200,
-            RESPONSE_HEADER_MESSAGES[ '200' ],
-            this.responseHeaders
-        );
+    head(code = 200) {
+        this.response.statusCode = code;
+
+        for (let header in this.response.$headers) {
+            this.response.setHeader(header, this.response.$headers[ header ]);
+        }
 
         return this;
     }
@@ -153,9 +152,7 @@ class AssetResponse extends BaseResponse {
      * @access private
      */
     head() {
-        super.head();
-
-        return this;
+        return super.head();
     }
 
     /**
@@ -165,7 +162,7 @@ class AssetResponse extends BaseResponse {
      */
     write() {
         let assetCache = new $CacheFactory('staticAssets'),
-            asset = this.response.$responseContent =
+            asset = this.response.content =
                 assetCache.get(this.path) ||
                     $$templateLoader(this.path, 'static') || undefined,
             me = this;
@@ -220,8 +217,7 @@ class ControllerResponse extends BaseResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -234,7 +230,7 @@ class ControllerResponse extends BaseResponse {
 
         let me = this;
         return new Promise(function(resolve) {
-            let controller = me.route.Controller;
+            let controller = me.route.Controller || me.route.controller;
 
             // Assign a function that can be called to resolve async
             // behavior in Controllers
@@ -256,7 +252,7 @@ class ControllerResponse extends BaseResponse {
             }
 
             // Call the bound controller function
-            return new $injectionBinder(
+            let controllerResponse = new $injectionBinder(
                 controller,
                 'controller'
             ).call(me.$scope, resolve);
@@ -264,13 +260,11 @@ class ControllerResponse extends BaseResponse {
             // Resolve the Promise if the controller does not return a
             // function
             if (
-                me.controller &&
-                (
-                    !me.controller.constructor ||
-                    me.controller.constructor.name !== 'Promise'
-                )
+                !controllerResponse ||
+                !controllerResponse.constructor ||
+                controllerResponse.constructor.name !== 'Promise'
             ) {
-                return resolve(controller);
+                resolve(controller);
             }
         });
     }
@@ -295,8 +289,7 @@ class ControllerTemplateResponse extends ControllerResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -335,8 +328,7 @@ class ControllerTemplatePathResponse extends ControllerResponse {
      * @access private
      */
     head() {
-        super.head();
-        return this;
+        return super.head();
     }
 
     /**
@@ -352,7 +344,7 @@ class ControllerTemplatePathResponse extends ControllerResponse {
 
             // Check to see if we can associate the template path with a
             // mime type
-            me.responseHeaders[ 'Content-Type' ] =
+            me.response.$headers[ 'Content-Type' ] =
                 $MimeType.fromPath(me.route.templatePath);
             me.template = template;
         }).then(
@@ -388,9 +380,8 @@ class RedirectResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.statusCode = 302;
         this.response.setHeader('Location', this.path);
-        return this;
+        return super.head(302);
     }
 
     /**
@@ -440,12 +431,7 @@ class UnknownResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.writeHead(
-            404,
-            app.constants.RESPONSE_HEADER_MESSAGES['404'],
-            this.responseHeaders
-        );
-        return this;
+        return super.head(404);
     }
 
     /**
@@ -500,12 +486,7 @@ class ErrorResponse extends BaseResponse {
      * @access private
      */
     head() {
-        this.response.writeHead(
-            500,
-            RESPONSE_HEADER_MESSAGES[ '500' ],
-            this.responseHeaders
-        );
-        return this;
+        return super.head(500);
     }
 
     /**
@@ -552,13 +533,9 @@ class $CustomResponse extends BaseResponse {
      * @since 0.4.0
      * @access private
      */
-    head(code = 200, msg, headers = {}) {
-        msg = msg || RESPONSE_HEADER_MESSAGES[ +code ] || 'Unknown Error';
-
-        this.responseHeaders = util._extend(this.responseHeaders, headers);
-        this.response.writeHead(+code, msg, this.responseHeaders);
-
-        return this;
+    head(code = 200, headers = {}) {
+        this.response.$headers = util._extend(this.response.$headers, headers);
+        return super.head(code);
     }
 
     /**
@@ -585,13 +562,6 @@ class $CustomResponse extends BaseResponse {
     }
 }
 
-// TODO this will be done with the RESTful work
-// class ControllerViewRequest extends ControllerRequest {
-//     constructor() {
-//
-//     }
-// }
-
 /**
  * @desc Resolves any situation in which a Controller is referenced where it
  * does not exist
@@ -614,11 +584,7 @@ class $$ControllerNotFoundError extends ReferenceError {
 
 // Performs the templating inside of Controller Classes
 function controllerTemplateRouteResponse() {
-    if (!this.template) {
-
-        // Template was not found and we need to go into the catch function
-        throw new Error();
-    } else {
+    if (this.template) {
         let match = this.template.toString().match(/!doctype ([a-z]+)/i),
             mime;
 
@@ -626,8 +592,8 @@ function controllerTemplateRouteResponse() {
         // DOCTYPE tag, we can force set the MIME
         // We want this here instead of the explicit template definition
         // in case the MIME failed earlier
-        if (match && !this.responseHeaders.hasOwnProperty('Content-Type')) {
-            mime = this.responseHeaders[ 'Content-Type' ] =
+        if (match && !this.response.$headers.hasOwnProperty('Content-Type')) {
+            mime = this.response.$headers[ 'Content-Type' ] =
                 $MimeType.$$(match[1].toLowerCase());
         }
 
@@ -649,7 +615,7 @@ function controllerTemplateRouteResponse() {
         }
 
         // Pull the response back in from wherever it was before
-        this.responseContent = this.response.$responseContent;
+        this.content = this.response.content;
 
         // Render the template into the resoponse
         let me = this;
@@ -664,8 +630,8 @@ function controllerTemplateRouteResponse() {
                 resolve(template);
             });
         }).then(function(template) {
-            me.response.$responseContent = me.responseContent += template;
-            me.response.write(me.responseContent);
+            me.response.content = me.content += template;
+            me.response.write(me.content);
         });
     }
 }

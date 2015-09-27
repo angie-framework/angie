@@ -43,27 +43,50 @@ describe('$RouteProvider', function() {
                     }
                 });
             });
-            it('test string-based child url path inherits Controller', function() {
-                $Routes.when('/test', {
-                    template: 'test',
-                    Controller: 'test',
-                    test: {
-                        template: 'test'
-                    }
-                });
-                expect($Routes.fetch()).to.deep.eq({
-                    routes: {
-                        '/test': {
-                            template: 'test',
-                            Controller: 'test'
-                        },
-                        '/test/test': {
-                            template: 'test',
-                            Controller: 'test'
+            it(
+                'test string-based child url path inherits Controller',
+                function() {
+                    $Routes.when('/test', {
+                        template: 'test',
+                        Controller: 'test',
+                        test: {
+                            template: 'test'
                         }
-                    }
-                });
-            });
+                    });
+                    expect($Routes.fetch()).to.deep.eq({
+                        routes: {
+                            '/test': {
+                                template: 'test',
+                                Controller: 'test'
+                            },
+                            '/test/test': {
+                                template: 'test',
+                                Controller: 'test'
+                            }
+                        }
+                    });
+                }
+            );
+            it(
+                'test non-object child url paths without object values ignored',
+                function() {
+                    let route = {
+                        template: 'test',
+                        Controller: 'test',
+                        test: 'test'
+                    };
+                    $Routes.when('/test', route);
+                    expect($Routes.fetch()).to.deep.eq({
+                        routes: {
+                            '/test': {
+                                template: 'test',
+                                Controller: 'test'
+                            }
+                        }
+                    });
+                    expect(route.hasOwnProperty('test')).to.be.false;
+                }
+            );
         });
         describe('RegExp paths', function() {
             it('test RegExp-based url path', function() {
