@@ -107,7 +107,7 @@ This block should look somewhat familiar to you if you have written an AngularJS
 cd templates
 echo test >> index.html
 ```
-This should have created a file called test.html in your templates folder. Because the templates directory is already included in our `AngieFile.json`, we do not need to tell the application where to find this template file. However, if we were to add the file in `templates/html`, we would need to specify this directory under `templateDirs` in the scaffolded `AngieFile.json`.
+This should have created a file called index.html in your templates folder. Because the templates directory is already included in our `AngieFile.json`, we do not need to tell the application where to find this template file. However, if we were to add the file in `templates/html`, we would need to specify this directory under `templateDirs` in the scaffolded `AngieFile.json`.
 
 If you visit [that route](http://localhost:3000/test "route") in your browser, you should now see the file you created. Simple web server: check. Now, let's get a little fancy... just a little. Open the index.html file you just created and triple bracket "test":
 ```html
@@ -115,7 +115,7 @@ If you visit [that route](http://localhost:3000/test "route") in your browser, y
 ```
 In Angie templates triple brackets are compiled. We can now configure a scope with which to compile this template. We will first need a controller. From the application root, navigate to the `src/controllers` folder. Once there, create a file called `test.ctrl.js` to which we will add the following:
 ```javascript
-app.Controller('testCtrl', function($scope, $request) {
+app.Controller('TestCtrl', function($scope, $request) {
     $scope.foo = $request.query.test || 'test';
 });
 ```
@@ -124,7 +124,7 @@ Now that we have a Controller, we can update our route to reference it.
 app.config(function($routeProvider) {
     $routeProvider.when('/test', {
         templatePath: 'index.html'
-        Controller: 'testCtrl'
+        Controller: 'TestCtrl'
     });
 });
 ```

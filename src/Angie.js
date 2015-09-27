@@ -508,8 +508,6 @@ if (!app) {
     // Services
     app.service('$Exceptions', $ExceptionsProvider)
         .service('$scope', $scope)
-        .service('$window', {})
-        .service('$document', {})
         .service('$templateCache', $templateCache);
 }
 

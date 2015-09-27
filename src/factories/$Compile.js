@@ -14,32 +14,6 @@ import { $$templateLoader } from    './$TemplateCache';
 import $Util, { $StringUtil } from  '../util/Util';
 
 /**
- * @desc $window is provided to any directive which has included it. It
- * is a NodeJS representation of a window object.
- *
- * This should not be used to transform window properties as the window
- * provided by the browser and $window are not the same instance.
- *
- * @since 0.2.4
- * @access public
- * @example new $window.HTMLElement('div');
- */
-// class $window {}
-
-/**
- * @desc $document is provided to any directive which has included it. It
- * is a NodeJS representation of a window.document object.
- *
- * This should not be used to transform document properties as the document
- * provided by the browser and $document are not the same instance.
- *
- * @since 0.2.4
- * @access public
- * @example new $window.HTMLElement('div');
- */
-// class $document{}
-
-/**
  * @desc $compile is provided to any service, Controller, directive, Model, or
  * view which has included it as an argument.
  *

@@ -57,8 +57,8 @@ gulp.task('istanbul', [ 'jscs' ], function(cb) {
 });
 gulp.task('mocha', [ 'istanbul' ], function() {
     return gulp.src([
-        'test/src/util.spec.js',
-        'test/**/*.spec.js'
+        'test/src/test.spec.js',
+        'test/**/*!(test).spec.js'
     ]).pipe(mocha({
         reporter: 'spec'
     })).pipe(istanbul.writeReports({

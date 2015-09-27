@@ -61,7 +61,7 @@ class $RouteProvider {
      *     Controller: 'TestCtrl',
      *     test2: {
      *         template: '<div>{{{test2}}}</div>',
-               Controller: 'Test2Ctrl'
+     *         Controller: 'Test2Ctrl'
      *     }
      * });
      */
