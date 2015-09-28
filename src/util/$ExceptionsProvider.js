@@ -5,39 +5,47 @@
  */
 
 // System Modules
-import $LogProvider from    'angie-log';
-import {cyan, blue} from    'chalk';
+import {
+    cyan,
+    blue,
+    bold,
+    red
+} from  'chalk';
 
 class $$InvalidConfigError extends Error {
     constructor() {
-        $LogProvider.error(
+        super(
             'Invalid application configuration. Check your ' +
             blue('Angiefile.json')
         );
-        super();
     }
 }
 
-class $$InvalidComponentConfigError extends SyntaxError {
+class $$InvalidModuleConfigError extends SyntaxError {
     constructor(type = 'directive', name) {
-        $LogProvider.error(`Invalid configuration for ${type} ${cyan(name)}`);
-        super();
+        super(bold(red(`Invalid configuration for ${type} ${cyan(name)}`)));
     }
 }
 
-class $$InvalidServiceConfigError extends $$InvalidComponentConfigError {
+class $$InvalidServiceConfigError extends $$InvalidModuleConfigError {
     constructor(name) {
         super('service', name);
     }
 }
 
-class $$InvalidFactoryConfigError extends $$InvalidComponentConfigError {
+class $$InvalidFactoryConfigError extends $$InvalidModuleConfigError {
     constructor(name) {
         super('factory', name);
     }
 }
 
-class $$InvalidDirectiveConfigError extends $$InvalidComponentConfigError {
+class $$InvalidControllerConfigError extends $$InvalidModuleConfigError {
+    constructor(name) {
+        super('Controller', name);
+    }
+}
+
+class $$InvalidDirectiveConfigError extends $$InvalidModuleConfigError {
     constructor(name) {
         super('directive', name);
     }
@@ -47,5 +55,6 @@ export {
     $$InvalidConfigError,
     $$InvalidServiceConfigError,
     $$InvalidFactoryConfigError,
+    $$InvalidControllerConfigError,
     $$InvalidDirectiveConfigError
 };

@@ -8,9 +8,9 @@
 import 'es6-module-loader';
 
 // System Modules
-import {exec} from                  'child_process';
-import {default as chalk} from      'chalk';
-import {argv} from                  'yargs';
+import { exec } from                'child_process';
+import chalk from                   'chalk';
+import { argv } from                'yargs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
@@ -24,10 +24,7 @@ import {
 // System/Tranform BabelJS options
 System.transpiler = 'babel';
 
-const p = process,
-    server = requiresConfig.bind(null, $$server),
-    watch = requiresConfig.bind(null, $$watch),
-    database = requiresConfig.bind(null, require.bind(null, 'angie-orm'));
+const p = process;
 let args = [];
 
 // Remove trivial arguments
@@ -37,19 +34,23 @@ p.argv.forEach(function(v) {
     }
 });
 
+if (argv.h || argv.help) {
+    help();
+}
+
 // Route the CLI request to a specific command
 switch ((args[0] || '').toLowerCase()) {
     case 'help':
         help();
         break;
     case 'server':
-        server();
+        requiresConfig($$server);
         break;
     case 'watch':
-        watch();
+        requiresConfig.bind($$watch);
         break;
     case 's':
-        server();
+        requiresConfig($$server);
         break;
     case 'cluster':
         break;
@@ -60,10 +61,10 @@ switch ((args[0] || '').toLowerCase()) {
         });
         break;
     case 'syncdb':
-        database();
+        requiresConfig(require.bind(null, 'angie-orm'));
         break;
     case 'migrate':
-        database();
+        requiresConfig(require.bind(null, 'angie-orm'));
         break;
     case 'test':
         runTests();
@@ -104,7 +105,7 @@ function runTests() {
 function help() {
     let gray = (...args) => console.log(chalk.gray.apply(null, args));
     $LogProvider.bold('Angie');
-    console.log('A Component-based NodeJS MVC');
+    console.log('A Module-Based NodeJS Web Application Framework in ES6');
     console.log('\r');
     $LogProvider.bold('Version:');
     console.log(global.ANGIE_VERSION);
@@ -136,4 +137,5 @@ function help() {
         'Runs the Angie test suite and prints the results in the ' +
         'console'
     );
+    p.exit(0);
 }

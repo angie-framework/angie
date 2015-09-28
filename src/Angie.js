@@ -20,16 +20,18 @@ import {$templateCache, $resourceLoader} from           './factories/$TemplateCa
 import {$StringUtil} from                               './util/Util';
 import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
 
-const $$require = (v) => {
+const CWD = process.cwd(),
+    $$require = v => {
 
-    // If we dont first clear this out of the module cache, then we don't
-    // actually do anything with the require call that isn't assigned
-    delete require.cache[ v ];
+        // If we dont first clear this out of the module cache, then we don't
+        // actually do anything with the require call that isn't assigned
+        delete require.cache[ v ];
 
-    // Furthermore because it is unassigned, we do not have to force anything
-    // to return from this arrow function
-    require(v);
-};
+        // Furthermore because it is unassigned, we do not have to force anything
+        // to return from this arrow function
+        require(v);
+    },
+    parse = v => JSON.parse(fs.readFileSync(v, 'utf8'));
 
 /**
  * @desc This is the default Angie class. It is instantiated and given
@@ -40,10 +42,9 @@ const $$require = (v) => {
  * with the resource pipeline & webserver, instead, use the Angie class to
  * access commonly used static methods.
  *
- * @todo rename this class
  * @since 0.0.1
  * @access public
- * @extends $Util
+ * @extends {$Util}
  * @example Angie.noop() // = undefined
  */
 class Angie {
@@ -134,24 +135,33 @@ class Angie {
      * @example Angie.Controller('foo', () => {});
      */
     Controller(name, obj) {
+        if (typeof obj !== 'function') {
+            throw new $ExceptionsProvider.$$InvalidControllerConfigError(name);
+        }
         return this.$$register('Controllers', name, obj);
+    }
+
+    /**
+     * @desc Alias of the Controller function.
+     * @since 0.4.1
+     * @access public
+     * @example Angie.Controller('foo', () => {});
+     */
+    controller(name, obj) {
+        return this.Controller.call(this, name, obj);
     }
 
     /**
      * @desc Creates an Angie directive provider. The second parameter
      * of the directive function must be an object, with properties defining the
      * directive itself.
-     *
      * @since 0.2.3
      * @access public
-     *
      * @param {string} name The name of the constant being created
      * @param {function|object} obj The directive value, returns directive params
      * @param {string} obj().Controller The associated directive controller
      * @param {number} obj().priority A number representing the directive's
      * priority, relative to the other declared directives
-     * @param {boolean} obj().replace Does the directive root get replaced by
-     * its inner HTML?
      * @param {string} obj().restrict What HTML components can parse this directive:
      *    'A': attribute
      *    'E': element
@@ -163,7 +173,6 @@ class Angie {
      * @param {string} obj().templatePath The path to an HTML template to be
      * added as a byproduct of the directive
      * @returns {object} this instanceof Angie
-     *
      * @example Angie.directive('foo', {
      *     return {
      *         Controller: 'test',
@@ -183,6 +192,21 @@ class Angie {
             throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
         return this.$$register('directives', name, dir);
+    }
+
+    /**
+     * @desc Alias of the directive function.
+     * @since 0.4.1
+     * @access public
+     * @example Angie.directive('foo', {
+     *     return {
+     *         Controller: 'test',
+     *         link: function() {}
+     *     };
+     * });
+     */
+    view(name, obj) {
+        return this.directive.call(this, name, obj);
     }
     config(fn) {
         if (typeof fn === 'function') {
@@ -252,6 +276,11 @@ class Angie {
      * @access private
      */
     $$loadDependencies(dependencies = []) {
+        const DEPENDENCY_DIRS = [
+            `${CWD}/node_modules/`,
+            `${__dirname}/../node_modules/`,
+            ''
+        ];
         let me = this,
             proms = [];
 
@@ -268,60 +297,75 @@ class Angie {
                 // This will load all of the modules, overwriting a module name
                 // will replace it
                 prom = new Promise(function(resolve) {
-                    let $config,
-                        name,
-                        subDependencies;
+                    let subDependencies = [],
+                        $config,
+                        $package,
+                        name;
 
-                    try {
-                        $config = JSON.parse(
-                            fs.readFileSync(
-                                `./node_modules/${dependency}/AngieFile.json`,
-                                'utf8'
-                            )
-                        );
-                    } catch(e) {
-                        $LogProvider.error(e);
-                    }
+                    for (let i = DEPENDENCY_DIRS.length - 1; i >= 0; --i) {
+                        let dir = DEPENDENCY_DIRS[ i ];
+                        try {
 
-                    if (typeof $config === 'object') {
+                            // Load the angie and the package config
+                            $config = parse(`${dir}${dependency}/AngieFile.json`);
+                            $package = parse(`${dir}${dependency}/package.json`);
 
-                        // Grab the dependency name fo' reals
-                        name = $config.projectName;
+                            // If a config was found
+                            if (typeof $config === 'object') {
 
-                        // Find any sub dependencies for recursive module
-                        // loading
-                        subDependencies = config.dependencies;
+                                // Grab the dependency name fo' reals
+                                name = $config.projectName;
 
-                        // Set the config in dependency configs (just in case)
-                        if (!app.$dependencyConfig) {
-                            app.$dependencyConfig = {};
-                        }
-                        app.$dependencyConfig[ dependency ] = $config;
-                    }
+                                // Find any sub dependencies for recursive module
+                                // loading
+                                subDependencies = config.dependencies;
 
-                    try {
+                                // Set the config in dependency configs (just in case)
+                                if (!app.$dependencyConfig) {
+                                    app.$dependencyConfig = {};
+                                }
+                            } else {
 
-                        let service = require(dependency);
+                                // Not an Angie package, pass
+                                throw new Error();
+                            }
 
-                        // TODO make this try to load not an npm project config
-                        if (service) {
+                            // No package.json, can't be an Angie package
+                            if (typeof $package !== 'object') {
+                                throw new Error();
+                            }
 
-                            // Instantiate the dependency as a provider
-                            // determined by its type
-                            me[
-                                typeof service === 'function' ? 'factory' :
-                                    typeof service === 'object' ? 'service' :
-                                        'constant'
-                            ](
-                                name || $StringUtil.toCamel(dependency),
-                                service
+                            // Try to load package "main"
+                            let service = $$require(
+                                `${dir}${dependency}/${$package.main}`
                             );
+
+                            if (service) {
+
+                                // Instantiate the dependency as a provider
+                                // determined by its type
+                                me[
+                                    typeof service === 'function' ? 'factory' :
+                                        typeof service === 'object' ? 'service' :
+                                            'constant'
+                                ](
+                                    name || $StringUtil.toCamel(dependency),
+                                    service
+                                );
+                            }
+
+                            app.$dependencyConfig[ dependency ] = $config;
+
                             $LogProvider.info(
                                 `Successfully loaded dependency ${magenta(v)}`
                             );
+
+                            break;
+                        } catch(e) {
+                            if (!e.code === 'ENOENT') {
+                                $LogProvider.error(e);
+                            }
                         }
-                    } catch(e) {
-                        $LogProvider.error(e);
                     }
 
                     return app.$$loadDependencies(
@@ -341,7 +385,7 @@ class Angie {
      * @access private
      * @param {string}  [param=process.cwd()] dir The dir to scan for modules
      */
-    $$bootstrap(dir = process.cwd()) {
+    $$bootstrap(dir = CWD) {
         let me = this,
             src = typeof config.projectRoot === 'string' ?
                 $StringUtil.removeTrailingLeadingSlashes(config.projectRoot) :
@@ -398,8 +442,7 @@ class Angie {
             // Once the configs object has been copied destroy it to prevent
             // those functions from ever being fired again in this or future
             // reloads within the same application context
-            me.configs.length = 0;
-            return true;
+            me.configs = [];
         });
     }
     $$load() {
@@ -414,48 +457,59 @@ class Angie {
     }
 }
 
-let app = global.app = new Angie();
+let app = global.app;
+if (!app) {
+     app = global.app = new Angie();
 
-// Require in any further external components
-// Constants
-app.constant('RESPONSE_HEADER_MESSAGES', {
-    200: 'OK',
-    404: 'File Not Found',
-    500: 'Invalid Request'
-}).constant(
-    'PRAGMA_HEADER',
-    'no-cache'
-).constant(
-    'NO_CACHE_HEADER',
-    'private, no-cache, no-store, must-revalidate'
-);
-
-// Configs
-app.config(function() {
-    $templateCache.put(
-        'index.html',
-        fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+    // Require in any further external components
+    // Constants
+    app.constant('ANGIE_TEMPLATE_DIRS', [
+        `${__dirname}/templates`
+    ].concat((config.templateDirs || []).map(function(v) {
+        if (v.indexOf(CWD) === -1) {
+            v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
+        }
+        v = $StringUtil.removeTrailingSlashes(v);
+        return v;
+    }))).constant(
+        'ANGIE_STATIC_DIRS',
+        config.staticDirs || []
+    ).constant('RESPONSE_HEADER_MESSAGES', {
+        200: 'Ok',
+        404: 'File Not Found',
+        500: 'Internal Server Error',
+        504: 'Gateway Timeout'
+    }).constant(
+        'PRAGMA_HEADER',
+        'no-cache'
+    ).constant(
+        'NO_CACHE_HEADER',
+        'private, no-cache, no-store, must-revalidate'
     );
-    $templateCache.put(
-        '404.html',
-        fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
-    );
-});
 
-// Factories
-app.factory('$Routes', $RouteProvider)
-    .factory('$Cache', $CacheFactory)
-    .factory('$compile', $compile)
-    .factory('$resourceLoader', $resourceLoader);
+    // Configs
+    app.config(function() {
+        $templateCache.put(
+            'index.html',
+            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+        );
+        $templateCache.put(
+            '404.html',
+            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
+        );
+    });
 
-// Services
-// Error utilities
-app.service('$Exceptions', $ExceptionsProvider)
-    .service('$scope', $scope)
-    .service('$window', {})
-    .service('$document', {})
-    .service('$templateCache', $templateCache);
+    // Factories
+    app.factory('$Routes', $RouteProvider)
+        .factory('$Cache', $CacheFactory)
+        .factory('$compile', $compile)
+        .factory('$resourceLoader', $resourceLoader);
+
+    // Services
+    app.service('$Exceptions', $ExceptionsProvider)
+        .service('$scope', $scope)
+        .service('$templateCache', $templateCache);
+}
 
 export default app;
 export {Angie};
-

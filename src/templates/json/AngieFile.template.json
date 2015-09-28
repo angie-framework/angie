@@ -20,5 +20,6 @@
         "angie-orm"
     ],
     "cacheStaticAssets": %s,
+    "responseErrorTimeout": 5000,
     "loadDefaultScriptFile": "%s"
 }

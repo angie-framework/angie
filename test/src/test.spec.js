@@ -20,6 +20,9 @@ class _Promise {
     catch(fn) {
         fn();
     }
+    static resolve(v) {
+        return new Promise(r => r(v));
+    }
     static all(proms) {
         return {
             then: new _Promise().then,
