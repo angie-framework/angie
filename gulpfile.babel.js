@@ -67,7 +67,13 @@ gulp.task('mocha', [ 'istanbul' ], function() {
             dir: 'coverage'
         },
         reporters: [ 'text', 'text-summary', 'html', 'cobertura' ]
-    }));
+    })).pipe(
+       istanbul.enforceThresholds({
+            thresholds: {
+                global: 70
+            }
+        })
+    );
 });
 gulp.task('cobertura', [ 'mocha' ], function(cb) {
     cobertura('coverage/cobertura-coverage.xml', 'svg', cb);

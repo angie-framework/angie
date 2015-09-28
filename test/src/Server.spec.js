@@ -4,8 +4,9 @@ import simple, {mock, spy} from     'simple-mock';
 import $LogProvider from            'angie-log';
 
 // System Modules
-import http from 'http';
-import https from 'https';
+import { argv } from                'yargs';
+import http from                    'http';
+import https from                   'https';
 
 // Angie Modules
 import app from                     '../../src/Angie';
@@ -161,7 +162,10 @@ describe('$$server', function() {
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test call with https and --usessl', function() {
-        $$server([ 'server', 1234, '--usessl' ]);
+        // yargs().resetOptions({ usessl: true });
+        // console.log(argv);
+        argv.run({ usessl: true });
+        $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
         expect(http.createServer).to.not.have.been.called;
         assert(https.createServer.called);
