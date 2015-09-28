@@ -39,6 +39,7 @@
   "devDependencies": {
     "babel-eslint": "3.1.17",
     "chai": "2.3.0",
+    "coveralls": "^2.11.4",
     "esdoc": "^0.2.4",
     "gulp": "3.9.0",
     "gulp-babel": "^5.2.1",
