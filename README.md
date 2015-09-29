@@ -50,7 +50,9 @@ Scaffold a new project, run a web server, sync your database, migrate your model
 Angie allows you to define dependencies to inject services straight into your application from any other Angie application. In the AngieFile.json created when you scaffold an app is a "dependencies" section. Add the absolute path of another Angie project to this list and when the app is bootstrapped, it will give you access to any of the code you have created in the dependency application.
 
 #### RESTful API responses &amp; template rendering
-Angie RESTful responses are accomplished via the [Angie REST Framework](https://github.com/angie-framework/angie-rest-framework "angie-rest-framework"). With the inclusion of this dependency, your Controllers have the ability to route requests via "allowed" method endpoints and serialize request and render response data from the Controller methods into a variety of formats. Templates can be pre-rendered by Controllers with Angie! The template compiler understands partial templates, scope inclusion, and can execute default or custom directives.
+Angie RESTful responses are accomplished via the [Angie REST Framework](https://github.com/angie-framework/angie-rest-framework "angie-rest-framework"). With the inclusion of this dependency, your Controllers have the ability to route requests via "allowed" method endpoints and serialize request and render response data from the Controller methods into a variety of formats.
+
+Templates can be pre-rendered by Controllers with Angie! The template compiler understands partial templates, scope inclusion, and can execute default or custom directives.
 
 #### Flexible ORM
 Angie makes creating &amp; maintaining data models across many different databases easy. Add your configuration options to a configuration file, sync your database and perform CRUDdy operations with ease. Support for more databases is being added all the time. For more information on the ORM, please visit the [Angie ORM Repository](https://github.com/angie-framework/angie-orm "angie-orm")

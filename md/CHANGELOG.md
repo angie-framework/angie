@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Moved all non-README markdown
 - Moved the QUICKSTART into its own markdown file
 - Added styles to default and 404 pages
+- Added tests for `$$templateLoader`, the internal template/static asset loader
 
 #### [0.4.1] - 2015-09-20
 ##### Added/Changed/Removed
