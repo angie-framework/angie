@@ -5,8 +5,10 @@
  */
 
 // System Modules
+import { argv } from                    'yargs';
+
 // Do not alias this as the commands mirror the global `confirm` and `prompt`
-import {default as promptly} from       'promptly';
+import { default as promptly } from     'promptly';
 import fs from                          'fs';
 import util from                        'util';
 import chalk, {
@@ -16,7 +18,7 @@ import chalk, {
 import $LogProvider from                'angie-log';
 
 // Angie Modules
-import {$StringUtil} from                '../Util';
+import { $StringUtil } from             '../Util';
 
 const p = process,
       breen = (v) => bold(green(v));
@@ -24,7 +26,7 @@ const p = process,
 /**
  * @desc $$createProject is the function called when the CLI attempts to create
  * a project from the command line. This scaffolds the main folder in the
- * specified location or no folder and then folders for commonly used providers
+ * specified directory or no folder and then folders for commonly used providers
  * and the Angie config file (AngieFile.json).
  *
  * The CLI function to create a project will ask the user a series of questions.
@@ -38,23 +40,20 @@ const p = process,
  * This function will gracefully exit the process if successful and exit with
  * errors if unsuccessful.
  * @since 0.0.1
- * @todo If any more CL arguments are required, you must abstract confirm/prompt
+ * @todo If any more CLI arguments are required, you must abstract confirm/prompt
  * as functions
  * @param {object} args A list of arugments passed from the CLI parser
  * @param {string} args.name The name of the project being created. This must
  * consist of letters, dashes, & underscores
- * @param {string} args.location [param=process.cwd()] The location in which the
- * inner files of the project are created. CWD if no location is specified.
+ * @param {string} args.dir [param=process.cwd()] The directory in which the
+ * inner files of the project are created. CWD if no directory is specified.
  * @access private
  */
-export default function $$createProject(args = {}) {
+function $$createProject({ name, dir }) {
 
     // Parse the passed arguments object
-    const name = args.name,
-          location = $StringUtil.removeTrailingLeadingSlashes(args.location);
-    let mkDir,
-        mkDirFiles,
-        mkSub;
+    name = argv.name || argv.n || name;
+    dir = $StringUtil.removeTrailingLeadingSlashes(argv.dir || dir);
 
     // The process must exit if there is no passed name, or the name passed is
     // in an incorrect format
@@ -71,10 +70,9 @@ export default function $$createProject(args = {}) {
     }
 
     // Make sure that we're creating the project in the right spot
-    mkDir = location ? (location === '.' ? '' : location) : `${p.cwd()}/${name}`;
-    mkDirFiles = mkDir ? `${mkDir}/` : '';
-    mkSub = `${mkDirFiles}src`.replace(/\/{2}/g, '/');
-
+    let mkDir = dir ? (dir === '.' ? '' : dir) : `${p.cwd()}/${name}`,
+        mkDirFiles = mkDir ? `${mkDir}/` : '',
+        mkSub = `${mkDirFiles}src`.replace(/\/{2}/g, '/');
     try {
 
         // We cannot create a dir if the argument is empty
@@ -196,3 +194,5 @@ class $$ProjectCreationError extends Error {
         super(e);
     }
 }
+
+export default $$createProject;

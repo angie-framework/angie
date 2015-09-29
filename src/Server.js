@@ -5,16 +5,17 @@
  */
 
 // System Modules
+import { argv } from                    'yargs';
 import repl from                        'repl';
 import http from                        'http';
 import https from                       'https';
-import {Client} from                    'fb-watchman';
-import {cyan} from                      'chalk';
-import {default as $Injector} from      'angie-injector';
+import { Client } from                  'fb-watchman';
+import { cyan } from                    'chalk';
+import $Injector from                   'angie-injector';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
-import {config} from                    './Config';
+import { config } from                  './Config';
 import app from                         './Angie';
 import $Request from                    './services/$Request';
 import $Response, {
@@ -53,7 +54,7 @@ let webserver,
 function $$watch(args = []) {
     const PORT = $$port(args),
         ACTION = args[0] || 'watch',
-        WATCH_DIR = /--?devmode/i.test(args) ? __dirname : process.cwd();
+        WATCH_DIR = argv.devmode || argv.d ? __dirname : process.cwd();
 
     // Check to see whether or not the config specifies the app as `development`
     // and we are creating a web server. If so, pose the user with a warning:
@@ -271,7 +272,8 @@ function $$server(args = []) {
 }
 
 function $$port(args) {
-    return /\--?usessl/i.test(args) ? 443 : !isNaN(+args[1]) ? +args[1] : 3000;
+    let port = +(argv.port || argv.p || args[ 1 ]);
+    return argv.usessl ? 443 : !isNaN(port) ? port : 3000;
 }
 
 export {
