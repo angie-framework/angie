@@ -1,0 +1,31 @@
+// out: ../css/index.css, compress: true
+
+@import 'shared';
+
+h1 {
+    font-family:@f0;
+    font-size:4em;
+    color:@c1;
+}
+
+div {
+    margin-top:25px;
+    font-family:@f1;
+    font-size:1.5em;
+    color:@c1;
+    a {
+        margin:15px 0 0 15px;
+        font-size:0.75em;
+        display:block;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        width:100%;
+    }
+
+    h1 {
+        font-size:3em;
+    }
+}

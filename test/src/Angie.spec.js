@@ -1,6 +1,3 @@
-// Global Modules
-import 'es6-module-loader';
-
 // Test Modules
 import { expect, assert } from      'chai';
 import simple, { mock } from        'simple-mock';
@@ -264,7 +261,6 @@ describe('Angie', function() {
 
         beforeEach(function() {
             mock(fs, 'readdirSync', () => [ 'test' ]);
-            mock(System, 'import', (v) => v);
             simple.mock(Promise, 'all');
             spy = simple.spy();
             app.configs = [
@@ -277,21 +273,18 @@ describe('Angie', function() {
         xit('test $$bootstrap with node_modules', function() {
             fs.readdirSync.returnWith([ 'node_modules' ]);
             app.$$bootstrap();
-            expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
             expect(app.configs).to.deep.eq([]);
         });
         xit('test $$bootstrap with non-js files', function() {
             app.$$bootstrap();
-            expect(System.import).to.not.have.been.called;
             expect(Promise.all.calls[0].args[0]).to.deep.eq([]);
             expect(spy).to.have.been.called;
         });
         xit('test $$bootstrap', function() {
             fs.readdirSync.returnWith([ 'test.js' ]);
             expect(app.$$bootstrap().val).to.be.true;
-            expect(System.import).to.have.been.called;
             expect(spy).to.have.been.called;
             expect(app.configs).to.deep.eq([]);
         });
