@@ -69,9 +69,7 @@ gulp.task('mocha', [ 'istanbul' ], function() {
     }));
 });
 gulp.task('esdoc', [ 'mocha' ], function() {
-    return gulp.src(SRC_DIR).pipe(esdoc({
-        destination: DOC_SRC
-    }));
+    return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
 });
 gulp.task('babel', [ 'esdoc' ], function() {
     gulp.src(SRC).pipe(babel({
