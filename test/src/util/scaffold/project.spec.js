@@ -1,12 +1,13 @@
 // Test Modules
-import {expect, assert} from            'chai';
-import simple, {mock} from              'simple-mock';
+import { expect, assert } from          'chai';
+import simple, { mock } from            'simple-mock';
 
 // System Modules
-import {default as promptly} from       'promptly';
+import { argv } from                    'yargs';
+import { default as promptly } from     'promptly';
 import fs from                          'fs';
 import util from                        'util';
-import {bold, green} from               'chalk';
+import { bold, green } from             'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
@@ -50,10 +51,10 @@ describe('$$createProject', function() {
         fs.mkdirSync.returnWith(new Error());
         expect(project).to.throw($$ProjectCreationError);
     });
-    it('test successful project creation with location', function() {
+    it('test successful project creation with directory', function() {
         project({
             name: 'test',
-            location: 'test/'
+            dir: 'test/'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
@@ -86,7 +87,7 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with location false confirm', function() {
+    it('test successful project creation with directory false confirm', function() {
         mock(promptly, 'confirm', function(_, fn) {
             fn(false);
         });
@@ -95,7 +96,7 @@ describe('$$createProject', function() {
         });
         project({
             name: 'test',
-            location: 'test/'
+            dir: 'test/'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
@@ -129,10 +130,10 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with "." location', function() {
+    it('test successful project creation with "." directory', function() {
         project({
             name: 'test',
-            location: '.'
+            dir: '.'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('src');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('src/constants');
@@ -165,7 +166,7 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with no location', function() {
+    it('test successful project creation with no directory', function() {
         const CWD = p.cwd();
 
         project({

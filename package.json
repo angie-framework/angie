@@ -9,7 +9,7 @@
   "preferGlobal": true,
   "scripts": {
     "start": "node dist/index.js",
-    "test": "gulp test",
+    "test": "gulp test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "postinstall": "babel src --out-dir dist --comments false --copy-files"
   },
   "engines": {
@@ -39,6 +39,7 @@
   "devDependencies": {
     "babel-eslint": "3.1.17",
     "chai": "2.3.0",
+    "coveralls": "^2.11.4",
     "esdoc": "^0.2.4",
     "gulp": "3.9.0",
     "gulp-babel": "^5.2.1",
@@ -50,7 +51,6 @@
     "gulp-jscs": "1.6.0",
     "gulp-mocha": "2.0.1",
     "isparta": "3.0.3",
-    "istanbul-cobertura-badger": "0.0.4",
     "mocha": "2.2.4",
     "simple-mock": "0.3.0"
   },

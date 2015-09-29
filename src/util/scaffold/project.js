@@ -5,8 +5,9 @@
  */
 
 // System Modules
-// Do not alias this as the commands mirror the global `confirm` and `prompt`
 import { argv } from                    'yargs';
+
+// Do not alias this as the commands mirror the global `confirm` and `prompt`
 import { default as promptly } from     'promptly';
 import fs from                          'fs';
 import util from                        'util';

@@ -128,8 +128,10 @@ function help() {
         'the Angie module "src" directory'
     );
 
+    // TODO cluster help item
     // console.log('cluster [-p=<port>] [--port=<port>]');
     // gray('Start the Angie Webserver as a Cluster.');
+
     console.log('angie project [-n=<name>][--name=<name>] [--dir=<directory>]');
     console.log(
         'angie createproject [-n=<name>][--name=<name>] [--dir=<directory>]'
