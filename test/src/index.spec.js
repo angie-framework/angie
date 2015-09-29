@@ -1,9 +1,9 @@
 // Test Modules
-import { expect, assert } from  'chai';
-import simple, { mock } from            'simple-mock';
+import { expect } from          'chai';
+import simple, { mock } from    'simple-mock';
 
 // System Modules
-import yargs from       'yargs';
+import yargs from               'yargs';
 
 describe('index', function() {
     const noop = () => false,

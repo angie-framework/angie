@@ -99,6 +99,7 @@ function runTests() {
 function help() {
     const GRAY = (...args) => console.log(gray.apply(null, args)),
         BOLD = (...args) => console.log(bold.apply(null, args));
+
     BOLD('Angie');
     console.log('A Module-Based NodeJS Web Application Framework in ES6');
     console.log('\r');
