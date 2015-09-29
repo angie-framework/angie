@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 #### [0.4.2] - 2015-10-01
 ##### Changed
 - Modified the fashion in which args are parsed for CLI tasks (backwards compatible with older parsing)
+- Moved all non-README markdown
 - Added styles to default and 404 pages
 
 #### [0.4.1] - 2015-09-20
