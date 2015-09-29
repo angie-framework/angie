@@ -55,6 +55,8 @@ function $$createProject({ name, dir }) {
     name = argv.name || argv.n || name;
     dir = $StringUtil.removeTrailingLeadingSlashes(argv.dir || dir);
 
+    // console.log('DIR', dir);
+
     // The process must exit if there is no passed name, or the name passed is
     // in an incorrect format
     if (!name) {

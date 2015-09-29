@@ -4,7 +4,7 @@ import simple, {mock, spy} from     'simple-mock';
 import $LogProvider from            'angie-log';
 
 // System Modules
-import { argv } from                'yargs';
+import yargs from                   'yargs';
 import http from                    'http';
 import https from                   'https';
 
@@ -28,6 +28,7 @@ describe('$$server', function() {
         e;
 
     beforeEach(function() {
+        yargs([]);
         e = new Error();
         listen = spy(function() {
             return {
@@ -133,6 +134,58 @@ describe('$$server', function() {
         expect(end.callCount).to.eq(2);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 1234');
     });
+    it('test call with http and argument -p', function() {
+        yargs([ '-p', '9999' ]);
+        $$server([ 'server', 1234 ]);
+        assert(app.$$load.called);
+        assert(http.createServer.called);
+        expect(https.createServer).to.not.have.been.called;
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
+        assert(dataMock.called);
+        assert(routeMock.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
+        assert(head.called);
+        assert(writeSync.called);
+        expect(listen.calls[0].args[0]).to.eq(9999);
+        expect(
+            app.$$tearDown.calls[0].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 9999');
+    });
+    it('test call with http and argument --port', function() {
+        yargs([ '--port', '9999' ]);
+        $$server([ 'server', 1234 ]);
+        assert(app.$$load.called);
+        assert(http.createServer.called);
+        expect(https.createServer).to.not.have.been.called;
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
+        assert(dataMock.called);
+        assert(routeMock.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
+        assert(head.called);
+        assert(writeSync.called);
+        expect(listen.calls[0].args[0]).to.eq(9999);
+        expect(
+            app.$$tearDown.calls[0].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 9999');
+    });
     it('test call with https and port 443', function() {
         $$server([ 'server', 443 ]);
         assert(app.$$load.called);
@@ -162,9 +215,7 @@ describe('$$server', function() {
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test call with https and --usessl', function() {
-        // yargs().resetOptions({ usessl: true });
-        // console.log(argv);
-        argv.run({ usessl: true });
+        yargs([ '--usessl' ]);
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
         expect(http.createServer).to.not.have.been.called;

@@ -179,8 +179,6 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
-    console.log('PORT', PORT);
-
     // Load necessary app components
     app.$$load().then(function() {
 
@@ -275,7 +273,7 @@ function $$server(args = []) {
 
 function $$port(args) {
     let port = +(argv.port || argv.p || args[ 1 ]);
-    return argv.usessl ? 443 : !isNaN(port) ? port : 3000;;
+    return argv.usessl ? 443 : !isNaN(port) ? port : 3000;
 }
 
 export {

@@ -4,9 +4,6 @@
  * @date 8/16/2015
  */
 
-// Global Modules
-import 'es6-module-loader';
-
 // System Modules
 import { argv } from                'yargs';
 import { exec } from                'child_process';
@@ -21,14 +18,10 @@ import {
     $$server
 } from                              './Server';
 
-// System/Tranform BabelJS options
-System.transpiler = 'babel';
-
-const p = process;
 let args = [];
 
 // Remove trivial arguments
-p.argv.forEach(function(v) {
+process.argv.forEach(function(v) {
     if (!v.match(/((babel-)?node|iojs|index|angie|--?)/)) {
         args.push(v);
     }
@@ -36,44 +29,45 @@ p.argv.forEach(function(v) {
 
 if (argv.help || argv.h) {
     help();
-}
+} else {
 
-// Route the CLI request to a specific command
-switch ((args[0] || '').toLowerCase()) {
-    case 'help':
-        help();
-        break;
-    case 'server':
-        requiresConfig($$server);
-        break;
-    case 'watch':
-        requiresConfig.bind($$watch);
-        break;
-    case 's':
-        requiresConfig($$server);
-        break;
-    case 'cluster':
-        break;
-    case 'createproject':
-        $$createProject({
-            name: args[ 1 ],
-            dir: args[ 2 ]
-        });
-        break;
-    case 'syncdb':
-        requiresConfig(require.bind(null, 'angie-orm'));
-        break;
-    case 'migrate':
-        requiresConfig(require.bind(null, 'angie-orm'));
-        break;
-    case 'test':
-        runTests();
-        break;
-    case 'shell':
-        watch();
-        break;
-    default:
-        help();
+    // Route the CLI request to a specific command
+    switch ((args[0] || '').toLowerCase()) {
+        case 'help':
+            help();
+            break;
+        case 'server':
+            requiresConfig($$server);
+            break;
+        case 'watch':
+            requiresConfig.bind($$watch);
+            break;
+        case 's':
+            requiresConfig($$server);
+            break;
+        case 'cluster':
+            break;
+        case 'createproject':
+            $$createProject({
+                name: args[ 1 ],
+                dir: args[ 2 ]
+            });
+            break;
+        case 'syncdb':
+            requiresConfig(require.bind(null, 'angie-orm'));
+            break;
+        case 'migrate':
+            requiresConfig(require.bind(null, 'angie-orm'));
+            break;
+        case 'test':
+            runTests();
+            break;
+        case 'shell':
+            watch();
+            break;
+        default:
+            help();
+    }
 }
 
 // Wrapper function for services which require configs to be loaded
@@ -83,7 +77,7 @@ function requiresConfig(fn) {
     return new Config().then(function() {
         return typeof fn === 'function' ? fn(args) : args;
     }, function() {
-        p.exit(1);
+        process.exit(1);
     });
 }
 
@@ -146,17 +140,4 @@ function help() {
         'Runs the Angie test suite and prints the results in the ' +
         'console'
     );
-    p.exit(0);
 }
-
-// Watch commands
-    // -p, --port, -d , --devmode, --usessl
-// Server Commands
-// create project commands
-
-// HELP/H IS COVERED
-// PORT/P IS COVERED
-// USE SSL IS COVERED
-// DEVMODE/D IS COVERED
-// NAME/N
-// DIR IS COVERED
