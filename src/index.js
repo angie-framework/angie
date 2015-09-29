@@ -40,7 +40,7 @@ if (argv.help || argv.h) {
             requiresConfig($$server);
             break;
         case 'watch':
-            requiresConfig.bind($$watch);
+            requiresConfig($$watch);
             break;
         case 's':
             requiresConfig($$server);

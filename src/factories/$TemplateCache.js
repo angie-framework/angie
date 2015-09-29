@@ -36,7 +36,9 @@ class $TemplateCache extends $CacheFactory {
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
-    const TEMPLATE_DIRS = $Injector.get('ANGIE_TEMPLATE_DIRS');
+    const TEMPLATE_DIRS = $Injector.get(
+        `ANGIE_${type === 'template' ? 'TEMPLATE' : 'STATIC'}_DIRS`
+    );
     let template;
 
     // Deliberately use a for loop so that we can break out of it
