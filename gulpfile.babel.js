@@ -66,13 +66,7 @@ gulp.task('mocha', [ 'istanbul' ], function() {
             dir: 'coverage'
         },
         reporters: [ 'text', 'text-summary', 'html', 'lcov' ]
-    })).pipe(
-       istanbul.enforceThresholds({
-            thresholds: {
-                global: 65
-            }
-        })
-    );
+    }));
 });
 gulp.task('esdoc', [ 'mocha' ], function() {
     return gulp.src(SRC_DIR).pipe(esdoc({
