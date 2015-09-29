@@ -165,12 +165,6 @@ class AssetResponse extends BaseResponse {
             me = this;
         return new Promise(function(resolve) {
             if (asset) {
-                if (
-                    config.hasOwnProperty('cacheStaticAssets') &&
-                    config.cacheStaticAssets === true
-                ) {
-                    assetCache.put(me.path, asset);
-                }
                 me.response.write(asset);
             } else {
                 return new UnknownResponse().head().write();

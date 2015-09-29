@@ -7,7 +7,6 @@ import $Injector from                   'angie-injector';
 
 // Angie Modules
 import { config } from                  '../../../src/Config';
-import $CacheFactory from               '../../../src/factories/$CacheFactory';
 import * as $TemplateCache from         '../../../src/factories/$TemplateCache';
 import $Response, {
     BaseResponse,
@@ -197,22 +196,9 @@ describe('$Responses', function() {
                 assert(headMock.called);
             });
             describe('write', function() {
-                let assetCacheGetMock,
-                    assetCachePutMock,
-                    $$templateLoaderMock;
+                let $$templateLoaderMock;
 
                 beforeEach(function() {
-                    mock($CacheFactory.prototype, 'constructor', () => false);
-                    assetCacheGetMock = mock(
-                        $CacheFactory.prototype,
-                        'get',
-                        () => false
-                    );
-                    assetCachePutMock = mock(
-                        $CacheFactory.prototype,
-                        'put',
-                        () => true
-                    );
                     $$templateLoaderMock = mock(
                         $TemplateCache,
                         '$$templateLoader',
@@ -224,7 +210,7 @@ describe('$Responses', function() {
                     delete config.cacheStaticAssets;
                     simple.restore();
                 });
-                it('test no asset cache, no asset template', function() {
+                it('test no asset template', function() {
                     let headMock,
                         unknownWriteSpy = spy();
                     $$templateLoaderMock.returnWith(false);
@@ -238,49 +224,9 @@ describe('$Responses', function() {
                     assert(headMock.called);
                     assert(unknownWriteSpy.called);
                 });
-                it('test asset from $$templateLoader, no caching', function() {
+                it('test asset from $$templateLoader', function() {
                     response.write();
-                    expect(assetCachePutMock).to.not.have.been.called;
                     assert(writeSpy.called);
-                });
-                it('test asset from $$templateLoader, caching is false', function() {
-                    config.cacheStaticAssets = false;
-                    response.write();
-                    expect(assetCachePutMock).to.not.have.been.called;
-                    assert(writeSpy.called);
-                });
-                it('test asset from $$templateLoader, caching', function() {
-                    config.cacheStaticAssets = true;
-                    response.write();
-                    expect(
-                        assetCachePutMock.calls[0].args
-                    ).to.deep.eq([ 'test.html', 'test' ]);
-                    assert(writeSpy.called);
-                });
-                describe('assetCache', function() {
-                    beforeEach(function() {
-                        assetCacheGetMock.returnWith('test');
-                        $$templateLoaderMock.returnWith(false);
-                    });
-                    it('test asset from assetCache, no caching', function() {
-                        response.write();
-                        expect(assetCachePutMock).to.not.have.been.called;
-                        assert(writeSpy.called);
-                    });
-                    it('test asset from assetCache, caching is false', function() {
-                        config.cacheStaticAssets = false;
-                        response.write();
-                        expect(assetCachePutMock).to.not.have.been.called;
-                        assert(writeSpy.called);
-                    });
-                    it('test asset from assetCache, caching', function() {
-                        config.cacheStaticAssets = true;
-                        response.write();
-                        expect(
-                            assetCachePutMock.calls[0].args
-                        ).to.deep.eq([ 'test.html', 'test' ]);
-                        assert(writeSpy.called);
-                    });
                 });
             });
         });

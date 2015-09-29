@@ -79,11 +79,11 @@ describe('$TemplateCache', function() {
             ).to.deep.eq([ 'test', undefined ]);
             expect(!$CacheFactory.prototype.put.called);
         });
-        it('test file found, static asset, config cache', function() {
+        it('test file found, config cache', function() {
             config.cacheStaticAssets = true;
             injectorMock.returnWith([ 'test' ]);
             fileMock.returnWith('test');
-            expect($$templateLoader('test', 'static')).to.eq('test');
+            expect($$templateLoader('test')).to.eq('test');
             assert(fileMock.called);
             expect(
                 fs.readFileSync.calls[0].args
