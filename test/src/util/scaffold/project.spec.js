@@ -1,12 +1,13 @@
 // Test Modules
-import {expect, assert} from            'chai';
-import simple, {mock} from              'simple-mock';
+import { expect, assert } from          'chai';
+import simple, { mock } from            'simple-mock';
 
 // System Modules
-import {default as promptly} from       'promptly';
+import yargs from                       'yargs';
+import { default as promptly } from     'promptly';
 import fs from                          'fs';
 import util from                        'util';
-import {bold, green} from               'chalk';
+import { bold, green } from             'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
@@ -21,6 +22,7 @@ describe('$$createProject', function() {
     let noop = () => null;
 
     beforeEach(function() {
+        yargs([]);
         mock(fs, 'mkdirSync', noop);
         mock(fs, 'readFileSync', noop);
         mock(util, 'format', () => 'test');
@@ -50,10 +52,10 @@ describe('$$createProject', function() {
         fs.mkdirSync.returnWith(new Error());
         expect(project).to.throw($$ProjectCreationError);
     });
-    it('test successful project creation with location', function() {
+    it('test successful project creation with directory', function() {
         project({
             name: 'test',
-            location: 'test/'
+            dir: 'test/'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
@@ -86,7 +88,81 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with location false confirm', function() {
+    it('test successful project creation with -n argument', function() {
+        yargs([ '-n', 'test' ]);
+        project({
+            name: 'test1',
+            dir: 'test/'
+        });
+        expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
+        expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
+        expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
+        expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
+        expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
+        expect(promptly.confirm.calls[0].args[0]).to.eq(
+            `${bold(green('Do you want Angie to cache static assets?'))} :`
+        );
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
+            'test',
+            'test',
+            true
+        ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
+        expect(fs.writeFileSync.calls[0].args).to.deep.eq([
+            'test/AngieFile.json', 'test', 'utf8'
+        ]);
+        expect(
+            $LogProvider.info.calls[0].args[0]
+        ).to.eq('Project successfully created');
+        expect(p.exit.calls[0].args[0]).to.eq(0);
+    });
+    it('test successful project creation with --name argument', function() {
+        yargs([ '--name', 'test' ]);
+        project({
+            name: 'test1',
+            dir: 'test/'
+        });
+        expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
+        expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
+        expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
+        expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
+        expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
+        expect(promptly.confirm.calls[0].args[0]).to.eq(
+            `${bold(green('Do you want Angie to cache static assets?'))} :`
+        );
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
+            'test',
+            'test',
+            true
+        ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
+        expect(fs.writeFileSync.calls[0].args).to.deep.eq([
+            'test/AngieFile.json', 'test', 'utf8'
+        ]);
+        expect(
+            $LogProvider.info.calls[0].args[0]
+        ).to.eq('Project successfully created');
+        expect(p.exit.calls[0].args[0]).to.eq(0);
+    });
+    it('test successful project creation with directory false confirm', function() {
         mock(promptly, 'confirm', function(_, fn) {
             fn(false);
         });
@@ -95,7 +171,7 @@ describe('$$createProject', function() {
         });
         project({
             name: 'test',
-            location: 'test/'
+            dir: 'test/'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
@@ -129,10 +205,10 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with "." location', function() {
+    it('test successful project creation with "." directory', function() {
         project({
             name: 'test',
-            location: '.'
+            dir: '.'
         });
         expect(fs.mkdirSync.calls[0].args[0]).to.eq('src');
         expect(fs.mkdirSync.calls[1].args[0]).to.eq('src/constants');
@@ -165,7 +241,81 @@ describe('$$createProject', function() {
         ).to.eq('Project successfully created');
         expect(p.exit.calls[0].args[0]).to.eq(0);
     });
-    it('test successful project creation with no location', function() {
+    it('test successful project creation with -d', function() {
+        yargs([ '-d', 'test' ]);
+        project({
+            name: 'test',
+            dir: 'test/'
+        });
+        expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
+        expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
+        expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
+        expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
+        expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
+        expect(promptly.confirm.calls[0].args[0]).to.eq(
+            `${bold(green('Do you want Angie to cache static assets?'))} :`
+        );
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
+            'test',
+            'test',
+            true
+        ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
+        expect(fs.writeFileSync.calls[0].args).to.deep.eq([
+            'test/AngieFile.json', 'test', 'utf8'
+        ]);
+        expect(
+            $LogProvider.info.calls[0].args[0]
+        ).to.eq('Project successfully created');
+        expect(p.exit.calls[0].args[0]).to.eq(0);
+    });
+    it('test successful project creation with --dir', function() {
+        yargs([ '--dir', 'test' ]);
+        project({
+            name: 'test',
+            dir: 'test/'
+        });
+        expect(fs.mkdirSync.calls[0].args[0]).to.eq('test');
+        expect(fs.mkdirSync.calls[1].args[0]).to.eq('test/src');
+        expect(fs.mkdirSync.calls[2].args[0]).to.eq('test/src/constants');
+        expect(fs.mkdirSync.calls[3].args[0]).to.eq('test/src/configs');
+        expect(fs.mkdirSync.calls[4].args[0]).to.eq('test/src/services');
+        expect(fs.mkdirSync.calls[5].args[0]).to.eq('test/src/factories');
+        expect(fs.mkdirSync.calls[6].args[0]).to.eq('test/src/controllers');
+        expect(fs.mkdirSync.calls[7].args[0]).to.eq('test/src/directives');
+        expect(fs.mkdirSync.calls[8].args[0]).to.eq('test/test');
+        expect(fs.mkdirSync.calls[9].args[0]).to.eq('test/static');
+        expect(fs.mkdirSync.calls[10].args[0]).to.eq('test/templates');
+        expect(promptly.confirm.calls[0].args[0]).to.eq(
+            `${bold(green('Do you want Angie to cache static assets?'))} :`
+        );
+        expect(util.format.calls[0].args.slice(0, 4)).to.deep.eq([
+            fs.readFileSync(
+                '../../../../src/templates/json/AngieFile.template.json'
+            ),
+            'test',
+            'test',
+            true
+        ]);
+        expect(util.format.calls[0].args[4].val).to.eq(true);
+        expect(fs.writeFileSync.calls[0].args).to.deep.eq([
+            'test/AngieFile.json', 'test', 'utf8'
+        ]);
+        expect(
+            $LogProvider.info.calls[0].args[0]
+        ).to.eq('Project successfully created');
+        expect(p.exit.calls[0].args[0]).to.eq(0);
+    });
+    it('test successful project creation with no directory', function() {
         const CWD = p.cwd();
 
         project({
