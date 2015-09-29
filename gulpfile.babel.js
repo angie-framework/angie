@@ -17,7 +17,6 @@ import jscs from            'gulp-jscs';
 import {Instrumenter} from  'isparta';
 import mocha from           'gulp-mocha';
 import istanbul from        'gulp-istanbul';
-import cobertura from       'istanbul-cobertura-badger';
 import esdoc from           'gulp-esdoc';
 import babel from           'gulp-babel';
 import copy from            'gulp-copy';
@@ -66,13 +65,16 @@ gulp.task('mocha', [ 'istanbul' ], function() {
         reportOpts: {
             dir: 'coverage'
         },
-        reporters: [ 'text', 'text-summary', 'html', 'cobertura' ]
-    }));
+        reporters: [ 'text', 'text-summary', 'html', 'lcov' ]
+    })).pipe(
+       istanbul.enforceThresholds({
+            thresholds: {
+                global: 65
+            }
+        })
+    );
 });
-gulp.task('cobertura', [ 'mocha' ], function(cb) {
-    cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
-});
-gulp.task('esdoc', [ 'cobertura' ], function() {
+gulp.task('esdoc', [ 'mocha' ], function() {
     return gulp.src(SRC_DIR).pipe(esdoc({
         destination: DOC_SRC
     }));
