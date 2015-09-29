@@ -32,20 +32,35 @@ class $TemplateCache extends $CacheFactory {
     }
 }
 
-// TODO remove static dir conglomeration to constants!!
+/**
+ * @desc $$templateLoader uses the $FileUtil static class to determine whether
+ * or not an asset exists in the configured template and static directories. If
+ * it does, it will return the asset. If `cacheStaticAssets` is enabled in the
+ * AngieFile.json, it will then cache the found asset.
+ * @since 0.3.2
+ * @param {string} url The name of the relative path to the file
+ * @param {string} [param='template'] type Is the url associated with a template
+ * or a static asset? Options:
+ *     'template':  Will load from declared `templateDirs`
+ *     'static':    Will load from declared `staticDirs`
+ * @returns {string|boolean} If the asset was found, the asset, otherwise `false`
+ * @access private
+ */
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
-    const TEMPLATE_DIRS = $Injector.get('ANGIE_TEMPLATE_DIRS');
+    const TEMPLATE_DIRS = $Injector.get(
+        `ANGIE_${type === 'template' ? 'TEMPLATE' : 'STATIC'}_DIRS`
+    );
     let template;
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = TEMPLATE_DIRS.length - 1; i >= 0; --i) {
-        let dir = TEMPLATE_DIRS[i],
+        let dir = TEMPLATE_DIRS[ i ],
             path = $FileUtil.find(dir, url);
 
         if (typeof path === 'string') {
-            template = fs.readFileSync(path, encoding || undefined);
+            template = fs.readFileSync(path, encoding);
         }
 
         if (template) {
@@ -55,12 +70,7 @@ function $$templateLoader(url, type = 'template', encoding) {
 
     if (!template) {
         return false;
-    } else if (
-        type === 'static' &&
-        config.hasOwnProperty('cacheStaticAssets') &&
-        config.cacheStaticAssets === true
-    ) {
-        // TODO you may want to put this in the asset loading block
+    } else if (config.cacheStaticAssets === true) {
         new $CacheFactory('staticAssets').put(url, template);
     }
     return template;

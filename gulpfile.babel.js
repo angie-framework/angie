@@ -69,9 +69,7 @@ gulp.task('mocha', [ 'istanbul' ], function() {
     }));
 });
 gulp.task('esdoc', [ 'mocha' ], function() {
-    return gulp.src(SRC_DIR).pipe(esdoc({
-        destination: DOC_SRC
-    }));
+    return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
 });
 gulp.task('babel', [ 'esdoc' ], function(cb) {
     gulp.src(SRC).pipe(babel({
@@ -96,7 +94,9 @@ gulp.task('bump', function() {
     if (version) {
 
         // Verify that the version is in the CHANGELOG
-        if (fs.readFileSync('CHANGELOG.md', 'utf8').indexOf(version) === -1) {
+        if (
+            fs.readFileSync('./md/CHANGELOG.md', 'utf8').indexOf(version) === -1
+        ) {
             throw new Error(bread('Version has no entry in CHANGELOG.md'));
         }
 

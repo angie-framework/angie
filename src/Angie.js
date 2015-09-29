@@ -464,17 +464,14 @@ if (!app) {
     // Require in any further external components
     // Constants
     app.constant('ANGIE_TEMPLATE_DIRS', [
-        `${__dirname}/templates`
-    ].concat((config.templateDirs || []).map(function(v) {
-        if (v.indexOf(CWD) === -1) {
-            v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
-        }
-        v = $StringUtil.removeTrailingSlashes(v);
-        return v;
-    }))).constant(
-        'ANGIE_STATIC_DIRS',
-        config.staticDirs || []
-    ).constant('RESPONSE_HEADER_MESSAGES', {
+        `${__dirname}/../templates`
+    ].concat(
+        (config.templateDirs || []).map(mapAssetDirectoryDeclarations)
+    )).constant('ANGIE_STATIC_DIRS', [
+        `${__dirname}/../static`
+    ].concat(
+        (config.staticDirs || []).map(mapAssetDirectoryDeclarations)
+    )).constant('RESPONSE_HEADER_MESSAGES', {
         200: 'Ok',
         404: 'File Not Found',
         500: 'Internal Server Error',
@@ -491,11 +488,11 @@ if (!app) {
     app.config(function() {
         $templateCache.put(
             'index.html',
-            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+            fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
         );
         $templateCache.put(
             '404.html',
-            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
+            fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
         );
     });
 
@@ -511,5 +508,13 @@ if (!app) {
         .service('$templateCache', $templateCache);
 }
 
+function mapAssetDirectoryDeclarations(v) {
+    if (v.indexOf(CWD) === -1) {
+        v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
+    }
+    v = $StringUtil.removeTrailingSlashes(v);
+    return v;
+}
+
 export default app;
-export {Angie};
+export { Angie };

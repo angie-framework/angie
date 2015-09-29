@@ -102,6 +102,7 @@ function $$createProject({ name, dir }) {
             fs.mkdirSync(`${mkDirFiles}${v}`);
         });
     } catch(e) {
+        console.log(e);
         throw new $$ProjectCreationError(e);
     } finally {
 
@@ -188,10 +189,10 @@ function $$createProject({ name, dir }) {
     }
 }
 
-class $$ProjectCreationError extends Error {
+class $$ProjectCreationError {
     constructor(e) {
         $LogProvider.error(e);
-        super(e);
+        throw new Error(e);
     }
 }
 

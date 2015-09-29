@@ -1,6 +1,6 @@
 {
   "name": "angie",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "authors": "Joe Groseclose <@benderTheCrime>",
   "description": "Angie: A Module-Based NodeJS Web Application Framework in ES6",
   "license": "MIT",
