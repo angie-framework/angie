@@ -464,7 +464,7 @@ if (!app) {
     // Require in any further external components
     // Constants
     app.constant('ANGIE_TEMPLATE_DIRS', [
-        `${__dirname}/templates`
+        `${__dirname}/../templates`
     ].concat((config.templateDirs || []).map(function(v) {
         if (v.indexOf(CWD) === -1) {
             v = `${CWD}/${$StringUtil.removeLeadingSlashes(v)}`;
@@ -491,11 +491,11 @@ if (!app) {
     app.config(function() {
         $templateCache.put(
             'index.html',
-            fs.readFileSync(`${__dirname}/templates/html/index.html`, 'utf8')
+            fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
         );
         $templateCache.put(
             '404.html',
-            fs.readFileSync(`${__dirname}/templates/html/404.html`, 'utf8')
+            fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
         );
     });
 

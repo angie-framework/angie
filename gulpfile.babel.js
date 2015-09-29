@@ -73,17 +73,11 @@ gulp.task('esdoc', [ 'mocha' ], function() {
         destination: DOC_SRC
     }));
 });
-gulp.task('babel', [ 'esdoc' ], function(cb) {
+gulp.task('babel', [ 'esdoc' ], function() {
     gulp.src(SRC).pipe(babel({
-        comments: false
-    })).pipe(gulp.dest(TRANSPILED_SRC)).on('finish', function() {
-        gulp.src(`${SRC_DIR}/templates/**`).pipe(
-            copy(`${TRANSPILED_SRC}/templates`, {
-                prefix: 2
-            })
-        );
-        cb();
-    });
+        comments: false,
+        copyFiles: true
+    }));
 });
 
 // Utility Tasks
@@ -96,7 +90,9 @@ gulp.task('bump', function() {
     if (version) {
 
         // Verify that the version is in the CHANGELOG
-        if (fs.readFileSync('CHANGELOG.md', 'utf8').indexOf(version) === -1) {
+        if (
+            fs.readFileSync('./md/CHANGELOG.md', 'utf8').indexOf(version) === -1
+        ) {
             throw new Error(bread('Version has no entry in CHANGELOG.md'));
         }
 
