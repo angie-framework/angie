@@ -3,7 +3,7 @@ import { assert, expect } from          'chai';
 import simple, { mock, spy } from       'simple-mock';
 
 // System Modules
-import { default as $Injector } from    'angie-injector';
+import $Injector from                   'angie-injector';
 
 // Angie Modules
 import { config } from                  '../../../src/Config';
@@ -285,25 +285,27 @@ describe('$Responses', function() {
             });
         });
         describe('$isRoutedAssetResourceResponse', function() {
-            let findMock;
+            let injectorMock,
+                fileMock;
 
             beforeEach(function() {
-                config.staticDirs = [ 'test', 'test2' ];
-                findMock = mock($FileUtil, 'find', () => true)
-            });
-            afterEach(function() {
-                delete config.staticDirs;
+                injectorMock = mock($Injector, 'get', () => [ 'test' ]);
+                fileMock = mock($FileUtil, 'find', () => true);
             });
             it('test found asset', function() {
                 expect(
-                    AssetResponse.$isRoutedAssetResourceResponse()
+                    AssetResponse.$isRoutedAssetResourceResponse('test')
                 ).to.be.true;
+                expect(fileMock.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+                expect(injectorMock.calls[0].args[0]).to.eq('ANGIE_STATIC_DIRS');
             });
             it('test did not find asset', function() {
-                findMock.returnWith(false);
+                fileMock.returnWith(false);
                 expect(
-                    AssetResponse.$isRoutedAssetResourceResponse()
+                    AssetResponse.$isRoutedAssetResourceResponse('test')
                 ).to.be.false;
+                expect(fileMock.calls[0].args).to.deep.eq([ 'test', 'test' ]);
+                expect(injectorMock.calls[0].args[0]).to.eq('ANGIE_STATIC_DIRS');
             });
         });
     });

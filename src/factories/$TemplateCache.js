@@ -32,7 +32,6 @@ class $TemplateCache extends $CacheFactory {
     }
 }
 
-// TODO remove static dir conglomeration to constants!!
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
@@ -43,11 +42,11 @@ function $$templateLoader(url, type = 'template', encoding) {
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = TEMPLATE_DIRS.length - 1; i >= 0; --i) {
-        let dir = TEMPLATE_DIRS[i],
+        let dir = TEMPLATE_DIRS[ i ],
             path = $FileUtil.find(dir, url);
 
         if (typeof path === 'string') {
-            template = fs.readFileSync(path, encoding || undefined);
+            template = fs.readFileSync(path, encoding);
         }
 
         if (template) {
@@ -57,11 +56,8 @@ function $$templateLoader(url, type = 'template', encoding) {
 
     if (!template) {
         return false;
-    } else if (
-        type === 'static' &&
-        config.hasOwnProperty('cacheStaticAssets') &&
-        config.cacheStaticAssets === true
-    ) {
+    } else if (type === 'static' && config.cacheStaticAssets === true) {
+
         // TODO you may want to put this in the asset loading block
         new $CacheFactory('staticAssets').put(url, template);
     }

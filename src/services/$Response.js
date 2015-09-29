@@ -190,7 +190,7 @@ class AssetResponse extends BaseResponse {
      */
     static $isRoutedAssetResourceResponse(path) {
         return $Injector.get('ANGIE_STATIC_DIRS').some(
-            (v) => !!$FileUtil.find(v, path)
+            v => !!$FileUtil.find(v, path)
         );
     }
 }

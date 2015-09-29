@@ -71,11 +71,17 @@ gulp.task('mocha', [ 'istanbul' ], function() {
 gulp.task('esdoc', [ 'mocha' ], function() {
     return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
 });
-gulp.task('babel', [ 'esdoc' ], function() {
+gulp.task('babel', [ 'esdoc' ], function(cb) {
     gulp.src(SRC).pipe(babel({
-        comments: false,
-        copyFiles: true
-    }));
+        comments: false
+    })).pipe(gulp.dest(TRANSPILED_SRC)).on('finish', function() {
+        gulp.src(`${SRC_DIR}/templates/**`).pipe(
+            copy(`${TRANSPILED_SRC}/templates`, {
+                prefix: 2
+            })
+        );
+        cb();
+    });
 });
 
 // Utility Tasks
