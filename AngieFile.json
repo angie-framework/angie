@@ -3,7 +3,10 @@
     "projectRoot": "./src",
     "development": false,
     "templateDirs": [
-        "src/templates/"
+        "templates/"
+    ],
+    "staticDirs": [
+        "static/"
     ],
     "dependencies": [
         "angie-log",

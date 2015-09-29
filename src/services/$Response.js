@@ -5,26 +5,23 @@
  */
 
 // System Modules
-import util from                    'util';
-import {blue} from                  'chalk';
-import {
-    default as $Injector,
-    $injectionBinder
-} from                              'angie-injector';
-import $LogProvider from            'angie-log';
+import util from                                'util';
+import {blue} from                              'chalk';
+import $Injector, { $injectionBinder } from     'angie-injector';
+import $LogProvider from                        'angie-log';
 
 // Angie Modules
-import {config} from                '../Config';
-import app from                     '../Angie';
-import $CacheFactory from           '../factories/$CacheFactory';
+import {config} from                            '../Config';
+import app from                                 '../Angie';
+import $CacheFactory from                       '../factories/$CacheFactory';
 import {
     $templateCache,
     $$templateLoader,
     $resourceLoader
-} from                              '../factories/$TemplateCache';
-import $compile from                '../factories/$Compile';
-import {default as $MimeType} from  '../util/$MimeTypeProvider';
-import {$FileUtil} from             '../util/Util';
+} from                                          '../factories/$TemplateCache';
+import $compile from                            '../factories/$Compile';
+import {default as $MimeType} from              '../util/$MimeTypeProvider';
+import {$FileUtil} from                         '../util/Util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
@@ -168,12 +165,6 @@ class AssetResponse extends BaseResponse {
             me = this;
         return new Promise(function(resolve) {
             if (asset) {
-                if (
-                    config.hasOwnProperty('cacheStaticAssets') &&
-                    config.cacheStaticAssets === true
-                ) {
-                    assetCache.put(me.path, asset);
-                }
                 me.response.write(asset);
             } else {
                 return new UnknownResponse().head().write();
@@ -192,8 +183,8 @@ class AssetResponse extends BaseResponse {
      * @access private
      */
     static $isRoutedAssetResourceResponse(path) {
-        return config.staticDirs.some(
-            (v) => !!$FileUtil.find(v, path)
+        return $Injector.get('ANGIE_STATIC_DIRS').some(
+            v => !!$FileUtil.find(v, path)
         );
     }
 }

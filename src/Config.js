@@ -8,8 +8,8 @@
 import fs from                          'fs';
 
 // Angie Modules
-import {$FileUtil} from                 './util/Util';
-import {$$InvalidConfigError} from      './util/$ExceptionsProvider';
+import { $FileUtil } from               './util/Util';
+import { $$InvalidConfigError } from    './util/$ExceptionsProvider';
 
 let config = {};
 
@@ -59,4 +59,4 @@ class Config {
 }
 
 export default Config;
-export {config};
+export { config };

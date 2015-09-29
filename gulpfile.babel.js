@@ -17,7 +17,6 @@ import jscs from            'gulp-jscs';
 import {Instrumenter} from  'isparta';
 import mocha from           'gulp-mocha';
 import istanbul from        'gulp-istanbul';
-import cobertura from       'istanbul-cobertura-badger';
 import esdoc from           'gulp-esdoc';
 import babel from           'gulp-babel';
 import copy from            'gulp-copy';
@@ -66,16 +65,11 @@ gulp.task('mocha', [ 'istanbul' ], function() {
         reportOpts: {
             dir: 'coverage'
         },
-        reporters: [ 'text', 'text-summary', 'html', 'cobertura' ]
+        reporters: [ 'text', 'text-summary', 'html', 'lcov' ]
     }));
 });
-gulp.task('cobertura', [ 'mocha' ], function(cb) {
-    cobertura('coverage/cobertura-coverage.xml', 'svg', cb);
-});
-gulp.task('esdoc', [ 'cobertura' ], function() {
-    return gulp.src(SRC_DIR).pipe(esdoc({
-        destination: DOC_SRC
-    }));
+gulp.task('esdoc', [ 'mocha' ], function() {
+    return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
 });
 gulp.task('babel', [ 'esdoc' ], function(cb) {
     gulp.src(SRC).pipe(babel({
@@ -100,7 +94,9 @@ gulp.task('bump', function() {
     if (version) {
 
         // Verify that the version is in the CHANGELOG
-        if (fs.readFileSync('CHANGELOG.md', 'utf8').indexOf(version) === -1) {
+        if (
+            fs.readFileSync('./md/CHANGELOG.md', 'utf8').indexOf(version) === -1
+        ) {
             throw new Error(bread('Version has no entry in CHANGELOG.md'));
         }
 
