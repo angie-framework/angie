@@ -1,5 +1,14 @@
 language: node_js
 node_js:
-  - "0.12"
-  - "iojs-2.5.0"
-  - "4.0.0"
+  - 0.12
+  - iojs-v2.5.0
+  - 4.0.0
+deploy:
+  provider: npm
+  email: joe.groseclose@gmail.com
+  api_key:
+    secure: 0wA5eiIask0mhrFaOqAxZJ6m6bOaVad0tYpNSzeyeF1ZeylR2COu4FWkEe6diS3YpCAKqPYAvEEuEB7FyVKUZGHQWzOM2JF/QtqlJzEl3VqWjDT/aJGeX2jSqCbbaQFMDaVEz+EMBXnRXki+w/TNoHhXgu9g0+Xf1dBX0g85AsjVCadFTDo3fUlTbRn7iks7AACGBT1rNgJOFZO2X/mVQJBJLxa4EHBtkNKROmIPjhUC9gwiCuZCEiMJazwrFj+9dXAwhY03JEkwN9UT+zqAK36DbVjlNIw9rXC+Mo04pJf046gmYWcMBAc0bR5Kf8OpPhsgaynlQUI4CwwTKpUVcWOZwMpHAIKWULex1ZsU1mHLw51XrKGGVnxHFgXGH+9uqwiIUuCw1yQ/HOB2LbsY3jvu5JnU2UCcckLZmm+rM/RRh/j2epR2yHpxwgnqfn4wNn07GD3W0Hod86CwDQOUOUry1ji3fnev34mlFCbF97NbpmrGOqZX380ggJWMgUeIaJdYXvFgJMvNw3ZwnnCFO8t1vrZzNO1KKpC4qIFAocyqwp69x20tJ2/sAOS1muKuyQaCkLe0pbBnRhyzb3yIBKDlzUXOZkZQD4qGNSZj7uQ3ZzNsNT5wlGqL/rUfVLiFaCu/2NbA9kmudzqeBPRwXr4lZoYtoEWvx87rcl8XMT0=
+  on:
+    tags: true
+    node: 4.0.0
+    repo: benderTheCrime/angie
