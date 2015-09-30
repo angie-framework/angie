@@ -62,7 +62,7 @@ Angie makes creating &amp; maintaining data models across many different databas
 <!-- #### Desktop Application Manager -->
 
 ### Documentation
-The entire application documentation can be found [here](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
+Angie documentation can be found [here](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation").
 
 ### Quickstart
 Please see the [QUICKSTART](https://github.com/angie-framework/angie/blob/master/md/QUICKSTART.md "QUICKSTART") guide for more details.
