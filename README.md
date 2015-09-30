@@ -7,7 +7,7 @@ A Module-Based NodeJS Web Application Framework in ES6
 ![node support](https://img.shields.io/badge/node-0.12.0+-brightgreen.svg "node support")
 [![Coverage Status](https://coveralls.io/repos/benderTheCrime/angie/badge.svg?branch=master&service=github)](https://coveralls.io/github/benderTheCrime/angie?branch=master)
 ![npm downloads](https://img.shields.io/npm/dm/angie.svg "npm downloads")
-![documentation](https://doc.esdoc.org/github.com/benderTheCrime/angie/badge.svg "documentation")
+![documentation](https://doc.esdoc.org/github.com/angie-framework/angie/badge.svg "documentation")
 
 [![NPM](https://nodei.co/npm/angie.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/angie/)
 
