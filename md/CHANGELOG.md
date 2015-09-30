@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-#### [0.4.2] - 2015-10-01
+#### [0.4.3] - 2015-09-29
+##### Changed
+- Modified README
+
+#### [0.4.2] - 2015-09-29
 ##### Added/Changed
 - Modified the fashion in which args are parsed for CLI tasks (backwards compatible with older parsing)
 - Moved all non-README markdown
