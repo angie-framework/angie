@@ -1,11 +1,11 @@
 // System Modules
-import {expect} from        'chai';
-import simple, {mock} from          'simple-mock';
+import { expect } from          'chai';
+import simple, { mock } from    'simple-mock';
+
 
 // Angie Modules
-import $ScopeProvider, {
-    $scope
-} from                      '../../../src/controllers/$ScopeProvider';
+const $ScopeProvider =      require(`../../../${TEST_ENV}/controllers/$ScopeProvider`).default,
+    $scope =                require(`../../../${TEST_ENV}/controllers/$ScopeProvider`).$scope;
 
 describe('$ScopeProvider', function() {
     let $$scope;
