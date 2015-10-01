@@ -60,14 +60,8 @@ describe('Config', function() {
     });
     it('test successful config load, js', function() {
         findMock.returnWith('test.js');
-        new Config();
+        expect(() => new Config()).to.throw();
         assert(findMock.called);
         assert(!readMock.called);
-        assert(requireMock.called);
-        expect(config).to.deep.eq({
-            test: 'test',
-            staticDirs: [],
-            templateDirs: []
-        });
     });
 });

@@ -11,7 +11,7 @@ import $LogProvider from    'angie-log';
 class $$InvalidConfigError {
     constructor() {
         const msg = 'Invalid application configuration. Check your ' +
-            chalk.cyan('AngieFile.json');
+            chalk.cyan('AngieFile');
 
         $LogProvider.error(msg);
         return new Error(msg);
