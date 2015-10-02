@@ -179,12 +179,8 @@ function $$shell() {
 function $$server(args = []) {
     const PORT = $$port(args);
 
-    console.log('HERE');
-
     // Load necessary app components
     app.$$load().then(function() {
-
-        console.log('IN HERE');
 
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
@@ -210,8 +206,6 @@ function $$server(args = []) {
             }).then(() => $request.$$route()).then(function() {
                 let code = response.statusCode,
                     log = 'error';
-
-                console.log('IN');
 
                 // Clear the request error because now we are guaranteed some
                 // sort of response
