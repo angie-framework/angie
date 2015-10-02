@@ -13,7 +13,7 @@ import $LogProvider from                'angie-log';
 // Angie Modules
 const project =                         require(`../../../../${TEST_ENV}/util/scaffold/project`),
     $$ProjectCreationError =
-        require(`../../../../${TEST_ENV}/util/$ExceptionsProvider`).$$ProjectCreationError,
+        require(`../../../../${TEST_ENV}/services/$Exceptions`).$$ProjectCreationError,
     p = process;
 
 describe('$$createProject', function() {

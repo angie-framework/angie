@@ -81,7 +81,7 @@ describe('Angie', function() {
             expect(obj.Controller).to.be.undefined;
         });
         it(
-            'test $ExceptionsProvider called when there is a not controller and ' +
+            'test $Exceptions called when there is a not controller and ' +
             'directive is an API View',
             function() {
                 expect(app.directive.bind(null, 'test', function() {

@@ -8,8 +8,8 @@
 import fs from                          'fs';
 
 // Angie Modules
+import { $$InvalidConfigError } from    './services/$Exceptions';
 import { $FileUtil } from               './util/Util';
-import { $$InvalidConfigError } from    './util/$ExceptionsProvider';
 
 let config = {};
 
@@ -17,6 +17,8 @@ let config = {};
  * @desc Instantiates the class that loads the AngieFile configs. This is an
  * internal class and the very first part of the application that is loaded.
  * None of the application will load if the AngieFile is missing or invalid.
+ * Valid names for this file are "angiefile" with any mixed case written as
+ * JSON or a JavaScript file (".js" or ".es6") that exports a JavaScript object.
  * @since 0.0.1
  * @access private
  */

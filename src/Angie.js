@@ -5,23 +5,24 @@
  */
 
 // System Modules
-import fs from                          'fs';
-import { magenta, blue } from           'chalk';
-import $LogProvider from                'angie-log';
-import {$injectionBinder} from          'angie-injector';
+import fs from                  'fs';
+import { magenta, blue } from   'chalk';
+import $LogProvider from        'angie-log';
+import {$injectionBinder} from  'angie-injector';
 
 // Angie Modules
-import { config } from                  './Config';
-import { $scope } from                  './controllers/$ScopeProvider';
-import $RouteProvider from              './factories/$RouteProvider';
-import $CacheFactory from               './factories/$CacheFactory';
-import $compile from                    './factories/$Compile';
+import { config } from          './Config';
+import { $scope } from          './controllers/$ScopeProvider';
+import $RouteProvider from      './factories/$RouteProvider';
+import $CacheFactory from       './factories/$CacheFactory';
+import $compile from            './factories/$Compile';
 import {
     $templateCache,
     $resourceLoader
-} from                                  './factories/$TemplateCache';
-import { $StringUtil } from             './util/Util';
-import * as $ExceptionsProvider from    './util/$ExceptionsProvider';
+} from                          './factories/$TemplateCache';
+import * as $Exceptions from    './services/$Exceptions';
+import { $StringUtil } from     './util/Util';
+
 
 const CWD = process.cwd(),
     $$require = v => {
@@ -96,7 +97,7 @@ class Angie {
 
         // Verify that the service is an object
         if (typeof obj !== 'object') {
-            throw new $ExceptionsProvider.$$InvalidServiceConfigError(name);
+            throw new $Exceptions.$$InvalidServiceConfigError(name);
         }
         return this.$$register('services', name, obj);
     }
@@ -117,7 +118,7 @@ class Angie {
 
         // Verify that the factory is a function
         if (typeof fn !== 'function' || !fn.prototype.constructor) {
-            throw new $ExceptionsProvider.$$InvalidFactoryConfigError(name);
+            throw new $Exceptions.$$InvalidFactoryConfigError(name);
         }
         return this.$$register('factories', name, fn);
     }
@@ -141,7 +142,7 @@ class Angie {
      */
     Controller(name, obj) {
         if (typeof obj !== 'function') {
-            throw new $ExceptionsProvider.$$InvalidControllerConfigError(name);
+            throw new $Exceptions.$$InvalidControllerConfigError(name);
         }
         return this.$$register('Controllers', name, obj);
     }
@@ -194,7 +195,7 @@ class Angie {
                 delete dir.Controller;
             }
         } else if (/api.?view/i.test(dir.type)) {
-            throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
+            throw new $Exceptions.$$InvalidDirectiveConfigError(name);
         }
         return this.$$register('directives', name, dir);
     }
@@ -508,7 +509,7 @@ if (!app) {
         .factory('$resourceLoader', $resourceLoader);
 
     // Services
-    app.service('$Exceptions', $ExceptionsProvider)
+    app.service('$Exceptions', $Exceptions)
         .service('$scope', $scope)
         .service('$templateCache', $templateCache);
 }
