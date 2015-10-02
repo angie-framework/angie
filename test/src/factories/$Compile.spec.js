@@ -6,14 +6,13 @@ import simple, { mock } from        'simple-mock';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import { config } from              '../../../src/Config';
-import app from                     '../../../src/Angie';
-import $compile from                '../../../src/factories/$Compile';
-import * as $TemplateCache from     '../../../src/factories/$TemplateCache';
-import $Util from                   '../../../src/util/Util';
+const config =                      require(`../../../${TEST_ENV}/Config`).config,
+    app =                           require(`../../../${TEST_ENV}/Angie`).default,
+    $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`),
+    $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
+    $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
 
 describe('$compile', function() {
-
     it(
         'test compile called without a template returns an empty function',
         function() {

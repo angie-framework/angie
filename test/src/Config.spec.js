@@ -7,8 +7,10 @@ import fs from                  'fs';
 import $LogProvider from        'angie-log';
 
 // Angie Modules
-import { $FileUtil } from       '../../src/util/Util';
-import Config, { config } from  '../../src/Config';
+const $FileUtil =               require(`../../${TEST_ENV}/util/Util`).$FileUtil,
+    $Config =                   require(`../../${TEST_ENV}/Config`),
+    Config =                    $Config.default,
+    config =                    $Config.config;
 
 describe('Config', function() {
     const noop = () => false;
@@ -52,11 +54,9 @@ describe('Config', function() {
         assert(findMock.called);
         assert(readMock.called);
         assert(!requireMock.called);
-        expect(config).to.deep.eq({
-            test: 'test',
-            staticDirs: [],
-            templateDirs: []
-        });
+        expect(config).to.be.an.object;
+        expect(config.staticDirs).to.deep.eq([ 'static/' ]);
+        expect(config.templateDirs).to.deep.eq([ 'templates/' ]);
     });
     xit('test successful config load, js', function() {
         findMock.returnWith('test.js');

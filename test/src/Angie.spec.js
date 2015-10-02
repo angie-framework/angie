@@ -7,14 +7,8 @@ import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import { Angie } from               '../../src/Angie';
-import {
-    $$InvalidDirectiveConfigError,
-    $$InvalidServiceConfigError,
-    $$InvalidFactoryConfigError
-} from                              '../../src/util/$ExceptionsProvider';
-
-const CWD = process.cwd();
+const Angie =                       require(`../../${TEST_ENV}/Angie`).Angie,
+    CWD = process.cwd();
 
 describe('Angie', function() {
     let noop = () => undefined,
@@ -94,7 +88,7 @@ describe('Angie', function() {
                     return {
                         type: 'APIView'
                     };
-                })).to.throw($$InvalidDirectiveConfigError);
+                })).to.throw();
             }
         );
     });
@@ -122,19 +116,19 @@ describe('Angie', function() {
             it('test function', function() {
                 expect(
                     app.service.bind(null, 'test', function test() {})
-                ).to.throw($$InvalidServiceConfigError);
+                ).to.throw();
             });
             it('test string', function() {
                 expect(
                     app.service.bind(null, 'test', 'test')
-                ).to.throw($$InvalidServiceConfigError);
+                ).to.throw();
             });
         });
         describe('test factory makes a call to $$register', function() {
             it('test object', function() {
                 expect(
                     app.factory.bind(null, 'test', { test: 'test' })
-                ).to.throw($$InvalidFactoryConfigError);
+                ).to.throw();
             });
             it('test function', function() {
                 let test = function() {};
@@ -148,7 +142,7 @@ describe('Angie', function() {
             it('test string', function() {
                 expect(
                     app.factory.bind(null, 'test', 'test')
-                ).to.throw($$InvalidFactoryConfigError);
+                ).to.throw();
             });
         });
         it(

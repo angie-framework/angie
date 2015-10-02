@@ -11,12 +11,10 @@ import { bold, green } from             'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
-import {
-    default as project
-} from                                  '../../../../src/util/scaffold/project';
-import {$$ProjectCreationError} from    '../../../../src/util/$ExceptionsProvider';
-
-const p = process;
+const project =                         require(`../../../../${TEST_ENV}/util/scaffold/project`),
+    $$ProjectCreationError =
+        require(`../../../../${TEST_ENV}/util/$ExceptionsProvider`).$$ProjectCreationError,
+    p = process;
 
 describe('$$createProject', function() {
     let noop = () => null;

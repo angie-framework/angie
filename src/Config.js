@@ -61,14 +61,12 @@ class Config {
         }
 
         try {
-            console.log('TEST', ext, file);
             if (ext === 'json') {
                 config = JSON.parse(fs.readFileSync(file, 'utf8'));
             } else {
                 config = require(file);
             }
         } catch(e) {
-            console.log(e);
             throw new $$InvalidConfigError();
         } finally {
             if (Object.keys(config).length) {

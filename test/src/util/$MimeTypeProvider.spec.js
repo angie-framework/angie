@@ -1,8 +1,8 @@
 // Test Modules
-import {expect} from                'chai';
+import { expect } from              'chai';
 
 // Angie Modules
-import {default as $MimeType} from  '../../../src/util/$MimeTypeProvider';
+const $MimeType =                   require(`../../../${TEST_ENV}/util/$MimeTypeProvider`);
 
 describe('$MimeTypeProvider', function() {
     describe('$$', function() {
