@@ -104,14 +104,16 @@ gulp.task('bump', function() {
 });
 
 // Bundled Tasks
-gulp.task('test', [ 'mocha:src' ]);
+gulp.task('test:src', [ 'jscs', 'mocha:src' ]);
+gulp.task('test:dist', [ 'mocha:dist' ]);
+gulp.task('test', [ 'test:src' ]);
 gulp.task('watch', [ 'test' ], function() {
     gulp.watch([ SRC, TEST_SRC ], [ 'test' ]);
 });
 gulp.task('watch:babel', [ 'babel' ], function() {
     gulp.watch([ 'src/**' ], [ 'babel' ]);
 });
-gulp.task('default', [ 'mocha:src', 'babel', 'esdoc' ]);
+gulp.task('default', [ 'cobertura', 'babel', 'esdoc' ]);
 
 function istanbulHandler(src, cb) {
     gulp.src(src).pipe(istanbul({
