@@ -71,7 +71,7 @@ gulp.task('babel', function(cb) {
         comments: false
     })).pipe(gulp.dest(TRANSPILED_SRC_DIR)).on('finish', function() {
         gulp.src(`${SRC_DIR}/templates/**`).pipe(
-            copy(`${TRANSPILED_SRC}/templates`, {
+            copy(`${TRANSPILED_SRC_DIR}/templates`, {
                 prefix: 2
             })
         );

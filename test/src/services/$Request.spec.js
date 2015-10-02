@@ -6,10 +6,10 @@ import simple, { mock, spy } from   'simple-mock';
 import { Form } from                'multiparty';
 
 // Angie Modules
-import { default as $Routes } from  '../../../src/factories/$RouteProvider';
-import * as $Responses from         '../../../src/services/$Response';
-import $Request from                '../../../src/services/$Request';
-import $Util from                   '../../../src/util/Util';
+const $Routes =                     require(`../../../${TEST_ENV}/factories/$RouteProvider`),
+    $Responses =                    require(`../../../${TEST_ENV}/services/$Response`),
+    $Request =                      require(`../../../${TEST_ENV}/services/$Request`),
+    $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
 
 describe('$Request', function() {
     const noop = () => false;
