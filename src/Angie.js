@@ -5,23 +5,24 @@
  */
 
 // System Modules
-import fs from                  'fs';
-import { magenta, blue } from   'chalk';
-import $LogProvider from        'angie-log';
-import {$injectionBinder} from  'angie-injector';
+import fs from                      'fs';
+import { magenta, blue } from       'chalk';
+import $LogProvider from            'angie-log';
+import {$injectionBinder} from      'angie-injector';
 
 // Angie Modules
-import { config } from          './Config';
-import { $scope } from          './controllers/$ScopeProvider';
-import $RouteProvider from      './factories/$RouteProvider';
-import $CacheFactory from       './factories/$CacheFactory';
-import $compile from            './factories/$Compile';
+import { config } from              './Config';
+import { $scope } from              './controllers/$ScopeProvider';
+import $RouteProvider from          './factories/$RouteProvider';
+import $CacheFactory from           './factories/$CacheFactory';
+import $compile from                './factories/$Compile';
 import {
     $templateCache,
     $resourceLoader
-} from                          './factories/$TemplateCache';
-import * as $Exceptions from    './services/$Exceptions';
-import { $StringUtil } from     './util/Util';
+} from                              './factories/$TemplateCache';
+import * as $Exceptions from        './services/$Exceptions';
+import $$ngieRepeatFactory from     './directives/ngie-repeat';
+import { $StringUtil } from         './util/Util';
 
 
 const CWD = process.cwd(),
@@ -465,53 +466,56 @@ class Angie {
 
 let app = global.app;
 if (!app) {
-    app = global.app = new Angie();
+    app = global.app = new Angie()
 
     // Require in any further external components
     // Constants
-    app.constant('ANGIE_TEMPLATE_DIRS', [
-        `${__dirname}/../templates`
-    ].concat(
-        config.templateDirs.map(mapAssetDirectoryDeclarations)
-    )).constant('ANGIE_STATIC_DIRS', [
-        `${__dirname}/../static`
-    ].concat(
-        config.staticDirs.map(mapAssetDirectoryDeclarations)
-    )).constant('RESPONSE_HEADER_MESSAGES', {
-        200: 'Ok',
-        404: 'File Not Found',
-        500: 'Internal Server Error',
-        504: 'Gateway Timeout'
-    }).constant(
-        'PRAGMA_HEADER',
-        'no-cache'
-    ).constant(
-        'NO_CACHE_HEADER',
-        'private, no-cache, no-store, must-revalidate'
-    );
+        .constant('ANGIE_TEMPLATE_DIRS', [
+            `${__dirname}/../templates`
+        ].concat(
+            config.templateDirs.map(mapAssetDirectoryDeclarations)
+        )).constant('ANGIE_STATIC_DIRS', [
+            `${__dirname}/../static`
+        ].concat(
+            config.staticDirs.map(mapAssetDirectoryDeclarations)
+        )).constant('RESPONSE_HEADER_MESSAGES', {
+            200: 'Ok',
+            404: 'File Not Found',
+            500: 'Internal Server Error',
+            504: 'Gateway Timeout'
+        }).constant(
+            'PRAGMA_HEADER',
+            'no-cache'
+        ).constant(
+            'NO_CACHE_HEADER',
+            'private, no-cache, no-store, must-revalidate'
+        )
 
     // Configs
-    app.config(function() {
-        $templateCache.put(
-            'index.html',
-            fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
-        );
-        $templateCache.put(
-            '404.html',
-            fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
-        );
-    });
+        .config(function() {
+            $templateCache.put(
+                'index.html',
+                fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
+            );
+            $templateCache.put(
+                '404.html',
+                fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
+            );
+        })
 
     // Factories
-    app.factory('$Routes', $RouteProvider)
+        .factory('$Routes', $RouteProvider)
         .factory('$Cache', $CacheFactory)
         .factory('$compile', $compile)
-        .factory('$resourceLoader', $resourceLoader);
+        .factory('$resourceLoader', $resourceLoader)
 
     // Services
-    app.service('$Exceptions', $Exceptions)
+        .service('$Exceptions', $Exceptions)
         .service('$scope', $scope)
-        .service('$templateCache', $templateCache);
+        .service('$templateCache', $templateCache)
+
+    // Directives
+        .directive('ngieRepeat', $$ngieRepeatFactory);
 }
 
 function mapAssetDirectoryDeclarations(v) {

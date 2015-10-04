@@ -52,15 +52,20 @@ function $compile(t) {
     // Direct reference by directive name to directive object
     for (let $directive in app.directives) {
         let directive = app.directives[ $directive ];
-        directive.$names = [
-            $directive,
-            $StringUtil.toUnderscore($directive),
-            $StringUtil.toDash($directive)
-        ];
+        if (!directive.$names) {
+            directive.$names = [
+                $directive,
+                $directive.toLowerCase(),
+                $StringUtil.toUnderscore($directive),
+                $StringUtil.toDash($directive)
+            ];
+        }
 
         // Add all parsed directve names to directives
         directives.push(directive);
     }
+
+    console.log('DIRECTIVES', directives);
 
     // Sort our directives for priority
     directives.sort(function(a, b) {
@@ -224,12 +229,22 @@ function $$processDirective(el, scope, directive, type) {
         typeof directive.link === 'function'
     ) {
         prom = prom.then(function() {
-            return new Promise(directive.link.bind(
-                app.services.$scope,
-                app.services.$scope,
-                type !== 'M' ? el : null,
-                parsedAttrs
-            ));
+            return new Promise(function(resolve) {
+                const link = directive.link.call(
+                    app.services.$scope,
+                    app.services.$scope,
+                    type !== 'M' ? el : null,
+                    parsedAttrs
+                );
+
+                if (
+                    !link ||
+                    !link.constructor ||
+                    link.constructor.name !== 'Promise'
+                ) {
+                    resolve(link);
+                }
+            });
         }).then(function() {
             if (el.attr) {
                 for (let key in parsedAttrs) {

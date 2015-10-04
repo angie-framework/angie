@@ -6,12 +6,12 @@
 
 // System Modules
 import util from                                'util';
-import {blue} from                              'chalk';
+import { blue } from                            'chalk';
 import $Injector, { $injectionBinder } from     'angie-injector';
 import $LogProvider from                        'angie-log';
 
 // Angie Modules
-import {config} from                            '../Config';
+import { config } from                          '../Config';
 import app from                                 '../Angie';
 import $CacheFactory from                       '../factories/$CacheFactory';
 import {
@@ -20,8 +20,8 @@ import {
     $resourceLoader
 } from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
-import {default as $MimeType} from              '../util/$MimeTypeProvider';
-import {$FileUtil} from                         '../util/Util';
+import { default as $MimeType } from            '../util/$MimeTypeProvider';
+import { $FileUtil } from                       '../util/Util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
@@ -242,11 +242,14 @@ class ControllerResponse extends BaseResponse {
                 return resolve();
             }
 
+            console.log('CONTROLLER', controller.toString(), me.$scope);
+            console.log('#SCOPE', app.$$registry.$scope);
+
             // Call the bound controller function
             let controllerResponse = new $injectionBinder(
-                controller,
+                controller.bind(me.$scope),
                 'controller'
-            ).call(me.$scope, resolve);
+            ).call(resolve);
 
             // Resolve the Promise if the controller does not return a
             // function
