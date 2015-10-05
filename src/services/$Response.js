@@ -11,7 +11,7 @@ import $Injector, { $injectionBinder } from     'angie-injector';
 import $LogProvider from                        'angie-log';
 
 // Angie Modules
-import { config } from                          '../Config';
+import { config } from                            '../Config';
 import app from                                 '../Angie';
 import $CacheFactory from                       '../factories/$CacheFactory';
 import {
@@ -225,9 +225,7 @@ class ControllerResponse extends BaseResponse {
 
             // Assign a function that can be called to resolve async
             // behavior in Controllers
-            app.services.$response.Controller = {
-                done: resolve
-            };
+            app.services.$response.Controller = { done: resolve };
 
             // Get controller and compile scope
             if (typeof controller === 'function') {
@@ -242,14 +240,11 @@ class ControllerResponse extends BaseResponse {
                 return resolve();
             }
 
-            console.log('CONTROLLER', controller.toString(), me.$scope);
-            console.log('#SCOPE', app.$$registry.$scope);
-
             // Call the bound controller function
             let controllerResponse = new $injectionBinder(
-                controller.bind(me.$scope),
+                controller,
                 'controller'
-            ).call(resolve);
+            ).call(me.$scope, resolve);
 
             // Resolve the Promise if the controller does not return a
             // function

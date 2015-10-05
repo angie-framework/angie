@@ -230,11 +230,17 @@ function $$processDirective(el, scope, directive, type) {
     ) {
         prom = prom.then(function() {
             return new Promise(function(resolve) {
+
+                // Assign a function that can be called to resolve async
+                // behavior in directives
+                app.services.$response.done = resolve;
+
                 const link = directive.link.call(
                     app.services.$scope,
                     app.services.$scope,
                     type !== 'M' ? el : null,
-                    parsedAttrs
+                    parsedAttrs,
+                    resolve
                 );
 
                 if (

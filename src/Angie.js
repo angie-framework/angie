@@ -466,56 +466,56 @@ class Angie {
 
 let app = global.app;
 if (!app) {
-    app = global.app = new Angie()
+    app = global.app = new Angie();
 
     // Require in any further external components
     // Constants
-        .constant('ANGIE_TEMPLATE_DIRS', [
-            `${__dirname}/../templates`
-        ].concat(
-            config.templateDirs.map(mapAssetDirectoryDeclarations)
-        )).constant('ANGIE_STATIC_DIRS', [
-            `${__dirname}/../static`
-        ].concat(
-            config.staticDirs.map(mapAssetDirectoryDeclarations)
-        )).constant('RESPONSE_HEADER_MESSAGES', {
-            200: 'Ok',
-            404: 'File Not Found',
-            500: 'Internal Server Error',
-            504: 'Gateway Timeout'
-        }).constant(
-            'PRAGMA_HEADER',
-            'no-cache'
-        ).constant(
-            'NO_CACHE_HEADER',
-            'private, no-cache, no-store, must-revalidate'
-        )
+    app.constant('ANGIE_TEMPLATE_DIRS', [
+        `${__dirname}/../templates`
+    ].concat(
+        config.templateDirs.map(mapAssetDirectoryDeclarations)
+    )).constant('ANGIE_STATIC_DIRS', [
+        `${__dirname}/../static`
+    ].concat(
+        config.staticDirs.map(mapAssetDirectoryDeclarations)
+    )).constant('RESPONSE_HEADER_MESSAGES', {
+        200: 'Ok',
+        404: 'File Not Found',
+        500: 'Internal Server Error',
+        504: 'Gateway Timeout'
+    }).constant(
+        'PRAGMA_HEADER',
+        'no-cache'
+    ).constant(
+        'NO_CACHE_HEADER',
+        'private, no-cache, no-store, must-revalidate'
+    );
 
     // Configs
-        .config(function() {
-            $templateCache.put(
-                'index.html',
-                fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
-            );
-            $templateCache.put(
-                '404.html',
-                fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
-            );
-        })
+    app.config(function() {
+        $templateCache.put(
+            'index.html',
+            fs.readFileSync(`${__dirname}/../templates/html/index.html`, 'utf8')
+        );
+        $templateCache.put(
+            '404.html',
+            fs.readFileSync(`${__dirname}/../templates/html/404.html`, 'utf8')
+        );
+    });
 
     // Factories
-        .factory('$Routes', $RouteProvider)
+    app.factory('$Routes', $RouteProvider)
         .factory('$Cache', $CacheFactory)
         .factory('$compile', $compile)
-        .factory('$resourceLoader', $resourceLoader)
+        .factory('$resourceLoader', $resourceLoader);
 
     // Services
-        .service('$Exceptions', $Exceptions)
+    app.service('$Exceptions', $Exceptions)
         .service('$scope', $scope)
-        .service('$templateCache', $templateCache)
+        .service('$templateCache', $templateCache);
 
     // Directives
-        .directive('ngieRepeat', $$ngieRepeatFactory);
+    app.directive('ngieRepeat', $$ngieRepeatFactory);
 }
 
 function mapAssetDirectoryDeclarations(v) {
