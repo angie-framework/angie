@@ -4,33 +4,31 @@
  * @date 10/01/2015
  */
 
-// app.directive('ngieRepeat', function() {
-//     return {
-//         priority: 1,
-//         restrict: 'AECM',
-//         link: function($scope, el, attrs) {
-//
-//             // We need to extract the repetition from the element
-//             let repeat = attrs.ngRepeat,
-//
-//             // Find the raw element's parent
-//                 $parent = el.parent(),
-//
-//             // Clone the raw element
-//                 $el = el.clone();
-//
-//             // Then remove the original el
-//             el.remove();
-//
-//             // Remove any $filter type phrasing for now
-//             repeat = repeat.replace(/\(|.*)$/, '');
-//
-//             // Now we can parse our repeat value
-//             repeat = repeat.split(' ');
-//
-//             console.log('REPEAT', repeat);
-//         }
-//     };
-// });
+import { $$safeEvalFn } from    '../factories/$Compile';
 
-// TODO test nested repeat directives
+function $$ngieIfFactory() {
+    return {
+        priority: 1,
+        restrict: 'AECM',
+        link: function($scope, el, attrs) {
+
+            // We need to extract the repetition from the element
+            let iif = attrs.ngieIf;
+
+            // Remove the if clause from the clone
+            el.removeAttr('ngie-if');
+            delete attrs.ngieIf;
+
+            // Evaluate expression
+            try {
+                if (!$$safeEvalFn.call($scope, iif)) {
+                    el.remove();
+                }
+            } catch(e) {
+                el.remove();
+            }
+        }
+    };
+}
+
+export default $$ngieIfFactory;

@@ -22,6 +22,7 @@ import {
 } from                              './factories/$TemplateCache';
 import * as $Exceptions from        './services/$Exceptions';
 import $$ngieRepeatFactory from     './directives/ngie-repeat';
+import $$ngieIfFactory from         './directives/ngie-if';
 import { $StringUtil } from         './util/Util';
 
 
@@ -515,7 +516,8 @@ if (!app) {
         .service('$templateCache', $templateCache);
 
     // Directives
-    app.directive('ngieRepeat', $$ngieRepeatFactory);
+    app.directive('ngieRepeat', $$ngieRepeatFactory)
+        .directive('ngieIf', $$ngieIfFactory);
 }
 
 function mapAssetDirectoryDeclarations(v) {

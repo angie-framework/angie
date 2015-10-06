@@ -6,6 +6,7 @@
 
 // System Modules
 import cheerio from                 'cheerio';
+import { cyan } from                'chalk';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
@@ -46,7 +47,6 @@ function $compile(t) {
 
     // We need to call template.toString() because we did not load with utf8
     let template = t.toString(),
-        listeners = template.match(/\{{3}[^\}]+\}{3}/g) || [],
         directives = [];
 
     // Direct reference by directive name to directive object
@@ -64,8 +64,6 @@ function $compile(t) {
         // Add all parsed directve names to directives
         directives.push(directive);
     }
-
-    console.log('DIRECTIVES', directives);
 
     // Sort our directives for priority
     directives.sort(function(a, b) {
@@ -87,28 +85,8 @@ function $compile(t) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
-            proms = [];
-
-        // Parse simple listeners/expressions
-        listeners.forEach(function(listener) {
-
-            // Remove the bracket mustaches
-            let parsedListener = listener.replace(/(\{|\}|\;)/g, '').trim(),
-                val = '';
-
-            // Evaluate the expression
-            try {
-                val = $$evalFn.call(scope, parsedListener);
-            } catch(e) {
-                $LogProvider.warn(e);
-            }
-
-            // Change the scope of the template
-            tmpLet = tmpLet.replace(listener, val);
-        });
-
-        // Parse directives
-        let $ = cheerio.load(tmpLet.replace(/<!?\s+?\s+?doctype\s+?>/i, '')),
+            proms = [],
+            $ = cheerio.load(tmpLet.replace(/<!?\s+?\s+?doctype\s+?>/i, '')),
             els = $('*');
 
         els.each(function(_, el) {
@@ -143,44 +121,18 @@ function $compile(t) {
                     )
                 ) {
                     let prom = $$processDirective(
-                        $(el), scope, directive, type
-                    );
+                            $(el), scope, directive, type
+                        );
                     proms.push(prom);
                 }
             });
         });
 
         return Promise.all(proms).then(function() {
+            els.each($$matchBrackets.bind(null, $, scope));
             return $.html();
         });
     };
-}
-
-// A private function to evaluate the parsed template string in the context of
-// `scope`
-function $$evalFn(str) {
-    let keyStr = '';
-
-    // Perform any parsing that needs to be performed on the scope value
-    for (let key in this) {
-        let val = this[ key ];
-        if (!val) {
-            continue;
-        } else if (typeof val === 'symbol' || typeof val === 'string') {
-            val = `"${val}"`;
-        } else if (typeof val === 'object') {
-            val = JSON.stringify(val);
-        }
-
-        // I don't like having to use var here
-        keyStr += `var ${key}=${val};`;
-    }
-
-    // Literal eval is executed in its own context here to reduce security issues
-    /* eslint-disable */
-    return eval([ keyStr, str ].join(''));
-
-    /* eslint-enable */
 }
 
 // Private function responsible for parsing directives
@@ -236,8 +188,8 @@ function $$processDirective(el, scope, directive, type) {
                 app.services.$response.done = resolve;
 
                 const link = directive.link.call(
-                    app.services.$scope,
-                    app.services.$scope,
+                    scope,
+                    scope,
                     type !== 'M' ? el : null,
                     parsedAttrs,
                     resolve
@@ -267,4 +219,59 @@ function $$processDirective(el, scope, directive, type) {
     return prom;
 }
 
+function $$matchBrackets($, scope, _, el) {
+    let $el = $(el),
+        html = $el.html();
+    const listeners = html.match(/\{{2,3}[^\}]+\}{2,3}/g) || [];
+
+    // Parse simple listeners/expressions
+    listeners.forEach(function(listener) {
+
+        // Remove the bracket mustaches
+        let parsedListener = listener.replace(/(\{|\}|\;)/g, '').trim(),
+            val = '';
+
+        // Evaluate the expression
+        try {
+            val = $$safeEvalFn.call(scope, parsedListener);
+        } catch(e) {
+            $LogProvider.warn(`Template ${cyan('$compile')} Error: ${e}`);
+        }
+
+        html = html.replace(listener, val);
+    });
+
+    $el.html(html);
+}
+
+// A private function to evaluate the parsed template string in the context of
+// `scope`
+function $$safeEvalFn(str) {
+    let keyStr = '';
+
+    // Perform any parsing that needs to be performed on the scope value
+    for (let key in this) {
+        let val = this[ key ];
+        if (!val) {
+            continue;
+        } else if (typeof val === 'symbol' || typeof val === 'string') {
+            val = `"${val}"`;
+        } else if (typeof val === 'object') {
+            val = JSON.stringify(val);
+        }
+
+        // I don't like having to use var here
+        keyStr += `var ${key}=${val};`;
+    }
+
+    console.log(keyStr, str);
+
+    // Literal eval is executed in its own context here to reduce security issues
+    /* eslint-disable */
+    return eval([ keyStr, str ].join(''));
+
+    /* eslint-enable */
+}
+
 export default $compile;
+export { $$safeEvalFn };

@@ -4,13 +4,13 @@
  * @date 10/01/2015
  */
 
+import cheerio from                 'cheerio';
+
 function $$ngieRepeatFactory($compile) {
     return {
         priority: 1,
         restrict: 'AECM',
         link($scope, el, attrs, done) {
-
-            console.log('EL HTML', el.html());
 
             // We need to extract the repetition from the element
             let repeat = attrs.ngieRepeat;
@@ -19,16 +19,18 @@ function $$ngieRepeatFactory($compile) {
             el.removeAttr('ngie-repeat');
             delete attrs.ngieRepeat;
 
-            console.log('here', el);
-
             // Find the element's parent
             let $parent = el.parent();
 
-            console.log('parent', $parent);
+            if (!$parent.html()) {
+                // Parent html must exist
+            }
 
             // Clone the raw element
             let $el = buildRepeaterElement(el[ 0 ] || el, el.html()),
+                prom = $compile($el),
                 proms = [],
+                html = '',
 
             // If not "for" in the Array, it's an invalid loop
                 hasFor = false,
@@ -44,21 +46,11 @@ function $$ngieRepeatFactory($compile) {
                 key,
                 value;
 
-            console.log('nablah', el);
-
-            el.remove();
-
-            console.log('blah', el);
-
-            // Remove any $filter type phrasing for now
-            repeat = repeat.replace(/(\|.*)$/, '');
-
-            // Now we can parse our repeat value
-            repeat = repeat.split(' ');
+            // Remove any $filter type phrasing for now, split between words
+            repeat = repeat.replace(/(\|.*)$/, '').split(' ');
 
             repeat.forEach(function(v) {
                 v = v.trim();
-                console.log(v);
                 if (v) {
                     switch (v) {
                         case 'for':
@@ -71,14 +63,12 @@ function $$ngieRepeatFactory($compile) {
                             arrLoop = true;
                             break;
                         default:
-                            console.log($scope);
                             if ($scope.hasOwnProperty(v)) {
                                 $scopeRef = $scope[ v ];
                             } else {
                                 v = v.split(',');
                                 key = v[0];
                                 value = v[1];
-                                console.log('here');
                             }
                     }
                 }
@@ -104,69 +94,53 @@ function $$ngieRepeatFactory($compile) {
                 // TODO no key or value to iterate over
             }
 
-            console.log('after decisions', hasFor, objLoop, arrLoop);
-
             if (objLoop) {
-                console.log('in obj loop', v);
                 for (let k of $scopeRef) {
-                    let v = $scopeRef[ k ];
-                    console.log('$el', $el);
-                    $parent.append(compile($el)({
-                        [ key ]: k,
-                        [ value ]: v
-                    }));
+                    let v = $scopeRef[ k ],
+                        $elProm = prom({
+                            [ key ]: k,
+                            [ value ]: v
+                        }).then(function(t) {
+                            $parent.append('test');
+                        });
+
+                    proms.push($elProm);
                 }
             } else if (arrLoop) {
-                console.log('in arr loop', key, $scopeRef);
                 for (let v of $scopeRef) {
-                    console.log('V', v);
-                    console.log(key);
-                    console.log('$el', $el);
-
-                    let prom = $compile($el)({
+                    let $elProm = prom({
                         [ key ]: v
-                    }).then(function(t) {
-                        console.log('T', t);
-                        $parent.append(t);
-                    });
+                    }).then(t => html += t);
 
-                    proms.push(prom);
+                    proms.push($elProm);
                 }
             }
 
-            console.log('TEST');
             return Promise.all(proms).then(function() {
+
+                console.log('html', html);
+
+                // TODO still an error with Reference
+                $parent.html($parent.html().replace(el.html(), html));
+                // $parent.insertAfter(el.html(), cheerio.load(html));
+                // el.remove();
+
                 done();
             });
-
-
-            // TODO remove repeat statement?
-            // TODO test stuff is inserted in right place
-            // TODO split on space is not good enough
-            // TODO SHOULD REORDER THE REPLACERS AND THE DIRECTIVES
         }
     };
 }
 
-function buildRepeaterElement($el, content) {
-
-    console.log('X', $el);
-
-    const tag = $el.name;
-
-    console.log('tag', tag);
-
+function buildRepeaterElement(el, content) {
+    const tag = el.name;
     let html = `<${tag}`;
 
-    console.log('in repeater', $el.attribs);
-
-    for (let key in $el.attribs) {
-        let value = $el.attribs[ key ];
+    for (let key in el.attribs) {
+        let value = el.attribs[ key ];
         html += ` ${key}="${value}"`;
     }
 
     html += `>${content}</${tag}>`;
-    console.log('HTML', html);
     return html;
 }
 
