@@ -15,14 +15,15 @@ function $$ngieIfFactory() {
             // We need to extract the repetition from the element
             let iif = attrs.ngieIf;
 
-            // Remove the if clause from the clone
-            el.removeAttr('ngie-if');
-            delete attrs.ngieIf;
-
             // Evaluate expression
             try {
                 if (!$$safeEvalFn.call($scope, iif)) {
                     el.remove();
+                } else {
+
+                    // Remove the if clause from the clone
+                    el.removeAttr('ngie-if');
+                    delete attrs.ngieIf;
                 }
             } catch(e) {
                 el.remove();

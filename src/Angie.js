@@ -194,11 +194,14 @@ class Angie {
 
         if (dir.hasOwnProperty('Controller')) {
             if (typeof dir.Controller !== 'string') {
-                delete dir.Controller;
+                throw new $Exceptions.$$InvalidDirectiveConfigError(name);
             }
-        } else if (/api.?view/i.test(dir.type)) {
+        }
+
+        if (dir.priority < 1) {
             throw new $Exceptions.$$InvalidDirectiveConfigError(name);
         }
+
         return this.$$register('directives', name, dir);
     }
 

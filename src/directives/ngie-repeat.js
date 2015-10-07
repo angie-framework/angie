@@ -4,13 +4,13 @@
  * @date 10/01/2015
  */
 
-import cheerio from                 'cheerio';
-
 function $$ngieRepeatFactory($compile) {
     return {
         priority: 1,
         restrict: 'AECM',
         link($scope, el, attrs, done) {
+
+            console.log('REPEATTTT');
 
             // We need to extract the repetition from the element
             let repeat = attrs.ngieRepeat;
@@ -20,15 +20,15 @@ function $$ngieRepeatFactory($compile) {
             delete attrs.ngieRepeat;
 
             // Find the element's parent
-            let $parent = el.parent();
-
+            let $parent = el.parent(),
+                $elHTML = buildRepeaterElement(el[ 0 ] || el, el.html());
             if (!$parent.html()) {
                 // Parent html must exist
             }
 
             // Clone the raw element
             let $el = buildRepeaterElement(el[ 0 ] || el, el.html()),
-                prom = $compile($el),
+                compileFn = $compile($el),
                 proms = [],
                 html = '',
 
@@ -47,9 +47,7 @@ function $$ngieRepeatFactory($compile) {
                 value;
 
             // Remove any $filter type phrasing for now, split between words
-            repeat = repeat.replace(/(\|.*)$/, '').split(' ');
-
-            repeat.forEach(function(v) {
+            repeat.replace(/(\|.*)$/, '').split(' ').forEach(function(v) {
                 v = v.trim();
                 if (v) {
                     switch (v) {
@@ -67,8 +65,8 @@ function $$ngieRepeatFactory($compile) {
                                 $scopeRef = $scope[ v ];
                             } else {
                                 v = v.split(',');
-                                key = v[0];
-                                value = v[1];
+                                key = v[ 0 ];
+                                value = v[ 1 ];
                             }
                     }
                 }
@@ -97,33 +95,24 @@ function $$ngieRepeatFactory($compile) {
             if (objLoop) {
                 for (let k of $scopeRef) {
                     let v = $scopeRef[ k ],
-                        $elProm = prom({
+                        prom = compileFn({
                             [ key ]: k,
                             [ value ]: v
-                        }).then(function(t) {
-                            $parent.append('test');
-                        });
-
-                    proms.push($elProm);
+                        }, false).then(t => html += t);
+                    proms.push(prom);
                 }
             } else if (arrLoop) {
                 for (let v of $scopeRef) {
-                    let $elProm = prom({
+                    let prom = compileFn({
                         [ key ]: v
-                    }).then(t => html += t);
-
-                    proms.push($elProm);
+                    }, false).then(t => html += t);
+                    proms.push(prom);
                 }
             }
 
             return Promise.all(proms).then(function() {
-
-                console.log('html', html);
-
-                // TODO still an error with Reference
-                $parent.html($parent.html().replace(el.html(), html));
-                // $parent.insertAfter(el.html(), cheerio.load(html));
-                // el.remove();
+                let $parentHTML = $parent.html().replace($elHTML, html);
+                $parent.html($parentHTML);
 
                 done();
             });

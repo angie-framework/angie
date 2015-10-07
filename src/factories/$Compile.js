@@ -69,8 +69,10 @@ function $compile(t) {
     directives.sort(function(a, b) {
         if (!a.priority && !b.priority) {
             return 0;
+        } else if ((a.priority && !b.priority) || (a.priority > b.priority)) {
+            return 1;
         }
-        return (a.priority && !b.priority) || (a.priority > b.priority) ? 1 : -1;
+        return -1;
     });
 
     /**
@@ -81,7 +83,7 @@ function $compile(t) {
      * $window/$document?
      * @returns {string} The compiled template
      */
-    return function $templateCompile (scope = {}) {
+    return function $templateCompile (scope = {}, assignDOMServices = true) {
 
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
@@ -90,8 +92,9 @@ function $compile(t) {
             els = $('*');
 
         els.each(function(_, el) {
-            let type;
             directives.forEach(function(directive) {
+                let type;
+
                 if (
                     el.attribs &&
                     directive.$names.some(v => el.attribs.hasOwnProperty(v))
@@ -154,7 +157,7 @@ function $$processDirective(el, scope, directive, type) {
     if (template) {
 
         // Setup the template HTML observing the prepend/append properties
-        prom = $compile(template)(scope).then(function(t) {
+        prom = $compile(template)(scope, false).then(function(t) {
             el.html(
                 `${directive.prepend === true ? '' : el.html()}${t}` +
                 `${directive.prepend !== true ? '' : el.html()}`
@@ -220,9 +223,12 @@ function $$processDirective(el, scope, directive, type) {
 }
 
 function $$matchBrackets($, scope, _, el) {
+    console.log('EL', el);
     let $el = $(el),
         html = $el.html();
-    const listeners = html.match(/\{{2,3}[^\}]+\}{2,3}/g) || [];
+    const listeners = html.match(/\{{3}[^\}]+\}{3}/g) || [];
+
+    console.log(listeners);
 
     // Parse simple listeners/expressions
     listeners.forEach(function(listener) {
@@ -235,7 +241,11 @@ function $$matchBrackets($, scope, _, el) {
         try {
             val = $$safeEvalFn.call(scope, parsedListener);
         } catch(e) {
-            $LogProvider.warn(`Template ${cyan('$compile')} Error: ${e}`);
+
+            // There is no reason to throw an error on unfound $scope variables
+            if (!(e instanceof ReferenceError)) {
+                $LogProvider.warn(`Template ${cyan('$compile')} Error: ${e}`);
+            }
         }
 
         html = html.replace(listener, val);
@@ -263,8 +273,6 @@ function $$safeEvalFn(str) {
         // I don't like having to use var here
         keyStr += `var ${key}=${val};`;
     }
-
-    console.log(keyStr, str);
 
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
