@@ -3,10 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 #### [0.4.4] - 2015-10-01
-##### Added/Changed
+##### Added/Changed/Fixed
 - Refactored the `$ExceptionsProvider` to `$Exceptions` and properly placed it in the services directory
 - Added tests for `$Exceptions`
 - Added tests for the `Config` internal class
+- Added `$Log` as a registered module (Fix)
 
 #### [0.4.3] - 2015-09-29
 ##### Changed

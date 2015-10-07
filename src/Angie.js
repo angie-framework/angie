@@ -505,6 +505,7 @@ if (!app) {
     // Factories
     app.factory('$Routes', $RouteProvider)
         .factory('$Cache', $CacheFactory)
+        .factory('$Log', $LogProvider)
         .factory('$compile', $compile)
         .factory('$resourceLoader', $resourceLoader);
 
