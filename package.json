@@ -47,10 +47,8 @@
     "gulp-copy": "0.0.2",
     "gulp-esdoc": "0.0.3",
     "gulp-eslint": "0.12.0",
-    "gulp-istanbul": "0.9.0",
     "gulp-jscs": "1.6.0",
     "gulp-mocha": "2.0.1",
-    "isparta": "3.0.3",
     "mocha": "2.2.4",
     "simple-mock": "0.3.0"
   },

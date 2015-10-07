@@ -223,12 +223,9 @@ function $$processDirective(el, scope, directive, type) {
 }
 
 function $$matchBrackets($, scope, _, el) {
-    console.log('EL', el);
     let $el = $(el),
         html = $el.html();
     const listeners = html.match(/\{{3}[^\}]+\}{3}/g) || [];
-
-    console.log(listeners);
 
     // Parse simple listeners/expressions
     listeners.forEach(function(listener) {

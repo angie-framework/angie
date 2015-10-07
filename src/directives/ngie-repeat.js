@@ -4,13 +4,11 @@
  * @date 10/01/2015
  */
 
-function $$ngieRepeatFactory($compile) {
+function $$ngieRepeatFactory($compile, $Log) {
     return {
         priority: 1,
         restrict: 'AECM',
         link($scope, el, attrs, done) {
-
-            console.log('REPEATTTT');
 
             // We need to extract the repetition from the element
             let repeat = attrs.ngieRepeat;
@@ -21,16 +19,15 @@ function $$ngieRepeatFactory($compile) {
 
             // Find the element's parent
             let $parent = el.parent(),
-                $elHTML = buildRepeaterElement(el[ 0 ] || el, el.html());
-            if (!$parent.html()) {
-                // Parent html must exist
-            }
 
             // Clone the raw element
-            let $el = buildRepeaterElement(el[ 0 ] || el, el.html()),
+                $el = buildRepeaterElement(el[ 0 ] || el, el.html()),
                 compileFn = $compile($el),
                 proms = [],
                 html = '',
+
+            // State of validity
+                warn = false,
 
             // If not "for" in the Array, it's an invalid loop
                 hasFor = false,
@@ -72,27 +69,19 @@ function $$ngieRepeatFactory($compile) {
                 }
             });
 
-            if (!hasFor) {
-
-                // TODO throw error, bad for statement
-            }
-
-            if (!objLoop && !arrLoop) {
-
-                // TODO throw error, neither loop declared
-            }
-
-            if (!$scopeRef) {
-
-                // TODO no scope ref found
-            }
-
-            if (!key) {
-
-                // TODO no key or value to iterate over
-            }
-
-            if (objLoop) {
+            // Check to see if we have parsed properly, throw errors
+            if (!$parent.html()) {
+                warn = 'Parent DOM element of ngieRepeat element must exist';
+            } else if (!hasFor) {
+                warn = 'No declared "for" in ngieRepeat directive';
+            } else if (!$scopeRef) {
+                warn = 'No $scope found for ngieRepeat iterable';
+            } else if (!key) {
+                warn = 'No key or value declarations for ngieRepeat to iterate ' +
+                    'over';
+            } else if (!objLoop && !arrLoop) {
+                warn = 'Use the keyword "in" or "of" in ngieRepeat declarations';
+            } else if (objLoop) {
                 for (let k of $scopeRef) {
                     let v = $scopeRef[ k ],
                         prom = compileFn({
@@ -110,8 +99,13 @@ function $$ngieRepeatFactory($compile) {
                 }
             }
 
+            if (warn) {
+                $LogProvider.warn(warn);
+                return;
+            }
+
             return Promise.all(proms).then(function() {
-                let $parentHTML = $parent.html().replace($elHTML, html);
+                let $parentHTML = $parent.html().replace($el, html);
                 $parent.html($parentHTML);
 
                 done();
