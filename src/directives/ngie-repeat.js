@@ -100,7 +100,7 @@ function $$ngieRepeatFactory($compile, $Log) {
             }
 
             if (warn) {
-                $LogProvider.warn(warn);
+                $Log.warn(warn);
                 return;
             }
 

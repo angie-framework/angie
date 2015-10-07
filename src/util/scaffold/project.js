@@ -102,7 +102,6 @@ function $$createProject({ name, dir }) {
             fs.mkdirSync(`${mkDirFiles}${v}`);
         });
     } catch(e) {
-        console.log(e);
         throw new $$ProjectCreationError(e);
     } finally {
 

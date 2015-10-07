@@ -8,9 +8,11 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 const config =                      require(`../../../${TEST_ENV}/Config`).config,
     app =                           require(`../../../${TEST_ENV}/Angie`).default,
-    $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`),
+    $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`).default,
     $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
     $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
+
+console.log('COMPILE', $compile);
 
 describe('$compile', function() {
     it(
