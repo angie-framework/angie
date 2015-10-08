@@ -21,6 +21,7 @@ import {
     $resourceLoader
 } from                              './factories/$TemplateCache';
 import * as $Exceptions from        './services/$Exceptions';
+import $$ngieIgnoreFactory from     './directives/ngie-ignore';
 import $$ngieRepeatFactory from     './directives/ngie-repeat';
 import $$ngieIfFactory from         './directives/ngie-if';
 import { $StringUtil } from         './util/Util';
@@ -520,7 +521,8 @@ if (!app) {
         .service('$templateCache', $templateCache);
 
     // Directives
-    app.directive('ngieRepeat', $$ngieRepeatFactory)
+    app.directive('ngieIgnore', $$ngieIgnoreFactory)
+        .directive('ngieRepeat', $$ngieRepeatFactory)
         .directive('ngieIf', $$ngieIfFactory);
 }
 

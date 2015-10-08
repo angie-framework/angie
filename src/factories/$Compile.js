@@ -66,6 +66,8 @@ function $compile(t) {
         directives.push(directive);
     }
 
+    console.log('DIRECTIVES', directives);
+
     // Sort our directives for priority
     directives.sort(function(a, b) {
         if (!a.priority && !b.priority) {
@@ -226,16 +228,12 @@ function $$processDirective(el, scope, directive, type) {
 
 function $$matchBrackets(html, scope) {
 
-    console.log('HTML', html);
-
     // Parse simple listeners/expressions
     return html.replace(/(\{{2,3}[^\}]+\}{2,3})/g, function(m) {
 
         // Remove the bracket mustaches
         const parsedListener = m.replace(/(\{|\}|;)/g, '').trim();
         let val = '';
-
-        console.log('PARSED', parsedListener, m);
 
         // Evaluate the expression
         try {
@@ -247,8 +245,6 @@ function $$matchBrackets(html, scope) {
                 $LogProvider.warn(`Template ${cyan('$compile')} Error: ${e}`);
             }
         }
-
-        console.log('VAL', val);
 
         return val;
     });
@@ -276,7 +272,6 @@ function $$safeEvalFn(str) {
 
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
-    console.log('STR', keyStr, str);
     return eval([ keyStr, str ].join(''));
 
     /* eslint-enable */
