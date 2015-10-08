@@ -7,6 +7,7 @@
 // System Modules
 import cheerio from                 'cheerio';
 import { cyan } from                'chalk';
+import $Injector from               'angie-injector';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
@@ -88,7 +89,9 @@ function $compile(t) {
         // Temporary template object, lets us hang on to our template
         let tmpLet = template,
             proms = [],
-            $ = cheerio.load(tmpLet.replace(/<!?\s+?\s+?doctype\s+?>/i, '')),
+            $ = cheerio.load(tmpLet.replace(/<!?\s+?\s+?doctype\s+?>/i, ''), {
+                decodeEntities: false
+            }),
             els = $('*');
 
         els.each(function(_, el) {
@@ -132,8 +135,7 @@ function $compile(t) {
         });
 
         return Promise.all(proms).then(function() {
-            els.each($$matchBrackets.bind(null, $, scope));
-            return $.html();
+            return $$matchBrackets($.html(), scope);
         });
     };
 }
@@ -188,7 +190,7 @@ function $$processDirective(el, scope, directive, type) {
 
                 // Assign a function that can be called to resolve async
                 // behavior in directives
-                app.services.$response.done = resolve;
+                $Injector.get('$response').done = resolve;
 
                 const link = directive.link.call(
                     scope,
@@ -222,17 +224,18 @@ function $$processDirective(el, scope, directive, type) {
     return prom;
 }
 
-function $$matchBrackets($, scope, _, el) {
-    let $el = $(el),
-        html = $el.html();
-    const listeners = html.match(/\{{3}[^\}]+\}{3}/g) || [];
+function $$matchBrackets(html, scope) {
+
+    console.log('HTML', html);
 
     // Parse simple listeners/expressions
-    listeners.forEach(function(listener) {
+    return html.replace(/(\{{2,3}[^\}]+\}{2,3})/g, function(m) {
 
         // Remove the bracket mustaches
-        let parsedListener = listener.replace(/(\{|\}|\;)/g, '').trim(),
-            val = '';
+        const parsedListener = m.replace(/(\{|\}|;)/g, '').trim();
+        let val = '';
+
+        console.log('PARSED', parsedListener, m);
 
         // Evaluate the expression
         try {
@@ -245,10 +248,10 @@ function $$matchBrackets($, scope, _, el) {
             }
         }
 
-        html = html.replace(listener, val);
-    });
+        console.log('VAL', val);
 
-    $el.html(html);
+        return val;
+    });
 }
 
 // A private function to evaluate the parsed template string in the context of
@@ -273,6 +276,7 @@ function $$safeEvalFn(str) {
 
     // Literal eval is executed in its own context here to reduce security issues
     /* eslint-disable */
+    console.log('STR', keyStr, str);
     return eval([ keyStr, str ].join(''));
 
     /* eslint-enable */

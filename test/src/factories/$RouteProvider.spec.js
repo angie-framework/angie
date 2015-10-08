@@ -6,7 +6,8 @@ import simple, {mock} from          'simple-mock';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-const $Routes =                     require(`../../../${TEST_ENV}/factories/$RouteProvider`);
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    $Routes =                       require(`../../../${TEST_ENV}/factories/$RouteProvider`);
 
 describe('$RouteProvider', function() {
     describe('when', function() {

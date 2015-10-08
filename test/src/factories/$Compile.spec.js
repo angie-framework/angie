@@ -3,16 +3,16 @@ import { expect } from              'chai';
 import simple, { mock } from        'simple-mock';
 
 // System Modules
+import $Injector from               'angie-injector';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-const config =                      require(`../../../${TEST_ENV}/Config`).config,
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    config =                        require(`../../../${TEST_ENV}/Config`).config,
     app =                           require(`../../../${TEST_ENV}/Angie`).default,
     $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`).default,
     $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
     $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
-
-console.log('COMPILE', $compile);
 
 describe('$compile', function() {
     it(
@@ -29,6 +29,7 @@ describe('$compile', function() {
         let scope;
 
         beforeEach(function() {
+            mock($Injector, 'get', () => ({}));
             mock($LogProvider, 'warn', function() {});
             scope = {
                 test: 'test',
@@ -41,7 +42,7 @@ describe('$compile', function() {
                 test6: 5
             };
         });
-        afterEach(() => simple.restore());
+        afterEach(simple.restore);
         it('test no listeners', function() {
             $compile('test')(scope).then(function(t) {
                 expect(t).to.eq('test');
@@ -50,7 +51,7 @@ describe('$compile', function() {
         it('test listener with no matches', function() {
             $compile('{{{test3}}}')(scope).then(function(t) {
                 expect(t).to.eq('');
-                expect($LogProvider.warn).to.have.been.called;
+                expect($LogProvider.warn).not.to.have.been.called;
             });
         });
         it('test $templateCompile evaluates a single matched listener', function() {
@@ -86,7 +87,7 @@ describe('$compile', function() {
             );
             $compile('{{{[ test, test1 ].join(\' & \')}}}')(scope).then(
                 function(t) {
-                    expect(t).to.eq('test &amp; test1');
+                    expect(t).to.eq('test & test1');
                 }
             );
             $compile('{{{test.toUpperCase()}}}')(scope).then(function(t) {

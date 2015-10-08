@@ -11,9 +11,9 @@ import { bold, green } from             'chalk';
 import $LogProvider from                'angie-log';
 
 // Angie Modules
-const project =                         require(`../../../../${TEST_ENV}/util/scaffold/project`),
-    $$ProjectCreationError =
-        require(`../../../../${TEST_ENV}/services/$Exceptions`).$$ProjectCreationError,
+const TEST_ENV =                        global.TEST_ENV || 'src',
+    project =                           require(`../../../../${TEST_ENV}/util/scaffold/project`),
+    $$ProjectCreationError =            require(`../../../../${TEST_ENV}/services/$Exceptions`).$$ProjectCreationError,
     p = process;
 
 describe('$$createProject', function() {

@@ -7,7 +7,8 @@ import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-const Angie =                       require(`../../${TEST_ENV}/Angie`).Angie,
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    Angie =                         require(`../../${TEST_ENV}/Angie`).Angie,
     CWD = process.cwd();
 
 describe('Angie', function() {
@@ -68,17 +69,12 @@ describe('Angie', function() {
                 [ 'directives', 'test', obj ]
             );
         });
-        it('test Controller deleted if not string type', function() {
+        it('test throws error if Controller not string type', function() {
             let obj = {
-                Controller: noop()
+                Controller: noop
             };
-            app.directive('test', function() {
-                return obj;
-            });
-            expect(app.$$register.calls[0].args).to.deep.eq(
-                [ 'directives', 'test', obj ]
-            );
-            expect(obj.Controller).to.be.undefined;
+            expect(app.directive.bind(null, 'test', () => obj));
+            assert(!app.$$register.called);
         });
         it(
             'test $Exceptions called when there is a not controller and ' +

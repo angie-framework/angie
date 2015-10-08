@@ -2,7 +2,8 @@
 import { expect } from              'chai';
 
 // Angie Modules
-const $MimeType =                   require(`../../../${TEST_ENV}/util/$MimeTypeProvider`);
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    $MimeType =                     require(`../../../${TEST_ENV}/util/$MimeTypeProvider`);
 
 describe('$MimeTypeProvider', function() {
     describe('$$', function() {

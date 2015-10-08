@@ -2,7 +2,8 @@
 import { expect } from  'chai';
 
 // Angie Modules
-const $cacheFactory =   require(`../../../${TEST_ENV}/factories/$CacheFactory`);
+const TEST_ENV =        global.TEST_ENV || 'src',
+    $cacheFactory =     require(`../../../${TEST_ENV}/factories/$CacheFactory`);
 
 describe('$CacheFactory', function() {
     let cache;

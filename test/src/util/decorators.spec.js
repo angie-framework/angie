@@ -3,7 +3,8 @@
 import { mock } from                'simple-mock';
 
 // Angie Modules
-const decorators =                  require(`../../../${TEST_ENV}/util/decorators`);
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    decorators =                    require(`../../../${TEST_ENV}/util/decorators`);
 
 describe('decorators', function() {
     beforeEach(function() {

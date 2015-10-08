@@ -7,7 +7,8 @@ import chalk from               'chalk';
 import $LogProvider from        'angie-log';
 
 // Angie Modules
-const $Exceptions =             require(`../../../${TEST_ENV}/services/$Exceptions`);
+const TEST_ENV =                global.TEST_ENV || 'src',
+    $Exceptions =               require(`../../../${TEST_ENV}/services/$Exceptions`);
 
 describe('$Exceptions', function() {
     beforeEach(function() {

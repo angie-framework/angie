@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added tests for `$Exceptions`
 - Added tests for the `Config` internal class
 - Added `$Log` as a registered module (Fix)
+- Added WallabyJS configuration
 
 #### [0.4.3] - 2015-09-29
 ##### Changed
