@@ -101,7 +101,7 @@ function $$ngieRepeatFactory($compile, $Log) {
 
             if (warn) {
                 $Log.warn(warn);
-                return;
+                return el.remove();
             }
 
             return Promise.all(proms).then(function() {

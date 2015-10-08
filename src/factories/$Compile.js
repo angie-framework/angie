@@ -66,8 +66,6 @@ function $compile(t) {
         directives.push(directive);
     }
 
-    console.log('DIRECTIVES', directives);
-
     // Sort our directives for priority
     directives.sort(function(a, b) {
         if (!a.priority && !b.priority) {
@@ -189,10 +187,15 @@ function $$processDirective(el, scope, directive, type) {
     ) {
         prom = prom.then(function() {
             return new Promise(function(resolve) {
+                let $response = {};
 
                 // Assign a function that can be called to resolve async
                 // behavior in directives
-                $Injector.get('$response').done = resolve;
+                try {
+                    $response = $Injector.get('$response');
+                } catch(e) {} finally {
+                    $response.done = resolve;
+                }
 
                 const link = directive.link.call(
                     scope,
@@ -229,10 +232,10 @@ function $$processDirective(el, scope, directive, type) {
 function $$matchBrackets(html, scope) {
 
     // Parse simple listeners/expressions
-    return html.replace(/(\{{2,3}[^\}]+\}{2,3})/g, function(m) {
+    return html.replace(/(\{{2,3}('\{{2,3})?[^\}\{]+(\}{2,3}')?\}{2,3})/g, function(m) {
 
         // Remove the bracket mustaches
-        const parsedListener = m.replace(/(\{|\}|;)/g, '').trim();
+        const parsedListener = m.replace(/^(\{{2,3})|(\}{2,3})$|;/g, '').trim();
         let val = '';
 
         // Evaluate the expression

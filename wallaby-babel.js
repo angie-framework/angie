@@ -2,6 +2,8 @@ const SRC = 'src/**/*.js',
     TEST_SRC = 'test/src/**/*.spec.js';
 
 module.exports = function() {
+
+    // WallabyJS configuration for the WallabyJS JetBrains/Atom plugin
     return {
         files: [
             {
@@ -24,9 +26,6 @@ module.exports = function() {
         ],
         env: {
             type: 'node'
-        },
-        params: {
-            env: 'TEST_ENV=src;'
         },
         workers: {
             recycle: true
