@@ -21,7 +21,7 @@ function $$ngieIfFactory() {
                     el.remove();
                 } else {
 
-                    // Remove the if clause from the clone
+                    // Remove the if clause from the element
                     el.removeAttr('ngie-if');
                     delete attrs.ngieIf;
                 }

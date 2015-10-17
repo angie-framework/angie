@@ -9,6 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added tests for the `Config` internal class
 - Added `$Log` as a registered module (Fix)
 - Added WallabyJS configuration
+- Add the ability to set X-Frame-Options header, as well as provisional security headers, in the response
+- Modified `.editorconfig` to include a global file configuration as well as js/css/html
 
 #### [0.4.3] - 2015-09-29
 ##### Changed

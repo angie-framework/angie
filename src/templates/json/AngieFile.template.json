@@ -21,5 +21,6 @@
     ],
     "cacheStaticAssets": %s,
     "responseErrorTimeout": 5000,
-    "loadDefaultScriptFile": "%s"
+    "loadDefaultScriptFile": "%s",
+    "setXFrameOptions": "SAMEORIGIN"
 }

@@ -230,9 +230,10 @@ describe('$Request', function() {
                     }
                 }));
                 request = new $Request(req);
+                request.path = '/test';
                 mock(
                     $Responses,
-                    'ControllerTemplateResponse',
+                    'ControllerTemplatePathResponse',
                     function() {
                         throw new Error();
                     }

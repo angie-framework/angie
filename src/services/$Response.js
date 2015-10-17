@@ -46,6 +46,20 @@ class $Response {
         // Define the Angie content string
         this.response.content = '';
     }
+
+    /**
+     * @desc Sets a header on the instance's encapsulation of NodeJS response.
+     * This function performs no safe checks on the headers.
+     * @param {string} [param=''] k The name of the header
+     * @param {string} [param=''] v The value of the header
+     * @since 0.4.4
+     * @example new $Response(res).header('X-Frame-Options', 'SAMEORIGIN');
+     */
+    header(k = '', v = '') {
+        this.response.setHeader(k, v);
+
+        return this;
+    }
 }
 
 /**
