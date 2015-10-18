@@ -12,7 +12,7 @@ describe('$$ngieIgnoreFactory', function() {
     it('test $$ngieIgnoreFactory returns', function() {
         let obj = $$ngieIgnoreFactory();
         expect(obj.priority).to.eq(1);
-        expect(obj.restrict).to.eq('AECM');
+        expect(obj.restrict).to.eq('A');
         expect(obj.link).to.be.a.function;
     });
     describe('link', function() {

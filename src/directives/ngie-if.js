@@ -21,7 +21,7 @@ import { $$safeEvalFn } from    '../factories/$Compile';
 function $$ngieIfFactory() {
     return {
         priority: 1,
-        restrict: 'AECM',
+        restrict: 'A',
         link: function($scope, el, attrs) {
 
             // We need to extract the repetition from the element
