@@ -31,10 +31,7 @@ import $Util, { $StringUtil } from  '../util/Util';
  * Native directives are called "ngie" to avoid namespace collisions. Dirty
  * checking is performed on directive names for camelCasing,
  * underscore_separation, and dash-separation.
- *
- * It can also be referenced as `app.services.$compile`.
  * @since 0.2.2
- * @todo "No parse operator"
  * @param {string} t Template string to be processed
  * @returns {function} Template function, compiles in whatever scope is passed
  * @access public
@@ -261,9 +258,12 @@ function $$safeEvalFn(str) {
     // Perform any parsing that needs to be performed on the scope value
     for (let key in this) {
         let val = this[ key ];
-        if (!val) {
+        if (!val && val !== 0 && val !== '') {
             continue;
-        } else if (typeof val === 'symbol' || typeof val === 'string') {
+        } else if (
+            typeof val === 'symbol' ||
+            typeof val === 'string'
+        ) {
             val = `"${val}"`;
         } else if (typeof val === 'object') {
             val = JSON.stringify(val);
