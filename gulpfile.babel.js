@@ -14,7 +14,9 @@ import gulp from                'gulp';
 import { argv } from            'yargs';
 import eslint from              'gulp-eslint';
 import jscs from                'gulp-jscs';
+import { Instrumenter } from    'isparta';
 import mocha from               'gulp-mocha';
+import istanbul from            'gulp-istanbul';
 import esdoc from               'gulp-esdoc';
 import babel from               'gulp-babel';
 import copy from                'gulp-copy';
@@ -45,8 +47,22 @@ gulp.task('jscs', [ 'eslint' ], function () {
             esnext: true
         }));
 });
-gulp.task('mocha:src', [ 'jscs' ], mochaHandler.bind(null, 'src', COVERAGE_SRC));
-gulp.task('mocha:dist', [ 'jscs' ], mochaHandler.bind(null, 'dist', undefined));
+gulp.task('istanbul:src', [ 'jscs' ], istanbulHandler.bind(null, SRC));
+gulp.task(
+    'istanbul:dist',
+    [ 'babel' ],
+    istanbulHandler.bind(null, TRANSPILED_SRC)
+);
+gulp.task(
+    'mocha:src',
+    [ 'istanbul:src' ],
+    mochaHandler.bind(null, 'src', COVERAGE_SRC)
+);
+gulp.task(
+    'mocha:dist',
+    [ 'istanbul:dist' ],
+    mochaHandler.bind(null, 'dist', undefined)
+);
 gulp.task('esdoc', function() {
     return gulp.src(SRC_DIR).pipe(esdoc({ destination: DOC_SRC }));
 });
@@ -99,9 +115,25 @@ gulp.task('watch:babel', [ 'babel' ], function() {
 });
 gulp.task('default', [ 'mocha:src', 'babel', 'esdoc' ]);
 
+function istanbulHandler(src, cb) {
+    gulp.src(src).pipe(istanbul({
+        instrumenter: Instrumenter,
+        includeUntested: true,
+        babel: {
+            stage: 0
+        }
+    })).pipe(istanbul.hookRequire()).on('finish', cb);
+}
+
 function mochaHandler(src, coverage = '/tmp') {
     global.TEST_ENV = src;
     return gulp.src(TEST_SRC).pipe(mocha({
         reporter: 'spec'
+    })).pipe(istanbul.writeReports({
+        dir: 'coverage',
+        reportOpts: {
+            dir: 'coverage'
+        },
+        reporters: [ 'text-summary', 'lcov' ]
     }));
 }
