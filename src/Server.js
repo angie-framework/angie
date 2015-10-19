@@ -259,6 +259,9 @@ function $$server(args = []) {
             });
         }).listen(PORT);
 
+        // Expose the webserver so that we can use it in sockets, etc.
+        app.service('$server', webserver);
+
         // Info
         $LogProvider.info(`Serving on port ${PORT}`);
 
