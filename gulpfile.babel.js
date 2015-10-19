@@ -134,6 +134,6 @@ function mochaHandler(src, coverage = '/tmp') {
         reportOpts: {
             dir: 'coverage'
         },
-        reporters: [ 'text-summary', 'lcov' ]
+        reporters: [ 'text', 'text-summary', 'lcov' ]
     }));
 }
