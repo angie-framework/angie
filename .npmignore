@@ -6,6 +6,7 @@ doc
 dist
 svg
 node_modules
+npm-shrinkwrap.json
 script
 .editorconfig
 .travis.yml
