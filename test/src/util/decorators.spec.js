@@ -1,9 +1,10 @@
 // Test Modules
-// import {expect} from        'chai';
-import {mock} from          'simple-mock';
+// import { expect } from           'chai';
+import { mock } from                'simple-mock';
 
 // Angie Modules
-import * as decorators from         '../../../src/util/decorators';
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    decorators =                    require(`../../../${TEST_ENV}/util/decorators`);
 
 describe('decorators', function() {
     beforeEach(function() {

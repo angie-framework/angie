@@ -7,14 +7,9 @@ import fs from                      'fs';
 import $LogProvider from            'angie-log';
 
 // Angie Modules
-import { Angie } from               '../../src/Angie';
-import {
-    $$InvalidDirectiveConfigError,
-    $$InvalidServiceConfigError,
-    $$InvalidFactoryConfigError
-} from                              '../../src/util/$ExceptionsProvider';
-
-const CWD = process.cwd();
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    Angie =                         require(`../../${TEST_ENV}/Angie`).Angie,
+    CWD = process.cwd();
 
 describe('Angie', function() {
     let noop = () => undefined,
@@ -74,27 +69,22 @@ describe('Angie', function() {
                 [ 'directives', 'test', obj ]
             );
         });
-        it('test Controller deleted if not string type', function() {
+        it('test throws error if Controller not string type', function() {
             let obj = {
-                Controller: noop()
+                Controller: noop
             };
-            app.directive('test', function() {
-                return obj;
-            });
-            expect(app.$$register.calls[0].args).to.deep.eq(
-                [ 'directives', 'test', obj ]
-            );
-            expect(obj.Controller).to.be.undefined;
+            expect(app.directive.bind(null, 'test', () => obj));
+            assert(!app.$$register.called);
         });
         it(
-            'test $ExceptionsProvider called when there is a not controller and ' +
+            'test $Exceptions called when there is a not controller and ' +
             'directive is an API View',
             function() {
                 expect(app.directive.bind(null, 'test', function() {
                     return {
                         type: 'APIView'
                     };
-                })).to.throw($$InvalidDirectiveConfigError);
+                })).to.throw();
             }
         );
     });
@@ -122,19 +112,19 @@ describe('Angie', function() {
             it('test function', function() {
                 expect(
                     app.service.bind(null, 'test', function test() {})
-                ).to.throw($$InvalidServiceConfigError);
+                ).to.throw();
             });
             it('test string', function() {
                 expect(
                     app.service.bind(null, 'test', 'test')
-                ).to.throw($$InvalidServiceConfigError);
+                ).to.throw();
             });
         });
         describe('test factory makes a call to $$register', function() {
             it('test object', function() {
                 expect(
                     app.factory.bind(null, 'test', { test: 'test' })
-                ).to.throw($$InvalidFactoryConfigError);
+                ).to.throw();
             });
             it('test function', function() {
                 let test = function() {};
@@ -148,7 +138,7 @@ describe('Angie', function() {
             it('test string', function() {
                 expect(
                     app.factory.bind(null, 'test', 'test')
-                ).to.throw($$InvalidFactoryConfigError);
+                ).to.throw();
             });
         });
         it(

@@ -5,20 +5,27 @@
  */
 
 // System Modules
-import fs from                                          'fs';
-import {magenta, blue} from                             'chalk';
-import $LogProvider from                                'angie-log';
-import {$injectionBinder} from                          'angie-injector';
+import fs from                      'fs';
+import { magenta, blue } from       'chalk';
+import $LogProvider from            'angie-log';
+import { $injectionBinder } from    'angie-injector';
 
 // Angie Modules
-import {config} from                                    './Config';
-import {$scope} from                                    './controllers/$ScopeProvider';
-import $RouteProvider from                              './factories/$RouteProvider';
-import $CacheFactory from                               './factories/$CacheFactory';
-import $compile from                                    './factories/$Compile';
-import {$templateCache, $resourceLoader} from           './factories/$TemplateCache';
-import {$StringUtil} from                               './util/Util';
-import * as $ExceptionsProvider from                    './util/$ExceptionsProvider';
+import { config } from              './Config';
+import { $scope } from              './controllers/$ScopeProvider';
+import $RouteProvider from          './factories/$RouteProvider';
+import $CacheFactory from           './factories/$CacheFactory';
+import $compile from                './factories/$Compile';
+import {
+    $templateCache,
+    $resourceLoader
+} from                              './factories/$TemplateCache';
+import * as $Exceptions from        './services/$Exceptions';
+import $$ngieIgnoreFactory from     './directives/ngie-ignore';
+import $$ngieRepeatFactory from     './directives/ngie-repeat';
+import $$ngieIfFactory from         './directives/ngie-if';
+import { $StringUtil } from         './util/Util';
+
 
 const CWD = process.cwd(),
     $$require = v => {
@@ -57,6 +64,8 @@ class Angie {
         this.directives = {};
         this.$dependencies = [];
         this.$$registry = {};
+
+        this.$$config = config;
     }
 
     /**
@@ -91,7 +100,7 @@ class Angie {
 
         // Verify that the service is an object
         if (typeof obj !== 'object') {
-            throw new $ExceptionsProvider.$$InvalidServiceConfigError(name);
+            throw new $Exceptions.$$InvalidServiceConfigError(name);
         }
         return this.$$register('services', name, obj);
     }
@@ -112,7 +121,7 @@ class Angie {
 
         // Verify that the factory is a function
         if (typeof fn !== 'function' || !fn.prototype.constructor) {
-            throw new $ExceptionsProvider.$$InvalidFactoryConfigError(name);
+            throw new $Exceptions.$$InvalidFactoryConfigError(name);
         }
         return this.$$register('factories', name, fn);
     }
@@ -136,7 +145,7 @@ class Angie {
      */
     Controller(name, obj) {
         if (typeof obj !== 'function') {
-            throw new $ExceptionsProvider.$$InvalidControllerConfigError(name);
+            throw new $Exceptions.$$InvalidControllerConfigError(name);
         }
         return this.$$register('Controllers', name, obj);
     }
@@ -186,11 +195,14 @@ class Angie {
 
         if (dir.hasOwnProperty('Controller')) {
             if (typeof dir.Controller !== 'string') {
-                delete dir.Controller;
+                throw new $Exceptions.$$InvalidDirectiveConfigError(name);
             }
-        } else if (/api.?view/i.test(dir.type)) {
-            throw new $ExceptionsProvider.$$InvalidDirectiveConfigError(name);
         }
+
+        if (dir.priority < 1) {
+            throw new $Exceptions.$$InvalidDirectiveConfigError(name);
+        }
+
         return this.$$register('directives', name, dir);
     }
 
@@ -459,18 +471,18 @@ class Angie {
 
 let app = global.app;
 if (!app) {
-     app = global.app = new Angie();
+    app = global.app = new Angie();
 
     // Require in any further external components
     // Constants
     app.constant('ANGIE_TEMPLATE_DIRS', [
         `${__dirname}/../templates`
     ].concat(
-        (config.templateDirs || []).map(mapAssetDirectoryDeclarations)
+        config.templateDirs.map(mapAssetDirectoryDeclarations)
     )).constant('ANGIE_STATIC_DIRS', [
         `${__dirname}/../static`
     ].concat(
-        (config.staticDirs || []).map(mapAssetDirectoryDeclarations)
+        config.staticDirs.map(mapAssetDirectoryDeclarations)
     )).constant('RESPONSE_HEADER_MESSAGES', {
         200: 'Ok',
         404: 'File Not Found',
@@ -499,13 +511,19 @@ if (!app) {
     // Factories
     app.factory('$Routes', $RouteProvider)
         .factory('$Cache', $CacheFactory)
+        .factory('$Log', $LogProvider)
         .factory('$compile', $compile)
         .factory('$resourceLoader', $resourceLoader);
 
     // Services
-    app.service('$Exceptions', $ExceptionsProvider)
+    app.service('$Exceptions', $Exceptions)
         .service('$scope', $scope)
         .service('$templateCache', $templateCache);
+
+    // Directives
+    app.directive('ngieIgnore', $$ngieIgnoreFactory)
+        .directive('ngieRepeat', $$ngieRepeatFactory)
+        .directive('ngieIf', $$ngieIfFactory);
 }
 
 function mapAssetDirectoryDeclarations(v) {

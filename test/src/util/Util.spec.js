@@ -1,9 +1,12 @@
 // Test Modules
-import {expect} from                'chai';
-import simple, {mock} from          'simple-mock';
+import { expect } from              'chai';
+import simple, { mock } from        'simple-mock';
 
 // Angie Modules
-import $Util, {$StringUtil} from    '../../../src/util/Util';
+const TEST_ENV =                    global.TEST_ENV || 'src',
+    Util =                          require(`../../../${TEST_ENV}/util/Util`),
+    $Util =                         Util.default,
+    $StringUtil =                   Util.$StringUtil;
 
 describe('$Util', function() {
     it('noop', function() {

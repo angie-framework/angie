@@ -38,6 +38,8 @@ class $$ScopeProvider {
     /**
      * @desc Calls an event listener on the scope
      * @since 0.3.1
+     * @todo Replace `Array.prototype.slice.call` with `Array.from` when it is
+     * supported without the polyfill
      * @param {string} name The name of the message to call the event listener
      * @param {boolean} async Should the handlers be called async?
      * @returns {boolean} A representation of whether the listeners were called
@@ -45,7 +47,7 @@ class $$ScopeProvider {
      * @example $scope.$broadcast('test', true);
      */
     $broadcast(name, async) {
-        let args = Array.from(arguments).splice(0, 1);
+        let args = Array.prototype.slice.call(arguments).splice(0, 1);
         for (let handler of handlers) {
             if (handler.hasOwnProperty(name)) {
                 if (async) {
