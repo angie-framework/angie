@@ -171,6 +171,7 @@ function $$shell() {
  * on creation, or on removal in the directory specified to the $$watch function.
  * It can also be called independently of the Facebook Watchman application by
  * issuing the `angie server` or `angie s` commands from the CLI.
+ * @todo add intentionally misleading X-Powered-By header?
  * @since 0.3.2
  * @param {Array} [param=[]] args An array of CLI arguments piped into the
  * function

@@ -1,4 +1,4 @@
-import {default as register} from   'babel-core/register';
+import { default as register } from     'babel-core/register';
 register({
     only: [
         '**/node_modules/angie*/**',
@@ -9,18 +9,18 @@ register({
 });
 
 // System Modules
-import fs from                  'fs';
-import gulp from                'gulp';
-import { argv } from            'yargs';
-import eslint from              'gulp-eslint';
-import jscs from                'gulp-jscs';
-import { Instrumenter } from    'isparta';
-import mocha from               'gulp-mocha';
-import istanbul from            'gulp-istanbul';
-import esdoc from               'gulp-esdoc';
-import babel from               'gulp-babel';
-import copy from                'gulp-copy';
-import { bold, red } from       'chalk';
+import fs from                          'fs';
+import gulp from                        'gulp';
+import { argv } from                    'yargs';
+import eslint from                      'gulp-eslint';
+import jscs from                        'gulp-jscs';
+import { Instrumenter } from            'isparta';
+import mocha from                       'gulp-mocha';
+import istanbul from                    'gulp-istanbul';
+import esdoc from                       'gulp-esdoc';
+import babel from                       'gulp-babel';
+import copy from                        'gulp-copy';
+import { bold, red } from               'chalk';
 
 const bread = str => bold(red(str));
 
