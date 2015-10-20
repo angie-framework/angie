@@ -7,7 +7,8 @@ import fs from                  'fs';
 import $LogProvider from        'angie-log';
 
 // Angie Modules
-const $FileUtil =               require(`../../${TEST_ENV}/util/Util`).$FileUtil,
+const TEST_ENV =                global.TEST_ENV || 'src',
+    $FileUtil =                 require(`../../${TEST_ENV}/util/Util`).$FileUtil,
     $Config =                   require(`../../${TEST_ENV}/Config`),
     Config =                    $Config.default,
     config =                    $Config.config;

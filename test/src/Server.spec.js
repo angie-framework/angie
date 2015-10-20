@@ -11,6 +11,7 @@ import $LogProvider from            'angie-log';
 // Angie Modules
 import app from                     '../../src/Angie';
 import { $$server } from            '../../src/Server';
+import { config } from              '../../src/Config';
 import $Request from                '../../src/services/$Request';
 import * as $Responses from         '../../src/services/$Response';
 
@@ -42,7 +43,8 @@ describe('$$server', function() {
         };
         response = {
             end,
-            _header: 'test'
+            _header: 'test',
+            setHeader: spy()
         };
         mock(app, '$$load', function() {
             return {
@@ -103,15 +105,19 @@ describe('$$server', function() {
         mock($Responses.default.prototype, 'constructor', function() {
             return { response };
         });
-        mock(app, '$$tearDown', () => true);
-        mock($LogProvider, 'error', () => true);
-        mock($LogProvider, 'warn', () => true);
-        mock($LogProvider, 'info', () => true);
+        mock(app, 'service', function() {
+            return this;
+        });
+        mock(app, '$$tearDown', noop);
+        mock($LogProvider, 'error', noop);
+        mock($LogProvider, 'warn', noop);
+        mock($LogProvider, 'info', noop);
     });
     afterEach(simple.restore);
     it('test call with http', function() {
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(3);
         assert(http.createServer.called);
         expect(https.createServer).to.not.have.been.called;
         assert(global.setTimeout.called);
@@ -134,12 +140,46 @@ describe('$$server', function() {
         expect(end.callCount).to.eq(2);
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 1234');
     });
+    it('test call with http, X-Frame-Options config set', function() {
+        config.setXFrameOptions = 'SAMEORIGIN';
+        $$server([ 'server', 1234 ]);
+        assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(4);
+        assert(http.createServer.called);
+        expect(https.createServer).to.not.have.been.called;
+        expect(app.service.calls[0].args[0]).to.eq('$request');
+        expect(app.service.calls[1].args[0]).to.eq('$response');
+        assert(global.setTimeout.called);
+        assert(global.clearTimeout.called);
+        assert(dataMock.called);
+        assert(routeMock.called);
+        expect($Responses.ErrorResponse.calls[0].args[0]).to.deep.eq(e);
+        expect(
+            $LogProvider.error.calls[0].args
+        ).to.deep.eq([ 'GET', 'test', 'test' ]);
+        assert(head.called);
+        assert(writeSync.called);
+        expect(listen.calls[0].args[0]).to.eq(1234);
+        expect(
+            app.$$tearDown.calls[0].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(
+            app.$$tearDown.calls[1].args
+        ).to.deep.eq([ '$request', '$response' ]);
+        expect(end.callCount).to.eq(2);
+        expect(app.service.calls[2].args[0]).to.eq('$server');
+        expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 1234');
+        delete config.setXFrameOptions;
+    });
     it('test call with http and argument -p', function() {
         yargs([ '-p', '9999' ]);
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(3);
         assert(http.createServer.called);
         expect(https.createServer).to.not.have.been.called;
+        expect(app.service.calls[0].args[0]).to.eq('$request');
+        expect(app.service.calls[1].args[0]).to.eq('$response');
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
         assert(dataMock.called);
@@ -158,14 +198,18 @@ describe('$$server', function() {
             app.$$tearDown.calls[1].args
         ).to.deep.eq([ '$request', '$response' ]);
         expect(end.callCount).to.eq(2);
+        expect(app.service.calls[2].args[0]).to.eq('$server');
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 9999');
     });
     it('test call with http and argument --port', function() {
         yargs([ '--port', '9999' ]);
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(3);
         assert(http.createServer.called);
         expect(https.createServer).to.not.have.been.called;
+        expect(app.service.calls[0].args[0]).to.eq('$request');
+        expect(app.service.calls[1].args[0]).to.eq('$response');
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
         assert(dataMock.called);
@@ -184,13 +228,17 @@ describe('$$server', function() {
             app.$$tearDown.calls[1].args
         ).to.deep.eq([ '$request', '$response' ]);
         expect(end.callCount).to.eq(2);
+        expect(app.service.calls[2].args[0]).to.eq('$server');
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 9999');
     });
     it('test call with https and port 443', function() {
         $$server([ 'server', 443 ]);
         assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(3);
         expect(http.createServer).to.not.have.been.called;
         assert(https.createServer.called);
+        expect(app.service.calls[0].args[0]).to.eq('$request');
+        expect(app.service.calls[1].args[0]).to.eq('$response');
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
         assert(dataMock.called);
@@ -212,14 +260,18 @@ describe('$$server', function() {
             app.$$tearDown.calls[1].args
         ).to.deep.eq([ '$request', '$response' ]);
         expect(end.callCount).to.eq(2);
+        expect(app.service.calls[2].args[0]).to.eq('$server');
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test call with https and --usessl', function() {
         yargs([ '--usessl' ]);
         $$server([ 'server', 1234 ]);
         assert(app.$$load.called);
+        expect(response.setHeader.callCount).to.eq(3);
         expect(http.createServer).to.not.have.been.called;
         assert(https.createServer.called);
+        expect(app.service.calls[0].args[0]).to.eq('$request');
+        expect(app.service.calls[1].args[0]).to.eq('$response');
         assert(global.setTimeout.called);
         assert(global.clearTimeout.called);
         assert(dataMock.called);
@@ -241,6 +293,7 @@ describe('$$server', function() {
             app.$$tearDown.calls[1].args
         ).to.deep.eq([ '$request', '$response' ]);
         expect(end.callCount).to.eq(2);
+        expect(app.service.calls[2].args[0]).to.eq('$server');
         expect($LogProvider.info.calls[0].args[0]).to.eq('Serving on port 443');
     });
     it('test < 400 level response', function() {

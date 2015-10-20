@@ -5,23 +5,26 @@
  */
 
 // System Modules
-import fs from                  'fs';
-import { magenta, blue } from   'chalk';
-import $LogProvider from        'angie-log';
-import {$injectionBinder} from  'angie-injector';
+import fs from                      'fs';
+import { magenta, blue } from       'chalk';
+import $LogProvider from            'angie-log';
+import { $injectionBinder } from    'angie-injector';
 
 // Angie Modules
-import { config } from          './Config';
-import { $scope } from          './controllers/$ScopeProvider';
-import $RouteProvider from      './factories/$RouteProvider';
-import $CacheFactory from       './factories/$CacheFactory';
-import $compile from            './factories/$Compile';
+import { config } from              './Config';
+import { $scope } from              './controllers/$ScopeProvider';
+import $RouteProvider from          './factories/$RouteProvider';
+import $CacheFactory from           './factories/$CacheFactory';
+import $compile from                './factories/$Compile';
 import {
     $templateCache,
     $resourceLoader
-} from                          './factories/$TemplateCache';
-import * as $Exceptions from    './services/$Exceptions';
-import { $StringUtil } from     './util/Util';
+} from                              './factories/$TemplateCache';
+import * as $Exceptions from        './services/$Exceptions';
+import $$ngieIgnoreFactory from     './directives/ngie-ignore';
+import $$ngieRepeatFactory from     './directives/ngie-repeat';
+import $$ngieIfFactory from         './directives/ngie-if';
+import { $StringUtil } from         './util/Util';
 
 
 const CWD = process.cwd(),
@@ -192,11 +195,14 @@ class Angie {
 
         if (dir.hasOwnProperty('Controller')) {
             if (typeof dir.Controller !== 'string') {
-                delete dir.Controller;
+                throw new $Exceptions.$$InvalidDirectiveConfigError(name);
             }
-        } else if (/api.?view/i.test(dir.type)) {
+        }
+
+        if (dir.priority < 1) {
             throw new $Exceptions.$$InvalidDirectiveConfigError(name);
         }
+
         return this.$$register('directives', name, dir);
     }
 
@@ -513,6 +519,11 @@ if (!app) {
     app.service('$Exceptions', $Exceptions)
         .service('$scope', $scope)
         .service('$templateCache', $templateCache);
+
+    // Directives
+    app.directive('ngieIgnore', $$ngieIgnoreFactory)
+        .directive('ngieRepeat', $$ngieRepeatFactory)
+        .directive('ngieIf', $$ngieIfFactory);
 }
 
 function mapAssetDirectoryDeclarations(v) {
