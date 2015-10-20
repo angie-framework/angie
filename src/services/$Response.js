@@ -6,12 +6,12 @@
 
 // System Modules
 import util from                                'util';
-import {blue} from                              'chalk';
+import { blue } from                            'chalk';
 import $Injector, { $injectionBinder } from     'angie-injector';
 import $LogProvider from                        'angie-log';
 
 // Angie Modules
-import {config} from                            '../Config';
+import { config } from                            '../Config';
 import app from                                 '../Angie';
 import $CacheFactory from                       '../factories/$CacheFactory';
 import {
@@ -20,8 +20,8 @@ import {
     $resourceLoader
 } from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
-import {default as $MimeType} from              '../util/$MimeTypeProvider';
-import {$FileUtil} from                         '../util/Util';
+import { default as $MimeType } from            '../util/$MimeTypeProvider';
+import { $FileUtil } from                       '../util/Util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
@@ -45,6 +45,20 @@ class $Response {
 
         // Define the Angie content string
         this.response.content = '';
+    }
+
+    /**
+     * @desc Sets a header on the instance's encapsulation of NodeJS response.
+     * This function performs no safe checks on the headers.
+     * @param {string} [param=''] k The name of the header
+     * @param {string} [param=''] v The value of the header
+     * @since 0.4.4
+     * @example new $Response(res).header('X-Frame-Options', 'SAMEORIGIN');
+     */
+    header(k = '', v = '') {
+        this.response.setHeader(k, v);
+
+        return this;
     }
 }
 
@@ -225,9 +239,7 @@ class ControllerResponse extends BaseResponse {
 
             // Assign a function that can be called to resolve async
             // behavior in Controllers
-            app.services.$response.Controller = {
-                done: resolve
-            };
+            app.services.$response.Controller = { done: resolve };
 
             // Get controller and compile scope
             if (typeof controller === 'function') {

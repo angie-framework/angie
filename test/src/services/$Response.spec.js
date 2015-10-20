@@ -26,6 +26,21 @@ describe('$Response', function() {
             response: { content: '' }
         });
     });
+    describe('header', function() {
+        let $response;
+
+        beforeEach(function() {
+            $response = new $Response({
+                setHeader: spy()
+            });
+        });
+        it('test header calls setHeader', function() {
+            $response.header('k', 'v');
+            expect(
+                $response.response.setHeader.calls[0].args
+            ).to.deep.eq([ 'k', 'v' ]);
+        });
+    });
 });
 
 describe('$Responses', function() {
@@ -56,7 +71,8 @@ describe('$Responses', function() {
     afterEach(simple.restore);
     describe('BaseResponse', function() {
         beforeEach(function() {
-            $injectorMock = mock($Injector, 'get', () => [ $request, $response ]);
+            $injectorMock =
+                mock($Injector, 'get', () => [ $request, $response ]);
         });
         describe('constructor', function() {
             it('test content type from request.headers.accept', function() {

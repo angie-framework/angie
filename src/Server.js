@@ -171,6 +171,7 @@ function $$shell() {
  * on creation, or on removal in the directory specified to the $$watch function.
  * It can also be called independently of the Facebook Watchman application by
  * issuing the `angie server` or `angie s` commands from the CLI.
+ * @todo add intentionally misleading X-Powered-By header?
  * @since 0.3.2
  * @param {Array} [param=[]] args An array of CLI arguments piped into the
  * function
@@ -185,11 +186,29 @@ function $$server(args = []) {
         // Start a webserver, use http/https based on port
         webserver = (PORT === 443 ? https : http).createServer(function(req, res) {
             let $request = new $Request(req),
-                response = new $Response(res).response,
+
+                // The service response instance
+                $response = new $Response(res),
+
+                // The base NodeJS response
+                response = $response.response,
                 requestTimeout;
 
             // Instantiate the request, get the data
             $request.$$data().then(function() {
+
+                // We can set provisional headers here
+                $response.header('X-Content-Type-Options', 'nosniff')
+                    .header('X-XSS-Protection', '1; mode=block')
+                    .header(
+                        'Content-Security-Policy',
+                        'default-src \'self\'; script-src \'self\';'
+                    );
+
+                // Set X-Frame-Options response header based on AngieFile
+                if (typeof config.setXFrameOptions === 'string') {
+                    $response.header('X-Frame-Options', config.setXFrameOptions);
+                }
 
                 // Add Angie components for the request and response objects
                 app.service('$request', $request).service('$response', response);
@@ -240,6 +259,9 @@ function $$server(args = []) {
                 end(response);
             });
         }).listen(PORT);
+
+        // Expose the webserver so that we can use it in sockets, etc.
+        app.service('$server', webserver);
 
         // Info
         $LogProvider.info(`Serving on port ${PORT}`);
