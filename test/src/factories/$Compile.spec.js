@@ -15,6 +15,10 @@ const TEST_ENV =                    global.TEST_ENV || 'src',
     $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
 
 describe('$compile', function() {
+    beforeEach(function() {
+        mock($LogProvider, 'error', () => false);
+    });
+    afterEach(simple.restore);
     it(
         'test compile called without a template returns an empty function',
         function() {

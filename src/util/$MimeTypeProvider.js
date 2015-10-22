@@ -7,6 +7,8 @@
 const MIME_TYPE = {
         atom: 'application/atom+xml',
         css: 'text/css',
+        emcascript: 'application/emcascript',
+        es6: 'application/emcascript',
         html: 'text/html',
         javascript: 'application/javascript',
         jpg: 'image/jpeg',
