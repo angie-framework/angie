@@ -19,8 +19,7 @@ import $Request from                '../../src/services/$Request';
 import * as $Responses from         '../../src/services/$Response';
 
 describe('Server', function() {
-    const noop = () => false,
-        t = s => s.toString().replace(/\s{2,}/g, '');
+    const noop = () => false;
 
     describe('$$cluster', function() {
         let coreCount = os.cpus().length;
@@ -36,6 +35,7 @@ describe('Server', function() {
         afterEach(simple.restore);
         describe('test cluster master', function() {
             beforeEach(function() {
+                yargs([]);
                 cluster.isMaster = true;
             });
             afterEach(function() {
@@ -59,10 +59,7 @@ describe('Server', function() {
                 expect($LogProvider.info.calls[0].args[0]).to.eq(
                     `Starting ${cyan('cluster')} on 1 core(s)`
                 );
-                expect($LogProvider.warn.calls[0].args[0]).to.eq(t`
-                    It is not recommended to use ${cyan('cluster')} in
-                    development
-                `);
+                assert($LogProvider.warn.called);
                 expect(cluster.fork.callCount).to.eq(1);
                 expect(
                     cluster.on.calls[0].args
@@ -70,7 +67,7 @@ describe('Server', function() {
                 expect(cluster.on.callCount).to.eq(1);
             });
             it('no development config, no refork', function() {
-                config.development = true;
+                yargs([ 'cluster', '--no-refork' ]);
                 Server.$$cluster();
                 expect($LogProvider.info.calls[0].args[0]).to.eq(
                     `Starting ${cyan('cluster')} on 1 core(s)`
