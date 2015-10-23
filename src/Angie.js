@@ -25,7 +25,7 @@ import $MimeType from               './services/mime-type';
 import $$ngieIgnoreFactory from     './directives/ngie-ignore';
 import $$ngieRepeatFactory from     './directives/ngie-repeat';
 import $$ngieIfFactory from         './directives/ngie-if';
-import { $StringUtil } from         './util/Util';
+import { $StringUtil } from         './util/util';
 
 
 const CWD = process.cwd(),

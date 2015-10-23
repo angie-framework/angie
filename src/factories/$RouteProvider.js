@@ -8,7 +8,7 @@
 import $LogProvider from        'angie-log';
 
 // Angie Modules
-import { $StringUtil } from     '../util/Util';
+import { $StringUtil } from     '../util/util';
 
 const IGNORE_KEYS = [
     'Controller',

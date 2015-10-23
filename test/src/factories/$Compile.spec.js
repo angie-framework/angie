@@ -12,7 +12,7 @@ const TEST_ENV =                    global.TEST_ENV || 'src',
     app =                           require(`../../../${TEST_ENV}/Angie`).default,
     $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`).default,
     $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
-    $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
+    $Util =                         require(`../../../${TEST_ENV}/util/util`).default;
 
 describe('$compile', function() {
     beforeEach(function() {

@@ -21,7 +21,7 @@ import {
 } from                                          '../factories/$TemplateCache';
 import $compile from                            '../factories/$Compile';
 import $MimeType from                           '../services/mime-type';
-import { $FileUtil } from                       '../util/Util';
+import { $FileUtil } from                       '../util/util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 

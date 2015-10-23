@@ -11,7 +11,7 @@ import { Form } from                'multiparty';
 // Angie Modules
 import { default as $Routes } from  '../factories/$RouteProvider';
 import * as $Responses from         './$Response';
-import $Util, { $StringUtil } from  '../util/Util';
+import $Util, { $StringUtil } from  '../util/util';
 
 /**
  * @desc The $Request class processes all of the incoming Angie requests. It

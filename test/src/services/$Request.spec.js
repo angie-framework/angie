@@ -10,7 +10,7 @@ const TEST_ENV =                    global.TEST_ENV || 'src',
     $Routes =                       require(`../../../${TEST_ENV}/factories/$RouteProvider`),
     $Responses =                    require(`../../../${TEST_ENV}/services/$Response`),
     $Request =                      require(`../../../${TEST_ENV}/services/$Request`),
-    $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
+    $Util =                         require(`../../../${TEST_ENV}/util/util`).default;
 
 describe('$Request', function() {
     const noop = () => false;
