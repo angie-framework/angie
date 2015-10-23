@@ -36,8 +36,6 @@ if (argv.help || argv.h) {
 } else {
     let main = (args[0] || argv._).toLowerCase();
 
-    console.log('ARGS', argv);
-
     // Route the CLI request to a specific command
     switch (main) {
         case 'help':

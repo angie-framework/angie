@@ -21,6 +21,7 @@ import {
     $resourceLoader
 } from                              './factories/$TemplateCache';
 import * as $Exceptions from        './services/$Exceptions';
+import $MimeType from               './services/mime-type';
 import $$ngieIgnoreFactory from     './directives/ngie-ignore';
 import $$ngieRepeatFactory from     './directives/ngie-repeat';
 import $$ngieIfFactory from         './directives/ngie-if';
@@ -517,6 +518,7 @@ if (!app) {
 
     // Services
     app.service('$Exceptions', $Exceptions)
+        .service('$MimeType', $MimeType)
         .service('$scope', $scope)
         .service('$templateCache', $templateCache);
 
