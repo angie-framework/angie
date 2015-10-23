@@ -196,7 +196,7 @@ function $$cluster() {
 
         // We only want to refork if the user has not explicitly set the
         // `--no-refork` option
-        if (!argv.hasOwnProperty('no-refork')) {
+        if (!argv.hasOwnProperty('norefork')) {
             cluster.on('exit', cluster.fork);
         }
     } else {

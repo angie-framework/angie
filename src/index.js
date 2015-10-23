@@ -118,10 +118,10 @@ function help() {
         the Angie module "src" directory
     `);
 
-    console.log('cluster [-p=<port>] [--port=<port>] [--usessl] [--no-refork]');
+    console.log('cluster [-p=<port>] [--port=<port>] [--usessl] [--norefork]');
     GRAY(t`
         Start the Angie Webserver as a cluster of forked webserver processes.
-        Unless \`--no-refork\` option is passed, forks will respawn on exit
+        Unless \`--norefork\` option is passed, forks will respawn on exit
     `);
 
     console.log('angie project [-n=<name>][--name=<name>] [--dir=<directory>]');

@@ -24,19 +24,17 @@ describe('Server', function() {
     describe('$$cluster', function() {
         let coreCount = os.cpus().length;
 
-        beforeEach(function() {
-            mock($LogProvider, 'info', noop);
-            mock($LogProvider, 'warn', noop);
-            mock(os, 'cpus', () => [ {} ]);
-            mock(cluster, 'fork', noop);
-            mock(cluster, 'on', noop);
-            mock(Server, '$$server', noop);
-        });
         afterEach(simple.restore);
         describe('test cluster master', function() {
             beforeEach(function() {
                 yargs([]);
                 cluster.isMaster = true;
+                mock($LogProvider, 'info', noop);
+                mock($LogProvider, 'warn', noop);
+                mock(os, 'cpus', () => [ {} ]);
+                mock(cluster, 'fork', noop);
+                mock(cluster, 'on', noop);
+
             });
             afterEach(function() {
                 delete config.development;
@@ -67,7 +65,7 @@ describe('Server', function() {
                 expect(cluster.on.callCount).to.eq(1);
             });
             it('no development config, no refork', function() {
-                yargs([ 'cluster', '--no-refork' ]);
+                yargs([ 'cluster', '--norefork' ]);
                 Server.$$cluster();
                 expect($LogProvider.info.calls[0].args[0]).to.eq(
                     `Starting ${cyan('cluster')} on 1 core(s)`
@@ -77,7 +75,16 @@ describe('Server', function() {
                 assert(!cluster.on.called);
             });
         });
-        // TODO child fork
+        describe('test fork', function() {
+            beforeEach(function() {
+                cluster.isMaster = false;
+                mock(Server, '$$server', noop);
+            });
+            xit('test $$server called', function() {
+                Server.$$cluster();
+                assert(Server.$$server.called);
+            });
+        });
     });
     describe('$$server', function() {
         let request,
