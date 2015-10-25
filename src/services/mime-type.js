@@ -1,5 +1,5 @@
 /**
- * @module $MimeType.js
+ * @module mime-type.js
  * @author Joe Groseclose <@benderTheCrime>
  * @date 8/16/2015
  */

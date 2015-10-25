@@ -7,7 +7,7 @@ import { Form } from                'multiparty';
 
 // Angie Modules
 const TEST_ENV =                    global.TEST_ENV || 'src',
-    $Routes =                       require(`../../../${TEST_ENV}/factories/$RouteProvider`),
+    $Routes =                       require(`../../../${TEST_ENV}/factories/routes`),
     $Responses =                    require(`../../../${TEST_ENV}/services/$Response`),
     $Request =                      require(`../../../${TEST_ENV}/services/$Request`),
     $Util =                         require(`../../../${TEST_ENV}/util/util`).default;

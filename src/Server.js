@@ -177,7 +177,7 @@ function $$shell() {
  * @todo With binding and sockets, one must make sure that the clustered app
  * listens across all of it's listeners and clients broadcast to a broker or
  * all of the children
- * @since 0.5.0
+ * @since 0.4.5
  * @access private
  */
 function $$cluster() {

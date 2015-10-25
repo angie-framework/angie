@@ -13,7 +13,7 @@ import { $injectionBinder } from    'angie-injector';
 // Angie Modules
 import { config } from              './Config';
 import { $scope } from              './controllers/$ScopeProvider';
-import $RouteProvider from          './factories/$RouteProvider';
+import $Routes from                 './factories/routes';
 import $CacheFactory from           './factories/$CacheFactory';
 import $compile from                './factories/$Compile';
 import {
@@ -510,7 +510,7 @@ if (!app) {
     });
 
     // Factories
-    app.factory('$Routes', $RouteProvider)
+    app.factory('$Routes', $Routes)
         .factory('$Cache', $CacheFactory)
         .factory('$Log', $LogProvider)
         .factory('$compile', $compile)
