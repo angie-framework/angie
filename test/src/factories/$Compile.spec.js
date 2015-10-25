@@ -11,7 +11,7 @@ const TEST_ENV =                    global.TEST_ENV || 'src',
     config =                        require(`../../../${TEST_ENV}/Config`).config,
     app =                           require(`../../../${TEST_ENV}/Angie`).default,
     $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`).default,
-    $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
+    $TemplateCache =                require(`../../../${TEST_ENV}/factories/template-cache`),
     $Util =                         require(`../../../${TEST_ENV}/util/util`).default;
 
 describe('$compile', function() {

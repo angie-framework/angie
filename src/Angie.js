@@ -19,7 +19,7 @@ import $compile from                './factories/$Compile';
 import {
     $templateCache,
     $resourceLoader
-} from                              './factories/$TemplateCache';
+} from                              './factories/template-cache';
 import * as $Exceptions from        './services/$Exceptions';
 import $MimeType from               './services/mime-type';
 import $$ngieIgnoreFactory from     './directives/ngie-ignore';

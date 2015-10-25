@@ -18,7 +18,7 @@ import {
     $templateCache,
     $$templateLoader,
     $resourceLoader
-} from                                          '../factories/$TemplateCache';
+} from                                          '../factories/template-cache';
 import $compile from                            '../factories/$Compile';
 import $MimeType from                           '../services/mime-type';
 import { $FileUtil } from                       '../util/util';

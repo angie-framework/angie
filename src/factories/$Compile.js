@@ -12,7 +12,7 @@ import $LogProvider from            'angie-log';
 
 // Angie Modules
 import app from                     '../Angie';
-import { $$templateLoader } from    './$TemplateCache';
+import { $$templateLoader } from    './template-cache';
 import $Util, { $StringUtil } from  '../util/util';
 
 /**

@@ -1,5 +1,5 @@
 /**
- * @module $TemplateCache.js
+ * @module template-cache.js
  * @author Joe Groseclose <@benderTheCrime>
  * @date 8/16/2015
  */
@@ -16,6 +16,16 @@ import {
     $FileUtil
 } from                              '../util/util';
 
+/**
+ * @desc `$TemplateCache` is a subclass wrapper around `$CacheFactory`. It
+ * creates a new cache abstraction specifically for templates.
+ *
+ * It possesses the same methods as $CacheFactory with the acception that the
+ * `get` method will perform a lookup if not template is found and conditonally
+ * cache based on the `cacheStaticAssets` setting.
+ * @since 0.3.2
+ * @access public
+ */
 class $TemplateCache extends $CacheFactory {
     constructor() {
         super('templateCache');
