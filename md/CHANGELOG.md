@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Changed the name of the "Util.js" file to "util.js"
 - Added the option to start Angie as a clustered application by calling the `angie cluster` command
 - Added support for flags on RegExp routes
+- Added tests for `$TemplateCache`
 
 #### [0.4.4] - 2015-10-19
 ##### Added/Changed/Fixed
