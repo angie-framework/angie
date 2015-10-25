@@ -7,7 +7,7 @@ import $Injector from                   'angie-injector';
 
 // Angie Modules
 import { config } from                  '../../../src/Config';
-import * as $TemplateCache from         '../../../src/factories/$TemplateCache';
+import * as $TemplateCache from         '../../../src/factories/template-cache';
 import $Response, {
     BaseResponse,
     AssetResponse,
@@ -18,7 +18,7 @@ import $Response, {
     ErrorResponse,
     $CustomResponse
 } from                                  '../../../src/services/$Response';
-import { $FileUtil } from               '../../../src/util/Util';
+import { $FileUtil } from               '../../../src/util/util';
 
 describe('$Response', function() {
     it('constructor', function() {

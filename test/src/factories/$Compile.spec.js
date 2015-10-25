@@ -11,10 +11,14 @@ const TEST_ENV =                    global.TEST_ENV || 'src',
     config =                        require(`../../../${TEST_ENV}/Config`).config,
     app =                           require(`../../../${TEST_ENV}/Angie`).default,
     $compile =                      require(`../../../${TEST_ENV}/factories/$Compile`).default,
-    $TemplateCache =                require(`../../../${TEST_ENV}/factories/$TemplateCache`),
-    $Util =                         require(`../../../${TEST_ENV}/util/Util`).default;
+    $TemplateCache =                require(`../../../${TEST_ENV}/factories/template-cache`),
+    $Util =                         require(`../../../${TEST_ENV}/util/util`).default;
 
 describe('$compile', function() {
+    beforeEach(function() {
+        mock($LogProvider, 'error', () => false);
+    });
+    afterEach(simple.restore);
     it(
         'test compile called without a template returns an empty function',
         function() {

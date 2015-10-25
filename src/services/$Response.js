@@ -18,10 +18,10 @@ import {
     $templateCache,
     $$templateLoader,
     $resourceLoader
-} from                                          '../factories/$TemplateCache';
+} from                                          '../factories/template-cache';
 import $compile from                            '../factories/$Compile';
-import { default as $MimeType } from            '../util/$MimeTypeProvider';
-import { $FileUtil } from                       '../util/Util';
+import $MimeType from                           '../services/mime-type';
+import { $FileUtil } from                       '../util/util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
