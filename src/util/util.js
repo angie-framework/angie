@@ -25,6 +25,37 @@ class $Util {
      * @example $Util.noop(); // = undefined
      */
     static noop() {}
+
+    static isArray(obj) {
+        return obj instanceof Array || (
+            typeof obj === 'object' && obj.hasOwnProperty('length')
+        );
+    }
+
+    static toSet() {
+        return new Set(this.toArray.apply(this, arguments));
+    }
+
+    /**
+     * @desc toArray takes one or many arguments and converts them into an Array
+     * @since 0.5.0
+     * @returns {Array} Array combination of arguments
+     * @example $Util.toArray(...);
+     */
+    static toArray() {
+        const args = Array.prototype.slice.call(arguments);
+        let arr = [];
+
+        for (let arg of args) {
+            if (this.isArray(arg)) {
+                arr = arr.concat(arg);
+            } else if (arg) {
+                arr.push(arg);
+            }
+        }
+
+        return arr;
+    }
 }
 $Util = util._extend($Util, util);
 

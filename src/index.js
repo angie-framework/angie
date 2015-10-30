@@ -54,10 +54,7 @@ if (argv.help || argv.h) {
             $$cluster();
             break;
         case 'createproject':
-            $$createProject({
-                name: args[ 1 ],
-                dir: args[ 2 ]
-            });
+            $$createProject({ name: args[ 1 ], dir: args[ 2 ] });
             break;
         case 'syncdb':
             require('angie-orm');

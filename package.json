@@ -56,12 +56,15 @@
   "dependencies": {
     "angie-injector": "^0.10.3",
     "angie-log": "^0.9.1",
+    "angie-orm": "0.0.6",
     "babel": "^5.6.23",
     "babel-core": "5.6.15",
     "chalk": "1.0.0",
     "cheerio": "^0.19.0",
+    "cookie": "^0.2.3",
     "fb-watchman": "^1.5.0",
     "multiparty": "^4.1.2",
+    "node-uuid": "^1.4.3",
     "promptly": "^0.2.1",
     "yargs": "^3.27.0"
   }

@@ -164,13 +164,16 @@ angie syncdb [database name]
 Note that the command above takes an optional database option. This is not required if we are syncing our default database. Also, note that we haven't actually created any models. Let's create one now. In the scaffolded folder `src/Models` create a file called `test.model.js`. In this file, we will create our model.
 ```javascript
 app.Model('TestAngie', function($fields) {
-   let obj = {};
-   obj.name = 'test_angie';
-   obj.name = new $fields.CharField({
-       minLength: 1,
-       maxLength: 50,
-       unique: true
-   });
+    let obj = {};
+
+    obj.name = 'test_angie';
+    obj.username = new $fields.CharField({
+        minLength: 1,
+        maxLength: 50,
+        unique: true
+    });
+
+    return obj;
 });
 ```
 If you run the "syncdb" command once more, it will add a model to our database with the name "test_angie", which is a horrible naming convention, but we are using it for demonstratory purposes. Feel free to change this at your leisure. Without the "name" property, this model would be named "TestAngie". The `$fields` service is automatically passed into the model. It gives the model access to all the available field types We've added a CharField to our model. The `$fields` service supports all of the fields you may want to use in your project. See the [documentation](https://doc.esdoc.org/github.com/angie-framework/angie/ "documentation") for a full list.

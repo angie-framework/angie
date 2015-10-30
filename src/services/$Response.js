@@ -21,7 +21,7 @@ import {
 } from                                          '../factories/template-cache';
 import $compile from                            '../factories/$Compile';
 import $MimeType from                           '../services/mime-type';
-import { $FileUtil } from                       '../util/util';
+import $Util, { $FileUtil } from                '../util/util';
 
 const RESPONSE_HEADER_MESSAGES = $Injector.get('RESPONSE_HEADER_MESSAGES');
 
@@ -175,7 +175,7 @@ class AssetResponse extends BaseResponse {
         let assetCache = new $CacheFactory('staticAssets'),
             asset = this.response.content =
                 assetCache.get(this.path) ||
-                    $$templateLoader(this.path, 'static') || undefined,
+                    $$templateLoader(this.path, 'static'),
             me = this;
         return new Promise(function(resolve) {
             if (asset) {
@@ -197,9 +197,16 @@ class AssetResponse extends BaseResponse {
      * @access private
      */
     static $isRoutedAssetResourceResponse(path) {
-        return $Injector.get('ANGIE_STATIC_DIRS').some(
-            v => !!$FileUtil.find(v, path)
-        );
+        let foundAssetPath = false;
+
+        for (let dir of $Injector.get('ANGIE_STATIC_DIRS')) {
+            if (!!$FileUtil.find(dir, path)) {
+                foundAssetPath = true;
+                break;
+            }
+        }
+
+        return foundAssetPath;
     }
 }
 
@@ -597,24 +604,22 @@ function controllerTemplateRouteResponse() {
         // in case the MIME failed earlier
         if (match && !this.response.$headers.hasOwnProperty('Content-Type')) {
             mime = this.response.$headers[ 'Content-Type' ] =
-                $MimeType.$$(match[1].toLowerCase());
+                $MimeType.$$(match[ 1 ].toLowerCase());
+        } else {
+            mime = this.response.$headers[ 'Content-Type' ];
         }
 
         // Check to see if this is an HTML template and has a DOCTYPE
         // and that the proper configuration options are set
         if (
             mime === 'text/html' &&
-            config.loadDefaultScriptFile &&
-            (
-                this.route.hasOwnProperty('useDefaultScriptFile') ||
-                this.route.useDefaultScriptFile !== false
-            )
+            config.loadDefaultScriptFile // &&
+            // (
+                // this.route.hasOwnProperty('useDefaultScriptFile') ||
+                // this.route.useDefaultScriptFile !== false
+            // )
         ) {
-
-            // Check that option is not true
-            let scriptFile = config.loadDefaultScriptFile === true ?
-                'application.js' : config.loadDefaultScriptFile;
-            $resourceLoader(scriptFile);
+            $resourceLoader(config.loadDefaultScriptFile);
         }
 
         // Pull the response back in from wherever it was before

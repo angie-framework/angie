@@ -5,8 +5,8 @@ import simple, { mock } from    'simple-mock';
 
 // Angie Modules
 const TEST_ENV =                global.TEST_ENV || 'src',
-    $ScopeProvider =            require(`../../../${TEST_ENV}/controllers/$ScopeProvider`).default,
-    $scope =                    require(`../../../${TEST_ENV}/controllers/$ScopeProvider`).$scope;
+    $ScopeProvider =            require(`../../../${TEST_ENV}/controllers/scope`).default,
+    $scope =                    require(`../../../${TEST_ENV}/controllers/scope`).$scope;
 
 describe('$ScopeProvider', function() {
     let $$scope;

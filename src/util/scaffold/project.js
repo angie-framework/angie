@@ -88,7 +88,8 @@ function $$createProject({ name, dir }) {
             'services',
             'factories',
             'controllers',
-            'directives'
+            'directives',
+            'models'
         ].forEach(function(v) {
             fs.mkdirSync(`${mkSub}/${v}`);
         });

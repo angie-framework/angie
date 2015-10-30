@@ -12,5 +12,6 @@
         "angie-log",
         "angie-injector"
     ],
-    "responseErrorTimeout": 5000
+    "responseErrorTimeout": 5000,
+    "loadDefaultScriptFile": "application.js"
 }

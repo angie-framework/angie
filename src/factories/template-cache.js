@@ -59,10 +59,10 @@ class $TemplateCache extends $CacheFactory {
 function $$templateLoader(url, type = 'template', encoding) {
 
     // Clone the template dirs
-    const TEMPLATE_DIRS = $Injector.get(
+    const TEMPLATE_DIRS = Array.from($Injector.get(
         `ANGIE_${type === 'template' ? 'TEMPLATE' : 'STATIC'}_DIRS`
-    );
-    let template;
+    ));
+    let template = false;
 
     // Deliberately use a for loop so that we can break out of it
     for (var i = TEMPLATE_DIRS.length - 1; i >= 0; --i) {
@@ -73,14 +73,13 @@ function $$templateLoader(url, type = 'template', encoding) {
             template = fs.readFileSync(path, encoding);
         }
 
-        if (template) {
+        // TODO write a test for this
+        if (template || template === '') {
             break;
         }
     }
 
-    if (!template) {
-        return false;
-    } else if (config.cacheStaticAssets === true) {
+    if (template && config.cacheStaticAssets === true) {
         new $CacheFactory('staticAssets').put(url, template);
     }
     return template;
@@ -91,7 +90,8 @@ function $$templateLoader(url, type = 'template', encoding) {
  * to any respose. It will attach it inside of the body if the file is requested
  * to be attached on an HTML response.
  * @since 0.3.2
- * @todo Make this work with .css, .less, .scss, .haml
+ * @todo Make this work with .css, .less, .scss, .haml, .html (for web
+ * components)
  * @todo Auto load Angular, jQuery, Underscore, etc. from their names alone
  * via Bower installs. Must create bower.json & bump bower version.
  * @param {string|Array} [param=10] filename Valid JS filename in Angie static
@@ -122,15 +122,16 @@ function $resourceLoader(files = [], loadStyle = 'src') {
         files = [ files ];
     }
 
-    files.forEach(function(resource) {
+    for (let resource of files) {
 
-        // Return if not a js file
-        if (resource.split('.').pop() !== 'js') {
-            return;
-        }
+        // TODO Return if not a js file
+        // if (resource.split('.').pop() !== 'js') {
+        //     return;
+        // }
 
         // TODO put this into a template?
-        let asset = '<script type="text/javascript"';
+        // TODO you can use $Util.format
+        let asset = '<script type="text/javascript" async defer';
         if (loadStyle === 'src') {
             asset += ` src="${[
                 $StringUtil.removeTrailingSlashes($request.path)
@@ -167,7 +168,8 @@ function $resourceLoader(files = [], loadStyle = 'src') {
         } else {
             $response.content = $response.content + asset;
         }
-    });
+    // });
+    }
 
     // For testing purposes
     return true;

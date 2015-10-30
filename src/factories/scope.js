@@ -4,7 +4,26 @@
  * @date 8/16/2015
  */
 
-let handlers = [];
+// System Modules
+import uuid from        'node-uuid';
+import $Injector from   'angie-injector';
+
+// TODO sessionStorage should have persistence options
+let sessionStorage,
+    handlers = [];
+
+// Clear out stale sessions
+setInterval(function() {
+    if (typeof sessionStorage === 'object') {
+        for (let key of sessionStorage) {
+            let value = sessionStorage[ key ];
+
+            if (+value.expiry < +new Date()) {
+                delete sessionStorage[ key ];
+            }
+        }
+    }
+}, 300);
 
 /**
  * @desc $ScopeProvider is the parent class on which all of the content shared
@@ -13,9 +32,64 @@ let handlers = [];
  * @since 0.3.1
  * @access private
  */
-class $$ScopeProvider {
+class $$ScopeFactory {
     constructor() {
         this.$$id = 1;
+        this.$$bindings = {};
+    }
+
+
+    $bind(key, model, ignoreKeys) {
+
+
+        // First we need to check that the key actually exists on the $scope
+        if (this.hasOwnProperty(key)) {
+
+            // TODO warning if key does not map to an object value
+
+            // The key exists in some capacity on the scope, we need to validate
+            // that the model exists
+            if (typeof model === 'string') {
+
+                // Attempt to look up our model by name
+                model = $Injector.get(model);
+            }
+
+            if (typeof model === 'object') {
+                let valid = false;
+
+                console.log(model);
+
+                // We now need to compare the keys on the $scope value and on
+                // the model
+                // TODO we ignore keys if they are in ignoreKeys and
+                // non-required on the model
+                for (let key in model) {
+                    let value = model[ key ];
+
+                    // Check to see if the key is a field
+
+                    // TODO If the scope is an array check that each instance has
+                    // the values. Honestly, I'm not even sure this is necessary,
+                    // we may not want to check this, we may just want the mappings
+                    // to emerge organically
+
+                    valid = true;
+                }
+
+                // TODO add iid to $scope property as a mapping for ids
+
+                if (valid) {
+                    this.$$bindings[ key ] = model.name;
+                }
+            }
+        }
+
+        // TODO throw a binding error
+    }
+
+    $createBinding() {
+        return this.$bind.apply(this, arguments);
     }
 
     /**
@@ -140,11 +214,24 @@ class $$ScopeProvider {
     }
 }
 
-/**
- * @desc $scope is the instance of $$ScopeProvider allocated to resources
- * @since 0.3.1
- * @access private
- */
-const $scope = new $$ScopeProvider();
-export default $$ScopeProvider;
-export {$scope};
+function $$fetch() {
+    const [ $Cookie, $Cache ] = $Injector.get('$Cookie', '$Cache'),
+        obj = {
+            $scope: new $$ScopeFactory(),
+            expiry: 1
+        },
+        sessionStorage = new $Cache('sessions');
+    let sessionId = $Cookie.get('ANGIE_SESSION_COOKIE');
+
+    // Now, look too see if we already have an ANGIE_SESSION_COOKIE
+    if (!sessionId) {
+        sessionId = uuid.v4();
+        $Cookie.set('ANGIE_SESSION_COOKIE', sessionId);
+    }
+
+    sessionStorage.put(sessionId, obj);
+    return obj.$scope;
+}
+
+export default $$ScopeFactory;
+export { $$fetch };
