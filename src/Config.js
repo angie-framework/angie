@@ -9,9 +9,8 @@ import fs from                          'fs';
 
 // Angie Modules
 import { $$InvalidConfigError } from    './services/$Exceptions';
-import $Util, { $FileUtil } from        './util/util';
+import { $FileUtil } from               './util/util';
 
-const CWD = process.cwd();
 let config = {};
 
 /**
@@ -73,37 +72,11 @@ class Config {
             throw new $$InvalidConfigError();
         } finally {
             if (Object.keys(config).length) {
-                if (!$Util.isArray(config.templateDirs)) {
-                    config.templateDirs = [];
-                }
-
-                if (!$Util.isArray(config.staticDirs)) {
-                    config.staticDirs = [];
-                }
 
                 // Set the template and static dirs to something if they do not
                 // exist
-                config.templateDirs = $Util.toSet(
-                    config.templateDirs.map(v => {
-                        if (v.indexOf(CWD) === -1) {
-                            v = `${CWD}/${v}`;
-                        }
-                        return v;
-                    })
-                ).add(`${__dirname}/../templates`);
-
-                config.staticDirs = $Util.toSet(
-                    config.staticDirs.map(v => {
-                        if (v.indexOf(CWD) === -1) {
-                            v = `${CWD}/${v}`;
-                        }
-                        return v;
-                    })
-                ).add(`${__dirname}/../static`);
-
-                config.loadDefaultScriptFile = new Set(
-                    $Util.toArray(config.loadDefaultScriptFile)
-                );
+                config.templateDirs = config.templateDirs || [];
+                config.staticDirs = config.staticDirs || [];
             } else {
                 throw new $$InvalidConfigError();
             }
@@ -116,6 +89,3 @@ new Config();
 
 export default Config;
 export { config };
-
-// TODO add top level angie static/templates
-// TODO fix routing of subs
