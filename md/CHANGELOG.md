@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.4.6] - 2015-11-02
+#### Changed
+- Force library to use a 5.x version of Babel
+
 ### [0.4.5] - 2015-10-25
 #### Changed
 - Exposed `$MimeType` as a service
