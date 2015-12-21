@@ -3,7 +3,7 @@
   "version": "0.4.7",
   "author": {
     "name" : "Joe Groseclose",
-    "email" : "joe.groseclose@gmal.com",
+    "email" : "joe.groseclose@gmail.com",
     "url" : "http://joegroseclose.com"
   },
   "description": "Angie: A Module-Based NodeJS Web Application Framework in ES6",
