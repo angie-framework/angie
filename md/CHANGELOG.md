@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.4.7] - 2015-12-20
+#### Fixed
+- Fixed an issue with the `angie shell` command preventing proper use of that CLI option
+
 ### [0.4.6] - 2015-11-02
 #### Changed
 - Force library to use a 5.x version of Babel
